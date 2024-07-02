@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine persönliche Webseite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            color: white;
+            padding: 0.5em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        section {
+            padding: 2em;
+            margin: 1em;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        video {
+            max-width: 100%;
+            height: auto;
+            margin: 1em 0;
+        }
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Willkommen auf meiner persönlichen Webseite!</h1>
+</header>
+
+<nav>
+    <a href="#about">Über mich</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#blog">Blog</a>
+    <a href="#gallery">Galerie</a>
+    <a href="#videos">Videos</a>
+    <a href="#interactive">Interaktive Elemente</a>
+    <a href="#contact">Kontakt</a>
+</nav>
+
+<section id="about">
+    <h2>Über mich</h2>
+    <img src="dein-bild.jpg" alt="Ein Bild von mir" style="width:200px; height:auto;">
+    <p>Hallo! Mein Name ist Max Mustermann. Ich bin ein Webentwickler mit einer Leidenschaft für das Erstellen von schönen und funktionalen Webseiten. In meiner Freizeit fotografiere ich gerne und reise um die Welt.</p>
+</section>
+
+<section id="portfolio">
+    <h2>Portfolio</h2>
+    <p>Hier sind einige meiner Projekte:</p>
+    <ul>
+        <li>Projekt 1: <a href="#">Link zum Projekt</a></li>
+        <li>Projekt 2: <a href="#">Link zum Projekt</a></li>
+        <li>Projekt 3: <a href="#">Link zum Projekt</a></li>
+    </ul>
+</section>
+
+<section id="blog">
+    <h2>Blog</h2>
+    <article>
+        <h3>Mein erster Blogeintrag</h3>
+        <p>Datum: 01. Januar 2024</p>
+        <p>Hier ist der Inhalt meines ersten Blogeintrags. Ich freue mich darauf, meine Gedanken und Erlebnisse zu teilen.</p>
+    </article>
+    <article>
+        <h3>Mein zweiter Blogeintrag</h3>
+        <p>Datum: 02. Januar 2024</p>
+        <p>Hier ist der Inhalt meines zweiten Blogeintrags. Es gibt so viel zu erzählen!</p>
+    </article>
+</section>
+
+<section id="gallery">
+    <h2>Galerie</h2>
+    <img src="bild1.jpg" alt="Bild 1" style="width:30%; height:auto; margin:1%;">
+    <img src="bild2.jpg" alt="Bild 2" style="width:30%; height:auto; margin:1%;">
+    <img src="bild3.jpg" alt="Bild 3" style="width:30%; height:auto; margin:1%;">
+</section>
+
+<section id="videos">
+    <h2>Videos</h2>
+    <video width="320" height="240" controls>
+        <source src="video.mp4" type="video/mp4">
+        Dein Browser unterstützt das Video-Tag nicht.
+    </video>
+</section>
+
+<section id="interactive">
+    <h2>Interaktive Elemente</h2>
+    <button onclick="alert('Hallo!')">Klick mich!</button>
+</section>
+
+<section id="contact">
+    <h2>Kontakt</h2>
+    <form action="mailto:max@example.com" method="post" enctype="text/plain">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br>
+        <label for="message">Nachricht:</label><br>
+        <textarea id="message" name="message" rows="4" required></textarea><br>
+        <input type="submit" value="Senden">
+    </form>
+</section>
+
+<footer>
+    &copy; 2024 Max Mustermann. Alle Rechte vorbehalten.
+</footer>
+
+</body>
+</html>
+
