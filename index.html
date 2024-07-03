@@ -33,6 +33,25 @@
         header h1 {
             margin: 0;
         }
+        .menu {
+            background-color: rgba(255, 105, 180, 0.7); /* Sanfteres Rosa */
+            padding: 2em;
+            margin: 1em;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+        }
+        .menu a {
+            display: block;
+            margin: 1em 0;
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        .menu a:hover {
+            text-decoration: underline;
+        }
         section {
             background-color: rgba(255, 105, 180, 0.7); /* Sanfteres Rosa */
             padding: 2em;
@@ -40,13 +59,6 @@
             border-radius: 10px;
             text-align: justify;
             animation: fadeIn 2s ease-out;
-        }
-        a {
-            color: #FFD700;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
         }
         footer {
             background-color: rgba(255, 105, 180, 0.7); /* Sanfteres Rosa */
@@ -64,7 +76,15 @@
     <h1>Lightning Horn Unicorn</h1>
 </header>
 
-<section>
+<div class="menu">
+    <a href="#about">ABOUT</a>
+    <a href="#art">ART</a>
+    <a href="#projects">PROJECTS</a>
+    <a href="#videos">VIDEOS</a>
+    <a href="#contact">CONTACT</a>
+</div>
+
+<section id="about">
     <h2>About</h2>
     <p>Welcome to the official portfolio of Vedran, known in the music world as Lightning Horn Unicorn. Based in the heart of Vienna, Austria, Vedi is not just a songwriter; he is a visionary artist whose melodies and lyrics are meticulously crafted from the depths of his soul.</p>
     <p>Lightning Horn Unicorn embodies unwavering dedication and extraordinary versatility. Since 2005, his musical journey began with the acoustic guitar, synthesizers, and drums, effortlessly merging his love for visual art into his compositions. Over the years, his sound has transcended traditional boundaries, embracing the digital revolution. Vedran masterfully composes music across diverse DAWs, crafting tracks that blend his personal touch with cutting-edge innovations.</p>
@@ -72,7 +92,22 @@
     <p>Join Lightning Horn Unicorn on this exhilarating ride of self-expression and innovation. Step into a world where every note is a brushstroke, every melody a masterpiece, and every performance a journey into the extraordinary.</p>
 </section>
 
-<section>
+<section id="art">
+    <h2>Art</h2>
+    <p>Explore the visual artistry that complements Lightning Horn Unicorn's musical creations. Each piece is a reflection of his creative journey, blending traditional techniques with modern digital artistry.</p>
+</section>
+
+<section id="projects">
+    <h2>Projects</h2>
+    <p>Discover the diverse range of projects by Lightning Horn Unicorn. From innovative music compositions to collaborative art pieces, each project is a testament to Vedran's creative versatility and groundbreaking approach.</p>
+</section>
+
+<section id="videos">
+    <h2>Videos</h2>
+    <p>Watch the latest videos from Lightning Horn Unicorn, showcasing his music, art, and creative process. Immerse yourself in the visual and auditory experience that defines his unique artistic vision.</p>
+</section>
+
+<section id="contact">
     <h2>Contact</h2>
     <p>Email: <a href="mailto:vedranlukic@hotmail.com">Unicorn Mailbox</a></p>
     <p>YouTube: <a href="https://www.youtube.com/channel/UCTUOGlA08-33szGHwIuH_qQ" target="_blank">Unicorn Television in Technicolor @ LightningHornUnicorn</a></p>
