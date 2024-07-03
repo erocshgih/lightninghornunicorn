@@ -11,8 +11,8 @@
             margin: 0;
             padding: 0;
             background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center fixed;
-            background-size: contain;
-            background-position: center center;
+            background-size: cover; /* Cover instead of contain for full-screen effect */
+            background-attachment: fixed;
             color: #FF2800; /* Ferrarirot */
             text-align: center;
             animation: fadeIn 2s;
@@ -21,14 +21,14 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
         header {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
             padding: 1em 0;
             animation: slideIn 1s ease-out;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
         }
         header h1 {
             margin: 0;
@@ -52,9 +52,11 @@
             font-size: 1.5em;
             font-family: 'Press Start 2P', cursive; /* Cool Retro Schriftart */
             cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
         }
         .menu a:hover {
-            text-decoration: underline;
+            color: #FFD700;
+            text-shadow: 0 0 8px #FFD700;
         }
         section {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -82,12 +84,17 @@
             width: 80%;
             height: 315px;
             margin: 10px 0;
+            border: none;
         }
         img {
             max-width: 100%;
             height: auto;
             border-radius: 10px;
             margin: 10px 0;
+            transition: transform 0.3s;
+        }
+        img:hover {
+            transform: scale(1.05);
         }
     </style>
     <script>
@@ -135,8 +142,8 @@
 
 <section id="videos">
     <h2>Videos</h2>
-    <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" frameborder="0" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" frameborder="0" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
 </section>
 
 <section id="contact">
