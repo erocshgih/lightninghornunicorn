@@ -10,9 +10,9 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center fixed;
-            background-size: cover; /* Cover instead of contain for full-screen effect */
-            background-attachment: fixed;
+            background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center;
+            background-size: contain;
+            background-attachment: fixed; /* Keep the background fixed */
             color: #FF2800; /* Ferrarirot */
             text-align: center;
             animation: fadeIn 2s;
@@ -21,20 +21,27 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         header {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
             padding: 1em 0;
             animation: slideIn 1s ease-out;
         }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
         header h1 {
             margin: 0;
-            font-family: 'Staatliches', sans-serif; /* Ändere Schriftart für Überschrift */
-            color: #FFD700; /* Goldene Farbe */
-            text-shadow: 2px 2px 0 #000000, -2px -2px 0 #000000, 2px -2px 0 #000000, -2px 2px 0 #000000; /* Schwarzer Rand */
+            font-family: 'Monoton', cursive; /* Retro Wave Schriftart */
+            font-size: 3em;
+            letter-spacing: 0.1em;
+            color: #FFFFFF; /* Weiße Farbe */
+            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
+            animation: float 5s ease-in-out infinite;
         }
         .menu {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -50,7 +57,7 @@
             color: #FF2800; /* Ferrarirot */
             text-decoration: none;
             font-size: 1.5em;
-            font-family: 'Press Start 2P', cursive; /* Cool Retro Schriftart */
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
             cursor: pointer;
             transition: color 0.3s, text-shadow 0.3s;
         }
@@ -69,8 +76,8 @@
         }
         section h2 {
             font-family: 'Staatliches', sans-serif; /* Schriftart für Abschnittsüberschriften */
-            color: #FFD700; /* Goldene Farbe */
-            text-shadow: 2px 2px 0 #000000, -2px -2px 0 #000000, 2px -2px 0 #000000, -2px 2px 0 #000000; /* Schwarzer Rand */
+            color: #FFFFFF; /* Weiße Farbe */
+            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
         }
         footer {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -114,11 +121,11 @@
 </header>
 
 <div class="menu">
-    <a onclick="showSection('about')">4B0UT</a>
-    <a onclick="showSection('art')">4RT</a>
-    <a onclick="showSection('projects')">PR0J3CTS</a>
-    <a onclick="showSection('videos')">V1D30S</a>
-    <a onclick="showSection('contact')">C0NT4CT</a>
+    <a onclick="showSection('about')">ABOUT</a>
+    <a onclick="showSection('art')">ART</a>
+    <a onclick="showSection('projects')">PROJECTS</a>
+    <a onclick="showSection('videos')">VIDEOS</a>
+    <a onclick="showSection('contact')">CONTACT</a>
 </div>
 
 <section id="about">
