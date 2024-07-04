@@ -19,25 +19,18 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
         @keyframes hueRotate {
             0% { filter: hue-rotate(0deg); }
             100% { filter: hue-rotate(360deg); }
         }
-        body::before {
-            content: "";
+        .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center;
-            background-size: contain;
             z-index: -1;
-            animation: float 5s ease-in-out infinite, hueRotate 10s linear infinite;
+            animation: hueRotate 10s linear infinite;
         }
         header {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -102,6 +95,33 @@
             color: #FFFFFF; /* Weiße Farbe */
             text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
         }
+        .sub-menu {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin-bottom: 2em;
+        }
+        .sub-menu a {
+            color: #FF2800;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .sub-menu a:hover {
+            color: #FFD700;
+            text-shadow: 0 0 8px #FFD700;
+        }
+        .ai-art img, .human-art img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+        .ai-art img {
+            width: calc(100% - 20px);
+            height: auto;
+        }
         footer {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
             padding: 1em 0;
@@ -141,6 +161,14 @@
             document.getElementById(sectionId).style.display = 'block';
             window.scrollTo(0, 0); // Scroll to top when section is shown
         }
+        function showSubSection(sectionId, subSectionId) {
+            showSection(sectionId);
+            const subSections = document.querySelectorAll('.' + sectionId + ' > div');
+            subSections.forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            document.getElementById(subSectionId).style.display = 'block';
+        }
     </script>
 </head>
 <body>
@@ -157,6 +185,12 @@
     <a onclick="showSection('contact')">CONTACT</a>
 </div>
 
+<div class="background">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" width="100" height="100"/>
+    </svg>
+</div>
+
 <section id="about">
     <h2>Lightning Horn Unicorn</h2>
     <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
@@ -170,43 +204,4 @@
     
     <p>The essence of Lightning Horn Unicorn's artistry lies in his profound and vivid lyricism. His songs are a tapestry of intricate imagery and deep themes, blending personal experiences with universal truths.</p>
     
-    <p>“Every song is a story, every lyric a piece of my thoughts,” he shares. Music is a reflection of the world. And sometimes, that world is just weird. Especially the internet, and we all know that. But you can’t just throw a guitar into an interdimensional wormhole and expect a Grammy. So he works on his stuff to make it better (input flying dragons blowing flames with guitar synthesizers around their backs here).</p>
-    
-    <p>Themes of awakening and realization are prevalent in his work, with haunting melodies and striking imagery symbolizing moments of clarity. Lightning Horn Unicorn’s exploration of the intersection between technology and human connection uses witty tech references to describe emotional intimacy. It’s like tech support, but with feelings.</p>
-    
-    <p>Overcoming darkness and adversity is a powerful theme in his music, with epic backdrops of mystical battles and personal triumphs creating an engaging and inspirational experience. Additionally, he celebrates cultural preservation through heroic imagery and communal rituals, bridging the old and the new and adding layers of depth to his work. Because who doesn’t love a good heroic anthem about saving coffee culture? We drink and love coffee every day.</p>
-    
-    <h3>Achievements and Aspirations</h3>
-    <p>From 2012 to 2016, Lightning Horn Unicorn built a successful home music studio in Carinthia, Austria, connecting with over 3000 supporters. “Every supporter was a beacon of hope, a testament to the power of music,” he reflects. Or, in less poetic terms, “You guys rock!”</p>
-    
-    <h3>Join the Journey</h3>
-    <p>If Lightning Horn Unicorn's story resonates with you, he welcomes your support. Explore his art and music, and join him on this exciting journey of self-expression and innovation. “Together, we can create something extraordinary,” he invites. Or at least, we’ll have a lot of fun trying.</p>
-</section>
-
-<section id="art">
-    <h2>Art</h2>
-    <p>Coming Soon...</p>
-</section>
-
-<section id="projects">
-    <h2>Projects</h2>
-    <p>Coming Soon...</p>
-</section>
-
-<section id="videos">
-    <h2>Videos</h2>
-    <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
-</section>
-
-<section id="contact">
-    <h2>Contact</h2>
-    <p><a href="mailto:vedranlukic@hotmail.com" class="mailbox">Unicorn Mailbox</a></p>
-</section>
-
-<footer>
-    &copy; 2024 Lightning Horn Unicorn. All rights reserved.
-</footer>
-
-</body>
-</html>
+    <p>“Every song is
