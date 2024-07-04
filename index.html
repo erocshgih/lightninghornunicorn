@@ -14,6 +14,7 @@
             text-align: center;
             animation: fadeIn 2s;
             overflow-y: scroll; /* Ermöglicht vertikales Scrolling */
+            background-color: transparent;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -145,6 +146,7 @@
             width: 100%;
             height: 100%;
             z-index: 1; /* Damit der 3D-Container hinter dem Inhalt bleibt */
+            pointer-events: none; /* Damit der 3D-Container keine Mausereignisse empfängt */
         }
     </style>
 </head>
@@ -163,8 +165,7 @@
     </div>
 
     <section id="about">
-        <h2>Lightning Horn Unicorn</h2>
-        <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
+        <h2>Lightning Horn Unicorn</h2>        <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
         <p>Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic. Now, grab a coffee and hop into the Fur-rarri for a wild ride through Vienna, Austria (Schnitzelland), where this visionary artist’s tunes hit harder than a wet Banana Joe neck-slap.</p>
         
         <h3>A Musical Journey</h3>
