@@ -83,12 +83,28 @@
         controls.dampingFactor = 0.05; // Damping factor for smooth interaction
         controls.rotateSpeed = 0.1; // Slow down the rotation speed
 
+        // Variables for bubble gum effect
+        let isInteracting = false;
+        let targetScale = 1;
+        let currentScale = 1;
+        
         // Render the scene
         function animate() {
           requestAnimationFrame(animate);
           
           // Update controls
           controls.update();
+
+          // Adjust the scale for the bubble gum effect
+          if (object) {
+            if (isInteracting) {
+                targetScale = 1.05;
+            } else {
+                targetScale = 1;
+            }
+            currentScale += (targetScale - currentScale) * 0.1;
+            object.scale.set(currentScale, currentScale, currentScale);
+          }
           
           // Render the scene
           renderer.render(scene, camera);
@@ -99,6 +115,15 @@
           camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
           renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Add mouse and touch interaction listeners to trigger the bubble gum effect
+        controls.addEventListener('start', () => {
+          isInteracting = true;
+        });
+
+        controls.addEventListener('end', () => {
+          isInteracting = false;
         });
         
         // Start the 3D rendering
