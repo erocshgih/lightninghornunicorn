@@ -83,28 +83,20 @@
         const ambientLight = new THREE.AmbientLight(0x333333, objToRender === "dino" ? 5 : 1);
         scene.add(ambientLight);
         
-        // This adds controls to the camera, so we can rotate / zoom it with the mouse
-        if (objToRender === "dino") {
-          controls = new OrbitControls(camera, renderer.domElement);
-        }
+        // Add controls to the camera for mouse and touch interactions
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable smooth damping
+        controls.dampingFactor = 0.25; // Damping factor for smooth interaction
+        controls.rotateSpeed = 0.1; // Slow down the rotation speed
         
         // Render the scene
         function animate() {
           requestAnimationFrame(animate);
-          // Here we could add some code to update the scene, adding some automatic movement
-        
-          // Make the eye move and rotate automatically
-          if (object) {
-            // Automatic rotation
-            object.rotation.y += 0.000002; // Reduced rotation speed
-            object.rotation.x += 0.000001; // Reduced rotation speed
-
-            // Adjust rotation based on mouse/touch input
-            if (objToRender === "eye") {
-                object.rotation.y += -3 + (mouseX + touchX) / window.innerWidth * 3;
-                object.rotation.x += -1.2 + (mouseY + touchY) * 2.5 / window.innerHeight;
-            }
-          }
+          
+          // Update controls
+          controls.update();
+          
+          // Render the scene
           renderer.render(scene, camera);
         }
         
@@ -114,29 +106,6 @@
           camera.updateProjectionMatrix();
           renderer.setSize(window.innerWidth, window.innerHeight);
         });
-        
-        // Add mouse position listener, so we can make the eye move
-        document.onmousemove = (e) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-        }
-        
-        // Add touch position listeners, so we can make the eye move on touch
-        document.ontouchstart = (e) => {
-          if (e.touches.length == 1) { // Only deal with one finger
-            e.preventDefault();
-            touchX = e.touches[0].clientX;
-            touchY = e.touches[0].clientY;
-          }
-        };
-        
-        document.ontouchmove = (e) => {
-          if (e.touches.length == 1) { // Only deal with one finger
-            e.preventDefault();
-            touchX = e.touches[0].clientX;
-            touchY = e.touches[0].clientY;
-          }
-        };
         
         // Start the 3D rendering
         animate();
