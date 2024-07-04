@@ -6,151 +6,151 @@
     <title>Lightning Horn Unicorn</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Press+Start+2P&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
     <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        background: none;
-        color: #FF2800; /* Ferrarirot */
-        text-align: center;
-        animation: fadeIn 2s;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    header {
-        background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-        padding: 1em 0;
-        animation: slideIn 1s ease-out;
-        position: relative;
-        z-index: 1;
-        display: flex;
-        justify-content: center; /* Zentrierter Text */
-    }
-    @keyframes slideIn {
-        from { transform: translateY(-100%); }
-        to { transform: translateY(0); }
-    }
-    header h1 {
-        margin: 0;
-        font-family: 'Orbitron', sans-serif; /* Neue ästhetische Schriftart */
-        font-size: 3em;
-        color: #FFFFFF; /* Weiße Farbe */
-        text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
-        text-transform: uppercase; /* Großbuchstaben */
-        line-height: 1.2em; /* Abstandsregelung */
-        text-align: center; /* Zentrierter Text */
-    }
-    .menu {
-        background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-        padding: 2em;
-        margin: 1em;
-        border-radius: 10px;
-        text-align: center;
-        animation: fadeIn 2s ease-out;
-        position: relative;
-        z-index: 1;
-    }
-    .menu a {
-        display: block;
-        margin: 1em 0;
-        color: #FF2800; /* Ferrarirot */
-        text-decoration: none;
-        font-size: 1.5em;
-        font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
-        cursor: pointer;
-        transition: color 0.3s, text-shadow 0.3s;
-    }
-    .menu a:hover {
-        color: #FFD700;
-        text-shadow: 0 0 8px #FFD700;
-    }
-    section {
-        background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-        padding: 2em;
-        margin: 1em;
-        border-radius: 10px;
-        text-align: justify;
-        display: none;
-        animation: fadeIn 2s ease-out;
-        position: relative;
-        z-index: 1;
-    }
-    section h2 {
-        font-family: 'Raleway', sans-serif; /* Entspannende Schriftart */
-        color: #FFFFFF; /* Weiße Farbe */
-        text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
-    }
-    .sub-menu {
-        display: flex;
-        justify-content: center;
-        gap: 2em;
-        margin-bottom: 2em;
-    }
-    .sub-menu a {
-        color: #FF2800;
-        text-decoration: none;
-        font-size: 1.2em;
-        font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
-        cursor: pointer;
-        transition: color 0.3s, text-shadow 0.3s;
-    }
-    .sub-menu a:hover {
-        color: #FFD700;
-        text-shadow: 0 0 8px #FFD700;
-    }
-    .ai-art img, .human-art img {
-        max-width: 100%;
-        height: auto;
-        margin: 10px 0;
-    }
-    .ai-art img {
-        width: calc(100% - 20px);
-        height: auto;
-    }
-    footer {
-        background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-        padding: 1em 0;
-        position: fixed;
-        width: 100%;
-        bottom: 0;
-        animation: fadeIn 2s ease-out;
-        z-index: 1;
-    }
-    iframe {
-        width: 80%;
-        height: 315px;
-        margin: 10px 0;
-        border: none;
-    }
-    img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 10px;
-        margin: 10px 0;
-    }
-    a.mailbox {
-        color: #FF2800; /* Ferrarirot */
-        text-decoration: none;
-    }
-    a.mailbox:hover {
-        color: #FFD700;
-        text-shadow: 0 0 8px #FFD700;
-    }
-    canvas {
-        display: block;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: -1; /* Damit das Canvas im Hintergrund bleibt */
-    }
-</style>
-<script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: none;
+            color: #FF2800; /* Ferrarirot */
+            text-align: center;
+            animation: fadeIn 2s;
+            overflow-y: scroll; /* Ermöglicht vertikales Scrolling */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        header {
+            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
+            padding: 1em 0;
+            animation: slideIn 1s ease-out;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center; /* Zentrierter Text */
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        header h1 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif; /* Neue ästhetische Schriftart */
+            font-size: 3em;
+            color: #FFFFFF; /* Weiße Farbe */
+            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
+            text-transform: uppercase; /* Großbuchstaben */
+            line-height: 1.2em; /* Abstandsregelung */
+            text-align: center; /* Zentrierter Text */
+        }
+        .menu {
+            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
+            padding: 2em;
+            margin: 1em;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+        .menu a {
+            display: block;
+            margin: 1em 0;
+            color: #FF2800; /* Ferrarirot */
+            text-decoration: none;
+            font-size: 1.5em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .menu a:hover {
+            color: #FFD700;
+            text-shadow: 0 0 8px #FFD700;
+        }
+        section {
+            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
+            padding: 2em;
+            margin: 1em;
+            border-radius: 10px;
+            text-align: justify;
+            display: none;
+            animation: fadeIn 2s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+        section h2 {
+            font-family: 'Raleway', sans-serif; /* Entspannende Schriftart */
+            color: #FFFFFF; /* Weiße Farbe */
+            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
+        }
+        .sub-menu {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin-bottom: 2em;
+        }
+        .sub-menu a {
+            color: #FF2800;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .sub-menu a:hover {
+            color: #FFD700;
+            text-shadow: 0 0 8px #FFD700;
+        }
+        .ai-art img, .human-art img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+        .ai-art img {
+            width: calc(100% - 20px);
+            height: auto;
+        }
+        footer {
+            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
+            padding: 1em 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            animation: fadeIn 2s ease-out;
+            z-index: 1;
+        }
+        iframe {
+            width: 80%;
+            height: 315px;
+            margin: 10px 0;
+            border: none;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        a.mailbox {
+            color: #FF2800; /* Ferrarirot */
+            text-decoration: none;
+        }
+        a.mailbox:hover {
+            color: #FFD700;
+            text-shadow: 0 0 8px #FFD700;
+        }
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Damit das Canvas im Hintergrund bleibt */
+        }
+    </style>
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
     <script>
-        let scene, camera, renderer, objLoader, mtlLoader, object;
+        let scene, camera, renderer, loader, object;
 
         function init() {
             scene = new THREE.Scene();
@@ -161,15 +161,10 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            mtlLoader = new THREE.MTLLoader();
-            mtlLoader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/model.mtl', function(materials) {
-                materials.preload();
-                objLoader = new THREE.OBJLoader();
-                objLoader.setMaterials(materials);
-                objLoader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/DALL%C2%B7E_2024_07_04_15_0704133225.obj', function(obj) {
-                    object = obj;
-                    scene.add(obj);
-                });
+            loader = new THREE.GLTFLoader();
+            loader.load('https://github.com/erocshgih/lightninghornunicorn/raw/main/friendlyunicornminator.glb', function(gltf) {
+                object = gltf.scene;
+                scene.add(object);
             });
 
             window.addEventListener('mousemove', onMouseMove, false);
