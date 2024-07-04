@@ -83,10 +83,11 @@
         controls.dampingFactor = 0.05; // Damping factor for smooth interaction
         controls.rotateSpeed = 0.1; // Slow down the rotation speed
 
-        // Variables for bubble gum effect
+        // Variables for water-filled effect
         let isInteracting = false;
         let targetScale = 1;
         let currentScale = 1;
+        let distortFactor = 0.02; // Adjust this value for more or less distortion
         
         // Render the scene
         function animate() {
@@ -95,7 +96,7 @@
           // Update controls
           controls.update();
 
-          // Adjust the scale for the bubble gum effect
+          // Adjust the scale and distortion for the water-filled effect
           if (object) {
             if (isInteracting) {
                 targetScale = 1.05;
@@ -104,6 +105,20 @@
             }
             currentScale += (targetScale - currentScale) * 0.1;
             object.scale.set(currentScale, currentScale, currentScale);
+
+            // Apply distortion to the object's vertices
+            object.children.forEach(child => {
+              if (child.geometry) {
+                const position = child.geometry.attributes.position;
+                for (let i = 0; i < position.count; i++) {
+                  const x = position.getX(i);
+                  const y = position.getY(i);
+                  const z = position.getZ(i);
+                  position.setXYZ(i, x * (1 + distortFactor * Math.sin(Date.now() * 0.001)), y, z);
+                }
+                position.needsUpdate = true;
+              }
+            });
           }
           
           // Render the scene
@@ -117,7 +132,7 @@
           renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Add mouse and touch interaction listeners to trigger the bubble gum effect
+        // Add mouse and touch interaction listeners to trigger the water-filled effect
         controls.addEventListener('start', () => {
           isInteracting = true;
         });
