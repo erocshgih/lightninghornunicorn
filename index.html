@@ -19,25 +19,18 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
         @keyframes hueRotate {
             0% { filter: hue-rotate(0deg); }
             100% { filter: hue-rotate(360deg); }
         }
-        body::before {
-            content: "";
+        .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center;
-            background-size: contain;
             z-index: -1;
-            animation: float 5s ease-in-out infinite, hueRotate 10s linear infinite;
+            animation: hueRotate 10s linear infinite;
         }
         header {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -102,6 +95,33 @@
             color: #FFFFFF; /* Weiße Farbe */
             text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
         }
+        .sub-menu {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin-bottom: 2em;
+        }
+        .sub-menu a {
+            color: #FF2800;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .sub-menu a:hover {
+            color: #FFD700;
+            text-shadow: 0 0 8px #FFD700;
+        }
+        .ai-art img, .human-art img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+        .ai-art img {
+            width: calc(100% - 20px);
+            height: auto;
+        }
         footer {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
             padding: 1em 0;
@@ -141,6 +161,14 @@
             document.getElementById(sectionId).style.display = 'block';
             window.scrollTo(0, 0); // Scroll to top when section is shown
         }
+        function showSubSection(sectionId, subSectionId) {
+            showSection(sectionId);
+            const subSections = document.querySelectorAll('.' + sectionId + ' > div');
+            subSections.forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            document.getElementById(subSectionId).style.display = 'block';
+        }
     </script>
 </head>
 <body>
@@ -155,6 +183,12 @@
     <a onclick="showSection('projects')">PROJECTS</a>
     <a onclick="showSection('videos')">VIDEOS</a>
     <a onclick="showSection('contact')">CONTACT</a>
+</div>
+
+<div class="background">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" width="100" height="100"/>
+    </svg>
 </div>
 
 <section id="about">
@@ -185,7 +219,22 @@
 
 <section id="art">
     <h2>Art</h2>
-    <p>Coming Soon...</p>
+    <div class="sub-menu">
+        <a onclick="showSubSection('art', 'ai-art')">A.I. Art</a>
+        <a onclick="showSubSection('art', 'human-art')">Human Art</a>
+    </div>
+    <div id="ai-art" class="ai-art" style="display:none;">
+        <h3>A.I. Art</h3>
+        <!-- Hier können die A.I. Art-Bilder im 16:9-Format eingefügt werden -->
+        <img src="https://via.placeholder.com/1600x900" alt="A.I. Art 1">
+        <img src="https://via.placeholder.com/1600x900" alt="A.I. Art 2">
+    </div>
+    <div id="human-art" class="human-art" style="display:none;">
+        <h3>Human Art</h3>
+        <!-- Hier können die Human Art-Bilder in unterschiedlichen Größen eingefügt werden -->
+        <img src="https://via.placeholder.com/800x600" alt="Human Art 1">
+        <img src="https://via.placeholder.com/600x800" alt="Human Art 2">
+    </div>
 </section>
 
 <section id="projects">
