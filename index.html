@@ -96,8 +96,8 @@
           // Make the eye move and rotate automatically
           if (object) {
             // Automatic rotation
-            object.rotation.y += 0.01;
-            object.rotation.x += 0.005;
+            object.rotation.y += 0.002; // Reduced rotation speed
+            object.rotation.x += 0.001; // Reduced rotation speed
 
             // Adjust rotation based on mouse/touch input
             if (objToRender === "eye") {
