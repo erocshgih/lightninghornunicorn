@@ -3,300 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lightning Horn Unicorn</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Press+Start+2P&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <title>3D Model Viewer</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            background: none;
-            color: #FF2800; /* Ferrarirot */
-            text-align: center;
-            animation: fadeIn 2s;
-            overflow-y: scroll; /* Ermöglicht vertikales Scrolling */
+            overflow: hidden;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        header {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-            padding: 1em 0;
-            animation: slideIn 1s ease-out;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            justify-content: center; /* Zentrierter Text */
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-        header h1 {
-            margin: 0;
-            font-family: 'Orbitron', sans-serif; /* Neue ästhetische Schriftart */
-            font-size: 3em;
-            color: #FFFFFF; /* Weiße Farbe */
-            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
-            text-transform: uppercase; /* Großbuchstaben */
-            line-height: 1.2em; /* Abstandsregelung */
-            text-align: center; /* Zentrierter Text */
-        }
-        .menu {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-            padding: 2em;
-            margin: 1em;
-            border-radius: 10px;
-            text-align: center;
-            animation: fadeIn 2s ease-out;
-            position: relative;
-            z-index: 1;
-        }
-        .menu a {
-            display: block;
-            margin: 1em 0;
-            color: #FF2800; /* Ferrarirot */
-            text-decoration: none;
-            font-size: 1.5em;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
-            cursor: pointer;
-            transition: color 0.3s, text-shadow 0.3s;
-        }
-        .menu a:hover {
-            color: #FFD700;
-            text-shadow: 0 0 8px #FFD700;
-        }
-        section {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-            padding: 2em;
-            margin: 1em;
-            border-radius: 10px;
-            text-align: justify;
-            display: none;
-            animation: fadeIn 2s ease-out;
-            position: relative;
-            z-index: 1;
-        }
-        section h2 {
-            font-family: 'Raleway', sans-serif; /* Entspannende Schriftart */
-            color: #FFFFFF; /* Weiße Farbe */
-            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
-        }
-        .sub-menu {
-            display: flex;
-            justify-content: center;
-            gap: 2em;
-            margin-bottom: 2em;
-        }
-        .sub-menu a {
-            color: #FF2800;
-            text-decoration: none;
-            font-size: 1.2em;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
-            cursor: pointer;
-            transition: color 0.3s, text-shadow 0.3s;
-        }
-        .sub-menu a:hover {
-            color: #FFD700;
-            text-shadow: 0 0 8px #FFD700;
-        }
-        .ai-art img, .human-art img {
-            max-width: 100%;
-            height: auto;
-            margin: 10px 0;
-        }
-        .ai-art img {
-            width: calc(100% - 20px);
-            height: auto;
-        }
-        footer {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-            padding: 1em 0;
-            position: fixed;
+        #container3D {
             width: 100%;
-            bottom: 0;
-            animation: fadeIn 2s ease-out;
-            z-index: 1;
-        }
-        iframe {
-            width: 80%;
-            height: 315px;
-            margin: 10px 0;
-            border: none;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-        a.mailbox {
-            color: #FF2800; /* Ferrarirot */
-            text-decoration: none;
-        }
-        a.mailbox:hover {
-            color: #FFD700;
-            text-shadow: 0 0 8px #FFD700;
-        }
-        canvas {
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1; /* Damit das Canvas im Hintergrund bleibt */
+            height: 100vh;
         }
     </style>
-    <script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
-<script>
-    let scene, camera, renderer, loader, object;
+    <div id="container3D"></div>
+    <script type="module">
+        import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
+        import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
+        import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
-    function init() {
-        // Szene erstellen
-        scene = new THREE.Scene();
-
-        // Kamera erstellen
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5;
-
-        // Renderer erstellen
-        renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // GLTFLoader erstellen
-        loader = new THREE.GLTFLoader();
-        loader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb', function(gltf) {
+        // Create a Three.JS Scene
+        const scene = new THREE.Scene();
+        
+        // Create a new camera with positions and angles
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        // Keep track of the mouse position, so we can make the eye move
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        
+        // Keep the 3D object on a global variable so we can access it later
+        let object;
+        
+        // OrbitControls allow the camera to move around the scene
+        let controls;
+        
+        // Set which object to render
+        let objToRender = 'eye';
+        
+        // Instantiate a loader for the .gltf file
+        const loader = new GLTFLoader();
+        
+        // Load the file
+        loader.load(
+          'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb',
+          function (gltf) {
+            // If the file is loaded, add it to the scene
             object = gltf.scene;
             scene.add(object);
-        }, undefined, function(error) {
+          },
+          function (xhr) {
+            // While it is loading, log the progress
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+          },
+          function (error) {
+            // If there is an error, log it
             console.error(error);
-        });
-
-        // Animation starten
-        animate();
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        if (object) {
-            object.rotation.y += 0.01;
-            object.rotation.x += 0.01;
-        }
-        renderer.render(scene, camera);
-    }
-
-    // Initialisieren
-    init();
-
-    // Größenänderung des Fensters berücksichtigen
-    window.addEventListener('resize', function() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+          }
+        );
+        
+        // Instantiate a new renderer and set its size
+        const renderer = new THREE.WebGLRenderer({ alpha: true }); // Alpha: true allows for the transparent background
         renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-</script>
-
-<header>
-    <h1>LIGHTNING<br>HORN<br>UNICORN</h1>
-</header>
-
-<div class="menu">
-    <a onclick="showSection('about')">ABOUT</a>
-    <a onclick="showSection('art')">ART</a>
-    <a onclick="showSection('projects')">PROJECTS</a>
-    <a onclick="showSection('videos')">VIDEOS</a>
-    <a onclick="showSection('contact')">CONTACT</a>
-</div>
-
-<section id="about">
-    <h2>Lightning Horn Unicorn</h2>
-    <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
-    <p>Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic. Now, grab a coffee and hop into the Fur-rarri for a wild ride through Vienna, Austria (Schnitzelland), where this visionary artist’s tunes hit harder than a wet Banana Joe neck-slap.</p>
-    
-    <h3>A Musical Journey</h3>
-    <p>It’s 2002: Picture a young Vedran with a borrowed electric guitar and a half-broken, duct-taped laptop running a demo version of FL Studio. His neighbors wonder if he's building a time machine. Despite these humble beginnings, his passion never wavered, transforming his career into something remarkable. "Music was my escape and my expression," he recalls. "I remember stumbling upon my first creations and thinking, 'Hey, that’s definitely something rare cooking here. Or maybe it’s just the CPU bench-pressing those MIDI files.'"</p>
-    
-    <h3>Innovative Sound and Lyricism</h3>
-    <p>Lightning Horn Unicorn transcends traditional boundaries, masterfully composing across various Digital Audio Workstations (DAWs). His blend of personal touch and cutting-edge innovation, including artificial intelligence, pushes the limits of musical expression. Think of him as the Da Vinci of DAWs, but with fewer paintbrushes and more keyboards.</p>
-    
-    <p>The essence of Lightning Horn Unicorn's artistry lies in his profound and vivid lyricism. His songs are a tapestry of intricate imagery and deep themes, blending personal experiences with universal truths.</p>
-    
-    <p>“Every song is a story, every lyric a piece of my thoughts,” he shares. Music is a reflection of the world. And sometimes, that world is just weird. Especially the internet, and we all know that. But you can’t just throw a guitar into an interdimensional wormhole and expect a Grammy. So he works on his stuff to make it better (input flying dragons blowing flames with guitar synthesizers around their backs here).</p>
-    
-    <p>Themes of awakening and realization are prevalent in his work, with haunting melodies and striking imagery symbolizing moments of clarity. Lightning Horn Unicorn’s exploration of the intersection between technology and human connection uses witty tech references to describe emotional intimacy. It’s like tech support, but with feelings.</p>
-    
-    <p>Overcoming darkness and adversity is a powerful theme in his music, with epic backdrops of mystical battles and personal triumphs creating an engaging and inspirational experience. Additionally, he celebrates cultural preservation through heroic imagery and communal rituals, bridging the old and the new and adding layers of depth to his work. Because who doesn’t love a good heroic anthem about saving coffee culture? We drink and love coffee every day.</p>
-    
-    <h3>Achievements and Aspirations</h3>
-    <p>From 2012 to 2016, Lightning Horn Unicorn built a successful home music studio in Carinthia, Austria, connecting with over 3000 supporters. “Every supporter was a beacon of hope, a testament to the power of music,” he reflects. Or, in less poetic terms, “You guys rock!”</p>
-    
-    <h3>Join the Journey</h3>
-    <p>If Lightning Horn Unicorn's story resonates with you, he welcomes your support. Explore his art and music, and join him on this exciting journey of self-expression and innovation. “Together, we can create something extraordinary,” he invites. Or at least, we’ll have a lot of fun trying.</p>
-</section>
-
-<section id="art">
-    <h2>Art</h2>
-    <div class="sub-menu">
-        <a onclick="showSubSection('art', 'ai-art')">A.I. Art</a>
-        <a onclick="showSubSection('art', 'human-art')">Human Art</a>
-    </div>
-    <div id="ai-art" class="ai-art" style="display:none;">
-        <h3>A.I. Art</h3>
-        <!-- Hier können die A.I. Art-Bilder im 16:9-Format eingefügt werden -->
-        <img src="https://drive.google.com/file/d/1GlyjdDvojTN0PP2AT1kM8HAukerCKQPS/view?usp=drive_link" alt="A.I. Art 1">
-        <img src="https://drive.google.com/file/d/1uaJ8IjQN42fRm7DMRTrUY860FHcl3hBn/view?usp=drive_link" alt="A.I. Art 2">
-        <img src="https://drive.google.com/file/d/1ThGB528vD2pVVLxSt0lAT79MlmQZf8t6/view?usp=drive_link" alt="A.I. Art 3">
-    </div>
-    <div id="human-art" class="human-art" style="display:none;">
-        <h3>Human Art</h3>
-        <!-- Hier können die Human Art-Bilder in unterschiedlichen Größen eingefügt werden -->
-        <img src="https://drive.google.com/file/d/1AArVup1iECAVKu4bwknICVWFnF4Br5rp/view?usp=drive_link" alt="Human Art 1">
-        <img src="https://drive.google.com/file/d/1FBhl5nl6aPSWVlsxxjqnbKZ9fzJI2HuV/view?usp=drive_link" alt="Human Art 2">
-    </div>
-</section>
-
-<section id="projects">
-    <h2>Projects</h2>
-    <p>Coming Soon...</p>
-</section>
-
-<section id="videos">
-    <h2>Videos</h2>
-    <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
-</section>
-
-<section id="contact">
-    <h2>Contact</h2>
-    <p><a href="mailto:vedranlukic@hotmail.com" class="mailbox">Unicorn Mailbox</a></p>
-</section>
-
-<footer>
-    &copy; 2024 Lightning Horn Unicorn. All rights reserved.
-</footer>
-
-<script>
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            section.style.display = 'none';
+        
+        // Add the renderer to the DOM
+        document.getElementById("container3D").appendChild(renderer.domElement);
+        
+        // Set how far the camera will be from the 3D model
+        camera.position.z = objToRender === "dino" ? 25 : 5;
+        
+        // Add lights to the scene, so we can actually see the 3D model
+        const topLight = new THREE.DirectionalLight(0xffffff, 1); // (color, intensity)
+        topLight.position.set(500, 500, 500); // top-left-ish
+        topLight.castShadow = true;
+        scene.add(topLight);
+        
+        const ambientLight = new THREE.AmbientLight(0x333333, objToRender === "dino" ? 5 : 1);
+        scene.add(ambientLight);
+        
+        // This adds controls to the camera, so we can rotate / zoom it with the mouse
+        if (objToRender === "dino") {
+          controls = new OrbitControls(camera, renderer.domElement);
+        }
+        
+        // Render the scene
+        function animate() {
+          requestAnimationFrame(animate);
+          // Here we could add some code to update the scene, adding some automatic movement
+        
+          // Make the eye move
+          if (object && objToRender === "eye") {
+            // I've played with the constants here until it looked good 
+            object.rotation.y = -3 + mouseX / window.innerWidth * 3;
+            object.rotation.x = -1.2 + mouseY * 2.5 / window.innerHeight;
+          }
+          renderer.render(scene, camera);
+        }
+        
+        // Add a listener to the window, so we can resize the window and the camera
+        window.addEventListener("resize", function () {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
         });
-        document.getElementById(sectionId).style.display = 'block';
-        window.scrollTo(0, 0); // Scroll to top when section is shown
-    }
-
-    function showSubSection(sectionId, subSectionId) {
-        showSection(sectionId);
-        const subSections = document.querySelectorAll('.' + sectionId + ' > div');
-        subSections.forEach(subSection => {
-            subSection.style.display = 'none';
-        });
-        document.getElementById(subSectionId).style.display = 'block';
-    }
-</script>
+        
+        // Add mouse position listener, so we can make the eye move
+        document.onmousemove = (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        }
+        
+        // Start the 3D rendering
+        animate();
+    </script>
 </body>
 </html>
