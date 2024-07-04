@@ -11,6 +11,9 @@
         }
         canvas {
             display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
@@ -30,20 +33,20 @@
             'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb',
             function (gltf) {
                 scene.add(gltf.scene);
-                renderer.render(scene, camera);
+                animate();
             },
             undefined,
             function (error) {
-                console.error(error);
+                console.error('An error happened:', error);
             }
         );
 
         camera.position.z = 5;
+
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
-        animate();
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
