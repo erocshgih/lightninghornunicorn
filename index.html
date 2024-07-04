@@ -23,6 +23,10 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
+        @keyframes hueRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
         body::before {
             content: "";
             position: fixed;
@@ -30,10 +34,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/lightninghornunicorn_animation.gif?raw=true') no-repeat center center;
+            background: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/lightninghornunicorn.svg') no-repeat center center;
             background-size: contain;
             z-index: -1;
-            animation: float 5s ease-in-out infinite;
+            animation: float 5s ease-in-out infinite, hueRotate 10s linear infinite;
         }
         header {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -57,6 +61,24 @@
             text-transform: uppercase; /* Großbuchstaben */
             line-height: 1.2em; /* Abstandsregelung */
             text-align: center; /* Zentrierter Text */
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #FFD700; /* Gold */
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+        }
+        nav a:hover {
+            color: #FFFFFF;
         }
         .menu {
             background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
@@ -118,10 +140,6 @@
             height: auto;
             border-radius: 10px;
             margin: 10px 0;
-            transition: transform 0.3s;
-        }
-        img:hover {
-            transform: scale(1.05);
         }
         a.mailbox {
             color: #FF2800; /* Ferrarirot */
@@ -144,6 +162,14 @@
     </script>
 </head>
 <body>
+
+<nav>
+    <a href="#about" onclick="showSection('about')">ABOUT</a>
+    <a href="#art" onclick="showSection('art')">ART</a>
+    <a href="#projects" onclick="showSection('projects')">PROJECTS</a>
+    <a href="#videos" onclick="showSection('videos')">VIDEOS</a>
+    <a href="#contact" onclick="showSection('contact')">CONTACT</a>
+</nav>
 
 <header>
     <h1>LIGHTNING<br>HORN<br>UNICORN</h1>
