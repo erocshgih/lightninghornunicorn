@@ -144,18 +144,14 @@
             text-shadow: 0 0 8px #FFD700;
         }
         #container3D {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            z-index: 1; /* Damit der 3D-Container hinter dem Inhalt bleibt */
-            pointer-events: none; /* Damit der 3D-Container keine Mausereignisse empfängt */
+            height: 300px;
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <div id="container3D"></div>
     <header>
         <h1>LIGHTNING<br>HORN<br>UNICORN</h1>
     </header>
@@ -167,6 +163,8 @@
         <a onclick="showSection('videos')">VIDEOS</a>
         <a onclick="showSection('contact')">CONTACT</a>
     </div>
+
+    <div id="container3D"></div>
 
     <section id="about">
         <h2>Lightning Horn Unicorn</h2>
