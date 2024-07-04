@@ -13,13 +13,10 @@
             background: none;
             color: #FF2800; /* Ferrarirot */
             text-align: center;
-            animation: fadeIn 2s;
-            overflow-y: scroll;
-            background-color: rgba(0, 0, 0, 0.2); /* 20% Transparenz */
+            overflow: hidden;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        #menu, section, footer, header {
+            display: none;
         }
         header, .menu, section, footer {
             background-color: rgba(255, 225, 53, 0.2); /* Bananengelb mit 20% Transparenz */
@@ -29,13 +26,6 @@
             border-radius: 10px;
             position: relative;
             z-index: 1;
-        }
-        header {
-            animation: slideIn 1s ease-out;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
         }
         h1, h2, h3, a {
             margin: 0.5em 0;
@@ -85,15 +75,18 @@
             left: 0;
             z-index: -1;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <canvas id="bgCanvas"></canvas>
-    <header>
+    <header id="header">
         <h1>LIGHTNING<br>HORN<br>UNICORN</h1>
     </header>
-
-    <div class="menu">
+    <div id="menu" class="menu">
         <a onclick="showSection('about')">ABOUT</a>
         <a onclick="showSection('art')">ART</a>
         <a onclick="showSection('projects')">PROJECTS</a>
@@ -172,6 +165,11 @@
                     renderer.render(scene, camera);
                 }
                 animate();
+
+                renderer.domElement.addEventListener('click', () => {
+                    document.getElementById('menu').style.display = 'block';
+                    document.querySelector('header').style.display = 'block';
+                });
             },
             undefined,
             function (error) {
