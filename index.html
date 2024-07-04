@@ -163,11 +163,11 @@
             document.body.appendChild(renderer.domElement);
 
             mtlLoader = new THREE.MTLLoader();
-            mtlLoader.load('https://example.com/path/to/your/model.mtl', function(materials) {
+            mtlLoader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/model.mtl', function(materials) {
                 materials.preload();
                 objLoader = new THREE.OBJLoader();
                 objLoader.setMaterials(materials);
-                objLoader.load('https://example.com/path/to/your/model.obj', function(obj) {
+                objLoader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/DALL%C2%B7E_2024_07_04_15_0704133225.obj', function(obj) {
                     object = obj;
                     scene.add(obj);
                 });
