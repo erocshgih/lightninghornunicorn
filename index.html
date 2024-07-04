@@ -23,6 +23,11 @@
     function init() {
         // Szene erstellen
         scene = new THREE.Scene();
+        const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 0).normalize();
+        scene.add(directionalLight);
 
         // Kamera erstellen
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -35,18 +40,16 @@
 
         // GLTFLoader erstellen
         loader = new THREE.GLTFLoader();
-        loader.load('https://raw.githubusercontent.com/erocshgih/3d-models/main/friendlyunicornminator.glb', function(gltf) {
+        loader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb', function(gltf) {
             object = gltf.scene;
             scene.add(object);
+            animate();
         }, undefined, function(error) {
-            console.error(error);
+            console.error('An error happened', error);
         });
 
         // Eventlistener für Mausbewegung
         window.addEventListener('mousemove', onMouseMove, false);
-
-        // Animation starten
-        animate();
     }
 
     function onMouseMove(event) {
