@@ -106,13 +106,13 @@
         controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // Enable smooth damping
         controls.dampingFactor = 0.05; // Damping factor for smooth interaction
-        controls.rotateSpeed = 0.1; // Slow down the rotation speed
+        controls.rotateSpeed = 2; // Slow down the rotation speed
 
         // Variables for water-filled effect
         let isInteracting = false;
         let targetScale = 1;
         let currentScale = 1;
-        let distortFactor = 0.02; // Adjust this value for more or less distortion
+        let distortFactor = 0.001; // Adjust this value for more or less distortion
         
         // Render the scene
         function animate() {
