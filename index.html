@@ -13,10 +13,22 @@
             width: 100%;
             height: 100vh;
         }
+        #overlay {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div id="container3D"></div>
+    <div id="overlay">Click here to learn more</div>
     <script type="module">
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
@@ -35,10 +47,6 @@
         // OrbitControls allow the camera to move around the scene
         let controls;
         
-        // Raycaster for detecting clicks
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-        
         // Set which object to render
         let objToRender = 'eye';
         
@@ -54,7 +62,7 @@
             scene.add(object);
             
             // Identify the yellow horn (you may need to adjust this depending on your model)
-            yellowHorn = object.getObjectByName('YellowHornName'); // Replace 'YellowHornName' with the actual name of the yellow horn in your model
+            yellowHorn = object.getObjectByName('Horn'); // Replace 'Horn' with the actual name of the yellow horn in your model
             
             // Apply glowing material to the yellow horn
             if (yellowHorn) {
@@ -104,7 +112,7 @@
         let isInteracting = false;
         let targetScale = 1;
         let currentScale = 1;
-        let distortFactor = 0.002; // Adjust this value for more or less distortion
+        let distortFactor = 0.004; // Adjust this value for more or less distortion
         
         // Render the scene
         function animate() {
@@ -158,27 +166,17 @@
           isInteracting = false;
         });
 
-        // Function to handle clicks
-        function onDocumentMouseDown(event) {
-          event.preventDefault();
-          
-          mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-          mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-          
-          raycaster.setFromCamera(mouse, camera);
-          
-          const intersects = raycaster.intersectObjects(object.children, true);
-          
-          if (intersects.length > 0) {
-            const clickedObject = intersects[0].object;
-            if (clickedObject === yellowHorn) {
-              window.location.href = 'https://github.com/erocshgih/lightninghornunicorn/blob/main/newpage.html'; // Replace with the actual URL of the new page on GitHub Pages
-            }
-          }
-        }
-        
-        document.addEventListener('mousedown', onDocumentMouseDown, false);
-        
+        // Show the overlay after 3 seconds
+        setTimeout(() => {
+          const overlay = document.getElementById('overlay');
+          overlay.style.display = 'block';
+        }, 3000);
+
+        // Add event listener to the overlay
+        document.getElementById('overlay').addEventListener('click', () => {
+          window.location.href = 'https://github.com/erocshgih/lightninghornunicorn/blob/main/newpage.html'; // Replace with the actual URL of the new page on GitHub Pages
+        });
+
         // Start the 3D rendering
         animate();
     </script>
