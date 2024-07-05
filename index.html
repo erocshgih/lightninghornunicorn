@@ -23,12 +23,14 @@
             border-radius: 10px;
             display: none;
             cursor: pointer;
+            font-size: 24px; /* Optional: Ändert die Schriftgröße */
+            font-weight: bold; /* Optional: Macht den Text fett */
         }
     </style>
 </head>
 <body>
     <div id="container3D"></div>
-    <div id="overlay">Click here to learn more</div>
+    <div id="overlay">CLICK HERE</div>
     <script type="module">
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
@@ -112,7 +114,7 @@
         let isInteracting = false;
         let targetScale = 1;
         let currentScale = 1;
-        let distortFactor = 0.001; // Adjust this value for more or less distortion
+        let distortFactor = 0.002; // Adjust this value for more or less distortion
         
         // Render the scene
         function animate() {
