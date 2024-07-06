@@ -138,12 +138,11 @@
         // Variables for music and head nodding
         const music = document.getElementById('background-music');
         const musicToggle = document.getElementById('music-toggle');
-        let isMusicPlaying = true;
+        let isMusicPlaying = false;
         const bpm = 96;
         const nodSpeed = (60 / bpm) * 2; // Seconds per nod (up and down)
 
-        music.play();
-
+        // Music toggle event listener
         musicToggle.addEventListener('click', () => {
             if (isMusicPlaying) {
                 music.pause();
