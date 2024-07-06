@@ -26,11 +26,30 @@
             font-size: 24px; /* Optional: Ändert die Schriftgröße */
             font-weight: bold; /* Optional: Macht den Text fett */
         }
+        #music-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #music-controls button {
+            padding: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div id="container3D"></div>
     <div id="overlay">CLICK HERE</div>
+    <div id="music-controls">
+        <button id="music-toggle">Music: On</button>
+    </div>
+    <audio id="background-music" loop>
+        <source src="https://github.com/erocshgih/lightninghornunicorn/blob/main/LightningHornUnicorn%20-%20CAT%20FARTS%202%20-%20Furarri.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <script type="module">
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
@@ -108,14 +127,34 @@
         controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // Enable smooth damping
         controls.dampingFactor = 0.05; // Damping factor for smooth interaction
-        controls.rotateSpeed = 2; // Slow down the rotation speed
+        controls.rotateSpeed = 0.1; // Slow down the rotation speed
 
         // Variables for water-filled effect
         let isInteracting = false;
         let targetScale = 1;
         let currentScale = 1;
-        let distortFactor = 0.002; // Adjust this value for more or less distortion
-        
+        let distortFactor = 0.02; // Adjust this value for more or less distortion
+
+        // Variables for music and head nodding
+        const music = document.getElementById('background-music');
+        const musicToggle = document.getElementById('music-toggle');
+        let isMusicPlaying = true;
+        const bpm = 96;
+        const nodSpeed = (60 / bpm) * 2; // Seconds per nod (up and down)
+
+        music.play();
+
+        musicToggle.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                music.pause();
+                musicToggle.textContent = 'Music: Off';
+            } else {
+                music.play();
+                musicToggle.textContent = 'Music: On';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
+
         // Render the scene
         function animate() {
           requestAnimationFrame(animate);
@@ -147,7 +186,15 @@
               }
             });
           }
-          
+
+          // Head nodding effect
+          if (isMusicPlaying && object) {
+              const time = Date.now() * 0.001;
+              object.rotation.x = Math.sin(time * (Math.PI / nodSpeed)) * 0.1; // Adjust nodding angle as needed
+          } else if (object) {
+              object.rotation.x = 0; // Reset rotation if music is not playing
+          }
+
           // Render the scene
           renderer.render(scene, camera);
         }
