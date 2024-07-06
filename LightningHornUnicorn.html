@@ -206,10 +206,10 @@
 <style>
     .sub-menu {
         display: flex;
-        justify-content: center;
-        gap: 2em;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1em;
         margin-bottom: 2em;
-        flex-wrap: wrap;
     }
     .art-link {
         color: #FF2800; /* Ferrarirot */
@@ -230,6 +230,27 @@
         }
     }
 </style>
+
+<script>
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+        window.scrollTo(0, 0); // Scroll to top when section is shown
+    }
+
+    function showSubSection(sectionId, subSectionId) {
+        showSection(sectionId);
+        const subSections = document.querySelectorAll('.' + sectionId + ' > div');
+        subSections.forEach(subSection => {
+            subSection.style.display = 'none';
+        });
+        document.getElementById(subSectionId).style.display = 'block';
+    }
+</script>
+
 
 
 <section id="projects">
