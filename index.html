@@ -13,18 +13,21 @@
             width: 100%;
             height: 100vh;
         }
-        #overlay {
+        #clickable-field {
             position: absolute;
             bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
+            width: 100px; /* Adjust the width as needed */
+            height: 100px; /* Adjust the height as needed */
             background: rgba(255, 255, 255, 0.7);
-            padding: 20px;
-            border-radius: 10px;
             display: none;
             cursor: pointer;
-            font-size: 24px; /* Optional: Ändert die Schriftgröße */
-            font-weight: bold; /* Optional: Macht den Text fett */
+        }
+        #clickable-field img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         #music-controls {
             position: absolute;
@@ -42,12 +45,14 @@
 </head>
 <body>
     <div id="container3D"></div>
-    <div id="overlay">CLICK HERE</div>
+    <div id="clickable-field">
+        <img src="https://path/to/your/image.jpg" alt="Clickable Image">
+    </div>
     <div id="music-controls">
         <button id="music-toggle">Click here for music - Music Off</button>
     </div>
     <audio id="background-music" loop>
-        <source src=https://github.com/erocshgih/lightninghornunicorn/raw/main/LightningHornUnicorn_-_Rise.mp3>
+        <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/LightningHornUnicorn_-_Rise.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     <script type="module">
@@ -214,14 +219,14 @@
           isInteracting = false;
         });
 
-        // Show the overlay after 3 seconds
+        // Show the clickable field after 3 seconds
         setTimeout(() => {
-          const overlay = document.getElementById('overlay');
-          overlay.style.display = 'block';
+          const clickableField = document.getElementById('clickable-field');
+          clickableField.style.display = 'block';
         }, 3000);
 
-        // Add event listener to the overlay
-        document.getElementById('overlay').addEventListener('click', () => {
+        // Add event listener to the clickable field
+        document.getElementById('clickable-field').addEventListener('click', () => {
           window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/newpage.html'; // Replace with the actual URL of the new page on GitHub Pages
         });
 
