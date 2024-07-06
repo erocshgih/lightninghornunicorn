@@ -18,8 +18,8 @@
             bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px; /* Adjust the width as needed */
-            height: 100px; /* Adjust the height as needed */
+            width: 100px;
+            height: 100px;
             background: rgba(255, 255, 255, 0.7);
             display: none;
             cursor: pointer;
@@ -46,7 +46,7 @@
 <body>
     <div id="container3D"></div>
     <div id="clickable-field">
-        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/smooth.png?raw=true" alt="Clickable Image">
+        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/smooth.svg" alt="Clickable Image">
     </div>
     <div id="music-controls">
         <button id="music-toggle">Click here for music - Music Off</button>
@@ -60,178 +60,70 @@
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
         import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
-        // Create a Three.JS Scene
         const scene = new THREE.Scene();
-        
-        // Create a new camera with positions and angles
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        
-        // Keep the 3D object on a global variable so we can access it later
-        let object;
-        let yellowHorn;
-        
-        // OrbitControls allow the camera to move around the scene
-        let controls;
-        
-        // Set which object to render
-        let objToRender = 'eye';
-        
-        // Instantiate a loader for the .gltf file
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById("container3D").appendChild(renderer.domElement);
+        camera.position.z = 5;
+
         const loader = new GLTFLoader();
-        
-        // Load the file
-        loader.load(
-          'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb',
-          function (gltf) {
-            // If the file is loaded, add it to the scene
+        let object;
+        loader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb', function (gltf) {
             object = gltf.scene;
             scene.add(object);
-            
-            // Identify the yellow horn (you may need to adjust this depending on your model)
-            yellowHorn = object.getObjectByName('Horn'); // Replace 'Horn' with the actual name of the yellow horn in your model
-            
-            // Apply glowing material to the yellow horn
-            if (yellowHorn) {
-                yellowHorn.traverse((child) => {
-                    if (child.isMesh) {
-                        child.material = new THREE.MeshBasicMaterial({ color: 0xffff00, emissive: 0xffff00, emissiveIntensity: 1 });
-                    }
-                });
-            }
-          },
-          function (xhr) {
-            // While it is loading, log the progress
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-          },
-          function (error) {
-            // If there is an error, log it
+        }, undefined, function (error) {
             console.error(error);
-          }
-        );
-        
-        // Instantiate a new renderer and set its size
-        const renderer = new THREE.WebGLRenderer({ alpha: true }); // Alpha: true allows for the transparent background
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        
-        // Add the renderer to the DOM
-        document.getElementById("container3D").appendChild(renderer.domElement);
-        
-        // Set how far the camera will be from the 3D model
-        camera.position.z = objToRender === "dino" ? 25 : 5;
-        
-        // Add lights to the scene, so we can actually see the 3D model
-        const topLight = new THREE.DirectionalLight(0xffffff, 1); // (color, intensity)
-        topLight.position.set(500, 500, 500); // top-left-ish
-        topLight.castShadow = true;
+        });
+
+        const topLight = new THREE.DirectionalLight(0xffffff, 1);
+        topLight.position.set(500, 500, 500);
         scene.add(topLight);
         
-        const ambientLight = new THREE.AmbientLight(0x333333, objToRender === "dino" ? 5 : 1);
+        const ambientLight = new THREE.AmbientLight(0x333333, 1);
         scene.add(ambientLight);
-        
-        // Add controls to the camera for mouse and touch interactions
-        controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Enable smooth damping
-        controls.dampingFactor = 0.05; // Damping factor for smooth interaction
-        controls.rotateSpeed = 2; // Slow down the rotation speed
 
-        // Variables for water-filled effect
-        let isInteracting = false;
-        let targetScale = 1;
-        let currentScale = 1;
-        let distortFactor = 0.002; // Adjust this value for more or less distortion
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.rotateSpeed = 2;
 
-        // Variables for music and head nodding
+        let isMusicPlaying = false;
         const music = document.getElementById('background-music');
         const musicToggle = document.getElementById('music-toggle');
-        let isMusicPlaying = false;
         const bpm = 174;
-        const nodSpeed = (60 / bpm) * 0.5; // Seconds per nod (up and down)
+        const nodSpeed = (60 / bpm) * 0.5;
 
-        // Music toggle event listener
         musicToggle.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                music.pause();
-                musicToggle.textContent = 'Click here for music - Music Off';
-            } else {
-                music.play();
-                musicToggle.textContent = 'Click here for music - Music On';
-            }
             isMusicPlaying = !isMusicPlaying;
+            isMusicPlaying ? music.play() : music.pause();
+            musicToggle.textContent = `Click here for music - Music ${isMusicPlaying ? 'On' : 'Off'}`;
         });
 
-        // Render the scene
         function animate() {
-          requestAnimationFrame(animate);
-          
-          // Update controls
-          controls.update();
-
-          // Adjust the scale and distortion for the water-filled effect
-          if (object) {
-            if (isInteracting) {
-                targetScale = 1.05;
-            } else {
-                targetScale = 1;
+            requestAnimationFrame(animate);
+            controls.update();
+            if (object) {
+                const time = Date.now() * 0.001;
+                object.rotation.x = isMusicPlaying ? Math.sin(time * (Math.PI / nodSpeed)) * 0.1 : 0;
             }
-            currentScale += (targetScale - currentScale) * 0.1;
-            object.scale.set(currentScale, currentScale, currentScale);
-
-            // Apply distortion to the object's vertices
-            object.children.forEach(child => {
-              if (child.geometry) {
-                const position = child.geometry.attributes.position;
-                for (let i = 0; i < position.count; i++) {
-                  const x = position.getX(i);
-                  const y = position.getY(i);
-                  const z = position.getZ(i);
-                  position.setXYZ(i, x * (1 + distortFactor * Math.sin(Date.now() * 0.001)), y, z);
-                }
-                position.needsUpdate = true;
-              }
-            });
-          }
-
-          // Head nodding effect
-          if (isMusicPlaying && object) {
-              const time = Date.now() * 0.001;
-              object.rotation.x = Math.sin(time * (Math.PI / nodSpeed)) * 0.1; // Adjust nodding angle as needed
-          } else if (object) {
-              object.rotation.x = 0; // Reset rotation if music is not playing
-          }
-
-          // Render the scene
-          renderer.render(scene, camera);
+            renderer.render(scene, camera);
         }
-        
-        // Add a listener to the window, so we can resize the window and the camera
-        window.addEventListener("resize", function () {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
+        animate();
+
+        window.addEventListener("resize", () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Add mouse and touch interaction listeners to trigger the water-filled effect
-        controls.addEventListener('start', () => {
-          isInteracting = true;
-        });
-
-        controls.addEventListener('end', () => {
-          isInteracting = false;
-        });
-
-        // Show the clickable field after 3 seconds
         setTimeout(() => {
-          const clickableField = document.getElementById('clickable-field');
-          clickableField.style.display = 'block';
+            document.getElementById('clickable-field').style.display = 'block';
         }, 3000);
 
-        // Add event listener to the clickable field
         document.getElementById('clickable-field').addEventListener('click', () => {
-          window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/newpage.html'; // Replace with the actual URL of the new page on GitHub Pages
+            window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/newpage.html';
         });
-
-        // Start the 3D rendering
-        animate();
     </script>
 </body>
 </html>
