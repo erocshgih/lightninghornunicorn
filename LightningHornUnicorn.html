@@ -187,23 +187,50 @@
 <section id="art">
     <h2>Art</h2>
     <div class="sub-menu">
-        <a onclick="showSubSection('art', 'ai-art')">A.I. Art</a>
-        <a onclick="showSubSection('art', 'human-art')">Human Art</a>
+        <a onclick="showSubSection('art', 'ai-art')" class="art-link">A.I. Art</a>
+        <a onclick="showSubSection('art', 'human-art')" class="art-link">Human Art</a>
     </div>
     <div id="ai-art" class="ai-art" style="display:none;">
         <h3>A.I. Art</h3>
-        <!-- Hier können die A.I. Art-Bilder im 16:9-Format eingefügt werden -->
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/bigwave.jpg?raw=true" alt="A.I. Art 1">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/8.png?raw=true" alt="A.I. Art 2">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/d13.png?raw=true" alt="A.I. Art 3">
     </div>
     <div id="human-art" class="human-art" style="display:none;">
         <h3>Human Art</h3>
-        <!-- Hier können die Human Art-Bilder in unterschiedlichen Größen eingefügt werden -->
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/my%20name%20is%20rain.png?raw=true" alt="Human Art 1">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/candle.png?raw=true" alt="Human Art 2">
     </div>
 </section>
+
+<style>
+    .sub-menu {
+        display: flex;
+        justify-content: center;
+        gap: 2em;
+        margin-bottom: 2em;
+        flex-wrap: wrap;
+    }
+    .art-link {
+        color: #FF2800; /* Ferrarirot */
+        text-decoration: none;
+        font-size: 2em;
+        font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+        cursor: pointer;
+        transition: color 0.3s, text-shadow 0.3s, transform 0.3s;
+    }
+    .art-link:hover {
+        color: #FFD700; /* Gold */
+        text-shadow: 0 0 8px #FFD700;
+        transform: scale(1.1);
+    }
+    @media (max-width: 600px) {
+        .art-link {
+            font-size: 1.5em;
+        }
+    }
+</style>
+
 
 <section id="projects">
     <h2>Projects</h2>
