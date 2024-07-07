@@ -132,6 +132,31 @@
             color: #FFD700;
             text-shadow: 0 0 8px #FFD700;
         }
+        .sub-menu {
+            display: flex;
+            justify-content: flex-start; /* Links ausrichten */
+            gap: 2em;
+            margin-bottom: 2em;
+            flex-wrap: wrap;
+        }
+        .art-link {
+            color: #FF2800; /* Ferrarirot */
+            text-decoration: none;
+            font-size: 2em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s, transform 0.3s;
+        }
+        .art-link:hover {
+            color: #FFD700; /* Gold */
+            text-shadow: 0 0 8px #FFD700;
+            transform: scale(1.1);
+        }
+        @media (max-width: 600px) {
+            .art-link {
+                font-size: 1.5em;
+            }
+        }
     </style>
     <script>
         function showSection(sectionId) {
@@ -141,6 +166,14 @@
             });
             document.getElementById(sectionId).style.display = 'block';
             window.scrollTo(0, 0); // Scroll to top when section is shown
+        }
+
+        function showSubSection(subSectionId) {
+            const subSections = document.querySelectorAll('#art > div');
+            subSections.forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            document.getElementById(subSectionId).style.display = 'block';
         }
     </script>
 </head>
@@ -201,44 +234,6 @@
     </div>
 </section>
 
-<style>
-    .sub-menu {
-        display: flex;
-        justify-content: flex-start; /* Links ausrichten */
-        gap: 2em;
-        margin-bottom: 2em;
-        flex-wrap: wrap;
-    }
-    .art-link {
-        color: #FF2800; /* Ferrarirot */
-        text-decoration: none;
-        font-size: 2em;
-        font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
-        cursor: pointer;
-        transition: color 0.3s, text-shadow 0.3s, transform 0.3s;
-    }
-    .art-link:hover {
-        color: #FFD700; /* Gold */
-        text-shadow: 0 0 8px #FFD700;
-        transform: scale(1.1);
-    }
-    @media (max-width: 600px) {
-        .art-link {
-            font-size: 1.5em;
-        }
-    }
-</style>
-
-<script>
-    function showSubSection(subSectionId) {
-        const subSections = document.querySelectorAll('#art > div');
-        subSections.forEach(subSection => {
-            subSection.style.display = 'none';
-        });
-        document.getElementById(subSectionId).style.display = 'block';
-    }
-</script>
-
 <section id="projects">
     <h2>Projects</h2>
     <p>Coming Soon...</p>
@@ -259,24 +254,5 @@
     &copy; 2024 Lightning Horn Unicorn. All rights reserved.
 </footer>
 
-<script>
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            section.style.display = 'none';
-        });
-        document.getElementById(sectionId).style.display = 'block';
-        window.scrollTo(0, 0); // Scroll to top when section is shown
-    }
-
-    function showSubSection(sectionId, subSectionId) {
-        showSection(sectionId);
-        const subSections = document.querySelectorAll('.' + sectionId + ' > div');
-        subSections.forEach(subSection => {
-            subSection.style.display = 'none';
-        });
-        document.getElementById(subSectionId).style.display = 'block';
-    }
-</script>
 </body>
 </html>
