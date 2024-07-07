@@ -120,6 +120,7 @@
             border-radius: 10px;
             margin: 10px 0;
             transition: transform 0.3s;
+            cursor: pointer;
         }
         img:hover {
             transform: scale(1.05);
@@ -140,21 +141,22 @@
             flex-wrap: wrap;
         }
         .art-link {
-            color: #FF2800; /* Ferrarirot */
-            text-decoration: none;
-            font-size: 2em;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
-            cursor: pointer;
-            transition: color 0.3s, text-shadow 0.3s, transform 0.3s;
+            display: block;
+            width: 150px; /* Größe der Bilder 1:1 Verhältnis */
+            height: 150px; /* Größe der Bilder 1:1 Verhältnis */
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .art-link:hover {
-            color: #FFD700; /* Gold */
-            text-shadow: 0 0 8px #FFD700;
             transform: scale(1.1);
+            box-shadow: 0 0 15px #FFD700; /* Gold */
         }
         @media (max-width: 600px) {
             .art-link {
-                font-size: 1.5em;
+                width: 100px;
+                height: 100px;
             }
         }
         .go-back {
@@ -189,6 +191,7 @@
             });
             document.getElementById(subSectionId).style.display = 'block';
             document.getElementById('go-back').style.display = 'block'; // Show "Go Back" link
+            document.querySelector('.sub-menu').style.display = 'none'; // Hide the sub-menu
         }
 
         function goBack() {
@@ -244,8 +247,8 @@
 <section id="art">
     <h2>Art</h2>
     <div class="sub-menu">
-        <a onclick="showSubSection('ai-art')" class="art-link">A.I. Art</a>
-        <a onclick="showSubSection('human-art')" class="art-link">Human Art</a>
+        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/ai-art.jpg');"></a>
+        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/human-art.jpg');"></a>
     </div>
     <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
     <div id="ai-art" class="ai-art" style="display:none;">
