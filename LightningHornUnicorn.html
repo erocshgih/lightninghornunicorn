@@ -157,6 +157,20 @@
                 font-size: 1.5em;
             }
         }
+        .go-back {
+            display: none;
+            color: #FF2800; /* Ferrarirot */
+            text-decoration: none;
+            font-size: 1.5em;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            margin-top: 1em;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .go-back:hover {
+            color: #FFD700; /* Gold */
+            text-shadow: 0 0 8px #FFD700;
+        }
     </style>
     <script>
         function showSection(sectionId) {
@@ -174,6 +188,15 @@
                 subSection.style.display = 'none';
             });
             document.getElementById(subSectionId).style.display = 'block';
+            document.getElementById('go-back').style.display = 'block'; // Show "Go Back" link
+        }
+
+        function goBack() {
+            const subSections = document.querySelectorAll('#art > div');
+            subSections.forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            document.getElementById('go-back').style.display = 'none'; // Hide "Go Back" link
         }
     </script>
 </head>
@@ -223,6 +246,7 @@
         <a onclick="showSubSection('ai-art')" class="art-link">A.I. Art</a>
         <a onclick="showSubSection('human-art')" class="art-link">Human Art</a>
     </div>
+    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
     <div id="ai-art" class="ai-art" style="display:none;">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/bigwave.jpg?raw=true" alt="A.I. Art 1">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/8.png?raw=true" alt="A.I. Art 2">
