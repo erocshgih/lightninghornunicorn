@@ -125,29 +125,21 @@
         img:hover {
             transform: scale(1.05);
         }
-        a.mailbox {
-            color: #FF2800; /* Ferrarirot */
-            text-decoration: none;
-        }
-        a.mailbox:hover {
-            color: #FFD700;
-            text-shadow: 0 0 8px #FFD700;
-        }
-        .sub-menu {
-            display: flex;
-            justify-content: flex-start; /* Links ausrichten */
-            gap: 2em;
-            margin-bottom: 2em;
-            flex-wrap: wrap;
-        }
         .art-link {
-            display: block;
-            width: 150px; /* Größe der Bilder 1:1 Verhältnis */
-            height: 150px; /* Größe der Bilder 1:1 Verhältnis */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 150px;
+            height: 150px;
             background-size: cover;
             background-position: center;
             border-radius: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: #FFFFFF;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            font-size: 1em;
+            text-align: center;
         }
         .art-link:hover {
             transform: scale(1.1);
@@ -157,6 +149,7 @@
             .art-link {
                 width: 100px;
                 height: 100px;
+                font-size: 0.8em;
             }
         }
         .go-back {
@@ -170,6 +163,20 @@
             transition: color 0.3s, text-shadow 0.3s;
         }
         .go-back:hover {
+            color: #FFD700; /* Gold */
+            text-shadow: 0 0 8px #FFD700;
+        }
+        .image-link {
+            display: block;
+            color: #FF2800; /* Ferrarirot */
+            text-decoration: none;
+            font-size: 1.2em;
+            margin: 1em 0;
+            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .image-link:hover {
             color: #FFD700; /* Gold */
             text-shadow: 0 0 8px #FFD700;
         }
@@ -201,6 +208,14 @@
             });
             document.getElementById('go-back').style.display = 'none'; // Hide "Go Back" link
             document.querySelector('.sub-menu').style.display = 'flex'; // Show the sub-menu again
+        }
+
+        function showImage(sectionId, imageId) {
+            const images = document.querySelectorAll(`#${sectionId} img`);
+            images.forEach(image => {
+                image.style.display = 'none';
+            });
+            document.getElementById(imageId).style.display = 'block';
         }
     </script>
 </head>
@@ -247,18 +262,23 @@
 <section id="art">
     <h2>Art</h2>
     <div class="sub-menu">
-        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i.%20.jpg?raw=true');"></a>
-        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');"></a>
+        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/ai-art.jpg');">A.I. Art</a>
+        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/human-art.jpg');">Human Art</a>
     </div>
     <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
     <div id="ai-art" class="ai-art" style="display:none;">
-        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/bigwave.jpg?raw=true" alt="A.I. Art 1">
-        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/8.png?raw=true" alt="A.I. Art 2">
-        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/d13.png?raw=true" alt="A.I. Art 3">
+        <a onclick="showImage('ai-art', 'ai-art-1')" class="image-link">Big Wave</a>
+        <a onclick="showImage('ai-art', 'ai-art-2')" class="image-link">Image 8</a>
+        <a onclick="showImage('ai-art', 'ai-art-3')" class="image-link">D13</a>
+        <img id="ai-art-1" src="https://github.com/erocshgih/lightninghornunicorn/blob/main/bigwave.jpg?raw=true" alt="A.I. Art 1" style="display:none;">
+        <img id="ai-art-2" src="https://github.com/erocshgih/lightninghornunicorn/blob/main/8.png?raw=true" alt="A.I. Art 2" style="display:none;">
+        <img id="ai-art-3" src="https://github.com/erocshgih/lightninghornunicorn/blob/main/d13.png?raw=true" alt="A.I. Art 3" style="display:none;">
     </div>
     <div id="human-art" class="human-art" style="display:none;">
-        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/my%20name%20is%20rain.png?raw=true" alt="Human Art 1">
-        <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/candle.png?raw=true" alt="Human Art 2">
+        <a onclick="showImage('human-art', 'human-art-1')" class="image-link">My Name is Rain</a>
+        <a onclick="showImage('human-art', 'human-art-2')" class="image-link">Candle</a>
+        <img id="human-art-1" src="https://github.com/erocshgih/lightninghornunicorn/blob/main/my%20name%20is%20rain.png?raw=true" alt="Human Art 1" style="display:none;">
+        <img id="human-art-2" src="https://github.com/erocshgih/lightninghornunicorn/blob/main/candle.png?raw=true" alt="Human Art 2" style="display:none;">
     </div>
 </section>
 
