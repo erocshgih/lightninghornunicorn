@@ -187,17 +187,15 @@
 <section id="art">
     <h2>Art</h2>
     <div class="sub-menu">
-        <a onclick="showSubSection('art', 'ai-art')" class="art-link">A.I. Art</a>
-        <a onclick="showSubSection('art', 'human-art')" class="art-link">Human Art</a>
+        <a onclick="showSubSection('ai-art')" class="art-link">A.I. Art</a>
+        <a onclick="showSubSection('human-art')" class="art-link">Human Art</a>
     </div>
     <div id="ai-art" class="ai-art" style="display:none;">
-        <h3>A.I. Art</h3>
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/bigwave.jpg?raw=true" alt="A.I. Art 1">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/8.png?raw=true" alt="A.I. Art 2">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/d13.png?raw=true" alt="A.I. Art 3">
     </div>
     <div id="human-art" class="human-art" style="display:none;">
-        <h3>Human Art</h3>
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/my%20name%20is%20rain.png?raw=true" alt="Human Art 1">
         <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/candle.png?raw=true" alt="Human Art 2">
     </div>
@@ -206,10 +204,10 @@
 <style>
     .sub-menu {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1em;
+        justify-content: flex-start; /* Links ausrichten */
+        gap: 2em;
         margin-bottom: 2em;
+        flex-wrap: wrap;
     }
     .art-link {
         color: #FF2800; /* Ferrarirot */
@@ -232,26 +230,14 @@
 </style>
 
 <script>
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            section.style.display = 'none';
-        });
-        document.getElementById(sectionId).style.display = 'block';
-        window.scrollTo(0, 0); // Scroll to top when section is shown
-    }
-
-    function showSubSection(sectionId, subSectionId) {
-        showSection(sectionId);
-        const subSections = document.querySelectorAll('.' + sectionId + ' > div');
+    function showSubSection(subSectionId) {
+        const subSections = document.querySelectorAll('#art > div');
         subSections.forEach(subSection => {
             subSection.style.display = 'none';
         });
         document.getElementById(subSectionId).style.display = 'block';
     }
 </script>
-
-
 
 <section id="projects">
     <h2>Projects</h2>
