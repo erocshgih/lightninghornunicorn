@@ -45,22 +45,26 @@
             width: 100%;
             top: 0;
             z-index: 1000;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
+            justify-content: center;
         }
         nav ul li {
-            margin: 0.5em;
+            margin: 0 0.5em;
         }
         nav ul li a {
             text-decoration: none;
             color: #333;
-            font-size: 1.2em;
+            font-size: 1em;
+            padding: 0.5em 1em;
             transition: color 0.3s;
         }
         nav ul li a:hover {
@@ -129,7 +133,7 @@
             font-family: 'Press Start 2P', cursive;
             font-size: 1em;
             text-align: center;
-            margin: 10px auto;
+            margin: 0 auto;
         }
         .art-link:hover {
             transform: scale(1.1);
@@ -179,10 +183,11 @@
                 section.style.display = 'none';
             });
             document.getElementById(sectionId).style.display = 'block';
-            if (sectionId === 'art') {
-                document.querySelector('.sub-menu').style.display = 'flex';
-                document.getElementById('go-back').style.display = 'none';
+
+            if (sectionId !== 'art') {
+                resetArtSection();
             }
+            
             window.scrollTo(0, 0);
         }
 
@@ -211,6 +216,15 @@
                 image.style.display = 'none';
             });
             document.getElementById(imageId).style.display = 'block';
+        }
+
+        function resetArtSection() {
+            const subSections = document.querySelectorAll('#art > div');
+            subSections.forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            document.querySelector('.sub-menu').style.display = 'flex';
+            document.getElementById('go-back').style.display = 'none';
         }
     </script>
 </head>
