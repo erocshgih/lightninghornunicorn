@@ -52,9 +52,10 @@
             margin: 0;
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
         }
         nav ul li {
-            margin: 0 1em;
+            margin: 0.5em;
         }
         nav ul li a {
             text-decoration: none;
@@ -128,7 +129,7 @@
             font-family: 'Press Start 2P', cursive;
             font-size: 1em;
             text-align: center;
-            margin: 0 auto;
+            margin: 10px auto;
         }
         .art-link:hover {
             transform: scale(1.1);
@@ -178,6 +179,10 @@
                 section.style.display = 'none';
             });
             document.getElementById(sectionId).style.display = 'block';
+            if (sectionId === 'art') {
+                document.querySelector('.sub-menu').style.display = 'flex';
+                document.getElementById('go-back').style.display = 'none';
+            }
             window.scrollTo(0, 0);
         }
 
