@@ -6,26 +6,15 @@
     <title>Lightning Horn Unicorn</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Press+Start+2P&family=Roboto&display=swap" rel="stylesheet">
     <style>
+        /* General Styles */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: none;
-            color: #FF2800; /* Ferrarirot */
+            background-color: #f5f5f5;
+            color: #FF2800; /* Ferrari Red */
             text-align: center;
-            animation: fadeIn 2s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes colorChange {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+            position: relative;
         }
         body::before {
             content: "";
@@ -37,57 +26,62 @@
             background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center;
             background-size: contain;
             z-index: -1;
-            animation: float 5s ease-in-out infinite, colorChange 10s linear infinite;
         }
+
+        /* Navigation Styles */
         .menu {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-            padding: 2em;
-            margin: 2em 0; /* Abstand vom Hauptinhalt */
-            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            animation: fadeIn 2s ease-out;
-            position: relative;
-            z-index: 1;
         }
         .menu a {
             display: block;
-            margin: 1em 0;
-            color: #FF2800; /* Ferrarirot */
+            color: #FF2800; /* Ferrari Red */
             text-decoration: none;
-            font-size: 1.5em;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            font-size: 2em;
+            font-family: 'Press Start 2P', cursive; /* Retro Font */
             cursor: pointer;
             transition: color 0.3s, text-shadow 0.3s;
+            margin: 0.5em 0;
         }
         .menu a:hover {
-            color: #FFD700;
+            color: #FFD700; /* Gold */
             text-shadow: 0 0 8px #FFD700;
         }
+
+        /* Section Styles */
         section {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
-            padding: 2em;
-            margin: 1em;
+            padding: 4em 1em;
+            margin: 2em 0;
+            text-align: center;
+            background-color: rgba(255, 225, 53, 0.7); /* Banana Yellow */
             border-radius: 10px;
-            text-align: justify;
-            display: none;
-            animation: fadeIn 2s ease-out;
-            position: relative;
-            z-index: 1;
+        }
+        section:nth-of-type(odd) {
+            background-color: rgba(255, 225, 53, 0.5); /* Slightly Transparent Banana Yellow */
         }
         section h2 {
-            font-family: 'Raleway', sans-serif; /* Entspannende Schriftart */
-            color: #FFFFFF; /* Weiße Farbe */
-            text-shadow: 2px 2px #FF2800; /* Ferrarirot Schatten */
+            font-family: 'Raleway', sans-serif;
+            color: #333;
         }
+        section p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        /* Footer Styles */
         footer {
-            background-color: rgba(255, 225, 53, 0.7); /* Bananengelb */
+            background-color: #333;
+            color: #fff;
             padding: 1em 0;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            animation: fadeIn 2s ease-out;
-            z-index: 1;
+            text-align: center;
         }
+
+        /* Image and Link Styles */
         iframe {
             width: 80%;
             height: 315px;
@@ -98,9 +92,10 @@
             max-width: 100%;
             height: auto;
             border-radius: 10px;
-            margin: 10px 0;
+            margin: 10px auto;
             transition: transform 0.3s;
             cursor: pointer;
+            display: block;
         }
         img:hover {
             transform: scale(1.05);
@@ -117,13 +112,14 @@
             transition: transform 0.3s, box-shadow 0.3s;
             text-decoration: none;
             color: #FFFFFF;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            font-family: 'Press Start 2P', cursive;
             font-size: 1em;
             text-align: center;
+            margin: 0 auto;
         }
         .art-link:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 15px #FFD700; /* Gold */
+            box-shadow: 0 0 15px #FFD700;
         }
         @media (max-width: 600px) {
             .art-link {
@@ -134,41 +130,47 @@
         }
         .go-back {
             display: none;
-            color: #FF2800; /* Ferrarirot */
+            color: #FF2800;
             text-decoration: none;
             font-size: 1.5em;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            font-family: 'Press Start 2P', cursive;
             cursor: pointer;
             margin-top: 1em;
             transition: color 0.3s, text-shadow 0.3s;
         }
         .go-back:hover {
-            color: #FFD700; /* Gold */
+            color: #FFD700;
             text-shadow: 0 0 8px #FFD700;
         }
         .image-link {
             display: block;
-            color: #FF2800; /* Ferrarirot */
+            color: #FF2800;
             text-decoration: none;
             font-size: 1.2em;
             margin: 1em 0;
-            font-family: 'Press Start 2P', cursive; /* Retro Schriftart */
+            font-family: 'Press Start 2P', cursive;
             cursor: pointer;
             transition: color 0.3s, text-shadow 0.3s;
         }
         .image-link:hover {
-            color: #FFD700; /* Gold */
+            color: #FFD700;
             text-shadow: 0 0 8px #FFD700;
         }
     </style>
     <script>
+        // JavaScript Functions
         function showSection(sectionId) {
             const sections = document.querySelectorAll('section');
             sections.forEach(section => {
                 section.style.display = 'none';
             });
             document.getElementById(sectionId).style.display = 'block';
-            window.scrollTo(0, 0); // Scroll to top when section is shown
+
+            if (sectionId !== 'art') {
+                resetArtSection();
+            }
+            
+            window.scrollTo(0, 0);
         }
 
         function showSubSection(subSectionId) {
@@ -177,8 +179,8 @@
                 subSection.style.display = 'none';
             });
             document.getElementById(subSectionId).style.display = 'block';
-            document.getElementById('go-back').style.display = 'block'; // Show "Go Back" link
-            document.querySelector('.sub-menu').style.display = 'none'; // Hide the sub-menu
+            document.getElementById('go-back').style.display = 'block';
+            document.querySelector('.sub-menu').style.display = 'none';
         }
 
         function goBack() {
@@ -186,8 +188,8 @@
             subSections.forEach(subSection => {
                 subSection.style.display = 'none';
             });
-            document.getElementById('go-back').style.display = 'none'; // Hide "Go Back" link
-            document.querySelector('.sub-menu').style.display = 'flex'; // Show the sub-menu again
+            document.getElementById('go-back').style.display = 'none';
+            document.querySelector('.sub-menu').style.display = 'flex';
         }
 
         function showImage(sectionId, imageId) {
@@ -197,10 +199,20 @@
             });
             document.getElementById(imageId).style.display = 'block';
         }
+
+        function resetArtSection() {
+            const subSections = document.querySelectorAll('#art > div');
+            subSections.forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            document.querySelector('.sub-menu').style.display = 'flex';
+            document.getElementById('go-back').style.display = 'none';
+        }
     </script>
 </head>
 <body>
 
+<!-- Navigation -->
 <div class="menu">
     <a onclick="showSection('about')">ABOUT</a>
     <a onclick="showSection('art')">ART</a>
