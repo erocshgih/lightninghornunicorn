@@ -47,18 +47,20 @@
             z-index: 1000;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
+            padding: 1em 0;
+            font-family: 'Press Start 2P', cursive;
         }
         nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
         }
         nav ul li {
-            margin: 0 0.5em;
+            margin: 0 1em;
+            white-space: nowrap;
         }
         nav ul li a {
             text-decoration: none;
@@ -69,6 +71,15 @@
         }
         nav ul li a:hover {
             color: #FF2800;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: row;
+            }
+            nav ul li {
+                margin: 0 0.5em;
+            }
         }
 
         /* Section Styles */
