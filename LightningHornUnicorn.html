@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta Information -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lightning Horn Unicorn</title>
@@ -12,111 +11,93 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: none;
-            color: #FF2800;
+            background-color: #f5f5f5;
+            color: #333;
             text-align: center;
-            animation: fadeIn 2s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes colorChange {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg') no-repeat center center;
-            background-size: contain;
-            z-index: -1;
-            animation: float 5s ease-in-out infinite, colorChange 10s linear infinite;
         }
 
         /* Header Styles */
         header {
-            background-color: rgba(255, 225, 53, 0.7);
+            background-color: #333;
+            color: #fff;
             padding: 1em 0;
-            animation: slideIn 1s ease-out;
-            position: relative;
-            z-index: 1;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         header h1 {
             margin: 0;
             font-family: 'Raleway', sans-serif;
-            font-size: 3em;
+            font-size: 2em;
             letter-spacing: 0.1em;
-            color: #FFFFFF;
-            text-shadow: 2px 2px #FF2800;
-            line-height: 1.2em;
         }
 
-        /* Menu Styles */
-        .menu {
-            background-color: rgba(255, 225, 53, 0.7);
-            padding: 2em;
-            margin: 1em;
-            border-radius: 10px;
-            text-align: center;
-            animation: fadeIn 2s ease-out;
-            position: relative;
-            z-index: 1;
+        /* Navigation Styles */
+        nav {
+            margin-top: 60px; /* space for fixed header */
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .menu a {
-            display: block;
-            margin: 1em 0;
-            color: #FF2800;
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 1em;
+        }
+        nav ul li a {
             text-decoration: none;
-            font-size: 1.5em;
-            font-family: 'Press Start 2P', cursive;
-            cursor: pointer;
-            transition: color 0.3s, text-shadow 0.3s;
+            color: #333;
+            font-size: 1.2em;
+            transition: color 0.3s;
         }
-        .menu a:hover {
-            color: #FFD700;
-            text-shadow: 0 0 8px #FFD700;
+        nav ul li a:hover {
+            color: #FF2800;
         }
 
         /* Section Styles */
         section {
-            background-color: rgba(255, 225, 53, 0.7);
-            padding: 2em;
-            margin: 1em;
-            border-radius: 10px;
-            text-align: justify;
-            display: none;
-            animation: fadeIn 2s ease-out;
-            position: relative;
-            z-index: 1;
+            padding: 4em 1em;
+            margin: 2em 0;
+        }
+        section:nth-of-type(odd) {
+            background-color: #f9f9f9;
         }
         section h2 {
             font-family: 'Raleway', sans-serif;
-            color: #FFFFFF;
-            text-shadow: 2px 2px #FF2800;
+            color: #333;
+        }
+        section p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 1em auto;
         }
 
         /* Footer Styles */
         footer {
-            background-color: rgba(255, 225, 53, 0.7);
+            background-color: #333;
+            color: #fff;
             padding: 1em 0;
             position: fixed;
             width: 100%;
             bottom: 0;
-            animation: fadeIn 2s ease-out;
-            z-index: 1;
+            text-align: center;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin: 0.5em 0;
+            }
         }
 
         /* Image and Link Styles */
@@ -236,23 +217,37 @@
 
 <!-- Header Section -->
 <header>
-    <h1>Lightning<br>Horn<br>Unicorn</h1>
+    <h1>Lightning Horn Unicorn</h1>
 </header>
 
-<!-- Menu Section -->
-<div class="menu">
-    <a onclick="showSection('about')">ABOUT</a>
-    <a onclick="showSection('art')">ART</a>
-    <a onclick="showSection('projects')">PROJECTS</a>
-    <a onclick="showSection('videos')">VIDEOS</a>
-    <a onclick="showSection('contact')">CONTACT</a>
-</div>
+<!-- Navigation -->
+<nav>
+    <ul>
+        <li><a href="#about" onclick="showSection('about')">ABOUT</a></li>
+        <li><a href="#art" onclick="showSection('art')">ART</a></li>
+        <li><a href="#projects" onclick="showSection('projects')">PROJECTS</a></li>
+        <li><a href="#videos" onclick="showSection('videos')">VIDEOS</a></li>
+        <li><a href="#contact" onclick="showSection('contact')">CONTACT</a></li>
+    </ul>
+</nav>
 
 <!-- About Section -->
 <section id="about">
-    <h2>Lightning Horn Unicorn</h2>
+    <h2>About Lightning Horn Unicorn</h2>
     <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
-    <p>Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic...</p>
+    <p>Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic. Now, grab a coffee and hop into the Fur-rarri for a wild ride through Vienna, Austria (Schnitzelland), where this visionary artist’s tunes hit harder than a wet Banana Joe neck-slap.</p>
+    <h3>A Musical Journey</h3>
+    <p>It’s 2002: Picture a young Vedran with a borrowed electric guitar and a half-broken, duct-taped laptop running a demo version of FL Studio. His neighbors wonder if he's building a time machine. Despite these humble beginnings, his passion never wavered, transforming his career into something remarkable. "Music was my escape and my expression," he recalls. "I remember stumbling upon my first creations and thinking, 'Hey, that’s definitely something rare cooking here. Or maybe it’s just the CPU bench-pressing those MIDI files.'"</p>
+    <h3>Innovative Sound and Lyricism</h3>
+    <p>Lightning Horn Unicorn transcends traditional boundaries, masterfully composing across various Digital Audio Workstations (DAWs). His blend of personal touch and cutting-edge innovation, including artificial intelligence, pushes the limits of musical expression. Think of him as the Da Vinci of DAWs, but with fewer paintbrushes and more keyboards.</p>
+    <p>The essence of Lightning Horn Unicorn's artistry lies in his profound and vivid lyricism. His songs are a tapestry of intricate imagery and deep themes, blending personal experiences with universal truths.</p>
+    <p>“Every song is a story, every lyric a piece of my thoughts,” he shares. Music is a reflection of the world. And sometimes, that world is just weird. Especially the internet, and we all know that. But you can’t just throw a guitar into an interdimensional wormhole and expect a Grammy. So he works on his stuff to make it better (input flying dragons blowing flames with guitar synthesizers around their backs here).</p>
+    <p>Themes of awakening and realization are prevalent in his work, with haunting melodies and striking imagery symbolizing moments of clarity. Lightning Horn Unicorn’s exploration of the intersection between technology and human connection uses witty tech references to describe emotional intimacy. It’s like tech support, but with feelings.</p>
+    <p>Overcoming darkness and adversity is a powerful theme in his music, with epic backdrops of mystical battles and personal triumphs creating an engaging and inspirational experience. Additionally, he celebrates cultural preservation through heroic imagery and communal rituals, bridging the old and the new and adding layers of depth to his work. Because who doesn’t love a good heroic anthem about saving coffee culture? We drink and love coffee every day.</p>
+    <h3>Achievements and Aspirations</h3>
+    <p>From 2012 to 2016, Lightning Horn Unicorn built a successful home music studio in Carinthia, Austria, connecting with over 3000 supporters. “Every supporter was a beacon of hope, a testament to the power of music,” he reflects. Or, in less poetic terms, “You guys rock!”</p>
+    <h3>Join the Journey</h3>
+    <p>If Lightning Horn Unicorn's story resonates with you, he welcomes your support. Explore his art and music, and join him on this exciting journey of self-expression and innovation. “Together, we can create something extraordinary,” he invites. Or at least, we’ll have a lot of fun trying.</p>
 </section>
 
 <!-- Art Section -->
@@ -265,7 +260,7 @@
     <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
     <div id="ai-art" class="ai-art" style="display:none;">
         <h3>A.I. Art</h3>
-        <p>Discover the magic of A.I. Art, where my ideas meet cutting-edge technology...</p>
+        <p>Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.</p>
         <a onclick="showImage('ai-art', 'ai-art-1')" class="image-link">Big Wave Haircut</a>
         <a onclick="showImage('ai-art', 'ai-art-3')" class="image-link">Human OBEY</a>
         <a onclick="showImage('ai-art', 'ai-art-4')" class="image-link">Snout Chordz</a>
@@ -287,7 +282,7 @@
     </div>
     <div id="human-art" class="human-art" style="display:none;">
         <h3>Human Art</h3>
-        <p>Explore the beauty of Human Art, entirely crafted by me...</p>
+        <p>Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.</p>
         <a onclick="showImage('human-art', 'human-art-1')" class="image-link">My Name is Rain</a>
         <a onclick="showImage('human-art', 'human-art-2')" class="image-link">Candle</a>
         <a onclick="showImage('human-art', 'human-art-3')" class="image-link">Rainbow Onyx</a>
