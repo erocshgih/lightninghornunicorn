@@ -45,8 +45,6 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            display: flex;
-            justify-content: center;
             padding: 1em 0;
             font-family: 'Press Start 2P', cursive;
         }
@@ -55,12 +53,11 @@
             padding: 0;
             margin: 0;
             display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
+            flex-direction: column;
+            align-items: center;
         }
         nav ul li {
-            margin: 0 1em;
-            white-space: nowrap;
+            margin: 0.5em 0;
         }
         nav ul li a {
             text-decoration: none;
@@ -71,15 +68,6 @@
         }
         nav ul li a:hover {
             color: #FF2800;
-        }
-
-        @media (max-width: 600px) {
-            nav ul {
-                flex-direction: row;
-            }
-            nav ul li {
-                margin: 0 0.5em;
-            }
         }
 
         /* Section Styles */
