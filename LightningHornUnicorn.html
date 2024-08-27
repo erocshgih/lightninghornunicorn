@@ -192,12 +192,12 @@
 
             setLanguage(lang);
 
-            // Speicher die gewählte Sprache für den weiteren Gebrauch
+            // Speichert die gewählte Sprache für den weiteren Gebrauch
             document.body.setAttribute('data-current-lang', lang);
         });
 
         function setLanguage(lang) {
-            const elements = document.querySelectorAll('[data-lang]');
+            const elements = document.querySelectorAll('[data-lang-en]');
             elements.forEach(element => {
                 const text = element.getAttribute(`data-lang-${lang}`);
                 if (text) {
