@@ -13,22 +13,6 @@
             width: 100%;
             height: 100vh;
         }
-        #clickable-field {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.7);
-            display: none;
-            cursor: pointer;
-        }
-        #clickable-field img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
         #music-controls {
             position: absolute;
             top: 10px;
@@ -41,15 +25,27 @@
             padding: 10px;
             font-size: 16px;
         }
+        #navigation-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #navigation-controls button {
+            padding: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div id="container3D"></div>
-    <div id="clickable-field">
-        <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/smooth.svg" alt="Clickable Image">
-    </div>
     <div id="music-controls">
         <button id="music-toggle">Click here for music - Music Off</button>
+    </div>
+    <div id="navigation-controls">
+        <button id="navigate-to-main">Go to Main Page</button>
     </div>
     <audio id="background-music" loop>
         <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/LightningHornUnicorn_-_Rise.mp3" type="audio/mpeg">
@@ -71,6 +67,8 @@
         let object;
         loader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb', function (gltf) {
             object = gltf.scene;
+            object.position.set(0, 0, 0);  // Setze die Position auf die Mitte der Szene
+            object.scale.set(1, 1, 1);     // Optional: Skaliere das Modell, falls es zu groß oder klein ist
             scene.add(object);
         }, undefined, function (error) {
             console.error(error);
@@ -100,6 +98,10 @@
             musicToggle.textContent = `Click here for music - Music ${isMusicPlaying ? 'On' : 'Off'}`;
         });
 
+        document.getElementById('navigate-to-main').addEventListener('click', () => {
+            window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html';
+        });
+
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
@@ -115,14 +117,6 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        setTimeout(() => {
-            document.getElementById('clickable-field').style.display = 'block';
-        }, 3000);
-
-        document.getElementById('clickable-field').addEventListener('click', () => {
-            window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html';
         });
     </script>
 </body>
