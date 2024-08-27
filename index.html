@@ -43,16 +43,45 @@
 <body>
     <div id="container3D"></div>
     <div id="music-controls">
-        <button id="music-toggle">Click here for music - Music Off</button>
+        <button id="music-toggle" data-lang-en="Click here for music - Music Off"
+                                       data-lang-de="Klicke hier für Musik - Musik Aus"
+                                       data-lang-fr="Cliquez ici pour la musique - Musique éteinte">
+            Click here for music - Music Off
+        </button>
     </div>
     <div id="navigation-controls">
-        <button id="navigate-to-main">Go to Main Page</button>
+        <button id="navigate-to-main" data-lang-en="Go to Main Page"
+                                       data-lang-de="Zur Hauptseite"
+                                       data-lang-fr="Aller à la page principale">
+            Go to Main Page
+        </button>
     </div>
     <audio id="background-music" loop>
         <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/LightningHornUnicorn_-_Rise.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+
     <script type="module">
+        // Sprachenerkennung und Textwechsel
+        document.addEventListener('DOMContentLoaded', () => {
+            const userLang = navigator.language || navigator.userLanguage;
+            const lang = userLang.startsWith('de') ? 'de' :
+                         userLang.startsWith('fr') ? 'fr' : 'en';
+
+            setLanguage(lang);
+        });
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[id]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-lang-${lang}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        }
+
+        // Hier der bestehende Code für die 3D-Darstellung und Steuerung (wie vorher)
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
         import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
