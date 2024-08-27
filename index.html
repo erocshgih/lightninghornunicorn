@@ -69,6 +69,9 @@
                          userLang.startsWith('fr') ? 'fr' : 'en';
 
             setLanguage(lang);
+
+            // Speicher die gewählte Sprache für den weiteren Gebrauch
+            document.body.setAttribute('data-current-lang', lang);
         });
 
         function setLanguage(lang) {
@@ -80,6 +83,27 @@
                 }
             });
         }
+
+        document.getElementById('music-toggle').addEventListener('click', () => {
+            let isMusicPlaying = document.body.getAttribute('data-music-playing') === 'true';
+            isMusicPlaying = !isMusicPlaying;
+            document.body.setAttribute('data-music-playing', isMusicPlaying);
+
+            // Hole die aktuelle Sprache und setze den entsprechenden Text
+            const currentLang = document.body.getAttribute('data-current-lang');
+            const musicOnText = {
+                en: "Click here for music - Music On",
+                de: "Klicke hier für Musik - Musik Ein",
+                fr: "Cliquez ici pour la musique - Musique activée"
+            };
+            const musicOffText = {
+                en: "Click here for music - Music Off",
+                de: "Klicke hier für Musik - Musik Aus",
+                fr: "Cliquez ici pour la musique - Musique éteinte"
+            };
+            
+            document.getElementById('music-toggle').textContent = isMusicPlaying ? musicOnText[currentLang] : musicOffText[currentLang];
+        });
 
         // Hier der bestehende Code für die 3D-Darstellung und Steuerung (wie vorher)
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
@@ -125,7 +149,19 @@
         musicToggle.addEventListener('click', () => {
             isMusicPlaying = !isMusicPlaying;
             isMusicPlaying ? music.play() : music.pause();
-            musicToggle.textContent = `Click here for music - Music ${isMusicPlaying ? 'On' : 'Off'}`;
+            const currentLang = document.body.getAttribute('data-current-lang');
+            const musicOnText = {
+                en: "Click here for music - Music On",
+                de: "Klicke hier für Musik - Musik Ein",
+                fr: "Cliquez ici pour la musique - Musique activée"
+            };
+            const musicOffText = {
+                en: "Click here for music - Music Off",
+                de: "Klicke hier für Musik - Musik Aus",
+                fr: "Cliquez ici pour la musique - Musique éteinte"
+            };
+            
+            musicToggle.textContent = isMusicPlaying ? musicOnText[currentLang] : musicOffText[currentLang];
         });
 
         document.getElementById('navigate-to-main').addEventListener('click', () => {
