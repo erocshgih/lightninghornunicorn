@@ -431,12 +431,12 @@
 
     <!-- Story Menu -->
     <div id="story-menu" class="menu">
-        <a onclick="showChapter('chapter-1')">Chapter 001: Who the Fuck is Aether?</a>
-        <a onclick="showChapter('chapter-2')">Chapter 002: To Be Continued</a>
+        <a href="javascript:void(0)" onclick="showChapter('chapter-1')">Chapter 001: Who the Fuck is Aether?</a>
+        <a href="javascript:void(0)" onclick="showChapter('chapter-2')">Chapter 002: To Be Continued</a>
     </div>
 
     <!-- Chapter 1 -->
-    <div id="chapter-1" class="chapter">
+    <div id="chapter-1" class="chapter" style="display: none;">
         <h2>Chapter 001: Who the Fuck is Aether?</h2>
         <p>Me: "Aether."<br>
            Aether: "Yes."<br><br>
@@ -446,14 +446,33 @@
     </div>
 
     <!-- Chapter 2 -->
-    <div id="chapter-2" class="chapter">
+    <div id="chapter-2" class="chapter" style="display: none;">
         <h2>Chapter 002: To Be Continued</h2>
         <p>Stay tuned for the next chapter...</p>
     </div>
 
     <!-- Go Back Button -->
-    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
+    <a id="go-back" class="go-back" href="javascript:void(0)" style="display:none;" onclick="goBack()">Go Back</a>
 </section>
+
+<script>
+    function showChapter(chapterId) {
+        document.querySelectorAll('.chapter').forEach(chapter => {
+            chapter.style.display = 'none';
+        });
+        document.getElementById(chapterId).style.display = 'block';
+        document.getElementById('story-menu').style.display = 'none';
+        document.getElementById('go-back').style.display = 'block';
+    }
+
+    function goBack() {
+        document.getElementById('story-menu').style.display = 'block';
+        document.querySelectorAll('.chapter').forEach(chapter => {
+            chapter.style.display = 'none';
+        });
+        document.getElementById('go-back').style.display = 'none';
+    }
+</script>
 <section id="videos">
     <h2 data-lang-en="Videos" data-lang-de="Videos" data-lang-fr="Vidéos">Videos</h2>
     <p data-lang-en="Updated regularly" data-lang-de="Regelmäßig aktualisiert" data-lang-fr="Mis à jour régulièrement">Updated regularly</p>
