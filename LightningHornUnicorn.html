@@ -406,30 +406,36 @@
 </section>
 
 <script>
-    // Show the subsection when clicked
     function showSubSection(subSectionId) {
+        // Hide all sub-sections
         document.querySelectorAll('#art > div').forEach(subSection => {
             subSection.style.display = 'none';
         });
+
+        // Show the selected sub-section
         document.getElementById(subSectionId).style.display = 'block';
+
+        // Show the "Go Back" button
         document.getElementById('go-back').style.display = 'block';
+
+        // Hide the main art menu
         document.querySelector('.sub-menu').style.display = 'none';
     }
 
-    // Go back to the main art menu
     function goBack() {
+        // Hide all sub-sections
         document.querySelectorAll('#art > div').forEach(subSection => {
             subSection.style.display = 'none';
         });
-        document.querySelector('.sub-menu').style.display = 'flex';
-        document.getElementById('go-back').style.display = 'none';
-    }
 
-    // Show the art menu by default on page load
-    window.onload = function() {
-        goBack();
-    };
+        // Hide the "Go Back" button
+        document.getElementById('go-back').style.display = 'none';
+
+        // Show the main art menu again
+        document.querySelector('.sub-menu').style.display = 'flex';
+    }
 </script>
+    
 <section id="projects">
     <h2 data-lang-en="Projects" data-lang-de="Projekte" data-lang-fr="Projets">Projects</h2>
     <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar..." data-lang-fr="Bientôt disponible...">Coming Soon...</p>
