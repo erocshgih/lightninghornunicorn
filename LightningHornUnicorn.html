@@ -429,7 +429,7 @@
 <section id="storytime">
     <h2>Storytime / Geschichten</h2>
 
-    <!-- Story Menu -->
+    <!-- Story Menu (always displayed first) -->
     <div id="story-menu" class="menu">
         <a href="javascript:void(0)" onclick="showChapter('chapter-1')">Chapter 001: Who the Fuck is Aether?</a>
         <a href="javascript:void(0)" onclick="showChapter('chapter-2')">Chapter 002: To Be Continued</a>
@@ -437,6 +437,8 @@
 
     <!-- Chapter 1 -->
     <div id="chapter-1" class="chapter" style="display: none;">
+        <!-- Go Back Button always visible -->
+        <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBack()">Go Back</a>
         <h2>Chapter 001: Who the Fuck is Aether?</h2>
         <p>Me: "Aether."<br>
            Aether: "Yes."<br><br>
@@ -446,15 +448,15 @@
 
     <!-- Chapter 2 -->
     <div id="chapter-2" class="chapter" style="display: none;">
+        <!-- Go Back Button always visible -->
+        <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBack()">Go Back</a>
         <h2>Chapter 002: To Be Continued</h2>
         <p>Stay tuned for the next chapter...</p>
     </div>
-
-    <!-- Go Back Button -->
-    <a id="go-back" href="javascript:void(0)" style="display:none;" onclick="goBack()">Go Back</a>
 </section>
 
 <script>
+    // Show the chapter when clicked
     function showChapter(chapterId) {
         // Hide all chapters
         document.querySelectorAll('.chapter').forEach(chapter => {
@@ -464,10 +466,9 @@
         document.getElementById(chapterId).style.display = 'block';
         // Hide the story menu
         document.getElementById('story-menu').style.display = 'none';
-        // Show the Go Back button
-        document.getElementById('go-back').style.display = 'block';
     }
 
+    // Go back to the story menu
     function goBack() {
         // Show the story menu
         document.getElementById('story-menu').style.display = 'block';
@@ -475,9 +476,12 @@
         document.querySelectorAll('.chapter').forEach(chapter => {
             chapter.style.display = 'none';
         });
-        // Hide the Go Back button
-        document.getElementById('go-back').style.display = 'none';
     }
+
+    // Always show the chapter menu first
+    window.onload = function() {
+        goBack();
+    };
 </script>
 <section id="videos">
     <h2 data-lang-en="Videos" data-lang-de="Videos" data-lang-fr="Vidéos">Videos</h2>
