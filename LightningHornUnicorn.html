@@ -479,32 +479,6 @@
         document.getElementById('go-back').style.display = 'none';
     }
 </script>
-
-<script>
-    function showChapter(chapterId) {
-        // Hide all chapters
-        document.querySelectorAll('.chapter').forEach(chapter => {
-            chapter.style.display = 'none';
-        });
-        // Show the selected chapter
-        document.getElementById(chapterId).style.display = 'block';
-        // Hide the story menu
-        document.getElementById('story-menu').style.display = 'none';
-        // Show the Go Back button
-        document.getElementById('go-back').style.display = 'block';
-    }
-
-    function goBack() {
-        // Show the story menu
-        document.getElementById('story-menu').style.display = 'block';
-        // Hide all chapters
-        document.querySelectorAll('.chapter').forEach(chapter => {
-            chapter.style.display = 'none';
-        });
-        // Hide the Go Back button
-        document.getElementById('go-back').style.display = 'none';
-    }
-</script>
 <section id="videos">
     <h2 data-lang-en="Videos" data-lang-de="Videos" data-lang-fr="Vidéos">Videos</h2>
     <p data-lang-en="Updated regularly" data-lang-de="Regelmäßig aktualisiert" data-lang-fr="Mis à jour régulièrement">Updated regularly</p>
