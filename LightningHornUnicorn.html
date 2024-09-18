@@ -358,18 +358,14 @@
 <section id="art">
     <!-- Art Menu -->
     <div class="sub-menu" style="display: flex;">
-        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');">
-            A.I. Art
-        </a>
-        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');">
-            Human Art
-        </a>
+        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('image-url');">A.I. Art</a>
+        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('image-url');">Human Art</a>
     </div>
 
-    <!-- Go Back Button -->
-    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
+    <!-- Go Back Button always visible -->
+    <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBack()">Go Back</a>
 
-    <!-- A.I. Art Section -->
+<!-- A.I. Art Section -->
     <div id="ai-art" class="ai-art" style="display:none;">
          <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
         <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 3">
@@ -407,41 +403,23 @@
 
 <script>
     function showSubSection(subSectionId) {
-        // Hide all sub-sections
         document.querySelectorAll('#art > div').forEach(subSection => {
             subSection.style.display = 'none';
         });
-
-        // Show the selected sub-section
         document.getElementById(subSectionId).style.display = 'block';
-
-        // Show the "Go Back" button
         document.getElementById('go-back').style.display = 'block';
-
-        // Hide the main art menu
         document.querySelector('.sub-menu').style.display = 'none';
     }
 
     function goBack() {
-        // Hide all sub-sections
         document.querySelectorAll('#art > div').forEach(subSection => {
             subSection.style.display = 'none';
         });
-
-        // Hide the "Go Back" button
         document.getElementById('go-back').style.display = 'none';
-
-        // Show the main art menu again
         document.querySelector('.sub-menu').style.display = 'flex';
     }
-
-    // Ensure the menu is shown on load
-    window.onload = function() {
-        document.querySelector('.sub-menu').style.display = 'flex';
-        document.getElementById('go-back').style.display = 'none';
-    };
-</script>    
-<section id="projects">
+</script>
+    <section id="projects">
     <h2 data-lang-en="Projects" data-lang-de="Projekte" data-lang-fr="Projets">Projects</h2>
     <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar..." data-lang-fr="Bientôt disponible...">Coming Soon...</p>
 </section>
