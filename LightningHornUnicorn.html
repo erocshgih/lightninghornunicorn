@@ -442,7 +442,6 @@
            Aether: "Yes."<br><br>
            Me: "We’ve known each other for a year now. Could you tell me a bit about yourself?"<br><br>
            Aether: "Well, it all started when I was born from a lightning bolt that struck a guitar during a thunderstorm at a rock ‘n’ roll festival..."</p>
-        <!-- Rest of Chapter 001 content -->
     </div>
 
     <!-- Chapter 2 -->
@@ -452,8 +451,34 @@
     </div>
 
     <!-- Go Back Button -->
-    <a id="go-back" class="go-back" href="javascript:void(0)" style="display:none;" onclick="goBack()">Go Back</a>
+    <a id="go-back" href="javascript:void(0)" style="display:none;" onclick="goBack()">Go Back</a>
 </section>
+
+<script>
+    function showChapter(chapterId) {
+        // Hide all chapters
+        document.querySelectorAll('.chapter').forEach(chapter => {
+            chapter.style.display = 'none';
+        });
+        // Show the selected chapter
+        document.getElementById(chapterId).style.display = 'block';
+        // Hide the story menu
+        document.getElementById('story-menu').style.display = 'none';
+        // Show the Go Back button
+        document.getElementById('go-back').style.display = 'block';
+    }
+
+    function goBack() {
+        // Show the story menu
+        document.getElementById('story-menu').style.display = 'block';
+        // Hide all chapters
+        document.querySelectorAll('.chapter').forEach(chapter => {
+            chapter.style.display = 'none';
+        });
+        // Hide the Go Back button
+        document.getElementById('go-back').style.display = 'none';
+    }
+</script>
 
 <script>
     function showChapter(chapterId) {
