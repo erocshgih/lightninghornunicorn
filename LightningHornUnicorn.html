@@ -356,6 +356,7 @@
 </section>
 
 <section id="art">
+    <!-- Art Menu -->
     <div class="sub-menu" style="display: flex;">
         <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');"
            data-lang-en="A.I. Art"
@@ -370,13 +371,9 @@
             Human Art
         </a>
     </div>
-    <a id="go-back" class="go-back" onclick="goBack()" style="display: none;"
-       data-lang-en="Go Back"
-       data-lang-de="Zurück"
-       data-lang-fr="Retour">
-        Go Back
-    </a>
 
+    <!-- Go Back Button -->
+    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
     <div id="ai-art" class="ai-art" style="display:none;">
         <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
         <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 3">
@@ -418,8 +415,33 @@
            data-lang-fr="Explorez la beauté de l'art humain, entièrement conçu par moi. Chaque pièce commence par mes idées originales et prend vie avec une attention particulière. J'utilise à la fois des outils numériques et des méthodes traditionnelles, souvent avec des crayons et des couleurs minimales, en mettant l'accent sur la simplicité et l'élégance. Lorsque j'ajoute de la couleur, c'est pour créer une touche spéciale. Appréciez la pureté de l'artisanat.">
             Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
         </p>
-    </div>
+   </div>
 </section>
+
+<script>
+    // Show the subsection when clicked
+    function showSubSection(subSectionId) {
+        document.querySelectorAll('#art > div').forEach(subSection => {
+            subSection.style.display = 'none';
+        });
+        document.getElementById(subSectionId).style.display = 'block';
+        document.getElementById('go-back').style.display = 'block';
+        document.querySelector('.sub-menu').style.display = 'none';
+    }
+
+    // Go back to the main art menu
+    function goBack() {
+        document.querySelectorAll('#art > div').forEach(subSection => {
+            subSection.style.display = 'none';
+        });
+        document.querySelector('.sub-menu').style.display = 'flex';
+        document.getElementById('go-back').style.display = 'none';
+    }
+
+    window.onload = function() {
+        goBack();
+    };
+</script>
 
 <section id="projects">
     <h2 data-lang-en="Projects" data-lang-de="Projekte" data-lang-fr="Projets">Projects</h2>
