@@ -367,8 +367,11 @@
     </div>
 
     <!-- Go Back Button -->
-    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>    <div id="ai-art" class="ai-art" style="display:none;">
-        <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
+    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
+
+    <!-- A.I. Art Section -->
+    <div id="ai-art" class="ai-art" style="display:none;">
+         <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
         <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 3">
         <img id="ai-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.jpg" alt="Snout Chordz">
         <img id="ai-art-5" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/RGB%20NIPPLES%20ARE%20RAINBOWS.jpg" alt="RGB NIPPLES ARE RAINBOWS">
@@ -384,14 +387,10 @@
         <img id="ai-art-15" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/schnitzilla_theaustriansensation.jpg" alt="schnitzilla3000">
         <img id="ai-art-16" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heavymapple.jpg" alt="heavymapple">
         <img id="ai-art-17" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/amici.jpg" alt="amici">
-
-        <p data-lang-en="Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires."
-           data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert."
-           data-lang-fr="Découvrez la magie de l'art A.I., où mes idées rencontrent la technologie de pointe. Je crée les concepts, et l'I.A. avancée les concrétise avec précision et innovation. Ce mélange d'imagination humaine et d'intelligence artificielle donne naissance à un art moderne unique qui repousse les limites et inspire.">
-            Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
-        </p>
+<p>Discover the magic of A.I. Art...</p>
     </div>
 
+    <!-- Human Art Section -->
     <div id="human-art" class="human-art" style="display:none;">
         <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.png" alt="Human Art 1">
         <img id="human-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.png" alt="Human Art 2">
@@ -402,13 +401,8 @@
         <img id="human-art-7" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augafpel.png" alt="Augafpel">
         <img id="human-art-8" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.png" alt="Apffel 2">
         <img id="human-art-9" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/a%20circle%20of%20colors.jpg" alt="A Circle of Colors">
-
-        <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
-           data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst."
-           data-lang-fr="Explorez la beauté de l'art humain, entièrement conçu par moi. Chaque pièce commence par mes idées originales et prend vie avec une attention particulière. J'utilise à la fois des outils numériques et des méthodes traditionnelles, souvent avec des crayons et des couleurs minimales, en mettant l'accent sur la simplicité et l'élégance. Lorsque j'ajoute de la couleur, c'est pour créer une touche spéciale. Appréciez la pureté de l'artisanat.">
-            Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
-        </p>
-   </div>
+        <p>Explore the beauty of Human Art...</p>
+    </div>
 </section>
 
 <script>
@@ -431,11 +425,11 @@
         document.getElementById('go-back').style.display = 'none';
     }
 
+    // Show the art menu by default on page load
     window.onload = function() {
         goBack();
     };
 </script>
-
 <section id="projects">
     <h2 data-lang-en="Projects" data-lang-de="Projekte" data-lang-fr="Projets">Projects</h2>
     <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar..." data-lang-fr="Bientôt disponible...">Coming Soon...</p>
