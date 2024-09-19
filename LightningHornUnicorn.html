@@ -221,25 +221,33 @@
         }
 
         function showSubSection(subSectionId) {
-            const subSections = document.querySelectorAll('#art > div');
-            subSections.forEach(subSection => {
-                subSection.style.display = 'none';
-            });
+    // Hide all sub-sections
+    document.querySelectorAll('#art > div').forEach(subSection => {
+        subSection.style.display = 'none';
+    });
 
-            document.getElementById(subSectionId).style.display = 'block';
-            document.getElementById('go-back').style.display = 'block'; // Show "Go Back" link
-            document.querySelector('.sub-menu').style.display = 'none'; // Hide the sub-menu
-        }
+    // Show the selected sub-section
+    document.getElementById(subSectionId).style.display = 'block';
 
-        function goBack() {
-            const subSections = document.querySelectorAll('#art > div');
-            subSections.forEach(subSection => {
-                subSection.style.display = 'none';
-            });
+    // Show the "Go Back" button
+    document.getElementById('go-back').style.display = 'block';
 
-            document.getElementById('go-back').style.display = 'none'; // Hide "Go Back" link
-            document.querySelector('.sub-menu').style.display = 'flex'; // Show the sub-menu again
-        }
+    // Hide the main art menu
+    document.querySelector('.sub-menu').style.display = 'none';
+}
+
+function goBack() {
+    // Hide all sub-sections
+    document.querySelectorAll('#art > div').forEach(subSection => {
+        subSection.style.display = 'none';
+    });
+
+    // Hide the "Go Back" button
+    document.getElementById('go-back').style.display = 'none';
+
+    // Show the main art menu again
+    document.querySelector('.sub-menu').style.display = 'flex';
+}
 
     </script>
 </head>
@@ -367,27 +375,15 @@
     </div>
 
     <!-- Go Back Button -->
-    <a id="go-back" class="go-back" onclick="goBack()" style="display: none;">Go Back</a>
+    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
 
     <!-- A.I. Art Section -->
     <div id="ai-art" class="ai-art" style="display:none;">
         <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
-        <img id="ai-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 2">
-        <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.jpg" alt="Snout Chordz">
-        <img id="ai-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/RGB%20NIPPLES%20ARE%20RAINBOWS.jpg" alt="RGB NIPPLES ARE RAINBOWS">
-        <img id="ai-art-5" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Kate%20Plush%20and%20the%20meow%20piano.jpg" alt="Kate Plush and the Meow Piano">
-        <img id="ai-art-6" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Harambe.jpg" alt="Harambe">
-        <img id="ai-art-7" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Chivalry.jpg" alt="Chivalry">
-        <img id="ai-art-8" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Cat%20Farts%202%20Weapon%20of%20Mass.jpg" alt="Cat Farts 2: Weapon of Mass">
-        <img id="ai-art-9" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Cat%20Farts%201%20Furarri.jpg" alt="Cat Farts 1: Furarri">
-        <img id="ai-art-10" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Notarobot.jpg" alt="Not a Robot">
-        <img id="ai-art-11" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bony_duck_enjoys_a_bath.jpg" alt="Bony Duck Enjoys a Bath">
-        <img id="ai-art-12" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bony_duck_skateboarding.jpg" alt="Bony Duck Skateboarding">
-        <img id="ai-art-13" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/schnitzilla.jpg" alt="Schnitzilla">
-        <img id="ai-art-14" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/schnitzilla_theaustriansensation.jpg" alt="Schnitzilla 3000">
-        <img id="ai-art-15" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heavymapple.jpg" alt="Heavy Mapple">
-        <img id="ai-art-16" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/amici.jpg" alt="Amici">
-        <p>Discover the magic of A.I. Art, where my ideas meet cutting-edge technology...</p>
+        <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 3">
+        <img id="ai-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.jpg" alt="Snout Chordz">
+        <img id="ai-art-5" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/RGB%20NIPPLES%20ARE%20RAINBOWS.jpg" alt="RGB NIPPLES ARE RAINBOWS">
+        <p>Discover the magic of A.I. Art...</p>
     </div>
 
     <!-- Human Art Section -->
@@ -395,13 +391,7 @@
         <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.png" alt="Human Art 1">
         <img id="human-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.png" alt="Human Art 2">
         <img id="human-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow%20onyx.jpg" alt="Rainbow Onyx">
-        <img id="human-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/clown.png" alt="Clown">
-        <img id="human-art-5" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/big%20wave%20cube.png" alt="Big Wave Cube">
-        <img id="human-art-6" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananism%20against%20gorillas.png" alt="Bananism Against Gorillas">
-        <img id="human-art-7" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augafpel.png" alt="Augafpel">
-        <img id="human-art-8" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.png" alt="Apffel 2">
-        <img id="human-art-9" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/a%20circle%20of%20colors.jpg" alt="A Circle of Colors">
-        <p>Explore the beauty of Human Art, entirely crafted by me...</p>
+        <p>Explore the beauty of Human Art...</p>
     </div>
 </section>
     
