@@ -27,8 +27,9 @@
             background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
             padding: 1em 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
+            position: fixed;
             top: 0;
+            width: 100%;
             z-index: 1001; /* Höher als floating-svg */
             backdrop-filter: blur(10px);
             display: flex;
@@ -55,6 +56,11 @@
         .menu a:hover {
             background-color: #FFD700; /* Gold */
             color: #ffffff;
+        }
+
+        /* Hauptinhalt - Padding oben hinzufügen, um das feste Menü auszugleichen */
+        main {
+            padding-top: 100px; /* Passe diesen Wert an die Höhe deines Menüs an */
         }
 
         /* Abschnitt-Stile */
@@ -171,31 +177,12 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .floating-svg {
-                width: 180px;
-                height: 180px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .floating-svg {
-                width: 160px;
-                height: 160px;
-            }
-        }
-
         @media (max-width: 768px) {
             .menu a {
                 margin: 5px 0;
                 padding: 8px 16px;
                 font-size: 0.9em;
                 width: 90%;           /* Passe die Breite für kleinere Bildschirme an */
-            }
-
-            .floating-svg {
-                width: 150px;
-                height: 150px;
             }
 
             iframe {
@@ -217,11 +204,6 @@
                 padding: 6px 12px;
                 font-size: 0.8em;
                 width: 95%;           /* Passe die Breite weiter an */
-            }
-
-            .floating-svg {
-                width: 100px;
-                height: 100px;
             }
 
             section {
@@ -301,9 +283,6 @@
             user-select: none; /* Verhindert Textauswahl beim Ziehen */
             touch-action: none; /* Verhindert Standard-Touch-Aktionen */
             transition: transform 0.2s ease; /* Sanfter Übergang beim Hover */
-            /* Entferne die festen Positionen */
-            /* top: 20px; */
-            /* right: 20px; */
         }
 
         /* Cursor ändern beim Ziehen */
@@ -318,20 +297,6 @@
         }
 
         /* Responsive Anpassungen */
-        @media (max-width: 1200px) {
-            .floating-svg {
-                width: 180px;
-                height: 180px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .floating-svg {
-                width: 160px;
-                height: 160px;
-            }
-        }
-
         @media (max-width: 768px) {
             .floating-svg {
                 width: 150px;
