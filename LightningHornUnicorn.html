@@ -429,6 +429,94 @@
         </svg>
     </div>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const svg = document.getElementById('floating-svg');
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        // Maus-Events
+        svg.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialLeft = parseInt(svg.style.left, 10) || 20;
+            initialTop = parseInt(svg.style.top, 10) || 20;
+            svg.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+                let newLeft = initialLeft + dx;
+                let newTop = initialTop + dy;
+
+                // Grenzen setzen
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const svgWidth = svg.offsetWidth;
+                const svgHeight = svg.offsetHeight;
+
+                if (newLeft < 0) newLeft = 0;
+                if (newTop < 0) newTop = 0;
+                if (newLeft + svgWidth > windowWidth) newLeft = windowWidth - svgWidth;
+                if (newTop + svgHeight > windowHeight) newTop = windowHeight - svgHeight;
+
+                svg.style.left = `${newLeft}px`;
+                svg.style.top = `${newTop}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            svg.style.cursor = 'grab';
+        });
+
+        // Touch-Events für mobile Geräte
+        svg.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            initialLeft = parseInt(svg.style.left, 10) || 20;
+            initialTop = parseInt(svg.style.top, 10) || 20;
+            svg.style.cursor = 'grabbing';
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const touch = e.touches[0];
+                let dx = touch.clientX - startX;
+                let dy = touch.clientY - startY;
+                let newLeft = initialLeft + dx;
+                let newTop = initialTop + dy;
+
+                // Grenzen setzen
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const svgWidth = svg.offsetWidth;
+                const svgHeight = svg.offsetHeight;
+
+                if (newLeft < 0) newLeft = 0;
+                if (newTop < 0) newTop = 0;
+                if (newLeft + svgWidth > windowWidth) newLeft = windowWidth - svgWidth;
+                if (newTop + svgHeight > windowHeight) newTop = windowHeight - svgHeight;
+
+                svg.style.left = `${newLeft}px`;
+                svg.style.top = `${newTop}px`;
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+            svg.style.cursor = 'grab';
+        });
+    });
+</script>
+
     <main>
         <!-- About Section --> 
         <section id="about">
