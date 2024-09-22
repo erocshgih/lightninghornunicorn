@@ -32,10 +32,8 @@
             z-index: 1000;
             backdrop-filter: blur(10px);
             display: flex;
-            flex-direction: column; /* Ändere die Richtung auf Spalte */
+            flex-direction: column; /* Standardmäßig vertikal */
             align-items: center;    /* Zentriere die Elemente horizontal */
-            /* Entferne flex-wrap, da wir eine vertikale Liste haben */
-            /* flex-wrap: wrap; */
         }
 
         /* Menü-Links */
@@ -57,6 +55,20 @@
         .menu a:hover {
             background-color: #FFD700; /* Gold */
             color: #ffffff;
+        }
+
+        /* Media Query für größere Bildschirme */
+        @media (min-width: 768px) {
+            .menu {
+                flex-direction: row; /* Horizontal auf größeren Bildschirmen */
+                justify-content: center; /* Zentriere die Links horizontal */
+            }
+
+            .menu a {
+                margin: 0 10px; /* Horizontale Margen für Abstand zwischen den Links */
+                width: auto;     /* Automatische Breite, damit die Links sich der Inhalt anpassen */
+                max-width: none; /* Entferne die maximale Breite */
+            }
         }
 
         /* Abschnitt-Stile */
@@ -116,6 +128,9 @@
         /* Sub-Menü-Stile */
         .sub-menu {
             margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .sub-menu a {
@@ -268,23 +283,27 @@
         .social-icons a:hover img {
             transform: scale(1.2);
         }
-    .floating-svg {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 200px;
-            height: 200px;
-            animation: float 6s ease-in-out infinite;
-            z-index: 1000;
+
+        /* Floating SVG Styles */
+        .floating-svg {
+            position: fixed; /* Fixiert das SVG relativ zum Viewport */
+            top: 20px;       /* Startposition vom oberen Rand */
+            right: 20px;     /* Startposition vom rechten Rand */
+            width: 200px;    /* Breite des Containers */
+            height: 200px;   /* Höhe des Containers */
+            z-index: 999;    /* Unter dem Menü setzen */
+            cursor: grab;    /* Zeigt an, dass das SVG ziehbar ist */
+            user-select: none; /* Verhindert Textauswahl beim Ziehen */
+            touch-action: none; /* Verhindert Standard-Touch-Aktionen */
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+        /* Hover-Effekt */
+        .floating-svg:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s;
         }
 
-        /* Optional: Responsive Anpassungen */
+        /* Responsive Anpassungen */
         @media (max-width: 768px) {
             .floating-svg {
                 width: 150px;
@@ -389,32 +408,26 @@
 
     <!-- Navigationsmenü -->
     <div class="menu">
-        
         <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
-        
         <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
-        
         <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
-        
         <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
-        
         <a data-lang-en="VIDEOS (updated regularly)" data-lang-de="VIDEOS (regelmäßig aktualisiert)" onclick="showSection('videos')">VIDEOS (updated regularly)</a>
-       
         <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
-        
     </div>
 
-    <div class="floating-svg">
-            <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="bgPattern" patternUnits="userSpaceOnUse" width="200" height="200">
-                        <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" x="0" y="0" width="200" height="200" />
-                    </pattern>
-                </defs>
-                <circle cx="100" cy="100" r="90" fill="url(#bgPattern)" />
-                <!-- Weitere SVG-Elemente können hier hinzugefügt werden -->
-            </svg>
-        </div>
+    <!-- Floating SVG Sticker -->
+    <div id="floating-svg" class="floating-svg">
+        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="bgPattern" patternUnits="userSpaceOnUse" width="200" height="200">
+                    <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" x="0" y="0" width="200" height="200" />
+                </pattern>
+            </defs>
+            <circle cx="100" cy="100" r="90" fill="url(#bgPattern)" />
+            <!-- Weitere SVG-Elemente können hier hinzugefügt werden -->
+        </svg>
+    </div>
 
     <main>
         <!-- About Section --> 
