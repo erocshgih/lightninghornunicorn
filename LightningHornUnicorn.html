@@ -538,33 +538,93 @@ Me: "And imagine emergency surgeries—'Scalpel, please... Wait, it's Macarena t
 </section>
 
 <!-- Angepasster JavaScript-Code -->
-<script>
-    // Funktion zum Anzeigen eines Kapitels
-    function showChapter(chapterId) {
-        // Alle Kapitel ausblenden
-        document.querySelectorAll('.chapter').forEach(chapter => {
-            chapter.style.display = 'none';
-        });
-        // Ausgewähltes Kapitel anzeigen
-        document.getElementById(chapterId).style.display = 'block';
-        // Story-Menü ausblenden
-        document.getElementById('story-menu').style.display = 'none';
+function setLanguage(lang) {
+    const elements = document.querySelectorAll('[data-lang-en]');
+    elements.forEach(element => {
+        const text = element.getAttribute(`data-lang-${lang}`);
+        if (text) {
+            element.textContent = text;
+        }
+    });
+}
+
+// Funktion zum Anzeigen einer Sektion
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    document.getElementById(sectionId).style.display = 'block';
+
+    if (sectionId === 'art') {
+        goBack();
     }
 
-    // Angepasste Go Back Funktion für Storytime
-    function goBackStory() {
-        // Story-Menü anzeigen
-        document.getElementById('story-menu').style.display = 'block';
-        // Alle Kapitel ausblenden
-        document.querySelectorAll('.chapter').forEach(chapter => {
-            chapter.style.display = 'none';
-        });
-    }
-
-    // Beim Laden der Seite das Story-Menü anzeigen
-    window.onload = function() {
+    // Hinzugefügte Bedingung für "storytime"
+    if (sectionId === 'storytime') {
         goBackStory();
-    };
+    }
+
+    window.scrollTo(0, 0); // Scroll to top when section is shown
+}
+
+// Funktionen für die "Art"-Sektion (bleiben unverändert)
+function showSubSection(subSectionId) {
+    // Hide all sub-sections
+    document.querySelectorAll('#art > div').forEach(subSection => {
+        subSection.style.display = 'none';
+    });
+
+    // Show the selected sub-section
+    document.getElementById(subSectionId).style.display = 'block';
+
+    // Show the "Go Back" button
+    document.getElementById('go-back').style.display = 'block';
+
+    // Hide the main art menu
+    document.querySelector('.sub-menu').style.display = 'none';
+}
+
+function goBack() {
+    // Hide all sub-sections
+    document.querySelectorAll('#art > div').forEach(subSection => {
+        subSection.style.display = 'none';
+    });
+
+    // Hide the "Go Back" button
+    document.getElementById('go-back').style.display = 'none';
+
+    // Show the main art menu again
+    document.querySelector('.sub-menu').style.display = 'flex';
+}
+
+// Funktion zum Anzeigen eines Kapitels
+function showChapter(chapterId) {
+    // Alle Kapitel ausblenden
+    document.querySelectorAll('.chapter').forEach(chapter => {
+        chapter.style.display = 'none';
+    });
+    // Ausgewähltes Kapitel anzeigen
+    document.getElementById(chapterId).style.display = 'block';
+    // Story-Menü ausblenden
+    document.getElementById('story-menu').style.display = 'none';
+}
+
+// Go Back Funktion für Storytime
+function goBackStory() {
+    // Story-Menü anzeigen
+    document.getElementById('story-menu').style.display = 'block';
+    // Alle Kapitel ausblenden
+    document.querySelectorAll('.chapter').forEach(chapter => {
+        chapter.style.display = 'none';
+    });
+}
+
+// Beim Laden der Seite das Story-Menü anzeigen
+window.onload = function() {
+    goBackStory();
+};
 </script><section id="videos">
     <h2 data-lang-en="Videos" data-lang-de="Videos" data-lang-fr="Vidéos">Videos</h2>
     <p data-lang-en="Updated regularly" data-lang-de="Regelmäßig aktualisiert" data-lang-fr="Mis à jour régulièrement">Updated regularly</p>
