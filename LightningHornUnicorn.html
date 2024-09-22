@@ -29,10 +29,10 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 1001; /* Höher als floating-svg */
             backdrop-filter: blur(10px);
             display: flex;
-            flex-direction: column; /* Standardmäßig vertikal */
+            flex-direction: column; /* Vertikale Liste */
             align-items: center;    /* Zentriere die Elemente horizontal */
         }
 
@@ -55,20 +55,6 @@
         .menu a:hover {
             background-color: #FFD700; /* Gold */
             color: #ffffff;
-        }
-
-        /* Media Query für größere Bildschirme */
-        @media (min-width: 768px) {
-            .menu {
-                flex-direction: row; /* Horizontal auf größeren Bildschirmen */
-                justify-content: center; /* Zentriere die Links horizontal */
-            }
-
-            .menu a {
-                margin: 0 10px; /* Horizontale Margen für Abstand zwischen den Links */
-                width: auto;     /* Automatische Breite, damit die Links sich der Inhalt anpassen */
-                max-width: none; /* Entferne die maximale Breite */
-            }
         }
 
         /* Abschnitt-Stile */
@@ -128,9 +114,6 @@
         /* Sub-Menü-Stile */
         .sub-menu {
             margin: 20px 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
         .sub-menu a {
@@ -287,19 +270,26 @@
         /* Floating SVG Styles */
         .floating-svg {
             position: fixed; /* Fixiert das SVG relativ zum Viewport */
-            top: 20px;       /* Startposition vom oberen Rand */
-            right: 20px;     /* Startposition vom rechten Rand */
             width: 200px;    /* Breite des Containers */
             height: 200px;   /* Höhe des Containers */
-            z-index: 999;    /* Unter dem Menü setzen */
+            z-index: 1000;   /* Stellt sicher, dass das SVG unter dem Menü liegt */
             cursor: grab;    /* Zeigt an, dass das SVG ziehbar ist */
             user-select: none; /* Verhindert Textauswahl beim Ziehen */
             touch-action: none; /* Verhindert Standard-Touch-Aktionen */
+            transition: transform 0.2s ease; /* Sanfter Übergang beim Hover */
+            /* Entferne die festen Positionen */
+            /* top: 20px; */
+            /* right: 20px; */
         }
 
-        /* Hover-Effekt */
+        /* Cursor ändern beim Ziehen */
+        .floating-svg:active {
+            cursor: grabbing; /* Ändert den Cursor beim Ziehen */
+        }
+
+        /* Optional: Hover-Effekt */
         .floating-svg:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             transition: transform 0.3s;
         }
 
@@ -308,8 +298,6 @@
             .floating-svg {
                 width: 150px;
                 height: 150px;
-                top: 10px;
-                right: 10px;
             }
         }
 
@@ -317,13 +305,18 @@
             .floating-svg {
                 width: 100px;
                 height: 100px;
-                top: 5px;
-                right: 5px;
             }
+        }
+
+        /* Optional: Visuelles Feedback beim Ziehen */
+        .floating-svg.dragging {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: scale(1.1);
         }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Sprachinitialisierung
             const userLang = navigator.language || navigator.userLanguage;
             const lang = userLang.startsWith('de') ? 'de' : 'en';
 
@@ -331,6 +324,166 @@
 
             // Speichert die gewählte Sprache für den weiteren Gebrauch
             document.body.setAttribute('data-current-lang', lang);
+
+            // Drag-and-Drop mit Physik für Floating SVG
+            const svg = document.getElementById('floating-svg');
+            const menu = document.querySelector('.menu');
+            let isDragging = false;
+            let startX, startY;
+            let initialLeft, initialTop;
+            let velocityX = 0;
+            let velocityY = 0;
+            let lastTime = Date.now();
+            let animationFrameId;
+
+            // Berechne die Anfangsposition des SVG
+            const initializePosition = () => {
+                const menuHeight = menu.offsetHeight;
+                const svgWidth = svg.offsetWidth;
+                const svgHeight = svg.offsetHeight;
+                const posX = (window.innerWidth - svgWidth) / 2;
+                const posY = menuHeight + 20; // 20px Abstand unter dem Menü
+                svg.style.left = `${posX}px`;
+                svg.style.top = `${posY}px`;
+                console.log(`Setting SVG position: left=${posX}px, top=${posY}px`);
+            };
+
+            initializePosition();
+
+            // Aktualisiere die Position bei Fenstergrößeänderung
+            window.addEventListener('resize', () => {
+                initializePosition();
+            });
+
+            // Drag Start Event
+            const dragStart = (x, y) => {
+                isDragging = true;
+                startX = x;
+                startY = y;
+                const rect = svg.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+                velocityX = 0;
+                velocityY = 0;
+                cancelAnimationFrame(animationFrameId);
+                svg.classList.add('dragging');
+            };
+
+            // Drag Move Event
+            const dragMove = (x, y) => {
+                if (!isDragging) return;
+                const deltaX = x - startX;
+                const deltaY = y - startY;
+                svg.style.left = `${initialLeft + deltaX}px`;
+                svg.style.top = `${initialTop + deltaY}px`;
+
+                const now = Date.now();
+                const deltaTime = now - lastTime;
+                lastTime = now;
+                // Convert deltaTime to seconds
+                const deltaTimeSeconds = deltaTime / 1000;
+                velocityX = (deltaX / deltaTimeSeconds) * 0.016; // approximate frame duration
+                velocityY = (deltaY / deltaTimeSeconds) * 0.016;
+            };
+
+            // Drag End Event
+            const dragEnd = () => {
+                isDragging = false;
+                lastTime = Date.now();
+                svg.classList.remove('dragging');
+                animate();
+            };
+
+            // Animation Function
+            const animate = () => {
+                const rect = svg.getBoundingClientRect();
+                let left = rect.left + velocityX * 16; // Approx. 60fps
+                let top = rect.top + velocityY * 16;
+
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const svgWidth = rect.width;
+                const svgHeight = rect.height;
+
+                // Kollision mit den Rändern
+                if (left + svgWidth > windowWidth) {
+                    left = windowWidth - svgWidth;
+                    velocityX = -velocityX;
+                } else if (left < 0) {
+                    left = 0;
+                    velocityX = -velocityX;
+                }
+
+                if (top + svgHeight > windowHeight) {
+                    top = windowHeight - svgHeight;
+                    velocityY = -velocityY;
+                } else if (top < 0) {
+                    top = 0;
+                    velocityY = -velocityY;
+                }
+
+                svg.style.left = `${left}px`;
+                svg.style.top = `${top}px`;
+
+                // Reibung zur Verlangsamung
+                velocityX *= 0.95;
+                velocityY *= 0.95;
+
+                // Stoppe die Animation, wenn die Geschwindigkeit sehr niedrig ist
+                if (Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
+                    cancelAnimationFrame(animationFrameId);
+                    return;
+                }
+
+                animationFrameId = requestAnimationFrame(animate);
+            };
+
+            // Maus Events
+            svg.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                dragStart(e.clientX, e.clientY);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    dragMove(e.clientX, e.clientY);
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    dragEnd();
+                }
+            });
+
+            // Touch Events
+            svg.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    dragStart(touch.clientX, touch.clientY);
+                }
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    dragMove(touch.clientX, touch.clientY);
+                }
+            });
+
+            document.addEventListener('touchend', (e) => {
+                if (isDragging) {
+                    dragEnd();
+                }
+            });
+
+            // Optional: Stop animation bei Fenstergrößenänderung, um Glitches zu vermeiden
+            window.addEventListener('resize', () => {
+                cancelAnimationFrame(animationFrameId);
+                velocityX = 0;
+                velocityY = 0;
+                initializePosition();
+            });
         });
 
         function setLanguage(lang) {
@@ -429,145 +582,7 @@
         </svg>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const svg = document.getElementById('floating-svg');
-        let isDragging = false;
-        let startX, startY;
-        let initialLeft, initialTop;
-        let velocityX = 0;
-        let velocityY = 0;
-        let lastTime = Date.now();
-        let animationFrameId;
-
-        // Drag Start Event
-        const dragStart = (x, y) => {
-            isDragging = true;
-            startX = x;
-            startY = y;
-            const rect = svg.getBoundingClientRect();
-            initialLeft = rect.left;
-            initialTop = rect.top;
-            velocityX = 0;
-            velocityY = 0;
-            cancelAnimationFrame(animationFrameId);
-        };
-
-        // Drag Move Event
-        const dragMove = (x, y) => {
-            if (!isDragging) return;
-            const deltaX = x - startX;
-            const deltaY = y - startY;
-            svg.style.left = `${initialLeft + deltaX}px`;
-            svg.style.top = `${initialTop + deltaY}px`;
-
-            const now = Date.now();
-            const deltaTime = now - lastTime;
-            lastTime = now;
-            velocityX = deltaX / deltaTime;
-            velocityY = deltaY / deltaTime;
-        };
-
-        // Drag End Event
-        const dragEnd = () => {
-            isDragging = false;
-            lastTime = Date.now();
-            animate();
-        };
-
-        // Animation Function
-        const animate = () => {
-            const rect = svg.getBoundingClientRect();
-            let left = rect.left + velocityX * 16; // Approx. 60fps
-            let top = rect.top + velocityY * 16;
-
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            const svgWidth = rect.width;
-            const svgHeight = rect.height;
-
-            // Kollision mit den Rändern
-            if (left + svgWidth > windowWidth) {
-                left = windowWidth - svgWidth;
-                velocityX = -velocityX;
-            } else if (left < 0) {
-                left = 0;
-                velocityX = -velocityX;
-            }
-
-            if (top + svgHeight > windowHeight) {
-                top = windowHeight - svgHeight;
-                velocityY = -velocityY;
-            } else if (top < 0) {
-                top = 0;
-                velocityY = -velocityY;
-            }
-
-            svg.style.left = `${left}px`;
-            svg.style.top = `${top}px`;
-
-            // Friction to slow down
-            velocityX *= 0.95;
-            velocityY *= 0.95;
-
-            // Stop animation if velocity is very low
-            if (Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
-                cancelAnimationFrame(animationFrameId);
-                return;
-            }
-
-            animationFrameId = requestAnimationFrame(animate);
-        };
-
-        // Mouse Events
-        svg.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            dragStart(e.clientX, e.clientY);
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                dragMove(e.clientX, e.clientY);
-            }
-        });
-
-        document.addEventListener('mouseup', (e) => {
-            if (isDragging) {
-                dragEnd();
-            }
-        });
-
-        // Touch Events
-        svg.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                const touch = e.touches[0];
-                dragStart(touch.clientX, touch.clientY);
-            }
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            if (isDragging && e.touches.length === 1) {
-                const touch = e.touches[0];
-                dragMove(touch.clientX, touch.clientY);
-            }
-        });
-
-        document.addEventListener('touchend', (e) => {
-            if (isDragging) {
-                dragEnd();
-            }
-        });
-
-        // Optional: Stop animation on window resize to prevent glitches
-        window.addEventListener('resize', () => {
-            cancelAnimationFrame(animationFrameId);
-            velocityX = 0;
-            velocityY = 0;
-        });
-    });
-</script>
-    <main>
-        <!-- About Section --> 
+    <main>        <!-- About Section --> 
         <section id="about">
             <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">About</h2>
             <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
