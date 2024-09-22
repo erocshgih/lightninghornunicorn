@@ -32,13 +32,16 @@
             z-index: 1000;
             backdrop-filter: blur(10px);
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column; /* Ändere die Richtung auf Spalte */
+            align-items: center;    /* Zentriere die Elemente horizontal */
+            /* Entferne flex-wrap, da wir eine vertikale Liste haben */
+            /* flex-wrap: wrap; */
         }
 
+        /* Menü-Links */
         .menu a {
-            display: inline-block;
-            margin: 10px 15px;
+            display: block;          /* Stelle sicher, dass Links als Block-Elemente angezeigt werden */
+            margin: 10px 0;          /* Vertikale Margen für Abstand zwischen den Links */
             color: #333333;
             text-decoration: none;
             font-size: 1em;
@@ -46,6 +49,9 @@
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
             cursor: pointer;
+            width: 80%;              /* Optional: Setze eine Breite, um die Links breiter zu machen */
+            max-width: 300px;        /* Optional: Begrenze die maximale Breite */
+            text-align: center;      /* Zentriere den Text innerhalb der Links */
         }
 
         .menu a:hover {
@@ -169,9 +175,10 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .menu a {
-                margin: 5px 10px;
+                margin: 5px 0;
                 padding: 8px 16px;
                 font-size: 0.9em;
+                width: 90%;           /* Passe die Breite für kleinere Bildschirme an */
             }
 
             iframe {
@@ -189,9 +196,10 @@
 
         @media (max-width: 480px) {
             .menu a {
-                margin: 5px;
+                margin: 5px 0;
                 padding: 6px 12px;
                 font-size: 0.8em;
+                width: 95%;           /* Passe die Breite weiter an */
             }
 
             section {
