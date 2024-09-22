@@ -475,8 +475,8 @@ Me: "I like me some Tibetan throat singing remixes of Macarena with a slight tou
 
 Aether: "So, you’re basically saying you’re a fan of Gigi D'Agostino?"
 
-Me: "Yes..." awkward silence
-Internal monologue: Why did he say that? Let’s just pretend this didn’t happen and smile.
+Me: "Yes..." *awkward silence*
+*Internal monologue:* Why did he say that? Let’s just pretend this didn’t happen and smile.
 
 Aether: "Ah, you Austrians with your weird music taste. It’s like I can hear the melody of bureaucracy coming from you. Hmm… but isn’t The Riddle written by Nik Kershaw?"
 
@@ -523,111 +523,110 @@ Me: "Mandatory dance breaks every hour. Doesn’t matter where you are—grocery
 
 Aether: "Yes! The entire world in synchronized confusion. I’m in. The traffic jams alone would be worth it."
 
-Me: "And imagine emergency surgeries—'Scalpel, please... Wait, it's Macarena time!' Your appendix can wait, right? Also, good luck trying to explain to your boss why you’re moonwalking through that serious meeting—'Sorry, Karen, it’s the law.' The world would be one big dance-off disaster, and I’d be here with popcorn."</div>
-<!-- Inhalt des Kapitels -->
-        <!-- ... -->
+Me: "And imagine emergency surgeries—'Scalpel, please... Wait, it's Macarena time!' Your appendix can wait, right? Also, good luck trying to explain to your boss why you’re moonwalking through that serious meeting—'Sorry, Karen, it’s the law.' The world would be one big dance-off disaster, and I’d be here with popcorn."
+        </p>
     </div>
 
     <!-- Kapitel 2 -->
     <div id="chapter-2" class="chapter" style="display: none;">
         <!-- Angepasster Go Back Button -->
         <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBackStory()">Go Back</a>
-        <p> to be continued <p><!-- Inhalt des Kapitels -->
-        <!-- ... -->
+        <p> to be continued </p>
     </div>
 </section>
 
 <!-- Angepasster JavaScript-Code -->
-</script>
-function setLanguage(lang) {
-    const elements = document.querySelectorAll('[data-lang-en]');
-    elements.forEach(element => {
-        const text = element.getAttribute(`data-lang-${lang}`);
-        if (text) {
-            element.textContent = text;
+<script>
+    // Funktion zum Festlegen der Sprache
+    function setLanguage(lang) {
+        const elements = document.querySelectorAll('[data-lang-en]');
+        elements.forEach(element => {
+            const text = element.getAttribute(`data-lang-${lang}`);
+            if (text) {
+                element.textContent = text;
+            }
+        });
+    }
+
+    // Funktion zum Anzeigen einer Sektion
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            section.style.display = 'none';
+        });
+
+        document.getElementById(sectionId).style.display = 'block';
+
+        if (sectionId === 'art') {
+            goBack();
         }
-    });
-}
 
-// Funktion zum Anzeigen einer Sektion
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
+        // Hinzugefügte Bedingung für "storytime"
+        if (sectionId === 'storytime') {
+            goBackStory();
+        }
 
-    document.getElementById(sectionId).style.display = 'block';
-
-    if (sectionId === 'art') {
-        goBack();
+        window.scrollTo(0, 0); // Scroll to top when section is shown
     }
 
-    // Hinzugefügte Bedingung für "storytime"
-    if (sectionId === 'storytime') {
+    // Funktionen für die "Art"-Sektion (bleiben unverändert)
+    function showSubSection(subSectionId) {
+        // Hide all sub-sections
+        document.querySelectorAll('#art > div').forEach(subSection => {
+            subSection.style.display = 'none';
+        });
+
+        // Show the selected sub-section
+        document.getElementById(subSectionId).style.display = 'block';
+
+        // Show the "Go Back" button
+        document.getElementById('go-back').style.display = 'block';
+
+        // Hide the main art menu
+        document.querySelector('.sub-menu').style.display = 'none';
+    }
+
+    function goBack() {
+        // Hide all sub-sections
+        document.querySelectorAll('#art > div').forEach(subSection => {
+            subSection.style.display = 'none';
+        });
+
+        // Hide the "Go Back" button
+        document.getElementById('go-back').style.display = 'none';
+
+        // Show the main art menu again
+        document.querySelector('.sub-menu').style.display = 'flex';
+    }
+
+    // Funktion zum Anzeigen eines Kapitels
+    function showChapter(chapterId) {
+        // Alle Kapitel ausblenden
+        document.querySelectorAll('.chapter').forEach(chapter => {
+            chapter.style.display = 'none';
+        });
+        // Ausgewähltes Kapitel anzeigen
+        document.getElementById(chapterId).style.display = 'block';
+        // Story-Menü ausblenden
+        document.getElementById('story-menu').style.display = 'none';
+    }
+
+    // Go Back Funktion für Storytime
+    function goBackStory() {
+        // Story-Menü anzeigen
+        document.getElementById('story-menu').style.display = 'block';
+        // Alle Kapitel ausblenden
+        document.querySelectorAll('.chapter').forEach(chapter => {
+            chapter.style.display = 'none';
+        });
+    }
+
+    // Beim Laden der Seite das Story-Menü anzeigen
+    window.onload = function() {
         goBackStory();
-    }
-
-    window.scrollTo(0, 0); // Scroll to top when section is shown
-}
-
-// Funktionen für die "Art"-Sektion (bleiben unverändert)
-function showSubSection(subSectionId) {
-    // Hide all sub-sections
-    document.querySelectorAll('#art > div').forEach(subSection => {
-        subSection.style.display = 'none';
-    });
-
-    // Show the selected sub-section
-    document.getElementById(subSectionId).style.display = 'block';
-
-    // Show the "Go Back" button
-    document.getElementById('go-back').style.display = 'block';
-
-    // Hide the main art menu
-    document.querySelector('.sub-menu').style.display = 'none';
-}
-
-function goBack() {
-    // Hide all sub-sections
-    document.querySelectorAll('#art > div').forEach(subSection => {
-        subSection.style.display = 'none';
-    });
-
-    // Hide the "Go Back" button
-    document.getElementById('go-back').style.display = 'none';
-
-    // Show the main art menu again
-    document.querySelector('.sub-menu').style.display = 'flex';
-}
-
-// Funktion zum Anzeigen eines Kapitels
-function showChapter(chapterId) {
-    // Alle Kapitel ausblenden
-    document.querySelectorAll('.chapter').forEach(chapter => {
-        chapter.style.display = 'none';
-    });
-    // Ausgewähltes Kapitel anzeigen
-    document.getElementById(chapterId).style.display = 'block';
-    // Story-Menü ausblenden
-    document.getElementById('story-menu').style.display = 'none';
-}
-
-// Go Back Funktion für Storytime
-function goBackStory() {
-    // Story-Menü anzeigen
-    document.getElementById('story-menu').style.display = 'block';
-    // Alle Kapitel ausblenden
-    document.querySelectorAll('.chapter').forEach(chapter => {
-        chapter.style.display = 'none';
-    });
-}
-
-// Beim Laden der Seite das Story-Menü anzeigen
-window.onload = function() {
-    goBackStory();
-};
-
+    };
 </script>
+
     <section id="videos">
     <h2 data-lang-en="Videos" data-lang-de="Videos" data-lang-fr="Vidéos">Videos</h2>
     <p data-lang-en="Updated regularly" data-lang-de="Regelmäßig aktualisiert" data-lang-fr="Mis à jour régulièrement">Updated regularly</p>
