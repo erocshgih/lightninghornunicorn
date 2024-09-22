@@ -187,8 +187,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language || navigator.userLanguage;
-            const lang = userLang.startsWith('de') ? 'de' :
-                         userLang.startsWith('fr') ? 'fr' : 'en';
+            const lang = userLang.startsWith('de') ? 'de' : 'en';
 
             setLanguage(lang);
 
@@ -221,33 +220,33 @@
         }
 
         function showSubSection(subSectionId) {
-    // Hide all sub-sections
-    document.querySelectorAll('#art > div').forEach(subSection => {
-        subSection.style.display = 'none';
-    });
+            // Hide all sub-sections
+            document.querySelectorAll('#art > div').forEach(subSection => {
+                subSection.style.display = 'none';
+            });
 
-    // Show the selected sub-section
-    document.getElementById(subSectionId).style.display = 'block';
+            // Show the selected sub-section
+            document.getElementById(subSectionId).style.display = 'block';
 
-    // Show the "Go Back" button
-    document.getElementById('go-back').style.display = 'block';
+            // Show the "Go Back" button
+            document.getElementById('go-back').style.display = 'block';
 
-    // Hide the main art menu
-    document.querySelector('.sub-menu').style.display = 'none';
-}
+            // Hide the main art menu
+            document.querySelector('.sub-menu').style.display = 'none';
+        }
 
-function goBack() {
-    // Hide all sub-sections
-    document.querySelectorAll('#art > div').forEach(subSection => {
-        subSection.style.display = 'none';
-    });
+        function goBack() {
+            // Hide all sub-sections
+            document.querySelectorAll('#art > div').forEach(subSection => {
+                subSection.style.display = 'none';
+            });
 
-    // Hide the "Go Back" button
-    document.getElementById('go-back').style.display = 'none';
+            // Hide the "Go Back" button
+            document.getElementById('go-back').style.display = 'none';
 
-    // Show the main art menu again
-    document.querySelector('.sub-menu').style.display = 'flex';
-}
+            // Show the main art menu again
+            document.querySelector('.sub-menu').style.display = 'flex';
+        }
 
     </script>
 </head>
@@ -255,18 +254,18 @@ function goBack() {
 <body>
 
 <div class="menu">
-    <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" data-lang-fr="À PROPOS" onclick="showSection('about')">ABOUT</a>
-    <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" data-lang-fr="ART (mis à jour régulièrement)" onclick="showSection('art')">ART (updated regularly)</a>
-    <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" data-lang-fr="PROJETS" onclick="showSection('projects')">PROJECTS</a>
-    <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" data-lang-fr="HISTOIRES" onclick="showSection('storytime')">STORYTIME</a>
-    <a data-lang-en="VIDEOS (updated regularly)" data-lang-de="VIDEOS (regelmäßig aktualisiert)" data-lang-fr="VIDÉOS (mis à jour régulièrement)" onclick="showSection('videos')">VIDEOS (updated regularly)</a>
-    <a data-lang-en="CONTACT" data-lang-de="KONTAKT" data-lang-fr="CONTACT" onclick="showSection('contact')">CONTACT</a>
+    <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
+    <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
+    <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
+    <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
+    <a data-lang-en="VIDEOS (updated regularly)" data-lang-de="VIDEOS (regelmäßig aktualisiert)" onclick="showSection('videos')">VIDEOS (updated regularly)</a>
+    <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
 </div>
 
 <main>
     <!-- About Section -->
     <section id="about">
-    <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH" data-lang-fr="À PROPOS">About</h2>
+    <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">About</h2>
     <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
     <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic." 
        data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, früher bekannt als Vedran Lukic." 
@@ -363,23 +362,24 @@ function goBack() {
     </p>
 </section>
 
-<section id="art">
-    <!-- Art Menu -->
-    <h2 data-lang-en="ART" data-lang-de="KUNST" data-lang-fr="ART">ART</h2>
-    <div class="sub-menu" style="display: flex;">
-        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');">
-            A.I. Art
-        </a>
-        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');">
-            Human Art
-        </a>
-    </div>
+    <!-- Art Section -->
+    <section id="art">
+        <!-- Art Menu -->
+        <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
+        <div class="sub-menu" style="display: flex;">
+            <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');">
+                A.I. Art
+            </a>
+            <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');">
+                Human Art
+            </a>
+        </div>
 
-    <!-- Go Back Button -->
-    <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
+        <!-- Go Back Button -->
+        <a id="go-back" class="go-back" onclick="goBack()">Go Back</a>
 
-    <!-- A.I. Art Section -->
-    <div id="ai-art" class="ai-art" style="display:none;">
+        <!-- A.I. Art Section -->
+       <div id="ai-art" class="ai-art" style="display:none;">
         <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
         <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 3">
         <img id="ai-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.jpg" alt="Snout Chordz">
@@ -396,17 +396,14 @@ function goBack() {
         <img id="ai-art-15" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/schnitzilla_theaustriansensation.jpg" alt="schnitzilla3000">
         <img id="ai-art-16" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heavymapple.jpg" alt="heavymapple">
         <img id="ai-art-17" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/amici.jpg" alt="amici">
+            <p data-lang-en="Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires."
+               data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert.">
+                Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
+            </p>
+        </div>
 
-        <p data-lang-en="Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires."
-           data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert."
-           data-lang-fr="Découvrez la magie de l'art A.I., où mes idées rencontrent la technologie de pointe. Je crée les concepts, et l'I.A. avancée les concrétise avec précision et innovation. Ce mélange d'imagination humaine et d'intelligence artificielle donne naissance à un art moderne unique qui repousse les limites et inspire.">
-            Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
-        </p><!-- Inhalte der A.I. Art Sektion -->
-        <!-- ... -->
-    </div>
-
-    <!-- Human Art Section -->
-    <div id="human-art" class="human-art" style="display:none;">
+        <!-- Human Art Section -->
+       <div id="human-art" class="human-art" style="display:none;">
         <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.png" alt="Human Art 1">
         <img id="human-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.png" alt="Human Art 2">
         <img id="human-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow%20onyx.jpg" alt="Rainbow Onyx">
@@ -416,42 +413,41 @@ function goBack() {
         <img id="human-art-7" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augafpel.png" alt="Augafpel">
         <img id="human-art-8" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.png" alt="Apffel 2">
         <img id="human-art-9" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/a%20circle%20of%20colors.jpg" alt="A Circle of Colors">
+            <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
+               data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst.">
+                Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
+            </p>
+        </div>
+    </section>
 
-        <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
-           data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst."
-           data-lang-fr="Explorez la beauté de l'art humain, entièrement conçu par moi. Chaque pièce commence par mes idées originales et prend vie avec une attention particulière. J'utilise à la fois des outils numériques et des méthodes traditionnelles, souvent avec des crayons et des couleurs minimales, en mettant l'accent sur la simplicité et l'élégance. Lorsque j'ajoute de la couleur, c'est pour créer une touche spéciale. Appréciez la pureté de l'artisanat.">
-            Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
-        </p><!-- Inhalte der Human Art Sektion -->
-        <!-- ... -->
-    </div>
-</section>
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE">Projects</h2>
+        <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar...">Coming Soon...</p>
+    </section>
 
-<section id="projects">
-    <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE" data-lang-fr="PROJETS">Projects</h2>
-    <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar..." data-lang-fr="Bientôt disponible...">Coming Soon...</p>
-</section>
-    
-<!-- Storytime Abschnitt -->
-<section id="storytime">
-    <h2 data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" data-lang-fr="L'HEURE DU CONTE">Storytime</h2>
+    <!-- Storytime Section -->
+    <section id="storytime">
+        <h2 data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN">Storytime</h2>
 
-    <!-- Story Menü -->
-    <div id="story-menu" class="menu">
-        <a href="javascript:void(0)" onclick="showChapter('chapter-1')"
-           data-lang-en="Chapter 001: Who the Fuck is Aether?"
-           data-lang-de="Kapitel 001: Wer zum Teufel ist Aether?">Chapter 001: Who the Fuck is Aether?</a>
-        <a href="javascript:void(0)" onclick="showChapter('chapter-2')"
-           data-lang-en="Chapter 002: To Be Continued"
-           data-lang-de="Kapitel 002: Fortsetzung folgt">Chapter 002: To Be Continued</a>
-    </div>
+        <!-- Story Menu -->
+        <div id="story-menu" class="menu">
+            <a href="javascript:void(0)" onclick="showChapter('chapter-1')"
+               data-lang-en="Chapter 001: Who the Fuck is Aether?"
+               data-lang-de="Kapitel 001: Wer zum Teufel ist Aether?">Chapter 001: Who the Fuck is Aether?</a>
+            <a href="javascript:void(0)" onclick="showChapter('chapter-2')"
+               data-lang-en="Chapter 002: To Be Continued"
+               data-lang-de="Kapitel 002: Fortsetzung folgt">Chapter 002: To Be Continued</a>
+        </div>
 
-    <!-- Kapitel 1 -->
-    <div id="chapter-1" class="chapter" style="display: none;">
-        <!-- Go Back Button -->
-        <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBackStory()"
-           data-lang-en="Go Back" data-lang-de="Zurück">Go Back</a>
-        
-        <!-- Englischer Inhalt -->
+        <!-- Chapter 1 -->
+        <div id="chapter-1" class="chapter" style="display: none;">
+            <!-- Go Back Button -->
+            <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBackStory()"
+               data-lang-en="Go Back" data-lang-de="Zurück">Go Back</a>
+
+            <!-- English Content -->
+            <!-- Englischer Inhalt -->
         <div data-lang="en">
             <!-- Englischer Text -->
             <!-- Kapitel 1 Englischer Inhalt -->
@@ -502,8 +498,9 @@ function goBack() {
     <p>Me: "And imagine emergency surgeries—'Scalpel, please... Wait, it's Macarena time!' Your appendix can wait, right? Also, good luck explaining to your boss why you're moonwalking through that serious meeting *AheeHee!*—'Sorry, Karen, it's the law.' The world would be one big dance disaster, and I'd be here with popcorn."</p>
     </div>
     </div>
-        
-        <!-- Deutscher Inhalt -->
+
+            <!-- German Content -->
+            <!-- Deutscher Inhalt -->
         <div data-lang="de">
             <!-- Deutscher Text -->
             <p>Ich: "Aether."</p>
@@ -554,28 +551,50 @@ function goBack() {
     </div>
     </div>
 
-    <!-- Kapitel 2 -->
-    <div id="chapter-2" class="chapter" style="display: none;">
-        <!-- Go Back Button -->
-        <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBackStory()"
-           data-lang-en="Go Back" data-lang-de="Zurück">Go Back</a>
-        
-        <!-- Englischer Inhalt -->
-        <div data-lang="en">
-            <p>To be continued...</p>
-        </div>
-        
-        <!-- Deutscher Inhalt -->
-        <div data-lang="de">
-            <p>Fortsetzung folgt...</p>
-        </div>
-    </div>
-</section>
+        <!-- Chapter 2 -->
+        <div id="chapter-2" class="chapter" style="display: none;">
+            <!-- Go Back Button -->
+            <a href="javascript:void(0)" style="font-size: 20px; margin-bottom: 20px;" onclick="goBackStory()"
+               data-lang-en="Go Back" data-lang-de="Zurück">Go Back</a>
 
-<!-- Aktualisierter JavaScript-Code -->
+            <!-- English Content -->
+            <div data-lang="en">
+                <p>To be continued...</p>
+            </div>
+
+            <!-- German Content -->
+            <div data-lang="de">
+                <p>Fortsetzung folgt...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section id="videos">
+        <h2 data-lang-en="VIDEOS" data-lang-de="VIDEOS">Videos</h2>
+        <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/9RnlWrrX6C8" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 data-lang-en="CONTACT" data-lang-de="KONTAKT">Contact</h2>
+        <p>
+            <a href="mailto:vedranlukic@hotmail.com" class="mailbox"
+               data-lang-en="Unicorn Mailbox" 
+               data-lang-de="Einhorn-Briefkasten">
+                Unicorn Mailbox
+            </a>
+        </p>
+    </section>
+
+</main>
+
+<!-- Updated JavaScript Code -->
 <script>
     function setLanguage(lang) {
-        // Elemente mit data-lang-en, data-lang-de, etc. behandeln
+        // Handle elements with data-lang-en, data-lang-de
         const elements = document.querySelectorAll('[data-lang-en]');
         elements.forEach(element => {
             const text = element.getAttribute(`data-lang-${lang}`);
@@ -584,20 +603,19 @@ function goBack() {
             }
         });
 
-        // Alle Elemente mit data-lang ausblenden
+        // Hide all elements with data-lang
         const allLangElements = document.querySelectorAll('[data-lang]');
         allLangElements.forEach(element => {
             element.style.display = 'none';
         });
 
-        // Elemente mit aktueller Sprache einblenden
+        // Show elements with the current language
         const currentLangElements = document.querySelectorAll(`[data-lang="${lang}"]`);
         currentLangElements.forEach(element => {
             element.style.display = 'block';
         });
     }
 
-    // Vorhandene Funktionen bleiben unverändert
     function showSection(sectionId) {
         const sections = document.querySelectorAll('section');
         sections.forEach(section => {
@@ -618,64 +636,37 @@ function goBack() {
     }
 
     function showChapter(chapterId) {
-        // Alle Kapitel ausblenden
+        // Hide all chapters
         document.querySelectorAll('.chapter').forEach(chapter => {
             chapter.style.display = 'none';
         });
-        // Ausgewähltes Kapitel anzeigen
+        // Show selected chapter
         document.getElementById(chapterId).style.display = 'block';
-        // Story-Menü ausblenden
+        // Hide the main story menu
         document.getElementById('story-menu').style.display = 'none';
     }
 
     function goBackStory() {
-        // Story-Menü anzeigen
+        // Show the main story menu
         document.getElementById('story-menu').style.display = 'block';
-        // Alle Kapitel ausblenden
+        // Hide all chapters
         document.querySelectorAll('.chapter').forEach(chapter => {
             chapter.style.display = 'none';
         });
     }
 
-    // Beim Laden der Seite die Sprache setzen
+    // Set the language on page load
     document.addEventListener('DOMContentLoaded', () => {
         const userLang = navigator.language || navigator.userLanguage;
-        const lang = userLang.startsWith('de') ? 'de' :
-                     userLang.startsWith('fr') ? 'fr' : 'en';
+        const lang = userLang.startsWith('de') ? 'de' : 'en';
 
         setLanguage(lang);
     });
 </script>
 
-    <section id="videos">
-    <h2 data-lang-en="VIDEOS" data-lang-de="VIDEOS" data-lang-fr="VIDEOS">Videos</h2>
-    <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/9RnlWrrX6C8" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
-</section>
-
-<section id="contact">
-    <h2 data-lang-en="CONTACT" data-lang-de="KONTAKT" data-lang-fr="CONTACT">Contact</h2>
-    <p>
-        <a href="mailto:vedranlukic@hotmail.com" class="mailbox"
-           data-lang-en="Unicorn Mailbox" 
-           data-lang-de="Einhorn-Briefkasten" 
-           data-lang-fr="Boîte aux lettres de l'unicorn">
-            Unicorn Mailbox
-        </a>
-    </p>
-</section>
-
-    
-
-    <!-- Weitere Abschnitte (Art, Projects, Storytime, Videos, Contact) folgen dem gleichen Muster -->
-
-</main>
-
 <!-- Footer Section -->
 <footer data-lang-en="&copy; 2024 Lightning Horn Unicorn. All rights reserved."
-        data-lang-de="&copy; 2024 Lightning Horn Unicorn. Alle Rechte vorbehalten."
-        data-lang-fr="&copy; 2024 Lightning Horn Unicorn. Tous droits réservés.">
+        data-lang-de="&copy; 2024 Lightning Horn Unicorn. Alle Rechte vorbehalten.">
     &copy; 2024 Lightning Horn Unicorn. All rights reserved.
 </footer>
 
