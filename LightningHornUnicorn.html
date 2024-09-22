@@ -24,53 +24,40 @@
 
         /* Menü-Stile */
         .menu {
+            position: fixed;        /* Fixiert das Menü oben */
+            top: 0;                 /* Am oberen Rand */
+            left: 0;                /* Am linken Rand */
+            width: 100%;            /* Volle Breite */
             background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
-            padding: 1em 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            padding: 1em 0;         /* Vertikales Padding */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);    /* Schatten für Tiefe */
+            z-index: 1001;          /* Höher als andere Elemente */
+            backdrop-filter: blur(10px); /* Weiche Unschärfe im Hintergrund */
             display: flex;
-            flex-direction: column; /* Standardmäßig vertikal */
-            align-items: center;    /* Zentriere die Elemente horizontal */
+            flex-direction: column; /* Vertikale Anordnung der Menüpunkte */
+            align-items: center;    /* Zentriert die Menüpunkte horizontal */
         }
 
         /* Menü-Links */
         .menu a {
-            display: block;          /* Stelle sicher, dass Links als Block-Elemente angezeigt werden */
-            margin: 10px 0;          /* Vertikale Margen für Abstand zwischen den Links */
+            display: block;          /* Block-Elemente für volle Klickfläche */
+            margin: 10px 0;          /* Vertikaler Abstand zwischen den Links */
             color: #333333;
             text-decoration: none;
-            font-size: 1em;
+            font-size: 1em;          /* Schriftgröße der Menüpunkte */
             padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
             cursor: pointer;
-            width: 80%;              /* Optional: Setze eine Breite, um die Links breiter zu machen */
-            max-width: 300px;        /* Optional: Begrenze die maximale Breite */
-            text-align: center;      /* Zentriere den Text innerhalb der Links */
+            width: 80%;              /* Breite der Links */
+            max-width: 300px;        /* Maximale Breite */
+            text-align: center;      /* Zentrierter Text */
         }
 
         .menu a:hover {
-            background-color: #FFD700; /* Gold */
+            background-color: #FFD700; /* Gold beim Hover */
             color: #ffffff;
         }
-
-        /* Media Query für größere Bildschirme */
-        @media (min-width: 768px) {
-            .menu {
-                flex-direction: row; /* Horizontal auf größeren Bildschirmen */
-                justify-content: center; /* Zentriere die Links horizontal */
-            }
-
-            .menu a {
-                margin: 0 10px; /* Horizontale Margen für Abstand zwischen den Links */
-                width: auto;     /* Automatische Breite, damit die Links sich der Inhalt anpassen */
-                max-width: none; /* Entferne die maximale Breite */
-            }
-        }
-
         /* Abschnitt-Stile */
         section {
             background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
