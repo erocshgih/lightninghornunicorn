@@ -107,65 +107,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* Sub-Menü-Stile */
-        .sub-menu {
-            margin: 20px 0;
-        }
-
-        .sub-menu a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-size: cover;
-            background-position: center;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            width: 200px;
-            height: 150px;
-            line-height: 150px; /* Vertikale Zentrierung des Textes */
-            font-size: 0.8em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sub-menu a::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.6);
-            color: #ffffff;
-            padding: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-        }
-
-        .sub-menu a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Go Back Button */
-        .go-back {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: #FF2800; /* Ferrarirot */
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .go-back:hover {
-            background-color: #FFA500; /* Orange */
-            transform: scale(1.05);
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .menu a {
@@ -177,13 +118,6 @@
             iframe {
                 width: 100%;
                 height: 200px;
-            }
-
-            .sub-menu a {
-                width: 150px;
-                height: 100px;
-                line-height: 100px;
-                font-size: 0.7em;
             }
         }
 
@@ -202,13 +136,6 @@
             footer {
                 font-size: 0.8em;
                 padding: 0.8em 0;
-            }
-
-            .sub-menu a {
-                width: 120px;
-                height: 80px;
-                line-height: 80px;
-                font-size: 0.6em;
             }
         }
 
@@ -260,6 +187,53 @@
         .social-icons a:hover img {
             transform: scale(1.2);
         }
+
+        /* Sub-Menu für Art Sektion */
+        .sub-menu {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sub-menu a {
+            width: 200px;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            margin: 10px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1em;
+            text-shadow: 1px 1px 2px #000000;
+            border: 2px solid #333333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .sub-menu a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Go Back Button Styling */
+        .go-back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FF2800; /* Ferrarirot */
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .go-back:hover {
+            background-color: #FFA500; /* Orange */
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -304,7 +278,7 @@
             targetSection.classList.add('active');
 
             if (sectionId === 'art') {
-                goBackArt(); // Initialisiert den Kunstbereich, zeigt das Sub-Menü
+                // Optionale zusätzliche Logik für den Art-Bereich
             }
 
             if (sectionId === 'storytime') {
@@ -334,7 +308,7 @@
             });
         }
 
-        // Neue Funktionen für den Kunstbereich
+        // Neue Funktionen für Art-Bereich
         function showSubSection(subSectionId) {
             // Verstecke alle Untersektionen
             document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
@@ -342,23 +316,17 @@
             });
             // Zeige die ausgewählte Untersektion
             document.getElementById(subSectionId).style.display = 'block';
-            // Verstecke das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'none';
-            }
+            // Verstecke das Hauptmenü der Art-Sektion
+            document.querySelector('#art .sub-menu').style.display = 'none';
         }
 
-        function goBackArt() {
+        function goBack() {
             // Verstecke alle Untersektionen
             document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
                 subSection.style.display = 'none';
             });
-            // Zeige das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'flex';
-            }
+            // Zeige das Hauptmenü der Art-Sektion
+            document.querySelector('#art .sub-menu').style.display = 'flex';
         }
     </script>
 </head>
@@ -367,19 +335,12 @@
 
     <!-- Navigationsmenü -->
     <div class="menu">
-        
         <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
-        
         <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
-        
         <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
-        
         <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
-        
         <a data-lang-en="VIDEOS (updated regularly)" data-lang-de="VIDEOS (regelmäßig aktualisiert)" onclick="showSection('videos')">VIDEOS (updated regularly)</a>
-       
         <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
-        
     </div>
 
     <main>
@@ -408,14 +369,7 @@
             
             <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/chewbaldy.jpg?raw=true" alt="Chew Baldy">
             
-            <p data-lang-en="Join us on an exciting journey through Vienna, Austria (affectionately known as Schnitzelland), where the creations of this visionary artist resonate with the impact of a memorable musical performance."
-               data-lang-de="Begleite uns auf eine aufregende Reise durch Wien, Österreich (liebevoll Schnitzelland genannt), wo die Kreationen dieses visionären Künstlers mit der Wucht einer unvergesslichen musikalischen Darbietung nachhallen.">
-                Join us on an exciting journey through Vienna, Austria (affectionately known as Schnitzelland), where the creations of this visionary artist resonate with the impact of a memorable musical performance.
-            </p>
-            
-            <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/aboutme2_wienershizal.jpg?raw=true" alt="Wiener Schnitzel">
-            
-            <h3 data-lang-en="A Musical Journey" data-lang-de="Eine musikalische Reise">A Musical Journey</h3>
+            <h3 data-lang-en="A Musical Journey" data-lang-de="Eine musikalische Reise" data-lang-fr="Un voyage musical">A Musical Journey</h3>
             
             <p data-lang-en="It’s 2002: Picture a young Vedran with a borrowed electric guitar and a half-broken, duct-taped laptop running a demo version of FL Studio. His neighbors wonder if he's building a time machine."
                data-lang-de="Es ist 2002: Stell dir einen jungen Vedran mit einer geliehenen E-Gitarre und einem halb kaputten, mit Klebeband reparierten Laptop vor, auf dem eine Demoversion von FL Studio läuft. Seine Nachbarn fragen sich, ob er eine Zeitmaschine baut.">
@@ -431,7 +385,7 @@
             
             <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/aboutme4_cpubench.jpg?raw=true" alt="CPU Bench">
             
-            <h3 data-lang-en="Innovative Sound and Lyricism" data-lang-de="Innovativer Klang und Lyrik">Innovative Sound and Lyricism</h3>
+            <h3 data-lang-en="Innovative Sound and Lyricism" data-lang-de="Innovativer Klang und Lyrik" data-lang-fr="Son et lyrisme innovants">Innovative Sound and Lyricism</h3>
             
             <p data-lang-en="Lightning Horn Unicorn transcends traditional boundaries, masterfully composing across various Digital Audio Workstations (DAWs). His blend of personal touch and cutting-edge innovation, including artificial intelligence, pushes the limits of musical expression. Think of him as the Da Vinci of DAWs, but with fewer paintbrushes and more keyboards."
                data-lang-de="Lightning Horn Unicorn überschreitet traditionelle Grenzen und komponiert meisterhaft auf verschiedenen Digital Audio Workstations (DAWs). Seine Mischung aus persönlicher Note und innovativer Technologie, einschließlich künstlicher Intelligenz, sprengt die Grenzen des musikalischen Ausdrucks. Stell ihn dir als den Da Vinci der DAWs vor, aber mit weniger Pinseln und mehr Tastaturen.">
@@ -443,11 +397,6 @@
             <p data-lang-en="The essence of Lightning Horn Unicorn's artistry lies in his profound and vivid lyricism. His songs are a tapestry of intricate imagery and deep themes, blending personal experiences with universal truths."
                data-lang-de="Das Wesen von Lightning Horn Unicorns Kunst liegt in seiner tiefgründigen und lebendigen Lyrik. Seine Songs sind ein Wandteppich aus komplexen Bildern und tiefen Themen, die persönliche Erfahrungen mit universellen Wahrheiten verbinden.">
                 The essence of Lightning Horn Unicorn's artistry lies in his profound and vivid lyricism. His songs are a tapestry of intricate imagery and deep themes, blending personal experiences with universal truths.
-            </p>
-            
-            <p data-lang-en="“Every song is a story, every lyric a piece of my thoughts,” he shares. Music is a reflection of the world. And sometimes, that world is just weird. Especially the internet, and we all know that. But you can’t just throw a guitar into an interdimensional wormhole and expect a Grammy. So he works on his stuff to make it better (input flying dragons blowing flames with guitar synthesizers around their backs here)."
-               data-lang-de="“Jeder Song ist eine Geschichte, jeder Text ein Stück meiner Gedanken”, teilt er mit. Musik ist ein Spiegelbild der Welt. Und manchmal ist diese Welt einfach seltsam. Besonders das Internet, das wissen wir alle. Aber du kannst nicht einfach eine Gitarre in ein interdimensionales Wurmloch werfen und einen Grammy erwarten. Also arbeitet er an seinem Zeug, um es besser zu machen (stelle dir fliegende Drachen vor, die Flammen mit Gitarrensynthesizern um den Rücken blasen).">
-                “Every song is a story, every lyric a piece of my thoughts,” he shares. Music is a reflection of the world. And sometimes, that world is just weird. Especially the internet, and we all know that. But you can’t just throw a guitar into an interdimensional wormhole and expect a Grammy. So he works on his stuff to make it better (input flying dragons blowing flames with guitar synthesizers around their backs here).
             </p>
             
             <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/aboutme6_synthdragonsreloaded.jpg?raw=true" alt="Synth Dragons Reloaded">
@@ -473,14 +422,14 @@
             
             <img src="https://github.com/erocshgih/lightninghornunicorn/blob/main/aboutme9_coffeepirate.jpg?raw=true" alt="Coffee Pirate">
             
-            <h3 data-lang-en="Achievements and Aspirations" data-lang-de="Erfolge und Bestrebungen">Achievements and Aspirations</h3>
+            <h3 data-lang-en="Achievements and Aspirations" data-lang-de="Erfolge und Bestrebungen" data-lang-fr="Réalisations et aspirations">Achievements and Aspirations</h3>
             
             <p data-lang-en="From 2012 to 2016, Lightning Horn Unicorn built a successful home music studio in Carinthia, Austria, connecting with over 3000 supporters. 'Every supporter was a beacon of hope, a testament to the power of music,' he reflects. Or, in less poetic terms, 'You guys rock!'"
                data-lang-de="Von 2012 bis 2016 baute Lightning Horn Unicorn ein erfolgreiches Heimstudio in Kärnten, Österreich, auf und verband sich mit über 3000 Unterstützern. 'Jeder Unterstützer war ein Leuchtfeuer der Hoffnung, ein Beweis für die Kraft der Musik', reflektiert er. Oder, in weniger poetischen Worten, 'Ihr seid großartig!'">
                 From 2012 to 2016, Lightning Horn Unicorn built a successful home music studio in Carinthia, Austria, connecting with over 3000 supporters. “Every supporter was a beacon of hope, a testament to the power of music,” he reflects. Or, in less poetic terms, “You guys rock!”
             </p>
             
-            <h3 data-lang-en="Join the Journey" data-lang-de="Begleite die Reise">Join the Journey</h3>
+            <h3 data-lang-en="Join the Journey" data-lang-de="Begleite die Reise" data-lang-fr="Rejoignez le voyage">Join the Journey</h3>
             
             <p data-lang-en="If Lightning Horn Unicorn's story resonates with you, he welcomes your support. Explore his art and music, and join him on this exciting journey of self-expression and innovation. 'Together, we can create something extraordinary,' he invites. Or at least, we’ll have a lot of fun trying."
                data-lang-de="Wenn dich die Geschichte von Lightning Horn Unicorn anspricht, freut er sich über deine Unterstützung. Erkunde seine Kunst und Musik und begleite ihn auf dieser aufregenden Reise der Selbstentfaltung und Innovation. 'Zusammen können wir etwas Außergewöhnliches schaffen', lädt er ein. Oder zumindest werden wir viel Spaß dabei haben.">
@@ -490,8 +439,8 @@
 
         <!-- Art Section -->
         <section id="art">
-            <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
             <!-- Art Menu -->
+            <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
             <div class="sub-menu" style="display: flex; flex-wrap: wrap; justify-content: center;">
                 <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');" data-title="A.I. Art">
                     A.I. Art
@@ -500,9 +449,6 @@
                     Human Art
                 </a>
             </div>
-
-            <!-- Go Back Button -->
-            <a id="go-back" class="go-back" onclick="goBackArt()">Go Back</a>
 
             <!-- A.I. Art Section -->
             <div id="ai-art" class="ai-art" style="display:none;">
