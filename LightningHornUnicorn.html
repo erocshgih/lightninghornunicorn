@@ -24,40 +24,39 @@
 
         /* Menü-Stile */
         .menu {
-            position: relative;        /* Fixiert das Menü oben */
-            top: 0;                 /* Am oberen Rand */
-            left: 0;                /* Am linken Rand */
-            width: 100%;            /* Volle Breite */
             background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
-            padding: 1em 0;         /* Vertikales Padding */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);    /* Schatten für Tiefe */
-            z-index: 1001;          /* Höher als andere Elemente */
-            backdrop-filter: blur(10px); /* Weiche Unschärfe im Hintergrund */
+            padding: 1em 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            top: 0;
+            z-index: 1001; /* Höher als floating-svg */
+            backdrop-filter: blur(10px);
             display: flex;
-            flex-direction: column; /* Vertikale Anordnung der Menüpunkte */
-            align-items: center;    /* Zentriert die Menüpunkte horizontal */
+            flex-direction: column; /* Vertikale Liste */
+            align-items: center;    /* Zentriere die Elemente horizontal */
         }
 
         /* Menü-Links */
         .menu a {
-            display: block;          /* Block-Elemente für volle Klickfläche */
-            margin: 10px 0;          /* Vertikaler Abstand zwischen den Links */
+            display: block;          /* Stelle sicher, dass Links als Block-Elemente angezeigt werden */
+            margin: 10px 0;          /* Vertikale Margen für Abstand zwischen den Links */
             color: #333333;
             text-decoration: none;
-            font-size: 1em;          /* Schriftgröße der Menüpunkte */
+            font-size: 1em;
             padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
             cursor: pointer;
-            width: 80%;              /* Breite der Links */
-            max-width: 300px;        /* Maximale Breite */
-            text-align: center;      /* Zentrierter Text */
+            width: 80%;              /* Optional: Setze eine Breite, um die Links breiter zu machen */
+            max-width: 300px;        /* Optional: Begrenze die maximale Breite */
+            text-align: center;      /* Zentriere den Text innerhalb der Links */
         }
 
         .menu a:hover {
-            background-color: #FFD700; /* Gold beim Hover */
+            background-color: #FFD700; /* Gold */
             color: #ffffff;
         }
+
         /* Abschnitt-Stile */
         section {
             background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
@@ -115,9 +114,6 @@
         /* Sub-Menü-Stile */
         .sub-menu {
             margin: 20px 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
         .sub-menu a {
@@ -256,7 +252,7 @@
         }
 
         .social-icons a {
-            margin: 0 100px;
+            margin: 0 10px;
             display: inline-block;
         }
 
@@ -274,19 +270,26 @@
         /* Floating SVG Styles */
         .floating-svg {
             position: fixed; /* Fixiert das SVG relativ zum Viewport */
-            top: 20px;       /* Startposition vom oberen Rand */
-            right: 20px;     /* Startposition vom rechten Rand */
             width: 200px;    /* Breite des Containers */
             height: 200px;   /* Höhe des Containers */
-            z-index: 999;    /* Unter dem Menü setzen */
+            z-index: 1000;   /* Stellt sicher, dass das SVG unter dem Menü liegt */
             cursor: grab;    /* Zeigt an, dass das SVG ziehbar ist */
             user-select: none; /* Verhindert Textauswahl beim Ziehen */
             touch-action: none; /* Verhindert Standard-Touch-Aktionen */
+            transition: transform 0.2s ease; /* Sanfter Übergang beim Hover */
+            /* Entferne die festen Positionen */
+            /* top: 20px; */
+            /* right: 20px; */
         }
 
-        /* Hover-Effekt */
+        /* Cursor ändern beim Ziehen */
+        .floating-svg:active {
+            cursor: grabbing; /* Ändert den Cursor beim Ziehen */
+        }
+
+        /* Optional: Hover-Effekt */
         .floating-svg:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             transition: transform 0.3s;
         }
 
@@ -295,8 +298,6 @@
             .floating-svg {
                 width: 150px;
                 height: 150px;
-                top: 10px;
-                right: 10px;
             }
         }
 
@@ -304,13 +305,18 @@
             .floating-svg {
                 width: 100px;
                 height: 100px;
-                top: 5px;
-                right: 5px;
             }
+        }
+
+        /* Optional: Visuelles Feedback beim Ziehen */
+        .floating-svg.dragging {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: scale(1.1);
         }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Sprachinitialisierung
             const userLang = navigator.language || navigator.userLanguage;
             const lang = userLang.startsWith('de') ? 'de' : 'en';
 
@@ -318,6 +324,166 @@
 
             // Speichert die gewählte Sprache für den weiteren Gebrauch
             document.body.setAttribute('data-current-lang', lang);
+
+            // Drag-and-Drop mit Physik für Floating SVG
+            const svg = document.getElementById('floating-svg');
+            const menu = document.querySelector('.menu');
+            let isDragging = false;
+            let startX, startY;
+            let initialLeft, initialTop;
+            let velocityX = 0;
+            let velocityY = 0;
+            let lastTime = Date.now();
+            let animationFrameId;
+
+            // Berechne die Anfangsposition des SVG
+            const initializePosition = () => {
+                const menuHeight = menu.offsetHeight;
+                const svgWidth = svg.offsetWidth;
+                const svgHeight = svg.offsetHeight;
+                const posX = (window.innerWidth - svgWidth) / 2;
+                const posY = menuHeight + 20; // 20px Abstand unter dem Menü
+                svg.style.left = `${posX}px`;
+                svg.style.top = `${posY}px`;
+                console.log(`Setting SVG position: left=${posX}px, top=${posY}px`);
+            };
+
+            initializePosition();
+
+            // Aktualisiere die Position bei Fenstergrößeänderung
+            window.addEventListener('resize', () => {
+                initializePosition();
+            });
+
+            // Drag Start Event
+            const dragStart = (x, y) => {
+                isDragging = true;
+                startX = x;
+                startY = y;
+                const rect = svg.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+                velocityX = 0;
+                velocityY = 0;
+                cancelAnimationFrame(animationFrameId);
+                svg.classList.add('dragging');
+            };
+
+            // Drag Move Event
+            const dragMove = (x, y) => {
+                if (!isDragging) return;
+                const deltaX = x - startX;
+                const deltaY = y - startY;
+                svg.style.left = `${initialLeft + deltaX}px`;
+                svg.style.top = `${initialTop + deltaY}px`;
+
+                const now = Date.now();
+                const deltaTime = now - lastTime;
+                lastTime = now;
+                // Convert deltaTime to seconds
+                const deltaTimeSeconds = deltaTime / 1000;
+                velocityX = (deltaX / deltaTimeSeconds) * 0.016; // approximate frame duration
+                velocityY = (deltaY / deltaTimeSeconds) * 0.016;
+            };
+
+            // Drag End Event
+            const dragEnd = () => {
+                isDragging = false;
+                lastTime = Date.now();
+                svg.classList.remove('dragging');
+                animate();
+            };
+
+            // Animation Function
+            const animate = () => {
+                const rect = svg.getBoundingClientRect();
+                let left = rect.left + velocityX * 16; // Approx. 60fps
+                let top = rect.top + velocityY * 16;
+
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const svgWidth = rect.width;
+                const svgHeight = rect.height;
+
+                // Kollision mit den Rändern
+                if (left + svgWidth > windowWidth) {
+                    left = windowWidth - svgWidth;
+                    velocityX = -velocityX;
+                } else if (left < 0) {
+                    left = 0;
+                    velocityX = -velocityX;
+                }
+
+                if (top + svgHeight > windowHeight) {
+                    top = windowHeight - svgHeight;
+                    velocityY = -velocityY;
+                } else if (top < 0) {
+                    top = 0;
+                    velocityY = -velocityY;
+                }
+
+                svg.style.left = `${left}px`;
+                svg.style.top = `${top}px`;
+
+                // Reibung zur Verlangsamung
+                velocityX *= 0.95;
+                velocityY *= 0.95;
+
+                // Stoppe die Animation, wenn die Geschwindigkeit sehr niedrig ist
+                if (Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
+                    cancelAnimationFrame(animationFrameId);
+                    return;
+                }
+
+                animationFrameId = requestAnimationFrame(animate);
+            };
+
+            // Maus Events
+            svg.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                dragStart(e.clientX, e.clientY);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    dragMove(e.clientX, e.clientY);
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    dragEnd();
+                }
+            });
+
+            // Touch Events
+            svg.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    dragStart(touch.clientX, touch.clientY);
+                }
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    dragMove(touch.clientX, touch.clientY);
+                }
+            });
+
+            document.addEventListener('touchend', (e) => {
+                if (isDragging) {
+                    dragEnd();
+                }
+            });
+
+            // Optional: Stop animation bei Fenstergrößenänderung, um Glitches zu vermeiden
+            window.addEventListener('resize', () => {
+                cancelAnimationFrame(animationFrameId);
+                velocityX = 0;
+                velocityY = 0;
+                initializePosition();
+            });
         });
 
         function setLanguage(lang) {
@@ -403,7 +569,33 @@
         <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
     </div>
 
-    <main>        <!-- About Section --> 
+    <!-- Floating SVG Sticker -->
+    <div id="floating-svg" class="floating-svg">
+        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="bgPattern" patternUnits="userSpaceOnUse" width="200" height="200">
+                    <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" x="0" y="0" width="200" height="200" />
+                </pattern>
+            </defs>
+            <circle cx="100" cy="100" r="90" fill="url(#bgPattern)" />
+            <!-- Weitere SVG-Elemente können hier hinzugefügt werden -->
+        </svg>
+    </div>
+
+    <main>
+        <!-- About Section -->
+        <section id="about">
+            <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">About</h2>
+            <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
+            <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic." 
+               data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, früher bekannt als Vedran Lukic.">
+                Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic.
+            </p>
+            <!-- Weitere Inhalte... -->
+        </section>
+
+        <!-- Weitere Abschnitte wie ART, PROJECTS, STORYTIME, VIDEOS, CONTACT -->
+    </main>       <!-- About Section --> 
         <section id="about">
             <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">About</h2>
             <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
