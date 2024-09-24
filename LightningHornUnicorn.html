@@ -353,7 +353,7 @@
         <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
     </div>
 
-    <!-- Floating SVG Sticker -->
+     <!-- Floating SVG Sticker -->
     <div id="floating-svg" class="floating-svg">
         <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -368,14 +368,174 @@
         </svg>
     </div>
 
+    <!-- CSS-Stile für den Floating SVG Sticker -->
+    <style>
+        /* ... [Hier bleibt das CSS unverändert, wie in deinem Code] ... */
+    </style>
+
     <!-- JavaScript für den Floating SVG Sticker -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ... Dein bereits vorhandenes Skript für den Floating SVG Sticker ...
-            // (Ich habe es hier aus Platzgründen ausgelassen, da es unverändert bleibt)
+            // Selektieren des SVG-Elements und des Menüs
+            const svg = document.getElementById('floating-svg');
+            const menu = document.querySelector('.menu');
+
+            // Variablen für das Drag-and-Drop
+            let isDragging = false;
+            let startX, startY;
+            let initialLeft, initialTop;
+            let velocityX = 0;
+            let velocityY = 0;
+            let lastTime = Date.now();
+            let animationFrameId;
+
+            // Funktion zur Initialisierung der SVG-Position
+            const initializePosition = () => {
+                const menuHeight = menu.offsetHeight;
+                const svgWidth = svg.offsetWidth;
+                const svgHeight = svg.offsetHeight;
+                const posX = (window.innerWidth - svgWidth) / 2; // Zentrierung horizontal
+                const posY = menuHeight + 20; // Platzierung unter dem Menü
+                svg.style.left = `${posX}px`;
+                svg.style.top = `${posY}px`;
+                svg.style.position = 'absolute'; // Stelle sicher, dass die Positionierung absolut ist
+            };
+
+            initializePosition(); // Position beim Laden der Seite setzen
+
+            // Aktualisieren der Position bei Fenstergrößenänderung
+            window.addEventListener('resize', () => {
+                initializePosition();
+            });
+
+            // Funktionen für Drag Start, Move und End
+            const dragStart = (x, y) => {
+                isDragging = true;
+                startX = x;
+                startY = y;
+                const rect = svg.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+                velocityX = 0;
+                velocityY = 0;
+                cancelAnimationFrame(animationFrameId);
+                svg.classList.add('dragging');
+            };
+
+            const dragMove = (x, y) => {
+                if (!isDragging) return;
+                const deltaX = x - startX;
+                const deltaY = y - startY;
+                svg.style.left = `${initialLeft + deltaX}px`;
+                svg.style.top = `${initialTop + deltaY}px`;
+
+                const now = Date.now();
+                const deltaTime = now - lastTime;
+                lastTime = now;
+                const deltaTimeSeconds = deltaTime / 1000;
+                velocityX = (deltaX / deltaTimeSeconds) * 0.016; // Berechnung der Geschwindigkeit
+                velocityY = (deltaY / deltaTimeSeconds) * 0.016;
+            };
+
+            const dragEnd = () => {
+                isDragging = false;
+                lastTime = Date.now();
+                svg.classList.remove('dragging');
+                animate(); // Starten der Animation nach Loslassen
+            };
+
+            // Animationsfunktion für den Bewegungseffekt nach dem Loslassen
+            const animate = () => {
+                const rect = svg.getBoundingClientRect();
+                let left = rect.left + velocityX * 16; // Bewegung basierend auf Geschwindigkeit
+                let top = rect.top + velocityY * 16;
+
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const svgWidth = rect.width;
+                const svgHeight = rect.height;
+
+                // Kollision mit den Bildschirmrändern
+                if (left + svgWidth > windowWidth) {
+                    left = windowWidth - svgWidth;
+                    velocityX = -velocityX; // Richtungsumkehr bei Kollision
+                } else if (left < 0) {
+                    left = 0;
+                    velocityX = -velocityX;
+                }
+
+                if (top + svgHeight > windowHeight) {
+                    top = windowHeight - svgHeight;
+                    velocityY = -velocityY;
+                } else if (top < 0) {
+                    top = 0;
+                    velocityY = -velocityY;
+                }
+
+                svg.style.left = `${left}px`;
+                svg.style.top = `${top}px`;
+
+                // Reibungseffekt zur allmählichen Verlangsamung
+                velocityX *= 0.95;
+                velocityY *= 0.95;
+
+                // Beenden der Animation, wenn die Geschwindigkeit gering ist
+                if (Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
+                    cancelAnimationFrame(animationFrameId);
+                    return;
+                }
+
+                animationFrameId = requestAnimationFrame(animate);
+            };
+
+            // Event Listener für Mausereignisse
+            svg.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                dragStart(e.clientX, e.clientY);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    dragMove(e.clientX, e.clientY);
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    dragEnd();
+                }
+            });
+
+            // Event Listener für Touch-Ereignisse (für mobile Geräte)
+            svg.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    dragStart(touch.clientX, touch.clientY);
+                }
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    dragMove(touch.clientX, touch.clientY);
+                }
+            });
+
+            document.addEventListener('touchend', (e) => {
+                if (isDragging) {
+                    dragEnd();
+                }
+            });
+
+            // Aktualisierung bei Fenstergrößenänderung
+            window.addEventListener('resize', () => {
+                cancelAnimationFrame(animationFrameId);
+                velocityX = 0;
+                velocityY = 0;
+                initializePosition();
+            });
         });
     </script>
-
     <!-- Hauptinhalt (Sektionen) -->
     <!-- About Section -->
     <section id="about">
