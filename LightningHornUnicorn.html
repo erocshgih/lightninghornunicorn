@@ -1,194 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> <!-- Definiert die Sprache der Seite als Englisch -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lightning Horn Unicorn</title>
+    <!-- Kopfbereich der Seite -->
+    <meta charset="UTF-8"> <!-- Definiert die Zeichenkodierung als UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsives Design -->
+    <title>Lightning Horn Unicorn</title> <!-- Titel der Webseite -->
+
+    <!-- Einbindung der Google-Schriftart "Press Start 2P" -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Globales CSS -->
     <style>
-        /* Grundlegende Stile */
+        /* Grundlegende Stile für die gesamte Seite */
         body {
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'Press Start 2P', cursive; /* Schriftart für die gesamte Seite */
             margin: 0;
             padding: 0;
-            background: #f0f0f0; /* Heller Hintergrund für bessere Lesbarkeit */
-            color: #333333; /* Dunkleres Grau für besseren Kontrast */
-            text-align: center;
-            animation: fadeIn 2s;
+            background: #f0f0f0; /* Heller Hintergrund */
+            color: #333333; /* Dunkle Textfarbe */
+            text-align: center; /* Zentrierter Text */
+            animation: fadeIn 2s; /* Einblend-Animation */
         }
 
+        /* Keyframe-Animation für das Einblenden */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
+        /* Weitere globale Stile können hier hinzugefügt werden */
+    </style>
+</head>
+<body>
+    <!-- Navigationsmenü -->
+    <div class="menu">
+        <!-- Menüpunkt "About" -->
+        <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
+        <!-- Menüpunkt "Art" -->
+        <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
+        <!-- Menüpunkt "Projects" -->
+        <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
+        <!-- Menüpunkt "Storytime" -->
+        <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
+        <!-- Menüpunkt "Videos" -->
+        <a data-lang-en="VIDEOS (updated regularly)" data-lang-de="VIDEOS (regelmäßig aktualisiert)" onclick="showSection('videos')">VIDEOS (updated regularly)</a>
+        <!-- Menüpunkt "Contact" -->
+        <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
+    </div>
+
+    <!-- CSS-Stile für das Navigationsmenü -->
+    <style>
         /* Menü-Stile */
         .menu {
-            background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
+            background-color: rgba(255, 255, 255, 0.95); /* Leicht transparenter weißer Hintergrund */
             padding: 1em 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Leichter Schatten unter dem Menü */
             position: relative;
             top: 0;
-            z-index: 1001; /* Höher als floating-svg */
-            backdrop-filter: blur(10px);
+            z-index: 1001; /* Sicherstellen, dass das Menü über anderen Elementen liegt */
+            backdrop-filter: blur(10px); /* Weichzeichner-Effekt für den Hintergrund */
             display: flex;
-            flex-direction: column; /* Vertikale Liste */
-            align-items: center;    /* Zentriere die Elemente horizontal */
+            flex-direction: column; /* Vertikales Menü */
+            align-items: center; /* Zentrierung der Menüelemente */
         }
 
         /* Menü-Links */
         .menu a {
-            display: block;          /* Stelle sicher, dass Links als Block-Elemente angezeigt werden */
-            margin: 10px 0;          /* Vertikale Margen für Abstand zwischen den Links */
-            color: #333333;
-            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+            color: #333333; /* Dunkle Textfarbe */
+            text-decoration: none; /* Unterstreichung entfernen */
             font-size: 1em;
             padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px; /* Abgerundete Ecken */
+            transition: background-color 0.3s, color 0.3s; /* Übergangseffekte beim Hover */
             cursor: pointer;
-            width: 80%;              /* Optional: Setze eine Breite, um die Links breiter zu machen */
-            max-width: 300px;        /* Optional: Begrenze die maximale Breite */
-            text-align: center;      /* Zentriere den Text innerhalb der Links */
+            width: 80%; /* Breite der Menüelemente */
+            max-width: 300px;
+            text-align: center;
         }
 
+        /* Hover-Effekt für Menü-Links */
         .menu a:hover {
-            background-color: #FFD700; /* Gold */
-            color: #ffffff;
+            background-color: #FFD700; /* Goldener Hintergrund beim Hover */
+            color: #ffffff; /* Weißer Text beim Hover */
         }
 
-        /* Abschnitt-Stile */
-        section {
-            background-color: rgba(255, 255, 255, 0.95); /* Weiß mit leichter Transparenz */
-            padding: 2em;
-            margin: 2em auto;
-            border-radius: 10px;
-            display: none;
-            animation: fadeIn 1.5s ease-out;
-            max-width: 1000px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        section.active {
-            display: block;
-        }
-
-        section h2, section h3, section p {
-            text-align: center;
-        }
-
-        section h2 {
-            color: #FF2800; /* Ferrarirot */
-            text-shadow: 2px 2px #FFA500; /* Orangener Schatten */
-            margin-bottom: 20px;
-        }
-
-        section h3 {
-            color: #333333;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        section p {
-            color: #555555;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        /* Bilder */
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 10px auto;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            display: block;
-        }
-
-        img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Sub-Menü-Stile */
-        .sub-menu {
-            margin: 20px 0;
-        }
-
-        .sub-menu a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-size: cover;
-            background-position: center;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            width: 200px;
-            height: 150px;
-            line-height: 150px; /* Vertikale Zentrierung des Textes */
-            font-size: 0.8em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sub-menu a::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.6);
-            color: #ffffff;
-            padding: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-        }
-
-        .sub-menu a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Go Back Button */
-        .go-back {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: #FF2800; /* Ferrarirot */
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .go-back:hover {
-            background-color: #FFA500; /* Orange */
-            transform: scale(1.05);
-        }
-
-        /* Responsive Design */
+        /* Responsive Anpassungen für kleinere Bildschirme */
         @media (max-width: 768px) {
             .menu a {
                 margin: 5px 0;
                 padding: 8px 16px;
                 font-size: 0.9em;
-                width: 90%;           /* Passe die Breite für kleinere Bildschirme an */
-            }
-
-            iframe {
-                width: 100%;
-                height: 200px;
-            }
-
-            .sub-menu a {
-                width: 150px;
-                height: 100px;
-                line-height: 100px;
-                font-size: 0.7em;
+                width: 90%;
             }
         }
 
@@ -197,103 +101,53 @@
                 margin: 5px 0;
                 padding: 6px 12px;
                 font-size: 0.8em;
-                width: 95%;           /* Passe die Breite weiter an */
-            }
-
-            section {
-                padding: 1.5em;
-                margin: 1em auto;
-            }
-
-            footer {
-                font-size: 0.8em;
-                padding: 0.8em 0;
-            }
-
-            .sub-menu a {
-                width: 120px;
-                height: 80px;
-                line-height: 80px;
-                font-size: 0.6em;
+                width: 95%;
             }
         }
+    </style>
 
-        /* Footer Styling */
-        footer {
-            background-color: rgba(77, 77, 77, 0.9); /* Halbtransparentes Dunkelgrau */
-            color: #FFFFFF; /* Weißer Text */
-            padding: 20px 0;
-            width: 100%;
-            position: relative;
-            animation: fadeIn 2s ease-out;
-        }
+    <!-- Floating SVG Sticker -->
+    <div id="floating-svg" class="floating-svg">
+        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Musterdefinition für den Hintergrund -->
+                <pattern id="bgPattern" patternUnits="userSpaceOnUse" width="200" height="200">
+                    <!-- Bild für das Muster -->
+                    <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" x="0" y="0" width="200" height="200" />
+                </pattern>
+            </defs>
+            <!-- Kreis mit dem Muster füllen -->
+            <circle cx="100" cy="100" r="90" fill="url(#bgPattern)" />
+        </svg>
+    </div>
 
-        .footer-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .footer-container p {
-            margin: 0;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .social-icons a {
-            margin: 0 10px;
-            display: inline-block;
-        }
-
-        .social-icons img {
-            width: 24px;
-            height: 24px;
-            filter: invert(100%); /* Macht schwarze Icons weiß */
-            transition: transform 0.3s;
-        }
-
-        .social-icons a:hover img {
-            transform: scale(1.2);
-        }
-
+    <!-- CSS-Stile für den Floating SVG Sticker -->
+    <style>
         /* Floating SVG Styles */
         .floating-svg {
-            position: fixed; /* Fixiert das SVG relativ zum Viewport */
-            width: 200px;    /* Breite des Containers */
-            height: 200px;   /* Höhe des Containers */
-            z-index: 1000;   /* Stellt sicher, dass das SVG unter dem Menü liegt */
-            cursor: grab;    /* Zeigt an, dass das SVG ziehbar ist */
+            position: fixed; /* Fixierte Position relativ zum Viewport */
+            width: 200px;
+            height: 200px;
+            z-index: 1000; /* Über anderen Elementen, aber unter dem Menü */
+            cursor: grab; /* Zeigt an, dass das Element gezogen werden kann */
             user-select: none; /* Verhindert Textauswahl beim Ziehen */
-            touch-action: none; /* Verhindert Standard-Touch-Aktionen */
-            transition: transform 0.2s ease; /* Sanfter Übergang beim Hover */
-            /* Entferne die festen Positionen */
-            /* top: 20px; */
-            /* right: 20px; */
+            touch-action: none; /* Deaktiviert Standard-Touch-Aktionen */
+            transition: transform 0.2s ease; /* Sanfter Übergang bei Transformationen */
+            /* Startposition wird im JavaScript initialisiert */
         }
 
-        /* Cursor ändern beim Ziehen */
+        /* Cursor ändern beim aktiven Ziehen */
         .floating-svg:active {
-            cursor: grabbing; /* Ändert den Cursor beim Ziehen */
+            cursor: grabbing;
         }
 
-        /* Optional: Hover-Effekt */
+        /* Hover-Effekt */
         .floating-svg:hover {
-            transform: scale(1.05);
+            transform: scale(1.05); /* Leichtes Vergrößern beim Hover */
             transition: transform 0.3s;
         }
 
-        /* Responsive Anpassungen */
+        /* Responsive Anpassungen für kleinere Bildschirme */
         @media (max-width: 768px) {
             .floating-svg {
                 width: 150px;
@@ -307,27 +161,16 @@
                 height: 100px;
             }
         }
-
-        /* Optional: Visuelles Feedback beim Ziehen */
-        .floating-svg.dragging {
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            transform: scale(1.1);
-        }
     </style>
+
+    <!-- JavaScript für den Floating SVG Sticker -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Sprachinitialisierung
-            const userLang = navigator.language || navigator.userLanguage;
-            const lang = userLang.startsWith('de') ? 'de' : 'en';
-
-            setLanguage(lang);
-
-            // Speichert die gewählte Sprache für den weiteren Gebrauch
-            document.body.setAttribute('data-current-lang', lang);
-
-            // Drag-and-Drop mit Physik für Floating SVG
+            // Selektieren des SVG-Elements und des Menüs
             const svg = document.getElementById('floating-svg');
             const menu = document.querySelector('.menu');
+
+            // Variablen für das Drag-and-Drop
             let isDragging = false;
             let startX, startY;
             let initialLeft, initialTop;
@@ -336,26 +179,25 @@
             let lastTime = Date.now();
             let animationFrameId;
 
-            // Berechne die Anfangsposition des SVG
+            // Funktion zur Initialisierung der SVG-Position
             const initializePosition = () => {
                 const menuHeight = menu.offsetHeight;
                 const svgWidth = svg.offsetWidth;
                 const svgHeight = svg.offsetHeight;
-                const posX = (window.innerWidth - svgWidth) / 2;
-                const posY = menuHeight + 20; // 20px Abstand unter dem Menü
+                const posX = (window.innerWidth - svgWidth) / 2; // Zentrierung horizontal
+                const posY = menuHeight + 20; // Platzierung unter dem Menü
                 svg.style.left = `${posX}px`;
                 svg.style.top = `${posY}px`;
-                console.log(`Setting SVG position: left=${posX}px, top=${posY}px`);
             };
 
-            initializePosition();
+            initializePosition(); // Position beim Laden der Seite setzen
 
-            // Aktualisiere die Position bei Fenstergrößeänderung
+            // Aktualisieren der Position bei Fenstergrößenänderung
             window.addEventListener('resize', () => {
                 initializePosition();
             });
 
-            // Drag Start Event
+            // Funktionen für Drag Start, Move und End
             const dragStart = (x, y) => {
                 isDragging = true;
                 startX = x;
@@ -369,7 +211,6 @@
                 svg.classList.add('dragging');
             };
 
-            // Drag Move Event
             const dragMove = (x, y) => {
                 if (!isDragging) return;
                 const deltaX = x - startX;
@@ -380,24 +221,22 @@
                 const now = Date.now();
                 const deltaTime = now - lastTime;
                 lastTime = now;
-                // Convert deltaTime to seconds
                 const deltaTimeSeconds = deltaTime / 1000;
-                velocityX = (deltaX / deltaTimeSeconds) * 0.016; // approximate frame duration
+                velocityX = (deltaX / deltaTimeSeconds) * 0.016; // Berechnung der Geschwindigkeit
                 velocityY = (deltaY / deltaTimeSeconds) * 0.016;
             };
 
-            // Drag End Event
             const dragEnd = () => {
                 isDragging = false;
                 lastTime = Date.now();
                 svg.classList.remove('dragging');
-                animate();
+                animate(); // Starten der Animation nach Loslassen
             };
 
-            // Animation Function
+            // Animationsfunktion für den Bewegungseffekt nach dem Loslassen
             const animate = () => {
                 const rect = svg.getBoundingClientRect();
-                let left = rect.left + velocityX * 16; // Approx. 60fps
+                let left = rect.left + velocityX * 16; // Bewegung basierend auf Geschwindigkeit
                 let top = rect.top + velocityY * 16;
 
                 const windowWidth = window.innerWidth;
@@ -405,10 +244,10 @@
                 const svgWidth = rect.width;
                 const svgHeight = rect.height;
 
-                // Kollision mit den Rändern
+                // Kollision mit den Bildschirmrändern
                 if (left + svgWidth > windowWidth) {
                     left = windowWidth - svgWidth;
-                    velocityX = -velocityX;
+                    velocityX = -velocityX; // Richtungsumkehr bei Kollision
                 } else if (left < 0) {
                     left = 0;
                     velocityX = -velocityX;
@@ -425,11 +264,11 @@
                 svg.style.left = `${left}px`;
                 svg.style.top = `${top}px`;
 
-                // Reibung zur Verlangsamung
+                // Reibungseffekt zur allmählichen Verlangsamung
                 velocityX *= 0.95;
                 velocityY *= 0.95;
 
-                // Stoppe die Animation, wenn die Geschwindigkeit sehr niedrig ist
+                // Beenden der Animation, wenn die Geschwindigkeit gering ist
                 if (Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
                     cancelAnimationFrame(animationFrameId);
                     return;
@@ -438,7 +277,7 @@
                 animationFrameId = requestAnimationFrame(animate);
             };
 
-            // Maus Events
+            // Event Listener für Mausereignisse
             svg.addEventListener('mousedown', (e) => {
                 e.preventDefault();
                 dragStart(e.clientX, e.clientY);
@@ -456,7 +295,7 @@
                 }
             });
 
-            // Touch Events
+            // Event Listener für Touch-Ereignisse (für mobile Geräte)
             svg.addEventListener('touchstart', (e) => {
                 if (e.touches.length === 1) {
                     const touch = e.touches[0];
@@ -477,7 +316,7 @@
                 }
             });
 
-            // Optional: Stop animation bei Fenstergrößenänderung, um Glitches zu vermeiden
+            // Aktualisierung bei Fenstergrößenänderung
             window.addEventListener('resize', () => {
                 cancelAnimationFrame(animationFrameId);
                 velocityX = 0;
@@ -485,108 +324,15 @@
                 initializePosition();
             });
         });
-
-        function setLanguage(lang) {
-            const elements = document.querySelectorAll('[data-lang-en]');
-            elements.forEach(element => {
-                const text = element.getAttribute(`data-lang-${lang}`);
-                if (text) {
-                    element.innerHTML = text;
-                }
-            });
-
-            // Hide all elements with data-lang
-            const allLangElements = document.querySelectorAll('[data-lang]');
-            allLangElements.forEach(element => {
-                element.style.display = 'none';
-            });
-
-            // Show elements with the current language
-            const currentLangElements = document.querySelectorAll(`[data-lang="${lang}"]`);
-            currentLangElements.forEach(element => {
-                element.style.display = 'block';
-            });
-        }
-
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-
-            const targetSection = document.getElementById(sectionId);
-            targetSection.classList.add('active');
-
-            if (sectionId === 'art') {
-                goBackArt(); // Initialisiert den Kunstbereich, zeigt das Sub-Menü
-            }
-
-            if (sectionId === 'storytime') {
-                goBackStory();
-            }
-
-            window.scrollTo(0, 0); // Scroll to top when section is shown
-        }
-
-        // Neue Funktionen für den Kunstbereich
-        function showSubSection(subSectionId) {
-            // Verstecke alle Untersektionen
-            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            // Zeige die ausgewählte Untersektion
-            document.getElementById(subSectionId).style.display = 'block';
-            // Verstecke das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'none';
-            }
-        }
-
-        function goBackArt() {
-            // Verstecke alle Untersektionen
-            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            // Zeige das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'flex';
-            }
-        }
     </script>
-</head>
 
-<body>
+    <!-- Hauptinhalt (Sektionen) -->
+    <!-- About Section -->
+    <section id="about">
+    <!-- Überschrift der Sektion -->
+    <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">ABOUT</h2>
 
-    <!-- Navigationsmenü -->
-    <div class="menu">
-        <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
-        <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
-        <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
-        <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
-        <a data-lang-en="VIDEOS (updated regularly)" data-lang-de="VIDEOS (regelmäßig aktualisiert)" onclick="showSection('videos')">VIDEOS (updated regularly)</a>
-        <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
-    </div>
-
-    <!-- Floating SVG Sticker -->
-    <div id="floating-svg" class="floating-svg">
-        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="bgPattern" patternUnits="userSpaceOnUse" width="200" height="200">
-                    <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" x="0" y="0" width="200" height="200" />
-                </pattern>
-            </defs>
-            <circle cx="100" cy="100" r="90" fill="url(#bgPattern)" />
-            <!-- Weitere SVG-Elemente können hier hinzugefügt werden -->
-        </svg>
-    </div>
-
-    <main>
-        <!-- About Section -->
-        <section id="about">
-            <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">About</h2>
-            <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
+     <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Vedran.jpg" alt="Vedran">
     <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic." 
        data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, früher bekannt als Vedran Lukic.">
         Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic.
@@ -686,30 +432,34 @@
        data-lang-de="Wenn dich die Geschichte von Lightning Horn Unicorn anspricht, freut er sich über deine Unterstützung. Erkunde seine Kunst und Musik und begleite ihn auf dieser aufregenden Reise der Selbstentfaltung und Innovation. 'Zusammen können wir etwas Außergewöhnliches schaffen', lädt er ein. Oder zumindest werden wir viel Spaß dabei haben.">
         If Lightning Horn Unicorn's story resonates with you, he welcomes your support. Explore his art and music, and join him on this exciting journey of self-expression and innovation. "Together, we can create something extraordinary," he invites. Or at least, we’ll have a lot of fun trying.
     </p>
-        </section>
+    </section>
 
-        <!-- Art Section -->
-        <section id="art">
-            <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
-            <!-- Art Menu -->
-            <div class="sub-menu" style="display: flex; flex-wrap: wrap; justify-content: center;">
-                <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');" data-title="A.I. Art">
-                    A.I. Art
-                </a>
-                <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');" data-title="Human Art">
-                    Human Art
-                </a>
-            </div>
 
-            <!-- Go Back Button wurde entfernt -->
+    
+    <!-- Weitere Sektionen (Art, Projects, Storytime, Videos, Contact) folgen hier -->
+    <!-- Füge sie nach dem gleichen Muster ein -->
+<!-- Art Section -->
+<section id="art">
+    <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
 
-            <!-- A.I. Art Section -->
-            <div id="ai-art" class="ai-art" style="display:none;">
-                <!-- Go Back Button -->
-                <a class="go-back" onclick="goBackArt()">Go Back</a>
+    <!-- Untermenü für die Auswahl zwischen A.I. Art und Human Art -->
+    <div class="sub-menu" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        <!-- Link zu A.I. Art -->
+        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');" data-title="A.I. Art">
+            A.I. Art
+        </a>
+        <!-- Link zu Human Art -->
+        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');" data-title="Human Art">
+            Human Art
+        </a>
+    </div>
 
-                <!-- Deine A.I. Art Bilder und Inhalte -->
-                <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
+    <!-- A.I. Art Section -->
+    <div id="ai-art" class="ai-art" style="display:none;">
+        <!-- Go Back Button -->
+        <a class="go-back" onclick="goBackArt()">Go Back</a>
+
+        <img id="ai-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwave.jpg" alt="A.I. Art 1">
                 <img id="ai-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/d13.png" alt="A.I. Art 3">
                 <img id="ai-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.jpg" alt="Snout Chordz">
                 <img id="ai-art-5" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/RGB%20NIPPLES%20ARE%20RAINBOWS.jpg" alt="RGB NIPPLES ARE RAINBOWS">
@@ -729,15 +479,14 @@
                    data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert.">
                     Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
                 </p>
-            </div>
+    </div>
 
-            <!-- Human Art Section -->
-            <div id="human-art" class="human-art" style="display:none;">
-                <!-- Go Back Button -->
-                <a class="go-back" onclick="goBackArt()">Go Back</a>
+    <!-- Human Art Section -->
+    <div id="human-art" class="human-art" style="display:none;">
+        <!-- Go Back Button -->
+        <a class="go-back" onclick="goBackArt()">Go Back</a>
 
-                <!-- Deine Human Art Bilder und Inhalte -->
-                <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.png" alt="Human Art 1">
+        <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.png" alt="Human Art 1">
                 <img id="human-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.png" alt="Human Art 2">
                 <img id="human-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow%20onyx.jpg" alt="Rainbow Onyx">
                 <img id="human-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/clown.png" alt="Clown">
@@ -750,13 +499,214 @@
                    data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst.">
                     Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
                 </p>
-            </div>
-        </section>
-        <!-- Projects Section -->
-        <section id="projects">
-            <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE">Projects</h2>
-            <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar...">Coming Soon...</p>
-        </section>
+    </div>
+
+    <!-- Art-spezifisches CSS -->
+    <style>
+        /* Sub-Menü-Stile */
+        .sub-menu a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 200px;
+            height: 150px;
+            line-height: 150px;
+            font-size: 0.8em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Titel für die Sub-Menü-Links */
+        .sub-menu a::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            color: #ffffff;
+            padding: 5px 0;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        /* Hover-Effekt für Sub-Menü-Links */
+        .sub-menu a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Go Back Button Stil */
+        .go-back {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #FF2800; /* Ferrarirot */
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .go-back:hover {
+            background-color: #FFA500; /* Orange */
+            transform: scale(1.05);
+        }
+    </style>
+
+    <!-- Art-spezifisches JavaScript -->
+    <script>
+        function showSubSection(subSectionId) {
+            // Verstecke alle Untersektionen
+            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            // Zeige die ausgewählte Untersektion
+            document.getElementById(subSectionId).style.display = 'block';
+            // Verstecke das Sub-Menü
+            const subMenu = document.querySelector('#art .sub-menu');
+            if (subMenu) {
+                subMenu.style.display = 'none';
+            }
+        }
+
+        function goBackArt() {
+            // Verstecke alle Untersektionen
+            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
+                subSection.style.display = 'none';
+            });
+            // Zeige das Sub-Menü
+            const subMenu = document.querySelector('#art .sub-menu');
+            if (subMenu) {
+                subMenu.style.display = 'flex';
+            }
+        }
+    </script>
+</section>
+<!-- Projects Section -->
+<section id="projects">
+    <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE">PROJECTS</h2>
+    <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar...">Coming Soon...</p>
+</section>
+<!-- Storytime Section -->
+<section id="storytime">
+    <h2 data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN">STORYTIME</h2>
+
+    <!-- Story-Menü zur Auswahl der Kapitel -->
+    <div id="story-menu" class="menu">
+        <a href="javascript:void(0)" onclick="showChapter('chapter-001')"
+           data-lang-en="Chapter 001: Who the Thunder is Aether?"
+           data-lang-de="Kapitel 001: Wer zum Donner ist Aether?">Chapter 001: WHO TF IS AETHER?</a>
+        <a href="javascript:void(0)" onclick="showChapter('chapter-002')"
+           data-lang-en="Chapter 002: the unicorn and the cyborg"
+           data-lang-de="Kapitel 002: Das Einhorn und der Cyborg">Chapter 002: the unicorn and the cyborg</a>
+        <!-- Weitere Kapitel können hier hinzugefügt werden -->
+    </div>
+
+    <!-- Kapitel 001 -->
+    <div id="chapter-001" class="chapter">
+        <!-- Go Back Button -->
+        <a href="javascript:void(0)" class="go-back" onclick="goBackStory()">Go Back</a>
+        <!-- Inhalt des Kapitels -->
+        <div data-lang="en">
+            <!-- Englischer Inhalt -->
+            <p>Me: "Aether."</p>
+            <!-- Weitere Absätze... -->
+        </div>
+        <div data-lang="de">
+            <!-- Deutscher Inhalt -->
+            <p>Ich: "Aether."</p>
+            <!-- Weitere Absätze... -->
+        </div>
+    </div>
+
+    <!-- Weitere Kapitel können nach dem gleichen Muster hinzugefügt werden -->
+
+    <!-- Storytime-spezifisches CSS -->
+    <style>
+        /* Stile für das Story-Menü */
+        .menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .menu a:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Stile für die Kapitel */
+        .chapter {
+            display: none; /* Kapitel standardmäßig versteckt */
+            margin-top: 20px;
+        }
+
+        .chapter.active {
+            display: block; /* Aktives Kapitel anzeigen */
+        }
+
+        /* Go Back Button Stil */
+        .go-back {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .go-back:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <!-- Storytime-spezifisches JavaScript -->
+    <script>
+        function showChapter(chapterId) {
+            // Verstecke alle Kapitel
+            document.querySelectorAll('.chapter').forEach(chapter => {
+                chapter.classList.remove('active');
+            });
+
+            // Zeige das ausgewählte Kapitel
+            const selectedChapter = document.getElementById(chapterId);
+            if (selectedChapter) {
+                selectedChapter.classList.add('active');
+                // Optional: Scrollen zum Kapitel
+                selectedChapter.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Verstecke das Story-Menü
+            document.getElementById('story-menu').style.display = 'none';
+        }
+
+        function goBackStory() {
+            // Zeige das Story-Menü
+            document.getElementById('story-menu').style.display = 'block';
+            // Verstecke alle Kapitel
+            document.querySelectorAll('.chapter').forEach(chapter => {
+                chapter.classList.remove('active');
+            });
+
+            // Optional: Scrollen zum Menü
+            document.getElementById('story-menu').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</section>
         <!-- Storytime Section -->
         <section id="storytime">
     <h2 data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN">Storytime</h2>
@@ -949,10 +899,11 @@
             <p>Fortsetzung folgt</p>
         </div>
     </div>
-            
-    <!-- Storytime-spezifisches CSS -->
+
+
+<!-- Storytime-spezifisches CSS -->
     <style>
-        /* Grundlegende Stile für das Menü und Kapitel */
+        /* Stile für das Story-Menü */
         .menu a {
             display: block;
             padding: 10px;
@@ -968,15 +919,17 @@
             background-color: #f0f0f0;
         }
 
+        /* Stile für die Kapitel */
         .chapter {
             display: none; /* Kapitel standardmäßig versteckt */
             margin-top: 20px;
         }
 
         .chapter.active {
-            display: block; /* Sichtbares Kapitel */
+            display: block; /* Aktives Kapitel anzeigen */
         }
 
+        /* Go Back Button Stil */
         .go-back {
             display: inline-block;
             margin-bottom: 15px;
@@ -995,7 +948,6 @@
 
     <!-- Storytime-spezifisches JavaScript -->
     <script>
-        // Funktion zum Anzeigen eines Kapitels
         function showChapter(chapterId) {
             // Verstecke alle Kapitel
             document.querySelectorAll('.chapter').forEach(chapter => {
@@ -1014,7 +966,6 @@
             document.getElementById('story-menu').style.display = 'none';
         }
 
-        // Funktion zum Zurückkehren zum Menü
         function goBackStory() {
             // Zeige das Story-Menü
             document.getElementById('story-menu').style.display = 'block';
@@ -1026,64 +977,167 @@
             // Optional: Scrollen zum Menü
             document.getElementById('story-menu').scrollIntoView({ behavior: 'smooth' });
         }
-
-        // Sprachwechsel-Funktion (Beispiel)
-        function switchLanguage(lang) {
-            document.querySelectorAll('[data-lang-en]').forEach(element => {
-                if (lang === 'de') {
-                    element.textContent = element.getAttribute('data-lang-de');
-                } else {
-                    element.textContent = element.getAttribute('data-lang-en');
-                }
-            });
-
-            document.querySelectorAll('[data-lang]').forEach(element => {
-                const content = element.getAttribute(`data-lang-${lang}`);
-                if (content) {
-                    element.innerHTML = content;
-                }
-            });
-        }
     </script>
 </section>
-        
-    <!-- Videos Section -->
-        <section id="videos">
-            <h2 data-lang-en="VIDEOS" data-lang-de="VIDEOS">Videos</h2>
-            <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-                <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
-                <iframe src="https://www.youtube.com/embed/9RnlWrrX6C8" allowfullscreen></iframe>
-                <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
-            </div>
-        </section>
 
-        <!-- Contact Section -->
-        <section id="contact">
-            <h2 data-lang-en="CONTACT" data-lang-de="KONTAKT">Contact</h2>
-            <p>
-                <a href="mailto:vedranlukic@hotmail.com" class="mailbox"
-                   data-lang-en="Unicorn Mailbox" 
-                   data-lang-de="Einhorn-Briefkasten">
-                    Unicorn Mailbox
-                </a>
-            </p>
-        </section>
-    </main>
-    <!-- Footer Section -->
-<footer>
-    <div class="footer-container">
-        <p data-lang-en="&copy; 2024 Lightning Horn Unicorn. All rights reserved."
-           data-lang-de="&copy; 2024 Lightning Horn Unicorn. Alle Rechte vorbehalten.">
-            &copy; 2024 Lightning Horn Unicorn. All rights reserved.
-        </p>
-        <div class="social-icons">
-            <a href="https://www.instagram.com/lightninghornunicorn/?igsh=NXZkN3BqbDhsMTAx" target="_blank">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" alt="Instagram">
-            </a>
-            <!-- Weitere Social-Media-Links hinzufügen -->
-        </div>
+<!-- Videos Section -->
+<section id="videos">
+    <h2 data-lang-en="VIDEOS" data-lang-de="VIDEOS">VIDEOS</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+        <!-- Einbettung von YouTube-Videos -->
+        <iframe src="https://www.youtube.com/embed/H6X8LdxIMZM" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/9RnlWrrX6C8" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/nvyAQcxVNNM" allowfullscreen></iframe>
     </div>
-</footer>
+</section>
+<!-- Contact Section -->
+<section id="contact">
+    <h2 data-lang-en="CONTACT" data-lang-de="KONTAKT">CONTACT</h2>
+    <p>
+        <!-- E-Mail-Link -->
+        <a href="mailto:vedranlukic@hotmail.com" class="mailbox"
+           data-lang-en="Unicorn Mailbox" 
+           data-lang-de="Einhorn-Briefkasten">
+            Unicorn Mailbox
+        </a>
+    </p>
+</section>
 
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <!-- Copyright -->
+            <p data-lang-en="&copy; 2024 Lightning Horn Unicorn. All rights reserved."
+               data-lang-de="&copy; 2024 Lightning Horn Unicorn. Alle Rechte vorbehalten.">
+                &copy; 2024 Lightning Horn Unicorn. All rights reserved.
+            </p>
+            <!-- Social-Media-Icons -->
+            <div class="social-icons">
+                <a href="https://www.instagram.com/lightninghornunicorn/" target="_blank">
+                    <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" alt="Instagram">
+                </a>
+                <!-- Weitere Social-Media-Links können hier hinzugefügt werden -->
+            </div>
+        </div>
+
+        <!-- Footer-spezifisches CSS -->
+        <style>
+            /* Footer Styling */
+            footer {
+                background-color: rgba(77, 77, 77, 0.9); /* Halbtransparenter dunkelgrauer Hintergrund */
+                color: #FFFFFF; /* Weißer Text */
+                padding: 20px 0;
+                width: 100%;
+                position: relative;
+                animation: fadeIn 2s ease-out;
+            }
+
+            .footer-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .footer-container p {
+                margin: 0;
+                font-size: 0.9em;
+                margin-bottom: 10px;
+            }
+
+            .social-icons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .social-icons a {
+                margin: 0 10px;
+                display: inline-block;
+            }
+
+            .social-icons img {
+                width: 24px;
+                height: 24px;
+                filter: invert(100%); /* Weiße Icons */
+                transition: transform 0.3s;
+            }
+
+            .social-icons a:hover img {
+                transform: scale(1.2); /* Vergrößerung beim Hover */
+            }
+
+            /* Responsive Anpassungen für kleinere Bildschirme */
+            @media (max-width: 480px) {
+                footer {
+                    font-size: 0.8em;
+                    padding: 0.8em 0;
+                }
+            }
+        </style>
+    </footer>
+
+    <!-- Globale JavaScript-Funktionen -->
+    <script>
+        // Sprachinitialisierung
+        document.addEventListener('DOMContentLoaded', () => {
+            const userLang = navigator.language || navigator.userLanguage;
+            const lang = userLang.startsWith('de') ? 'de' : 'en';
+            setLanguage(lang);
+            document.body.setAttribute('data-current-lang', lang);
+        });
+
+        // Funktion zum Setzen der Sprache
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-lang-${lang}`);
+                if (text) {
+                    element.innerHTML = text;
+                }
+            });
+
+            // Verstecke alle Elemente mit data-lang
+            const allLangElements = document.querySelectorAll('[data-lang]');
+            allLangElements.forEach(element => {
+                element.style.display = 'none';
+            });
+
+            // Zeige Elemente mit der aktuellen Sprache
+            const currentLangElements = document.querySelectorAll(`[data-lang="${lang}"]`);
+            currentLangElements.forEach(element => {
+                element.style.display = 'block';
+            });
+        }
+
+        // Funktion zum Anzeigen einer Sektion
+        function showSection(sectionId) {
+            // Verstecke alle Sektionen
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Zeige die ausgewählte Sektion
+            const targetSection = document.getElementById(sectionId);
+            targetSection.classList.add('active');
+
+            // Spezifische Initialisierungen für bestimmte Sektionen
+            if (sectionId === 'art') {
+                goBackArt(); // Zeigt das Sub-Menü in der Art-Sektion an
+            }
+
+            if (sectionId === 'storytime') {
+                goBackStory(); // Zeigt das Story-Menü in der Storytime-Sektion an
+            }
+
+            window.scrollTo(0, 0); // Scrollt nach oben, wenn die Sektion angezeigt wird
+        }
+    </script>
 </body>
 </html>
+
