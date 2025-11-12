@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enter Your Secret PIN</title>
+  <style>
+    #download-section, #fail-unicorn {
+      display: none;
+    }
+    #fail-unicorn {
+      text-align: center;
+      font-size: 24px;
+      color: hotpink;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Enter Your PIN to Unlock the Magic 🦄</h2>
+  <input type="text" id="pin" placeholder="4-digit PIN">
+  <button onclick="checkPin()">Submit</button>
+
+  <div id="download-section">
+    <p>🎉 Congrats! Here's your download:</p>
+    <a href="your-album.zip" download>Download Album</a>
+  </div>
+
+  <div id="fail-unicorn">
+    <p>🦄 *Snap!* Nice try, mortal. 🫰</p>
+  </div>
+
+  <script>
+    const validPins = {
+      "1234": false,
+      "5678": false
+    };
+
+    function checkPin() {
+      const input = document.getElementById("pin").value;
+      if (validPins[input] === false) {
+        document.getElementById("download-section").style.display = "block";
+        document.getElementById("fail-unicorn").style.display = "none";
+        // Hier könnte man z. B. die PIN als 'benutzt' markieren – mit Backend
+      } else {
+        document.getElementById("fail-unicorn").style.display = "block";
+        document.getElementById("download-section").style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
