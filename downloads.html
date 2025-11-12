@@ -1,47 +1,67 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lightning Horn Unicorn – Downloads</title>
+
+  <!-- 80s Videogame Font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg-dark: #1a1a1a;
+      --bg-light: #2b2b2b;
+      --text-main: #ffd54a;    /* goldgelb */
+      --text-accent: #ffae00;  /* orangegelb */
+      --text-hover: #fff3b0;   /* helles cremegelb */
+      --text-muted: #999;
+    }
+
     body {
       font-family: 'Press Start 2P', monospace;
-      background-color: #0a0a0a;
-      color: #00f7ff;
+      background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
       text-align: center;
-      padding: 50px;
+      padding: 60px 20px;
       line-height: 1.8;
+      letter-spacing: 0.3px;
     }
+
     h1 {
-      font-size: 1.2em;
+      font-size: 1.3em;
       margin-bottom: 40px;
-      color: #ff00aa;
-      text-shadow: 0 0 10px #ff00aa, 0 0 20px #00f7ff;
+      color: var(--text-accent);
+      text-shadow: 0 0 10px var(--text-accent), 0 0 20px var(--text-main);
     }
+
     ul.downloads {
       list-style: none;
       padding: 0;
       margin: 0 auto;
       max-width: 800px;
     }
+
     ul.downloads li {
       margin: 20px 0;
     }
+
     a.download {
-      color: #00f7ff;
+      color: var(--text-main);
       text-decoration: none;
       transition: color 0.3s, text-shadow 0.3s;
       display: inline-block;
     }
+
     a.download:hover {
-      color: #ff00aa;
-      text-shadow: 0 0 10px #ff00aa, 0 0 20px #00f7ff;
+      color: var(--text-hover);
+      text-shadow: 0 0 10px var(--text-accent), 0 0 20px var(--text-hover);
     }
+
     .note {
       margin-top: 60px;
       font-size: 0.6em;
-      color: #888;
+      color: var(--text-muted);
       max-width: 700px;
       margin-left: auto;
       margin-right: auto;
@@ -81,11 +101,10 @@
     ideas that accidentally (and through hard work) turn into masterpieces.<br><br>
     Stay kind and inspired.<br><br>
     All songs, lyrics, and artworks are original protected works created by 
-    Lightning Horn Unicorn (Vedran Lukic & Aether Veylan).<br>
-    No part of this material may be used, copied, remixed, or distributed 
-    without explicit permission from the artist.
+    Lightning Horn Unicorn (Vedran Lukic &amp; Aether Veylan).<br>
+    No part of this material may be used, copied, remixed, or distributed without 
+    explicit permission from the artist.
   </div>
 
 </body>
 </html>
-
