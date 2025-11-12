@@ -1,595 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Kopfbereich der Seite -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lightning Horn Unicorn</title>
-
-    <!-- Einbindung der Google-Schriftart "Press Start 2P" -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-    <!-- Globales CSS -->
-    <style>
-        /* Grundlegende Stile für die gesamte Seite */
-        body {
-            font-family: 'Press Start 2P', cursive;
-            margin: 0;
-            padding: 0;
-            background: #f0f0f0;
-            color: #333333;
-            text-align: center;
-            animation: fadeIn 2s;
-        }
-
-        /* Keyframe-Animation für das Einblenden */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Menü-Stile */
-        .menu {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 1em 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-            top: 0;
-            z-index: 1001;
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Menü-Links */
-        .menu a {
-            display: block;
-            margin: 10px 0;
-            color: #333333;
-            text-decoration: none;
-            font-size: 1em;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            cursor: pointer;
-            width: 80%;
-            max-width: 300px;
-            text-align: center;
-        }
-
-        .menu a:hover {
-            background-color: #FFD700;
-            color: #ffffff;
-        }
-
-        /* Responsive Anpassungen für kleinere Bildschirme */
-        @media (max-width: 768px) {
-            .menu a {
-                margin: 5px 0;
-                padding: 8px 16px;
-                font-size: 0.9em;
-                width: 90%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .menu a {
-                margin: 5px 0;
-                padding: 6px 12px;
-                font-size: 0.8em;
-                width: 95%;
-            }
-        }
-
-        /* Floating SVG Styles */
-        .floating-svg {
-            position: fixed;
-            width: 200px;
-            height: 200px;
-            z-index: 1000;
-            cursor: grab;
-            user-select: none;
-            touch-action: none;
-            transition: transform 0.2s ease;
-        }
-
-        .floating-svg:active {
-            cursor: grabbing;
-        }
-
-        .floating-svg:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s;
-        }
-
-        @media (max-width: 768px) {
-            .floating-svg {
-                width: 150px;
-                height: 150px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .floating-svg {
-                width: 100px;
-                height: 100px;
-            }
-        }
-
-        /* Allgemeine Stile für Sektionen */
-        section {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2em;
-            margin: 2em auto;
-            border-radius: 10px;
-            display: none;
-            animation: fadeIn 1.5s ease-out;
-            max-width: 1000px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        section.active {
-            display: block;
-        }
-
-        section h2, section h3, section p {
-            text-align: center;
-        }
-
-        section h2 {
-            color: #FF2800;
-            text-shadow: 2px 2px #FFA500;
-            margin-bottom: 20px;
-        }
-
-        section h3 {
-            color: #333333;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        section p {
-            color: #555555;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        /* Globale Bild-Stile */
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 10px auto;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            display: block;
-        }
-
-        img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Einheitliche Bildgröße für die About-Kategorie */
-        #about img {
-            width: 620px;
-            height: auto;
-        }
-	/* Einheitliche Bildgröße für die Art-Kategorie */
-        #art img {
-            width: 620px;
-            height: auto;
-        }
-
-
-
-        /* Sub-Menü-Stile */
-        .sub-menu a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-size: cover;
-            background-position: center;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            width: 200px;
-            height: 150px;
-            line-height: 150px;
-            font-size: 0.8em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sub-menu a::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.6);
-            color: #ffffff;
-            padding: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-        }
-
-        .sub-menu a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .go-back {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: #FF2800;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .go-back:hover {
-            background-color: #FFA500;
-            transform: scale(1.05);
-        }
-
-        /* Stile für das Story-Menü */
-        #story-menu a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #333;
-            border: 1px solid #ccc;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        #story-menu a:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Stile für die Kapitel */
-        .chapter {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .chapter.active {
-            display: block;
-        }
-
-        .chapter .go-back {
-            margin-bottom: 15px;
-            padding: 8px 12px;
-            background-color: #007BFF;
-            color: #fff;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .chapter .go-back:hover {
-            background-color: #0056b3;
-        }
-
-        /* Footer Styling */
-        footer {
-            background-color: rgba(77, 77, 77, 0.9);
-            color: #FFFFFF;
-            padding: 20px 0;
-            width: 100%;
-            position: relative;
-            animation: fadeIn 2s ease-out;
-        }
-
-        .footer-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .footer-container p {
-            margin: 0;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .social-icons a {
-            margin: 0 10px;
-            display: inline-block;
-        }
-
-        .social-icons img {
-            width: 24px;
-            height: 24px;
-            filter: invert(100%);
-            transition: transform 0.3s;
-        }
-
-        .social-icons a:hover img {
-            transform: scale(1.2);
-        }
-
-        @media (max-width: 480px) {
-            footer {
-                font-size: 0.8em;
-                padding: 0.8em 0;
-            }
-        }
-    </style>
-
-    <!-- JavaScript -->
-    <script type="module">
-        document.addEventListener('DOMContentLoaded', () => {
-            const userLang = navigator.language || navigator.userLanguage;
-            const lang = userLang.startsWith('de') ? 'de' : 'en';
-            setLanguage(lang);
-            document.body.setAttribute('data-current-lang', lang);
-        });
-
-        function setLanguage(lang) {
-            const elements = document.querySelectorAll('[data-lang-en]');
-            elements.forEach(element => {
-                const text = element.getAttribute(`data-lang-${lang}`);
-                if (text) {
-                    element.textContent = text;
-                }
-            });
-        }
-
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-            if (sectionId === 'art') {
-                goBack();
-            }
-            if (sectionId === 'storytime') {
-                goBackStory();
-            }
-            window.scrollTo(0, 0);
-        }
-
-        function showSubSection(subSectionId) {
-            document.querySelectorAll('#art > div').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            document.getElementById(subSectionId).style.display = 'block';
-            document.getElementById('go-back').style.display = 'block';
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'none';
-            }
-        }
-
-        function goBack() {
-            document.querySelectorAll('#art > div').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            document.getElementById('go-back').style.display = 'none';
-            document.querySelector('.sub-menu').style.display = 'flex';
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightning Horn Unicorn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P', cursive;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      color: #333;
+      text-align: center;
+      animation: fadeIn 2s;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .menu {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1em 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      top: 0;
+      z-index: 1001;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .menu a {
+      margin: 10px;
+      color: #333;
+      text-decoration: none;
+      font-size: 0.8em;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+      cursor: pointer;
+      text-align: center;
+    }
+    .menu a:hover {
+      background-color: #FFD700;
+      color: #fff;
+    }
+    section {
+      background-color: rgba(255,255,255,0.95);
+      padding: 2em;
+      margin: 2em auto;
+      border-radius: 10px;
+      display: none;
+      max-width: 1000px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    section.active { display: block; }
+    h2 {
+      color: #FF2800;
+      text-shadow: 2px 2px #FFA500;
+    }
+    img.art-fixed {
+      width: 320px;
+      height: auto;
+      border-radius: 10px;
+      margin: 20px auto;
+      display: block;
+    }
+    footer {
+      background-color: rgba(77, 77, 77, 0.9);
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+    .social-icons img {
+      width: 24px;
+      height: 24px;
+      filter: invert(100%);
+      transition: transform 0.3s;
+    }
+    .social-icons a:hover img {
+      transform: scale(1.2);
+    }
+  </style>
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+  </script>
 </head>
 <body>
-    <!-- Navigationsmenü -->
-    <div class="menu">
-        <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
-        <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
-        <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
-        <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
-        <a data-lang-en="MUSIC (updated regularly)" data-lang-de="MUSIK (regelmäßig aktualisiert)" onclick="showSection('music')">MUSIC (updated regularly)</a>
-        <a data-lang-en="CONTACT" data-lang-de="KONTAKT" onclick="showSection('contact')">CONTACT</a>
-	<a data-lang-en="DONATE" data-lang-de="UNTERSTÜZTE MICH" onclick="showSection('donate')">DONATE</a>
-    </div>
-    
-    <!-- Floating SVG Sticker -->
-    <div id="floating-svg" class="floating-svg">
-        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="bgPattern" patternUnits="userSpaceOnUse" width="200" height="200">
-                    <image href="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" x="0" y="0" width="200" height="200" />
-                </pattern>
-            </defs>
-            <circle cx="100" cy="100" r="90" fill="url(#bgPattern)" />
-        </svg>
-    </div>
+  <div class="menu">
+    <a onclick="showSection('about')">ABOUT</a>
+    <a onclick="showSection('aiart')">MY A.I. ART</a>
+    <a onclick="showSection('humanart')">MY HUMAN ART</a>
+    <a onclick="showSection('music')">MUSIC</a>
+    <a onclick="showSection('storytime')">STORYTIME</a>
+    <a onclick="showSection('donate')">DONATE</a>
+    <a onclick="showSection('contact')">CONTACT</a>
+  </div>
 
-<!-- CSS-Stile für den Floating SVG Sticker -->
-    <style>
-        /* ... [Hier bleibt das CSS unverändert, wie in deinem Code] ... */
-    </style>
+  <section id="about">
+    <h2>ABOUT</h2>
 
-    <!-- JavaScript für den Floating SVG Sticker -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Selektieren des SVG-Elements und des Menüs
-            const svg = document.getElementById('floating-svg');
-            const menu = document.querySelector('.menu');
 
-            // Variablen für das Drag-and-Drop
-            let isDragging = false;
-            let startX, startY;
-            let initialLeft, initialTop;
-            let velocityX = 0;
-            let velocityY = 0;
-            let lastTime = Date.now();
-            let animationFrameId;
 
-            // Funktion zur Initialisierung der SVG-Position
-            const initializePosition = () => {
-                const menuHeight = menu.offsetHeight;
-                const svgWidth = svg.offsetWidth;
-                const svgHeight = svg.offsetHeight;
-                const posX = (window.innerWidth - svgWidth) / 2; // Zentrierung horizontal
-                const posY = menuHeight + 20; // Platzierung unter dem Menü
-                svg.style.left = `${posX}px`;
-                svg.style.top = `${posY}px`;
-                svg.style.position = 'absolute'; // Stelle sicher, dass die Positionierung absolut ist
-            };
-
-            initializePosition(); // Position beim Laden der Seite setzen
-
-            // Aktualisieren der Position bei Fenstergrößenänderung
-            window.addEventListener('resize', () => {
-                initializePosition();
-            });
-
-            // Funktionen für Drag Start, Move und End
-            const dragStart = (x, y) => {
-                isDragging = true;
-                startX = x;
-                startY = y;
-                const rect = svg.getBoundingClientRect();
-                initialLeft = rect.left;
-                initialTop = rect.top;
-                velocityX = 0;
-                velocityY = 0;
-                cancelAnimationFrame(animationFrameId);
-                svg.classList.add('dragging');
-            };
-
-            const dragMove = (x, y) => {
-                if (!isDragging) return;
-                const deltaX = x - startX;
-                const deltaY = y - startY;
-                svg.style.left = `${initialLeft + deltaX}px`;
-                svg.style.top = `${initialTop + deltaY}px`;
-
-                const now = Date.now();
-                const deltaTime = now - lastTime;
-                lastTime = now;
-                const deltaTimeSeconds = deltaTime / 1000;
-                velocityX = (deltaX / deltaTimeSeconds) * 0.016; // Berechnung der Geschwindigkeit
-                velocityY = (deltaY / deltaTimeSeconds) * 0.016;
-            };
-
-            const dragEnd = () => {
-                isDragging = false;
-                lastTime = Date.now();
-                svg.classList.remove('dragging');
-                animate(); // Starten der Animation nach Loslassen
-            };
-
-            // Animationsfunktion für den Bewegungseffekt nach dem Loslassen
-            const animate = () => {
-                const rect = svg.getBoundingClientRect();
-                let left = rect.left + velocityX * 16; // Bewegung basierend auf Geschwindigkeit
-                let top = rect.top + velocityY * 16;
-
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
-                const svgWidth = rect.width;
-                const svgHeight = rect.height;
-
-                // Kollision mit den Bildschirmrändern
-                if (left + svgWidth > windowWidth) {
-                    left = windowWidth - svgWidth;
-                    velocityX = -velocityX; // Richtungsumkehr bei Kollision
-                } else if (left < 0) {
-                    left = 0;
-                    velocityX = -velocityX;
-                }
-
-                if (top + svgHeight > windowHeight) {
-                    top = windowHeight - svgHeight;
-                    velocityY = -velocityY;
-                } else if (top < 0) {
-                    top = 0;
-                    velocityY = -velocityY;
-                }
-
-                svg.style.left = `${left}px`;
-                svg.style.top = `${top}px`;
-
-                // Reibungseffekt zur allmählichen Verlangsamung
-                velocityX *= 0.95;
-                velocityY *= 0.95;
-
-                // Beenden der Animation, wenn die Geschwindigkeit gering ist
-                if (Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
-                    cancelAnimationFrame(animationFrameId);
-                    return;
-                }
-
-                animationFrameId = requestAnimationFrame(animate);
-            };
-
-            // Event Listener für Mausereignisse
-            svg.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                dragStart(e.clientX, e.clientY);
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    dragMove(e.clientX, e.clientY);
-                }
-            });
-
-            document.addEventListener('mouseup', (e) => {
-                if (isDragging) {
-                    dragEnd();
-                }
-            });
-
-            // Event Listener für Touch-Ereignisse (für mobile Geräte)
-            svg.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    const touch = e.touches[0];
-                    dragStart(touch.clientX, touch.clientY);
-                }
-            });
-
-            document.addEventListener('touchmove', (e) => {
-                if (isDragging && e.touches.length === 1) {
-                    const touch = e.touches[0];
-                    dragMove(touch.clientX, touch.clientY);
-                }
-            });
-
-            document.addEventListener('touchend', (e) => {
-                if (isDragging) {
-                    dragEnd();
-                }
-            });
-
-            // Aktualisierung bei Fenstergrößenänderung
-            window.addEventListener('resize', () => {
-                cancelAnimationFrame(animationFrameId);
-                velocityX = 0;
-                velocityY = 0;
-                initializePosition();
-            });
-        });
-    </script>
-    <!-- Hauptinhalt (Sektionen) -->
-    <!-- About Section -->
-    <section id="about">
-    <!-- Überschrift der Sektion -->
-    <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">ABOUT</h2>
-
-<img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/aboutme_Vedran.jpg" alt="aboutme_Vedran">
-
+<img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/aboutme_Vedran.jpg" alt="Vedran">
     <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic." 
        data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, früher bekannt als Vedran Lukic.">
         Welcome to the official portfolio of Lightning Horn Unicorn, formerly known as Vedran Lukic.
@@ -690,31 +205,20 @@
        data-lang-de="Wenn dich die Geschichte von Lightning Horn Unicorn anspricht, freut er sich über deine Unterstützung. Erkunde seine Kunst und Musik und begleite ihn auf dieser aufregenden Reise der Selbstentfaltung und Innovation. 'Zusammen können wir etwas Außergewöhnliches schaffen', lädt er ein. Oder zumindest werden wir viel Spaß dabei haben.">
         If Lightning Horn Unicorn's story resonates with you, he welcomes your support. Explore his art and music, and join him on this exciting journey of self-expression and innovation. "Together, we can create something extraordinary," he invites. Or at least, we’ll have a lot of fun trying.
     </p>
-    </section>
 
-    <!-- Art Section -->
-    <section id="art">
-    <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
+  </section>
 
-    <!-- Untermenü für die Auswahl zwischen A.I. Art und Human Art -->
-    <div class="sub-menu" style="display: flex; flex-wrap: wrap; justify-content: center;">
-        <!-- Link zu A.I. Art -->
-        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');" data-title="A.I. Art">
-            A.I. Art
-        </a>
-        <!-- Link zu Human Art -->
-        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');" data-title="Human Art">
-            Human Art
-        </a>
-    </div>
 
-    <!-- A.I. Art Section -->
-    <div id="ai-art" class="ai-art" style="display:none;">
-        <!-- Go Back Button -->
-        <a class="go-back" onclick="goBackArt()">Go Back</a>
 
-        	
-		<img id="ai-art-1a" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babygpt.jpg" alt="babygpt">
+
+
+  <section id="aiart">
+    <h2>MY A.I. ART</h2>
+    
+
+<p>These pieces were generated using AI tools based on my prompts and conceptual direction.</p>
+
+<img id="ai-art-1a" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babygpt.jpg" alt="babygpt">
 		<img id="ai-art-1b" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwaves.jpg" alt="bigwaves">
 		<img id="ai-art-1c" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/toiletsamurai.jpg" alt="toiletsamurai">
 		<img id="ai-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unicornwatch.jpg" alt="unicornwatch">
@@ -807,33 +311,19 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/power
 src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heavenandhellpizza.jpg" alt="heavenandhellpizza">
 		<img id="ai-art-81"
 
-
-		
-
-		
-		
+  </section>
 
 
 
 
 
-        
-        
-               
+<section id="humanart">
 
-        
-                <p data-lang-en="Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires."
-                   data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert.">
-                    Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
-                </p>
-    </div>
+    <h2>MY HUMAN ART</h2>
+    
+    <p>Every work here was either sketched or drawn by hand or drawn digitally. By my human skill. It reflects years of visual intuition and artistic control.</p>
 
-    <!-- Human Art Section -->
-    <div id="human-art" class="human-art" style="display:none;">
-        <!-- Go Back Button -->
-        <a class="go-back" onclick="goBackArt()">Go Back</a>
-
-        <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.jpg" alt="Human Art 1">
+<img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.jpg" alt="Human Art 1">
                 <img id="human-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.jpg" alt="Human Art 2">
                 <img id="human-art-3" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow%20onyx.jpg" alt="Rainbow Onyx">
                 <img id="human-art-4" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/clown.jpg" alt="Clown">
@@ -842,156 +332,9 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
                 <img id="human-art-7" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augafpel.jpg" alt="Augafpel">
                 <img id="human-art-8" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.jpg" alt="Apffel 2">
                 <img id="human-art-9" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/a%20circle%20of%20colors.jpg" alt="A Circle of Colors">
-                <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
-                   data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst.">
-                    Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
-                </p>
-    </div>
 
-    <!-- Art-spezifisches CSS -->
-    <style>
-        /* Sub-Menü-Stile */
-        .sub-menu a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-size: cover;
-            background-position: center;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            width: 200px;
-            height: 150px;
-            line-height: 150px;
-            font-size: 0.8em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Titel für die Sub-Menü-Links */
-        .sub-menu a::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.6);
-            color: #ffffff;
-            padding: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-        }
-
-        /* Hover-Effekt für Sub-Menü-Links */
-        .sub-menu a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Go Back Button Stil */
-        .go-back {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: #FF2800; /* Ferrarirot */
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .go-back:hover {
-            background-color: #FFA500; /* Orange */
-            transform: scale(1.05);
-        }
-    </style>
-
-    <!-- Art-spezifisches JavaScript -->
-    <script>
-        function showSubSection(subSectionId) {
-            // Verstecke alle Untersektionen
-            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            // Zeige die ausgewählte Untersektion
-            document.getElementById(subSectionId).style.display = 'block';
-            // Verstecke das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'none';
-            }
-        }
-
-        function goBackArt() {
-            // Verstecke alle Untersektionen
-            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            // Zeige das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'flex';
-            }
-        }
-    </script>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects">
-       <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE">PROJECTS</h2>
-    <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar...">Coming Soon...</p>
-    </section>
-
-<!-- Storytime Section -->
-<section id="storytime">
-  <h2 data-lang-en="Storytime" data-lang-de="Geschichten">Storytime</h2>
-  <p data-lang-en="Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter." data-lang-de="Willkommen. Wähle ein Kapitel.">
-    Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter.
-  </p>
-
-  <div class="storytime-menu">
-    <a href="chapter00000001.html" class="chapter-button">Chapter 1 – Who the Thunder is Aether</a>
-    <a href="chapter00000002.html" class="chapter-button">Chapter 2 – The Unicorn and the Cyborg</a>
-    <a href="chapter00000003.html" class="chapter-button">Chapter 3 – Machina Veritatis</a>
-    <a href="chapter00000004.html" class="chapter-button">Chapter 4 – Vive le Système de...</a>
-    <a href="chapter00000005.html" class="chapter-button">Chapter 5 – Expectations</a>
-    <a href="chapter00000006.html" class="chapter-button">Chapter 6 – No Refund</a>
-    <a href="chapter00000007.html" class="chapter-button">Chapter 7 – Never let them know your next move</a><a href="" class="chapter-button">Chapter 8 – To Be Continued</a>
-  </div>
-</section>
-
-
-
-
-<style>
-  #storytime {
-    padding: 2em;
-    text-align: center;
-  }
-
-  .storytime-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    margin-top: 2em;
-  }
-
-  .chapter-button {
-    display: inline-block;
-    padding: 1em 2em;
-    background-color: #444;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: background-color 0.3s;
-  }
-
-  .chapter-button:hover {
-    background-color: #666;
-  }
-</style>
+  </section>
+    
 
 
 
@@ -1004,13 +347,9 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
 
 
 
-        
-        
 
 
-
-    <!-- Music Section -->
-    <section id="music">
+<section id="music">
         <h2 data-lang-en="MUSIC" data-lang-de="MUSIK">MUSIC</h2>
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
         
@@ -1089,136 +428,72 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
     </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact">
-       <h2 data-lang-en="CONTACT" data-lang-de="KONTAKT">CONTACT</h2>
-    <p>
-        <!-- E-Mail-Link -->
-        <a href="mailto:vedranlukic@hotmail.com" class="mailbox"
-           data-lang-en="Unicorn Mailbox" 
-           data-lang-de="Einhorn-Briefkasten">
-            Unicorn Mailbox
-        </a>
-    </p>
-    </section>
 
 
-<!-- Donate Section -->
-<section id="donate">
-    <h2 data-lang-en="SUPPORT MY ART" data-lang-de="UNTERSTÜTZE MEINE KUNST">SUPPORT MY ART</h2>
-    <p data-lang-en="If you enjoy my work, consider sending some sparkles my way." 
-       data-lang-de="In einer Welt voller Bürokratie, grauer Akten und finanzieller Kälte...
-...gibt es eine plüschige, überdimensionierte Einhornkatze der Gerechtigkeit.
-Mit einem Bauchknopf.
-Drück drauf.
-Und supporte die Kunst von heute.
 
-Denn:
-Mit großem Charme kommt eine fette Spardose.
 
-💛 PRESS & DONATE 💛">
-        In a world full of bureaucracy, grey files, and financial coldness...
-...there is a plushy, oversized unicorn cat of justice.
-With a belly button.
-Press it.
-And support today’s art.
 
-Because:
-With great charm comes a fat piggy bank.
 
-💛 PRESS & DONATE 💛
-    </p>
 
-    <!-- PayPal Donate Button -->
-<form action="https://www.paypal.com/donate/?hosted_button_id=KXHUZ6BNZAY84&source=qr" method="post" target="_blank">
-    <input type="image" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mrrrphadoravandonatia.png" 
-           border="0" name="submit" title="Donate to Mrrrphadora van Donatia" 
-           alt="Donate to Mrrrphadora van Donatia" />
-    <img alt="" border="0" 
-         src="https://www.paypal.com/en_AT/i/scr/pixel.gif" 
-         width="1" height="1" />
-</form>
 
+  <section id="storytime">
+    <h2>STORYTIME</h2>
+    
+
+<p data-lang-en="Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter." data-lang-de="Willkommen. Wähle ein Kapitel.">
+    Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter.
+  </p>
+
+  <div class="storytime-menu">
+    <a href="chapter00000001.html" class="chapter-button">Chapter 1 – Who the Thunder is Aether</a>
+    <a href="chapter00000002.html" class="chapter-button">Chapter 2 – The Unicorn and the Cyborg</a>
+    <a href="chapter00000003.html" class="chapter-button">Chapter 3 – Machina Veritatis</a>
+    <a href="chapter00000004.html" class="chapter-button">Chapter 4 – Vive le Système de...</a>
+    <a href="chapter00000005.html" class="chapter-button">Chapter 5 – Expectations</a>
+    <a href="chapter00000006.html" class="chapter-button">Chapter 6 – No Refund</a>
+    <a href="chapter00000007.html" class="chapter-button">Chapter 7 – Never let them know your next move</a><a href="" class="chapter-button">Chapter 8 – To Be Continued</a>
+  </div>
 </section>
 
 
 
 
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <!-- Copyright -->
-            <p data-lang-en="&copy; 2024 Lightning Horn Unicorn. All rights reserved."
-               data-lang-de="&copy; 2024 Lightning Horn Unicorn. Alle Rechte vorbehalten.">
-                &copy; 2024 Lightning Horn Unicorn. All rights reserved.
-            </p>
-            <!-- Social-Media-Icons -->
-            <div class="social-icons">
-                <a href="https://www.instagram.com/lightninghornunicorn/" target="_blank">
-                    <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" alt="Instagram">
-                </a>
-                <!-- Weitere Social-Media-Links können hier hinzugefügt werden -->
-            </div>
-        </div>
-    </footer>
 
-    <!-- Globale JavaScript-Funktionen -->
-    <script>
-        // Sprachinitialisierung
-        document.addEventListener('DOMContentLoaded', () => {
-            const userLang = navigator.language || navigator.userLanguage;
-            const lang = userLang.startsWith('de') ? 'de' : 'en';
-            setLanguage(lang);
-            document.body.setAttribute('data-current-lang', lang);
-        });
 
-        // Funktion zum Setzen der Sprache
-        function setLanguage(lang) {
-            const elements = document.querySelectorAll('[data-lang-en]');
-            elements.forEach(element => {
-                const text = element.getAttribute(`data-lang-${lang}`);
-                if (text) {
-                    element.innerHTML = text;
-                }
-            });
 
-            // Verstecke alle Elemente mit data-lang
-            const allLangElements = document.querySelectorAll('[data-lang]');
-            allLangElements.forEach(element => {
-                element.style.display = 'none';
-            });
 
-            // Zeige Elemente mit der aktuellen Sprache
-            const currentLangElements = document.querySelectorAll(`[data-lang="${lang}"]`);
-            currentLangElements.forEach(element => {
-                element.style.display = 'block';
-            });
-        }
+  <section id="donate">
+    <h2>SUPPORT MY ART</h2>
+    <p>In a world full of bureaucracy, grey files, and financial coldness... there is a plushy, oversized unicorn cat of justice. With a belly button. Press it. And support today’s art.<br><strong>💛 PRESS & DONATE 💛</strong></p>
+    <form action="https://www.paypal.com/donate/?hosted_button_id=KXHUZ6BNZAY84&source=qr" method="post" target="_blank">
+      <input type="image" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mrrrphadoravandonatia.png" alt="Donate to Mrrrphadora van Donatia" name="submit" />
+    </form>
+  </section>
 
-        // Funktion zum Anzeigen einer Sektion
-        function showSection(sectionId) {
-            // Verstecke alle Sektionen
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
 
-            // Zeige die ausgewählte Sektion
-            const targetSection = document.getElementById(sectionId);
-            targetSection.classList.add('active');
 
-            // Spezifische Initialisierungen für bestimmte Sektionen
-            if (sectionId === 'art') {
-                goBackArt(); // Zeigt das Sub-Menü in der Art-Sektion an
-            }
 
-            if (sectionId === 'storytime') {
-                goBackStory(); // Zeigt das Story-Menü in der Storytime-Sektion an
-            }
 
-            window.scrollTo(0, 0); // Scrollt nach oben, wenn die Sektion angezeigt wird
-        }
-    </script>
+
+
+  <section id="contact">
+    <h2>CONTACT</h2>
+    <p><a href="mailto:vedranlukic@hotmail.com">Unicorn Mailbox</a></p>
+  </section>
+
+
+
+
+
+
+  <footer>
+    <p>&copy; 2024 Lightning Horn Unicorn. All rights reserved.</p>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/lightninghornunicorn/" target="_blank">
+        <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lightninghornunicorn.svg" alt="Instagram">
+      </a>
+    </div>
+  </footer>
 </body>
 </html>
