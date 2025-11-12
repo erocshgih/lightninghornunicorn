@@ -1,51 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-  <title>Enter Your Secret PIN</title>
+  <meta charset="UTF-8">
+  <title>Lightning Horn Unicorn – Downloads</title>
   <style>
-    #download-section, #fail-unicorn {
-      display: none;
-    }
-    #fail-unicorn {
+    body {
+      font-family: sans-serif;
+      background-color: #111;
+      color: #fff;
       text-align: center;
-      font-size: 24px;
-      color: hotpink;
+      padding: 50px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    a.download {
+      display: block;
+      margin: 15px 0;
+      color: #00f7ff;
+      font-size: 1.2em;
+      text-decoration: none;
+    }
+    a.download:hover {
+      text-decoration: underline;
+      color: #ff00aa;
+    }
+    .note {
+      margin-top: 50px;
+      font-size: 0.9em;
+      color: #888;
     }
   </style>
 </head>
 <body>
 
-  <h2>Enter Your PIN to Unlock the Magic 🦄</h2>
-  <input type="text" id="pin" placeholder="4-digit PIN">
-  <button onclick="checkPin()">Submit</button>
+  <h1>🎧 Lightning Horn Unicorn Downloads 🎧</h1>
 
-  <div id="download-section">
-    <p>🎉 Congrats! Here's your download:</p>
-    <a href="your-album.zip" download>Download Album</a>
+  <a class="download" href="downloads/Album_Eight.zip" download>💾 Album: EIGHT (ZIP)</a>
+  <a class="download" href="downloads/Song_Tonagag.mp3" download>🎵 Song: Tonagag (MP3)</a>
+  <a class="download" href="downloads/VHS_Cover_Eight.jpg" download>🖼️ VHS-Cover: Eight (JPG)</a>
+  <a class="download" href="downloads/LHU_Sticker_Pack.zip" download>🦄 Sticker Pack (ZIP)</a>
+
+  <div class="note">
+    ⚠️ Thank you for supporting a real artist 
+and musician from Vienna, Austria — 
+one coffee, one riff, one ridiculous idea at a time. 
+
+Massive shout-out to everyone who believes 
+in loud guitars, weirdness and late-night 
+ideas that accidentally (and thru hard work) 
+turn into masterpieces. 
+Stay kind and inspired. 
+
+All songs, lyrics, 
+and artworks included here are original, 
+protected works created by Lightning Horn Unicorn 
+(Vedran Lukic & Aether Veylan). 
+No part of this material may be used, 
+copied, remixed, or distributed without 
+explicit permission from the artist.<br>
+    Support: <a href="https://ko-fi.com/lightninghornunicorn" target="_blank" style="color:#fff;">Ko-fi</a>
   </div>
-
-  <div id="fail-unicorn">
-    <p>🦄 *Snap!* Nice try, mortal. 🫰</p>
-  </div>
-
-  <script>
-    const validPins = {
-      "1234": false,
-      "5678": false
-    };
-
-    function checkPin() {
-      const input = document.getElementById("pin").value;
-      if (validPins[input] === false) {
-        document.getElementById("download-section").style.display = "block";
-        document.getElementById("fail-unicorn").style.display = "none";
-        // Hier könnte man z. B. die PIN als 'benutzt' markieren – mit Backend
-      } else {
-        document.getElementById("fail-unicorn").style.display = "block";
-        document.getElementById("download-section").style.display = "none";
-      }
-    }
-  </script>
 
 </body>
 </html>
