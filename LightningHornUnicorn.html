@@ -349,18 +349,19 @@
   height: auto;
   border-radius: 10px;
   transition: filter 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 .paypal-img:hover {
   filter: drop-shadow(0 0 10px var(--text-accent)) drop-shadow(0 0 20px var(--text-main));
 }
 
-/* Optional: Bessere Darstellung auf Mobilgeräten */
 @media (max-width: 600px) {
   .paypal-img {
     width: 60%;
   }
 }
+
 
     </style>
 
@@ -918,8 +919,11 @@ Mit großem Charme kommt eine fette Spardose.
 
     <!-- PayPal Donate Button -->
 <form action="https://www.paypal.com/donate/?hosted_button_id=KXHUZ6BNZAY84&source=qr" method="post" target="_blank">
-  <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mrrrphadoravandonatia.png" 
-       class="paypal-img" alt="Donate Button" />
+  <input type="image"
+         src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mrrrphadoravandonatia.png"
+         class="paypal-img"
+         title="Donate to Mrrrphadora van Donatia"
+         alt="Donate to Mrrrphadora van Donatia" />
 </form>
 
 </section>
