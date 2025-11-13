@@ -394,7 +394,8 @@
     <!-- Navigationsmenü -->
     <div class="menu">
         <a data-lang-en="ABOUT" data-lang-de="ÜBER MICH" onclick="showSection('about')">ABOUT</a>
-        <a data-lang-en="ART (updated regularly)" data-lang-de="KUNST (regelmäßig aktualisiert)" onclick="showSection('art')">ART (updated regularly)</a>
+        <a data-lang-en="A.I.ART (updated regularly)" data-lang-de="A.I.ART (regelmäßig aktualisiert)" 	onclick="showSection('A.I.ART')">A.I.ART (updated regularly)</a>
+	<a data-lang-en="HUMANART (updated regularly)" data-lang-de="MENSCHKUNST (regelmäßig aktualisiert)" 	onclick="showSection('HUMANART')">HUMANART (updated regularly)</a>
         <a data-lang-en="PROJECTS" data-lang-de="PROJEKTE" onclick="showSection('projects')">PROJECTS</a>
         <a data-lang-en="STORYTIME" data-lang-de="GESCHICHTEN" onclick="showSection('storytime')">STORYTIME</a>
         <a data-lang-en="MUSIC (updated regularly)" data-lang-de="MUSIK (regelmäßig aktualisiert)" onclick="showSection('music')">MUSIC (updated regularly)</a>
@@ -583,7 +584,10 @@
         });
     </script>
     <!-- Hauptinhalt (Sektionen) -->
-    <!-- About Section -->
+    
+
+
+<!-- About Section -->
     <section id="about">
     <!-- Überschrift der Sektion -->
     <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">ABOUT</h2>
@@ -692,29 +696,32 @@
     </p>
     </section>
 
-    <!-- Art Section -->
-    <section id="art">
-    <h2 data-lang-en="ART" data-lang-de="KUNST">ART</h2>
 
-    <!-- Untermenü für die Auswahl zwischen A.I. Art und Human Art -->
-    <div class="sub-menu" style="display: flex; flex-wrap: wrap; justify-content: center;">
-        <!-- Link zu A.I. Art -->
-        <a onclick="showSubSection('ai-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%202%20a.i._%20.jpg?raw=true');" data-title="A.I. Art">
-            A.I. Art
-        </a>
-        <!-- Link zu Human Art -->
-        <a onclick="showSubSection('human-art')" class="art-link" style="background-image: url('https://github.com/erocshgih/lightninghornunicorn/blob/main/player%201%20human.jpg?raw=true');" data-title="Human Art">
-            Human Art
-        </a>
-    </div>
+
+
+
+
+
+
+
+
+    <!-- A.I.Art Section -->
+
+    <section id="A.I.ART">
+    <h2 data-lang-en="A.I.ART" data-lang-de="A.I.ART">A.I.ART</h2>
 
     <!-- A.I. Art Section -->
     <div id="ai-art" class="ai-art" style="display:none;">
-        <!-- Go Back Button -->
-        <a class="go-back" onclick="goBackArt()">Go Back</a>
 
-        	
-		<img id="ai-art-1a" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babygpt.jpg" alt="babygpt">
+<p data-lang-en="Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires."
+                   data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert.">
+                    Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
+                </p>
+
+
+
+
+<img id="ai-art-1a" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babygpt.jpg" alt="babygpt">
 		<img id="ai-art-1b" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwaves.jpg" alt="bigwaves">
 		<img id="ai-art-1c" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/toiletsamurai.jpg" alt="toiletsamurai">
 		<img id="ai-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unicornwatch.jpg" alt="unicornwatch">
@@ -808,30 +815,31 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
 		<img id="ai-art-81"
 
 
-		
-
-		
-		
-
-
-
-
-
-        
-        
-               
-
-        
-                <p data-lang-en="Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires."
-                   data-lang-de="Entdecke die Magie der A.I. Kunst, wo meine Ideen auf modernste Technologie treffen. Ich entwickle die Konzepte, und fortschrittliche K.I. erweckt sie mit Präzision und Innovation zum Leben. Diese Mischung aus menschlicher Vorstellungskraft und künstlicher Intelligenz führt zu einzigartiger, moderner Kunst, die Grenzen überschreitet und inspiriert.">
-                    Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I create the concepts, and advanced A.I. brings them to life with precision and innovation. This blend of human imagination and artificial intelligence results in unique, modern art that pushes boundaries and inspires.
-                </p>
+		     
+             
     </div>
 
-    <!-- Human Art Section -->
-    <div id="human-art" class="human-art" style="display:none;">
-        <!-- Go Back Button -->
-        <a class="go-back" onclick="goBackArt()">Go Back</a>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- HUMANART Section -->
+
+    <section id="HUMANART">
+    <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
+
+    <!-- HUMANART Section -->
+    <div id="ai-art" class="ai-art" style="display:none;">
+
+
+
+
 
         <img id="human-art-1" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/my%20name%20is%20rain.jpg" alt="Human Art 1">
                 <img id="human-art-2" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.jpg" alt="Human Art 2">
@@ -848,101 +856,28 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
                 </p>
     </div>
 
-    <!-- Art-spezifisches CSS -->
-    <style>
-        /* Sub-Menü-Stile */
-        .sub-menu a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-size: cover;
-            background-position: center;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            width: 200px;
-            height: 150px;
-            line-height: 150px;
-            font-size: 0.8em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Titel für die Sub-Menü-Links */
-        .sub-menu a::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.6);
-            color: #ffffff;
-            padding: 5px 0;
-            text-align: center;
-            font-size: 0.9em;
-        }
-
-        /* Hover-Effekt für Sub-Menü-Links */
-        .sub-menu a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Go Back Button Stil */
-        .go-back {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: #FF2800; /* Ferrarirot */
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .go-back:hover {
-            background-color: #FFA500; /* Orange */
-            transform: scale(1.05);
-        }
-    </style>
-
-    <!-- Art-spezifisches JavaScript -->
-    <script>
-        function showSubSection(subSectionId) {
-            // Verstecke alle Untersektionen
-            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            // Zeige die ausgewählte Untersektion
-            document.getElementById(subSectionId).style.display = 'block';
-            // Verstecke das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'none';
-            }
-        }
-
-        function goBackArt() {
-            // Verstecke alle Untersektionen
-            document.querySelectorAll('.ai-art, .human-art').forEach(subSection => {
-                subSection.style.display = 'none';
-            });
-            // Zeige das Sub-Menü
-            const subMenu = document.querySelector('#art .sub-menu');
-            if (subMenu) {
-                subMenu.style.display = 'flex';
-            }
-        }
-    </script>
     </section>
 
-    <!-- Projects Section -->
+
+
+
+
+
+
+
+
+
+<!-- Projects Section -->
     <section id="projects">
        <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE">PROJECTS</h2>
     <p data-lang-en="Coming Soon..." data-lang-de="Demnächst verfügbar...">Coming Soon...</p>
     </section>
+
+
+
+
+
+
 
 <!-- Storytime Section -->
 <section id="storytime">
@@ -1008,8 +943,7 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
         
 
 
-
-    <!-- Music Section -->
+<!-- Music Section -->
     <section id="music">
         <h2 data-lang-en="MUSIC" data-lang-de="MUSIK">MUSIC</h2>
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
@@ -1103,6 +1037,14 @@ src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heave
     </section>
 
 
+
+
+
+
+
+
+
+
 <!-- Donate Section -->
 <section id="donate">
     <h2 data-lang-en="SUPPORT MY ART" data-lang-de="UNTERSTÜTZE MEINE KUNST">SUPPORT MY ART</h2>
@@ -1140,6 +1082,10 @@ With great charm comes a fat piggy bank.
 </form>
 
 </section>
+
+
+
+
 
 
 
