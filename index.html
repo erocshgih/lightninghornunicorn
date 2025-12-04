@@ -10,13 +10,10 @@
             margin: 0;
             overflow: hidden;
 
-            /* 🔥 Hintergrundbild */
+            /* 🔥 Matrix-7 Hintergrundbild */
             background: url('https://github.com/erocshgih/lightninghornunicorn/raw/main/blue7.png') 
                         no-repeat center center fixed;
-
-            /* Zoom – du kannst 110%, 130%, 150% probieren */
             background-size: 125%;
-
             background-color: #000814; /* Fallback */
         }
 
@@ -25,24 +22,24 @@
             height: 100vh;
         }
 
-        /* UI Buttons */
-        #music-controls, #navigation-controls {
+        /* UI Wrapper – Buttons zentriert oben */
+        #ui-wrapper {
             position: absolute;
-            left: 10px;
-            background: rgba(255, 255, 255, 0.75);
-            padding: 10px;
-            border-radius: 6px;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
         }
 
-        #music-controls { top: 10px; }
-        #navigation-controls { top: 70px; }
-
-        #music-controls button,
-        #navigation-controls button {
-            padding: 10px;
+        #ui-wrapper button {
+            padding: 10px 18px;
             font-size: 16px;
             border-radius: 6px;
-            border: none;
+            border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.85);
             cursor: pointer;
         }
     </style>
@@ -51,18 +48,19 @@
 <body>
     <div id="container3D"></div>
 
-    <div id="music-controls">
-        <button id="music-toggle" data-lang-en="Click here for music - Music Off"
-                                       data-lang-de="Klicke hier für Musik - Musik Aus"
-                                       data-lang-fr="Cliquez ici pour la musique - Musique éteinte">
+    <!-- UI: Buttons jetzt in einem Wrapper, zentriert -->
+    <div id="ui-wrapper">
+        <button id="music-toggle" 
+                data-lang-en="Click here for music - Music Off"
+                data-lang-de="Klicke hier für Musik - Musik Aus"
+                data-lang-fr="Cliquez ici pour la musique - Musique éteinte">
             Click here for music - Music Off
         </button>
-    </div>
 
-    <div id="navigation-controls">
-        <button id="navigate-to-main" data-lang-en="Go to Main Page"
-                                       data-lang-de="Zur Hauptseite"
-                                       data-lang-fr="Aller à la page principale">
+        <button id="navigate-to-main" 
+                data-lang-en="Go to Main Page"
+                data-lang-de="Zur Hauptseite"
+                data-lang-fr="Aller à la page principale">
             Go to Main Page
         </button>
     </div>
@@ -74,6 +72,7 @@
 
     <!-- THREE.JS -->
     <script type="module">
+        // Sprache setzen
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language.startsWith('de') ? 'de' :
                              navigator.language.startsWith('fr') ? 'fr' : 'en';
@@ -93,12 +92,39 @@
         import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5;
+        // kein scene.background -> wir nutzen das CSS-Background-Image
 
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        const camera = new THREE.PerspectiveCamera(
+            50,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.set(0, 0, 5);
+
+        // Renderer mit sRGB + ACES für nice Chrome
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.1;
         document.getElementById("container3D").appendChild(renderer.domElement);
+
+        // Lights – wie „früher schön“
+        const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambient);
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        keyLight.position.set(4, 6, 5);
+        scene.add(keyLight);
+
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.7);
+        fillLight.position.set(-4, 2, 3);
+        scene.add(fillLight);
+
+        const rimLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        rimLight.position.set(0, 4, -4);
+        scene.add(rimLight);
 
         const loader = new GLTFLoader();
         let object;
@@ -107,20 +133,13 @@
             'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb',
             gltf => {
                 object = gltf.scene;
-                object.position.set(0, 0, 0);
+                object.position.set(0, -0.1, 0); // leicht runter, damit er mittiger wirkt
                 object.scale.set(1, 1, 1);
                 scene.add(object);
             },
             undefined,
             err => console.error(err)
         );
-
-        const topLight = new THREE.DirectionalLight(0xffffff, 1);
-        topLight.position.set(500, 500, 500);
-        scene.add(topLight);
-
-        const ambientLight = new THREE.AmbientLight(0x444444, 1);
-        scene.add(ambientLight);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -131,29 +150,46 @@
         const bpm = 128;
         const nodSpeed = (60 / bpm) * 0.5;
 
-        document.getElementById('music-toggle').addEventListener('click', () => {
+        const musicToggle = document.getElementById('music-toggle');
+
+        musicToggle.addEventListener('click', () => {
             isMusicPlaying = !isMusicPlaying;
             isMusicPlaying ? music.play() : music.pause();
 
             const lang = document.body.getAttribute('data-current-lang');
-            const onTxt = { en:"Click here for music - Music On", de:"Klicke hier für Musik - Musik Ein", fr:"Cliquez ici pour la musique - Musique activée" };
-            const offTxt = { en:"Click here for music - Music Off", de:"Klicke hier für Musik - Musik Aus", fr:"Cliquez ici pour la musique - Musique éteinte" };
+            const onTxt = {
+                en:"Click here for music - Music On",
+                de:"Klicke hier für Musik - Musik Ein",
+                fr:"Cliquez ici pour la musique - Musique activée"
+            };
+            const offTxt = {
+                en:"Click here for music - Music Off",
+                de:"Klicke hier für Musik - Musik Aus",
+                fr:"Cliquez ici pour la musique - Musique éteinte"
+            };
 
-            document.getElementById('music-toggle').textContent =
-                isMusicPlaying ? onTxt[lang] : offTxt[lang];
+            musicToggle.textContent = isMusicPlaying ? onTxt[lang] : offTxt[lang];
         });
 
         document.getElementById('navigate-to-main').addEventListener('click', () => {
-            window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html';
+            window.location.href =
+                'https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html';
         });
 
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
 
-            if (object && isMusicPlaying) {
-                const t = Date.now() * 0.001;
-                object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.1;
+            if (object) {
+                // leichte Idle-Rotation
+                object.rotation.y += 0.003;
+
+                if (isMusicPlaying) {
+                    const t = Date.now() * 0.001;
+                    object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.1;
+                } else {
+                    object.rotation.x *= 0.9; // langsam wieder zurück
+                }
             }
 
             renderer.render(scene, camera);
