@@ -20,7 +20,7 @@
             background: rgba(255, 255, 255, 0.7);
             padding: 10px;
             border-radius: 5px;
-            margin-bottom: 10px; /* Abstand nach unten */
+            margin-bottom: 10px;
         }
         #music-controls button {
             padding: 10px;
@@ -28,7 +28,7 @@
         }
         #navigation-controls {
             position: absolute;
-            top: 70px; /* Setzt es direkt unter das Musikfeld */
+            top: 70px;
             left: 10px;
             background: rgba(255, 255, 255, 0.7);
             padding: 10px;
@@ -62,15 +62,13 @@
     </audio>
 
     <script type="module">
-        // Sprachenerkennung und Textwechsel
+        // Sprachenerkennung
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language || navigator.userLanguage;
             const lang = userLang.startsWith('de') ? 'de' :
                          userLang.startsWith('fr') ? 'fr' : 'en';
 
             setLanguage(lang);
-
-            // Speicher die gewählte Sprache für den weiteren Gebrauch
             document.body.setAttribute('data-current-lang', lang);
         });
 
@@ -89,7 +87,6 @@
             isMusicPlaying = !isMusicPlaying;
             document.body.setAttribute('data-music-playing', isMusicPlaying);
 
-            // Hole die aktuelle Sprache und setze den entsprechenden Text
             const currentLang = document.body.getAttribute('data-current-lang');
             const musicOnText = {
                 en: "Click here for music - Music On",
@@ -102,54 +99,88 @@
                 fr: "Cliquez ici pour la musique - Musique éteinte"
             };
             
-            document.getElementById('music-toggle').textContent = isMusicPlaying ? musicOnText[currentLang] : musicOffText[currentLang];
+            document.getElementById('music-toggle').textContent =
+                isMusicPlaying ? musicOnText[currentLang] : musicOffText[currentLang];
         });
 
-        // Hier der bestehende Code für die 3D-Darstellung und Steuerung (wie vorher)
+        // THREE.js Setup
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
         import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        scene.background = new THREE.Color(0x111111); // leicht grau statt hart weiß/schwarz
+
+        const camera = new THREE.PerspectiveCamera(
+            50,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.set(0, 0, 4);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Color Management & Tonemapping, wichtig für PBR/Chrome
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+
         document.getElementById("container3D").appendChild(renderer.domElement);
-        camera.position.z = 5;
+
+        // Lights – Key / Fill / Rim + ambient
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x222222, 0.8);
+        scene.add(hemiLight);
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+        keyLight.position.set(3, 5, 5);
+        scene.add(keyLight);
+
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        fillLight.position.set(-4, 2, 2);
+        scene.add(fillLight);
+
+        const backLight = new THREE.DirectionalLight(0xffffff, 0.7);
+        backLight.position.set(0, 4, -4);
+        scene.add(backLight);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
+        scene.add(ambientLight);
 
         const loader = new GLTFLoader();
         let object;
-        loader.load('https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb', function (gltf) {
-            object = gltf.scene;
-            object.position.set(0, 0, 0);  // Setze die Position auf die Mitte der Szene
-            object.scale.set(1, 1, 1);     // Optional: Skaliere das Modell, falls es zu groß oder klein ist
-            scene.add(object);
-        }, undefined, function (error) {
-            console.error(error);
-        });
 
-        const topLight = new THREE.DirectionalLight(0xffffff, 1);
-        topLight.position.set(500, 500, 500);
-        scene.add(topLight);
-        
-        const ambientLight = new THREE.AmbientLight(0x333333, 1);
-        scene.add(ambientLight);
+        loader.load(
+            "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb",
+            function (gltf) {
+                object = gltf.scene;
+                object.position.set(0, -0.25, 0);        // leicht nach unten
+                object.scale.set(1, 1, 1);
+                scene.add(object);
+            },
+            undefined,
+            function (error) {
+                console.error(error);
+            }
+        );
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
-        controls.rotateSpeed = 2;
+        controls.rotateSpeed = 1.5;
 
         let isMusicPlaying = false;
-        const music = document.getElementById('background-music');
-        const musicToggle = document.getElementById('music-toggle');
+        const music = document.getElementById("background-music");
+        const musicToggle = document.getElementById("music-toggle");
         const bpm = 128;
         const nodSpeed = (60 / bpm) * 0.5;
 
-        musicToggle.addEventListener('click', () => {
+        musicToggle.addEventListener("click", () => {
             isMusicPlaying = !isMusicPlaying;
             isMusicPlaying ? music.play() : music.pause();
-            const currentLang = document.body.getAttribute('data-current-lang');
+
+            const currentLang = document.body.getAttribute("data-current-lang");
             const musicOnText = {
                 en: "Click here for music - Music On",
                 de: "Klicke hier für Musik - Musik Ein",
@@ -160,21 +191,28 @@
                 de: "Klicke hier für Musik - Musik Aus",
                 fr: "Cliquez ici pour la musique - Musique éteinte"
             };
-            
-            musicToggle.textContent = isMusicPlaying ? musicOnText[currentLang] : musicOffText[currentLang];
+
+            musicToggle.textContent =
+                isMusicPlaying ? musicOnText[currentLang] : musicOffText[currentLang];
         });
 
-        document.getElementById('navigate-to-main').addEventListener('click', () => {
-            window.location.href = 'https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html';
+        document.getElementById("navigate-to-main").addEventListener("click", () => {
+            window.location.href =
+                "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html";
         });
 
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
+
             if (object) {
                 const time = Date.now() * 0.001;
-                object.rotation.x = isMusicPlaying ? Math.sin(time * (Math.PI / nodSpeed)) * 0.1 : 0;
+                object.rotation.x = isMusicPlaying
+                    ? Math.sin(time * (Math.PI / nodSpeed)) * 0.1
+                    : 0;
+                object.rotation.y += 0.002; // leichte Dauerrotation für nicer Look
             }
+
             renderer.render(scene, camera);
         }
         animate();
