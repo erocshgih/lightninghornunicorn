@@ -46,7 +46,7 @@
             z-index: 2;
         }
 
-        /* Hologramm-Buttons */
+        /* Hologramm-Buttons (Standard = Blau/Cyan) */
         #ui-wrapper button {
             position: relative;
             padding: 10px 20px;
@@ -74,7 +74,7 @@
                 border-color 160ms ease-out;
         }
 
-        /* Hologram-Scan-Linie im Button */
+        /* Scanline */
         #ui-wrapper button::before {
             content: "";
             position: absolute;
@@ -95,7 +95,7 @@
                 transform 350ms ease-out;
         }
 
-        /* Hover-Effekt: leichter Lift + stärkeres Glow + Scan-Linie */
+        /* Hover */
         #ui-wrapper button:hover {
             transform: translateY(-2px);
             box-shadow:
@@ -110,14 +110,48 @@
             opacity: 1;
             transform: translateX(120%);
         }
+
+        /* --------------------------------------------------------------- */
+        /* 🔥 RED HOLOGRAM BUTTON — ONLY FOR #navigate-to-main */
+        /* --------------------------------------------------------------- */
+
+        #navigate-to-main {
+            border-color: rgba(255, 70, 70, 0.8) !important;
+            background: radial-gradient(circle at 0% 0%, rgba(255,70,70,0.25), transparent 60%)
+                        rgba(40, 10, 20, 0.65) !important;
+            color: #ffeaea !important;
+            box-shadow:
+                0 0 8px rgba(255, 70, 70, 0.55),
+                0 0 20px rgba(255, 50, 50, 0.35) !important;
+        }
+
+        #navigate-to-main::before {
+            background: linear-gradient(
+                120deg,
+                transparent 0%,
+                rgba(255, 60, 60, 0.55) 40%,
+                rgba(255, 255, 255, 0.85) 50%,
+                rgba(255, 60, 60, 0.55) 60%,
+                transparent 100%
+            ) !important;
+        }
+
+        #navigate-to-main:hover {
+            border-color: rgba(255, 80, 80, 1) !important;
+            box-shadow:
+                0 0 14px rgba(255, 60, 60, 0.9),
+                0 0 40px rgba(255, 40, 40, 0.55) !important;
+            background: radial-gradient(circle at 100% 0%, rgba(255,60,60,0.35), transparent 60%)
+                        rgba(40, 10, 20, 0.75) !important;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Matrix-7 Hintergrund -->
+    <!-- Matrix Hintergrund -->
     <canvas id="matrix-bg"></canvas>
 
-    <!-- 3D-Szene -->
+    <!-- 3D Szene -->
     <div id="container3D"></div>
 
     <!-- UI -->
@@ -142,14 +176,13 @@
         Your browser does not support the audio element.
     </audio>
 
-    <!-- MATRIX-7 TUNNEL ANIMATION -->
+    <!-- MATRIX-TUNNEL -->
     <script>
         const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
 
         const BASE_FONT_SIZE = 26;
-        const NUM_SEVENS = 140;       // Anzahl „Partikel“
-
+        const NUM_SEVENS = 140;
         let sevens = [];
         let centerX = 0;
         let centerY = 0;
@@ -167,59 +200,44 @@
         }
 
         function makeSeven() {
-            // Start am Rand spawnen (oben, unten, links, rechts)
             const edge = Math.floor(Math.random() * 4);
             let x, y;
 
-            if (edge === 0) {        // oben
-                x = Math.random() * canvas.width;
-                y = -20;
-            } else if (edge === 1) { // rechts
-                x = canvas.width + 20;
-                y = Math.random() * canvas.height;
-            } else if (edge === 2) { // unten
-                x = Math.random() * canvas.width;
-                y = canvas.height + 20;
-            } else {                 // links
-                x = -20;
-                y = Math.random() * canvas.height;
-            }
+            if (edge === 0) x = Math.random() * canvas.width, y = -20;
+            else if (edge === 1) x = canvas.width + 20, y = Math.random() * canvas.height;
+            else if (edge === 2) x = Math.random() * canvas.width, y = canvas.height + 20;
+            else x = -20, y = Math.random() * canvas.height;
 
             return {
-                x,
-                y,
-                life: 0,                             // 0 → Start, 1 → beim Zentrum
+                x, y,
+                life: 0,
                 speed: 0.008 + Math.random() * 0.015
             };
         }
 
         function drawMatrix() {
-            // dunkles Overlay für Motion-Trail
             ctx.fillStyle = 'rgba(0, 5, 40, 0.35)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             for (let s of sevens) {
                 s.life += s.speed;
                 if (s.life >= 1) {
-                    // neu spawnen wenn „im Bildschirm verschwunden“
                     Object.assign(s, makeSeven());
                     continue;
                 }
 
-                // Bewegung Richtung Screen-Zentrum
                 const dx = centerX - s.x;
                 const dy = centerY - s.y;
 
-                s.x += dx * s.speed * 2.0;
-                s.y += dy * s.speed * 2.0;
+                s.x += dx * s.speed * 2;
+                s.y += dy * s.speed * 2;
 
-                // Größe und Alpha verringern sich → wirkt wie „rein in den Screen“
-                const sizeFactor = 1 - s.life * 0.7;          // 1 → 0.3
+                const sizeFactor = 1 - s.life * 0.7;
                 const fontSize = BASE_FONT_SIZE * sizeFactor;
-                const alpha = 0.2 + (1 - s.life) * 0.8;       // 1 → 0.2
+                const alpha = 0.2 + (1 - s.life) * 0.8;
 
                 ctx.font = fontSize + 'px monospace';
-                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
                 ctx.fillText('7', s.x, s.y);
             }
 
@@ -234,9 +252,8 @@
         window.addEventListener('resize', resizeMatrix);
     </script>
 
-    <!-- THREE.JS / UNICORNINATOR -->
+    <!-- THREE.JS / UNICORNATOR -->
     <script type="module">
-        // Sprache initialisieren
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language.startsWith('de')
                 ? 'de'
@@ -262,7 +279,6 @@
 
         const scene = new THREE.Scene();
 
-        // Kamera: mittig, leicht von vorne
         const camera = new THREE.PerspectiveCamera(
             50,
             window.innerWidth / window.innerHeight,
@@ -275,11 +291,10 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.45; // etwas heller für mehr Chrome
+        renderer.toneMappingExposure = 1.45;
         renderer.physicallyCorrectLights = true;
         document.getElementById('container3D').appendChild(renderer.domElement);
 
-        // Environment für Reflexionen (Studio-Look)
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
         pmremGenerator.compileEquirectangularShader();
 
@@ -287,10 +302,8 @@
             new RoomEnvironment(),
             0.02
         ).texture;
-
         scene.environment = envTexture;
 
-        // Lichtsetup – Studio: vorne hell, soft fill, rim
         const ambient = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambient);
 
@@ -316,37 +329,34 @@
                 object.position.set(0, -0.05, 0);
                 object.scale.set(1, 1, 1);
 
-                // Material-Tuning: Richtung Meshy-Chrome
                 object.traverse((child) => {
                     if (child.isMesh && child.material) {
                         const mat = child.material;
-
                         if (mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial) {
-                            mat.envMapIntensity = 5.5;     // starke Spiegelung
-                            mat.roughness = 0.12;          // glatt
-                            mat.metalness = 1.0;           // max metal
+                            mat.envMapIntensity = 5.5;
+                            mat.roughness = 0.12;
+                            mat.metalness = 1.0;
                             mat.needsUpdate = true;
                         }
                     }
                 });
 
                 scene.add(object);
-            },
-            undefined,
-            (err) => console.error(err)
+            }
         );
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
-        controls.enableZoom = true;
 
         let isMusicPlaying = false;
-        const music = document.getElementById('background-music');
-        const bpm = 128;
-        const nodSpeed = (60 / bpm) * 0.5;
+const music = document.getElementById('background-music');
 
-        const musicToggle = document.getElementById('music-toggle');
+const bpm = 128;
+const nodSpeed = (60 / bpm) * 0.5; // wie vorher
+
+const musicToggle = document.getElementById('music-toggle');
+
 
         musicToggle.addEventListener('click', () => {
             isMusicPlaying = !isMusicPlaying;
@@ -373,24 +383,26 @@
         });
 
         function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
+    requestAnimationFrame(animate);
+    controls.update();
 
-            if (object) {
-                // leichte idle-Rotation (dein Value)
-                object.rotation.y += 0.0003;
+    if (object) {
+        // langsame Idle-Rotation
+        object.rotation.y += 0.0003;
 
-                if (isMusicPlaying) {
-                    const t = Date.now() * 0.001;
-                    object.rotation.x =
-                        Math.sin(t * (Math.PI / nodSpeed)) * 0.1;
-                } else {
-                    object.rotation.x *= 0.9;
-                }
-            }
-
-            renderer.render(scene, camera);
+        // Kopf-Nicken im Takt, wenn Musik spielt
+        if (isMusicPlaying) {
+            const t = Date.now() * 0.001;
+            object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.1;
+        } else {
+            // langsam zurück in Neutralposition
+            object.rotation.x *= 0.9;
         }
+    }
+
+    renderer.render(scene, camera);
+}
+
         animate();
 
         window.addEventListener('resize', () => {
