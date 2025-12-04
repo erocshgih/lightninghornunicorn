@@ -34,7 +34,7 @@
             z-index: 1;
         }
 
-        /* Buttons oben mittig */
+        /* Wrapper für die Buttons – oben mittig zentriert */
         #ui-wrapper {
             position: absolute;
             top: 16px;
@@ -46,17 +46,69 @@
             z-index: 2;
         }
 
+        /* Hologramm-Buttons */
         #ui-wrapper button {
-            padding: 10px 18px;
-            font-size: 11px;              /* Press Start 2P ist klein */
-            border-radius: 6px;
-            border: 1px solid #333;
-            background: rgba(255, 255, 255, 0.9);
+            position: relative;
+            padding: 10px 20px;
+            font-size: 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 255, 255, 0.7);
+            background: radial-gradient(circle at 0% 0%, rgba(0,255,255,0.25), transparent 60%)
+                        rgba(10, 20, 40, 0.65);
             cursor: pointer;
             font-family: "Press Start 2P", system-ui, sans-serif;
-            text-transform: uppercase;     /* ALLES GROSS */
+            text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1.4;
+            color: #e6faff;
+            box-shadow:
+                0 0 8px rgba(0, 255, 255, 0.55),
+                0 0 20px rgba(0, 180, 255, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            overflow: hidden;
+            transition:
+                transform 160ms ease-out,
+                box-shadow 160ms ease-out,
+                background 160ms ease-out,
+                border-color 160ms ease-out;
+        }
+
+        /* Hologram-Scan-Linie im Button */
+        #ui-wrapper button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                120deg,
+                transparent 0%,
+                rgba(0, 255, 255, 0.55) 40%,
+                rgba(255, 255, 255, 0.85) 50%,
+                rgba(0, 255, 255, 0.55) 60%,
+                transparent 100%
+            );
+            opacity: 0;
+            transform: translateX(-120%);
+            pointer-events: none;
+            transition:
+                opacity 200ms ease-out,
+                transform 350ms ease-out;
+        }
+
+        /* Hover-Effekt: leichter Lift + stärkeres Glow + Scan-Linie */
+        #ui-wrapper button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 0 14px rgba(0, 255, 255, 0.9),
+                0 0 40px rgba(0, 180, 255, 0.55);
+            border-color: rgba(0, 255, 255, 1);
+            background: radial-gradient(circle at 100% 0%, rgba(0,255,255,0.35), transparent 60%)
+                        rgba(10, 20, 40, 0.75);
+        }
+
+        #ui-wrapper button:hover::before {
+            opacity: 1;
+            transform: translateX(120%);
         }
     </style>
 </head>
@@ -210,14 +262,14 @@
 
         const scene = new THREE.Scene();
 
-        // Kamera: nah dran, leicht von oben
+        // Kamera: mittig, leicht von vorne
         const camera = new THREE.PerspectiveCamera(
             50,
             window.innerWidth / window.innerHeight,
             0.1,
             1000
         );
-        camera.position.set(3.2, 0.0, 2.6);
+        camera.position.set(0, 0.0, 2.6);
 
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
