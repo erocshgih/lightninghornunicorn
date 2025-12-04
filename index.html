@@ -210,7 +210,7 @@
                 object.rotation.x = isMusicPlaying
                     ? Math.sin(time * (Math.PI / nodSpeed)) * 0.1
                     : 0;
-                object.rotation.y += 0.002; // leichte Dauerrotation für nicer Look
+                object.rotation.y += 0.0001; // leichte Dauerrotation für nicer Look
             }
 
             renderer.render(scene, camera);
