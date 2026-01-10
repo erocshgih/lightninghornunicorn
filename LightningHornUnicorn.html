@@ -88,12 +88,12 @@ img {
 
 
     <!-- JavaScript -->
-    document.addEventListener('DOMContentLoaded', () => {
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
     const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
     setLanguage(lang);
     document.body.dataset.currentLang = lang;
-
-    showSection('ABOUT'); // Startzustand
+    showSection('ABOUT');
 });
 
 function setLanguage(lang) {
@@ -102,8 +102,6 @@ function setLanguage(lang) {
         if (txt) el.textContent = txt;
     });
 }
-
-/* 🔌 HOOK – macht NOCH nichts (kommt in Part 2) */
 
 
 function showSection(id) {
@@ -388,7 +386,7 @@ Discover the magic of A.I. Art, where my ideas meet cutting-edge technology. I c
 <img id="ai-art-85" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananaphone.webp" alt="bananaphone">
 <img id="ai-art-86" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/misshotdog1.webp" alt="misshotdog1">
 <img id="ai-art-87" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/misshotdog2.webp" alt="misshotdog2">
-<img id="ai-art-88" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/burpsi.webp" alt="burpsi">
+<img id="ai-art-83" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/burpsi.webp" alt="burpsi">
 
 </section>
 
@@ -438,43 +436,61 @@ Explore the beauty of Human Art, entirely crafted by me. Each piece starts with 
     </p>
 </section>
 
-<!-- STORYTIME Section -->
+
+
+
+
+
+
+
+<!-- Storytime Section -->
 <section id="STORYTIME">
-    <h2 data-lang-en="Storytime" data-lang-de="Geschichten">Storytime</h2>
+  <h2 data-lang-en="Storytime" data-lang-de="Geschichten">Storytime</h2>
+  <p data-lang-en="Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter." data-lang-de="Willkommen. Wähle ein Kapitel.">
+    Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter.
+  </p>
 
-    <p data-lang-en="Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter."
-       data-lang-de="Willkommen. Wähle ein Kapitel.">
-        Welcome to Lightning Horn Unicorn’s Storytime. Choose a chapter.
-    </p>
-
-    <div class="storytime-menu">
-        <a href="chapter00000001.html" class="chapter-button">
-            Chapter 1 – Who the Thunder is Aether
-        </a>
-        <a href="chapter00000002.html" class="chapter-button">
-            Chapter 2 – The Unicorn and the Cyborg
-        </a>
-        <a href="chapter00000003.html" class="chapter-button">
-            Chapter 3 – Machina Veritatis
-        </a>
-        <a href="chapter00000004.html" class="chapter-button">
-            Chapter 4 – Vive le Système de...
-        </a>
-        <a href="chapter00000005.html" class="chapter-button">
-            Chapter 5 – Expectations
-        </a>
-        <a href="chapter00000006.html" class="chapter-button">
-            Chapter 6 – No Refund
-        </a>
-        <a href="chapter00000007.html" class="chapter-button">
-            Chapter 7 – Never let them know your next move
-        </a>
-        <a href="#" class="chapter-button">
-            Chapter 8 – To Be Continued
-        </a>
-    </div>
+  <div class="storytime-menu">
+    <a href="chapter00000001.html" class="chapter-button">Chapter 1 – Who the Thunder is Aether</a>
+    <a href="chapter00000002.html" class="chapter-button">Chapter 2 – The Unicorn and the Cyborg</a>
+    <a href="chapter00000003.html" class="chapter-button">Chapter 3 – Machina Veritatis</a>
+    <a href="chapter00000004.html" class="chapter-button">Chapter 4 – Vive le Système de...</a>
+    <a href="chapter00000005.html" class="chapter-button">Chapter 5 – Expectations</a>
+    <a href="chapter00000006.html" class="chapter-button">Chapter 6 – No Refund</a>
+    <a href="chapter00000007.html" class="chapter-button">Chapter 7 – Never let them know your next move</a><a href="" class="chapter-button">Chapter 8 – To Be Continued</a>
+  </div>
 </section>
 
+
+
+
+<style>
+  #storytime {
+    padding: 2em;
+    text-align: center;
+  }
+
+  .storytime-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 2em;
+  }
+
+  .chapter-button {
+    display: inline-block;
+    padding: 1em 2em;
+    background-color: #444;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+  }
+
+  .chapter-button:hover {
+    background-color: #777;
+  }
+</style>
 
 
 
