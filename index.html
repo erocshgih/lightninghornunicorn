@@ -1,103 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lightning Horn Unicorn</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-
-  <!-- ✅ Strict CSP, no unsafe-inline or unsafe-eval -->
+  <!-- Strenge, aber eval-freie CSP -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self' https://esm.sh;
-    style-src 'self' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com;
+    style-src 'self';
+    font-src 'self';
     img-src 'self' data: blob:;
-    connect-src 'self' https://raw.githubusercontent.com;
     media-src 'self' https://github.com https://raw.githubusercontent.com;
+    connect-src 'self' https://raw.githubusercontent.com;
   ">
 
   <style>
-    body {
+    html, body {
       margin: 0;
-      overflow: hidden;
-      background-color: #000814;
-      font-family: system-ui, sans-serif;
-    }
-    #matrix-bg {
-      position: fixed;
-      inset: 0;
-      width: 100%;
       height: 100%;
-      z-index: 0;
+      background: black;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    #container3D {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      z-index: 1;
-    }
-    #ui-wrapper {
+    canvas { position: fixed; inset: 0; z-index: 0; }
+    #container3D { width: 100vw; height: 100vh; position: relative; z-index: 1; }
+    #controls {
       position: absolute;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 40px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      z-index: 9999;
+      align-items: center;
+      z-index: 2;
     }
-    #ui-wrapper button {
-      position: relative;
-      padding: 10px 20px;
-      font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 255, 255, 0.7);
-      background: radial-gradient(circle at 0% 0%, rgba(0,255,255,0.25), transparent 60%) rgba(10, 20, 40, 0.65);
+    button {
+      background: none;
+      color: cyan;
+      border: 1px solid cyan;
+      padding: 8px 16px;
       cursor: pointer;
-      font-family: "Press Start 2P", system-ui, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #e6faff;
-      box-shadow: 0 0 8px rgba(0, 255, 255, 0.55), 0 0 20px rgba(0, 180, 255, 0.35);
-      backdrop-filter: blur(6px);
-      transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+      font-family: sans-serif;
     }
-    #navigate-to-main {
-      border-color: rgba(255, 70, 70, 0.8);
-      background: radial-gradient(circle at 0% 0%, rgba(255,70,70,0.25), transparent 60%) rgba(40, 10, 20, 0.65);
-      color: #ffeaea;
-    }
+    button:hover { background: rgba(0,255,255,0.1); }
   </style>
 </head>
-
 <body>
-  <canvas id="matrix-bg"></canvas>
+
+  <canvas id="matrix"></canvas>
   <div id="container3D"></div>
 
-  <div id="ui-wrapper">
-    <button id="music-toggle"
-      data-lang-en="CLICK HERE FOR MUSIC - MUSIC OFF"
-      data-lang-de="KLICKE HIER FÜR MUSIK - MUSIK AUS"
-      data-lang-fr="CLIQUEZ ICI POUR LA MUSIQUE - MUSIQUE ÉTEINTE">
-      CLICK HERE FOR MUSIC - MUSIC OFF
-    </button>
-
-    <button id="navigate-to-main"
-      data-lang-en="GO TO MAIN PAGE"
-      data-lang-de="ZUR HAUPTSEITE"
-      data-lang-fr="ALLER À LA PAGE PRINCIPALE">
-      GO TO MAIN PAGE
-    </button>
+  <div id="controls">
+    <button id="music-toggle">MUSIC OFF</button>
+    <button id="goto-main">MAIN PAGE</button>
   </div>
 
-  <audio id="background-music" loop>
-    <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/intro.mp3" type="audio/mpeg" />
+  <audio id="music" loop>
+    <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/intro.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- External, CSP-safe scripts -->
-  <script src="scripts/matrix.js" defer></script>
-  <script type="module" src="scripts/unicorn.js"></script>
+  <script>
+    // MATRIX BACKGROUND (pure JS, kein eval)
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    let width, height, sevens = [];
+    function resize() {
+      width = canvas.width = innerWidth;
+      height = canvas.height = innerHeight;
+      sevens = Array.from({length: 150}, () => ({
+        x: Math.random()*width,
+        y: Math.random()*height,
+        speed: 2 + Math.random()*3
+      }));
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    function draw() {
+      ctx.fillStyle = 'rgba(0,0,0,0.25)';
+      ctx.fillRect(0,0,width,height);
+      ctx.fillStyle = 'rgba(0,150,255,0.8)';
+      ctx.font = '16px monospace';
+      sevens.forEach(s=>{
+        ctx.fillText('7', s.x, s.y);
+        s.y += s.speed;
+        if(s.y > height) s.y = 0;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+
+  <script type="module">
+    import * as THREE from 'https://esm.sh/three@0.129.0';
+    import { OrbitControls } from 'https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 100);
+    camera.position.set(2.5,0.5,2.5);
+
+    const renderer = new THREE.WebGLRenderer({alpha:true, antialias:true});
+    renderer.setSize(innerWidth, innerHeight);
+    document.getElementById('container3D').appendChild(renderer.domElement);
+
+    const light = new THREE.DirectionalLight(0xffffff,1.5);
+    light.position.set(1,1,1);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x4040ff,0.6));
+
+    const loader = new GLTFLoader();
+    let head;
+    loader.load(
+      'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb',
+      gltf => {
+        head = gltf.scene;
+        scene.add(head);
+      }
+    );
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const music = document.getElementById('music');
+    let playing = false;
+    document.getElementById('music-toggle').onclick = () => {
+      playing = !playing;
+      if (playing) music.play(); else music.pause();
+      document.getElementById('music-toggle').textContent = playing ? 'MUSIC ON' : 'MUSIC OFF';
+    };
+    document.getElementById('goto-main').onclick = () => {
+      location.href = 'https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html';
+    };
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (head) {
+        head.rotation.y += 0.01;
+        if (playing) head.rotation.x = Math.sin(Date.now()*0.005)*0.2;
+      }
+      controls.update();
+      renderer.render(scene,camera);
+    }
+    animate();
+
+    window.addEventListener('resize', ()=>{
+      camera.aspect = innerWidth/innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+  </script>
 </body>
 </html>
