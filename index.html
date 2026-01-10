@@ -11,8 +11,8 @@
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
         font-src 'self' https://fonts.gstatic.com; 
         img-src 'self' data: blob:; 
-        connect-src 'self' https://raw.githubusercontent.com https://esm.sh; 
-        media-src 'self' https://github.com;
+        connect-src 'self' https://raw.githubusercontent.com https://esm.sh blob:; 
+        media-src 'self' https://github.com https://raw.githubusercontent.com;
     ">
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -102,7 +102,7 @@
     </audio>
 
     <script>
-        /* MATRIX-TUNNEL LOGIC */
+        /* MATRIX-TUNNEL */
         const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
         const BASE_FONT_SIZE = 26;
@@ -153,13 +153,11 @@
     </script>
 
     <script type="module">
-        /* 3D LOGIC & IMPORTS */
         import * as THREE from 'https://esm.sh/three@0.129.0';
         import { OrbitControls } from 'https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js';
         import { GLTFLoader } from 'https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js';
         import { RoomEnvironment } from 'https://esm.sh/three@0.129.0/examples/jsm/environments/RoomEnvironment.js';
 
-        // Language Handling
         const userLang = navigator.language.startsWith('de') ? 'de' : navigator.language.startsWith('fr') ? 'fr' : 'en';
         document.body.setAttribute('data-current-lang', userLang);
         function setLang(l) {
@@ -170,7 +168,6 @@
         }
         setLang(userLang);
 
-        // Scene Setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(2.6, 0.0, 2.6);
@@ -194,7 +191,6 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
-        // Music & Animation Logic
         let isMusicPlaying = false;
         const music = document.getElementById('background-music');
         const bpm = 128;
@@ -202,7 +198,11 @@
 
         document.getElementById('music-toggle').addEventListener('click', function() {
             isMusicPlaying = !isMusicPlaying;
-            isMusicPlaying ? music.play() : music.pause();
+            if (isMusicPlaying) {
+                music.play().catch(e => console.error("Playback failed:", e));
+            } else {
+                music.pause();
+            }
             
             const lang = document.body.getAttribute('data-current-lang');
             const onTxt = { en: 'MUSIC ON', de: 'MUSIK EIN', fr: 'MUSIQUE ACTIVÉE' };
