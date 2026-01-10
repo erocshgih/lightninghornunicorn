@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lightning Horn Unicorn</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://esm.sh; 
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+        font-src 'self' https://fonts.gstatic.com; 
+        img-src 'self' data: blob:; 
+        connect-src 'self' https://raw.githubusercontent.com https://esm.sh; 
+        media-src 'self' https://github.com;
+    ">
+
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 
     <style>
@@ -38,7 +49,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            z-index: 9999; /* Damit die Buttons sicher klickbar sind */
+            z-index: 9999;
         }
 
         #ui-wrapper button {
@@ -91,7 +102,7 @@
     </audio>
 
     <script>
-        /* DEIN ORIGINALER MATRIX-TUNNEL */
+        /* MATRIX-TUNNEL LOGIC */
         const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
         const BASE_FONT_SIZE = 26;
@@ -111,10 +122,10 @@
         function makeSeven() {
             const edge = Math.floor(Math.random() * 4);
             let x, y;
-            if (edge === 0) x = Math.random() * canvas.width, y = -20;
-            else if (edge === 1) x = canvas.width + 20, y = Math.random() * canvas.height;
-            else if (edge === 2) x = Math.random() * canvas.width, y = canvas.height + 20;
-            else x = -20, y = Math.random() * canvas.height;
+            if (edge === 0) { x = Math.random() * canvas.width; y = -20; }
+            else if (edge === 1) { x = canvas.width + 20; y = Math.random() * canvas.height; }
+            else if (edge === 2) { x = Math.random() * canvas.width; y = canvas.height + 20; }
+            else { x = -20; y = Math.random() * canvas.height; }
             return { x, y, life: 0, speed: 0.008 + Math.random() * 0.015 };
         }
 
@@ -142,13 +153,13 @@
     </script>
 
     <script type="module">
-        /* FIX: STABILE IMPORTE */
+        /* 3D LOGIC & IMPORTS */
         import * as THREE from 'https://esm.sh/three@0.129.0';
         import { OrbitControls } from 'https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js';
         import { GLTFLoader } from 'https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js';
         import { RoomEnvironment } from 'https://esm.sh/three@0.129.0/examples/jsm/environments/RoomEnvironment.js';
 
-        // Sprache
+        // Language Handling
         const userLang = navigator.language.startsWith('de') ? 'de' : navigator.language.startsWith('fr') ? 'fr' : 'en';
         document.body.setAttribute('data-current-lang', userLang);
         function setLang(l) {
@@ -159,7 +170,7 @@
         }
         setLang(userLang);
 
-        // Szene
+        // Scene Setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(2.6, 0.0, 2.6);
@@ -183,11 +194,11 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
-        // Musik & Animation Logik
+        // Music & Animation Logic
         let isMusicPlaying = false;
         const music = document.getElementById('background-music');
         const bpm = 128;
-        const nodSpeed = (60 / bpm) * 0.5; // DEIN ORIGINALER WERT
+        const nodSpeed = (60 / bpm) * 0.5;
 
         document.getElementById('music-toggle').addEventListener('click', function() {
             isMusicPlaying = !isMusicPlaying;
@@ -208,10 +219,10 @@
             requestAnimationFrame(animate);
             controls.update();
             if (object) {
-                object.rotation.y += 0.0003; // Dein originaler Idle-Wert
+                object.rotation.y += 0.0003; 
                 if (isMusicPlaying) {
                     const t = Date.now() * 0.001;
-                    object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.1; // Dein originaler Nicker
+                    object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.1;
                 } else {
                     object.rotation.x *= 0.9;
                 }
