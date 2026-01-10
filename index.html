@@ -39,6 +39,7 @@ body {
     z-index: 5;
     font-size: 20px;
     letter-spacing: 2px;
+    pointer-events: none;
 }
 
 /* UI */
@@ -68,7 +69,7 @@ body {
 <canvas id="matrix-bg"></canvas>
 <div id="container3D"></div>
 
-<div id="loading">LOADING</div>
+<div id="loading">loading</div>
 
 <div id="ui-wrapper">
     <button id="music-toggle">Music Off</button>
@@ -123,6 +124,19 @@ import * as THREE from "https://esm.sh/three@0.129.0";
 import { OrbitControls } from "https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
+/* ---------- LOADING TEXT ANIMATION (PURE LOGIC) ---------- */
+const loadingEl = document.getElementById("loading");
+const baseText = "loading";
+let dotIndex = 0;
+
+const loadingInterval = setInterval(() => {
+    const chars = baseText.split("");
+    chars.splice(dotIndex, 0, ".");
+    loadingEl.textContent = chars.join("");
+    dotIndex = (dotIndex + 1) % (baseText.length + 1);
+}, 180);
+/* -------------------------------------------------------- */
+
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
@@ -133,7 +147,7 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.outputEncoding = THREE.sRGBEncoding;
 document.getElementById("container3D").appendChild(renderer.domElement);
 
-/* LIGHTING – klar & weich */
+/* LIGHTING */
 scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
 const key = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -151,7 +165,9 @@ new GLTFLoader().load(
     g => {
         object = g.scene;
         scene.add(object);
-        document.getElementById("loading").style.display = "none";
+
+        clearInterval(loadingInterval);
+        loadingEl.style.display = "none";
     }
 );
 
