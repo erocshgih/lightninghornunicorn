@@ -9,7 +9,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: blue;
+    background: black;
     font-family: system-ui, sans-serif;
     color: white;
 }
@@ -39,7 +39,6 @@ body {
     z-index: 5;
     font-size: 20px;
     letter-spacing: 2px;
-    background: green;
 }
 
 /* UI */
@@ -106,7 +105,7 @@ for (let i = 0; i < COUNT; i++) symbols.push(spawn());
 
 function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#8fd9fb";
     ctx.font = "20px monospace";
     for (let s of symbols) {
         s.y -= s.speed;
