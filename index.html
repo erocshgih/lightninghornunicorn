@@ -29,23 +29,36 @@ body {
     z-index: 1;
 }
 
-/* UI – MINIMAL */
+/* LOADING */
+#loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    font-size: 20px;
+    letter-spacing: 2px;
+    background: black;
+}
+
+/* UI */
 #ui-wrapper {
     position: absolute;
-    top: 16px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 12px;
+    gap: 20px;
     z-index: 10;
 }
 
 #ui-wrapper button {
     background: transparent;
-    border: 1px solid white;
+    border: 2px solid white;
     color: white;
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 12px 22px;
+    font-size: 16px;
     cursor: pointer;
 }
 </style>
@@ -56,6 +69,8 @@ body {
 <canvas id="matrix-bg"></canvas>
 <div id="container3D"></div>
 
+<div id="loading">LOADING</div>
+
 <div id="ui-wrapper">
     <button id="music-toggle">Music Off</button>
     <button id="navigate-to-main">Main Page</button>
@@ -65,17 +80,16 @@ body {
     <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/intro.mp3" type="audio/mpeg">
 </audio>
 
-<!-- MATRIX – FLACH & RUHIG -->
+<!-- MATRIX -->
 <script>
 const canvas = document.getElementById("matrix-bg");
 const ctx = canvas.getContext("2d");
-
 let symbols = [];
 const COUNT = 120;
 
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
 }
 window.addEventListener("resize", resize);
 resize();
@@ -94,7 +108,6 @@ function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle = "white";
     ctx.font = "20px monospace";
-
     for (let s of symbols) {
         s.y -= s.speed;
         if (s.y < -20) Object.assign(s, spawn());
@@ -112,30 +125,45 @@ import { OrbitControls } from "https://esm.sh/three@0.129.0/examples/jsm/control
 import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
 const scene = new THREE.Scene();
+
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
 camera.position.set(2.6,0,2.6);
 
 const renderer = new THREE.WebGLRenderer({ alpha:true, antialias:true });
 renderer.setSize(innerWidth, innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
 document.getElementById("container3D").appendChild(renderer.domElement);
 
-const light = new THREE.HemisphereLight(0xffffff, 0x222222, 1);
-scene.add(light);
+/* LIGHTING – klar & weich */
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
+const key = new THREE.DirectionalLight(0xffffff, 0.8);
+key.position.set(3,4,5);
+scene.add(key);
+
+const rim = new THREE.DirectionalLight(0xffffff, 0.4);
+rim.position.set(-3,2,-4);
+scene.add(rim);
+
+/* MODEL */
 let object;
 new GLTFLoader().load(
     "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/friendlyunicornminator.glb",
     g => {
         object = g.scene;
         scene.add(object);
+        document.getElementById("loading").style.display = "none";
     }
 );
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
+/* MUSIC */
 let musicOn = false;
 const music = document.getElementById("background-music");
+const bpm = 128;
+const nodSpeed = (60 / bpm) * 0.5;
 
 document.getElementById("music-toggle").onclick = () => {
     musicOn = !musicOn;
@@ -147,10 +175,21 @@ document.getElementById("navigate-to-main").onclick = () => {
     location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html";
 };
 
+/* ANIMATION */
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
-    if (object) object.rotation.y += 0.00025;
+
+    if (object) {
+        object.rotation.y += 0.00025;
+
+        if (musicOn) {
+            const t = Date.now() * 0.001;
+            object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.08;
+        } else {
+            object.rotation.x *= 0.9;
+        }
+    }
     renderer.render(scene, camera);
 }
 animate();
