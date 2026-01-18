@@ -162,6 +162,7 @@ new THREE.TextureLoader().load(
   (texture) => {
     const envMap = pmrem.fromEquirectangular(texture).texture;
     scene.environment = envMap;
+    scene.background = envMap; 
 
     texture.dispose();
     pmrem.dispose();
