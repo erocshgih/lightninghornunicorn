@@ -154,18 +154,15 @@ renderer.toneMappingExposure = 1.2;
 
 document.getElementById("container3D").appendChild(renderer.domElement);
 
-/* ENVIRONMENT LIGHT (IBL) */
-const pmrem = new THREE.PMREMGenerator(renderer);
 
+/* ENVIRONMENT (FAKE HDRI FOR CHROME) */
 new THREE.TextureLoader().load(
-  "https://threejs.org/examples/textures/equirectangular/royal_esplanade_1k.jpg",
-  (texture) => {
-    const envMap = pmrem.fromEquirectangular(texture).texture;
-    scene.environment = envMap;
-    scene.background = envMap; 
+  "./assets/hdri/lhu_tropical_chrome.png",
+  (tex) => {
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.colorSpace = THREE.SRGBColorSpace;
 
-    texture.dispose();
-    pmrem.dispose();
+    scene.environment = tex;
   }
 );
 
