@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -8,55 +7,59 @@
 
 <style>
 body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  font-family: system-ui, sans-serif;
-  color: white;
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: system-ui, sans-serif;
+    color: white;
 }
 
+/* MATRIX */
 #matrix-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
 }
 
+/* 3D */
 #container3D {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  z-index: 1;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
 }
 
+/* LOADING */
 #loading {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
-  font-size: 20px;
-  letter-spacing: 2px;
-  pointer-events: none;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    font-size: 20px;
+    letter-spacing: 2px;
+    pointer-events: none;
 }
 
+/* UI */
 #ui-wrapper {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 20px;
-  z-index: 10;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 10;
 }
 
 #ui-wrapper button {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 12px 22px;
-  font-size: 16px;
-  cursor: pointer;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 12px 22px;
+    font-size: 16px;
+    cursor: pointer;
 }
 </style>
 </head>
@@ -65,15 +68,16 @@ body {
 
 <canvas id="matrix-bg"></canvas>
 <div id="container3D"></div>
+
 <div id="loading">loading</div>
 
 <div id="ui-wrapper">
-  <button id="music-toggle">Music Off</button>
-  <button id="navigate-to-main">Main Page</button>
+    <button id="music-toggle">Music Off</button>
+    <button id="navigate-to-main">Main Page</button>
 </div>
 
 <audio id="background-music" loop>
-  <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/extraterrestrialmegatarsier.ogg" type="audio/ogg">
+    <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/extraterrestrialmegatarsier.ogg" type="audio/ogg">
 </audio>
 
 <!-- MATRIX -->
@@ -83,35 +87,35 @@ const ctx = canvas.getContext("2d");
 let symbols = [];
 const COUNT = 120;
 
-function resizeMatrix() {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+function resize() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
 }
-window.addEventListener("resize", resizeMatrix);
-resizeMatrix();
+window.addEventListener("resize", resize);
+resize();
 
 function spawn() {
-  return {
-    x: Math.random() * canvas.width,
-    y: canvas.height + Math.random() * canvas.height,
-    speed: 0.3 + Math.random() * 0.6
-  };
+    return {
+        x: Math.random() * canvas.width,
+        y: canvas.height + Math.random() * canvas.height,
+        speed: 0.3 + Math.random() * 0.6
+    };
 }
 
 for (let i = 0; i < COUNT; i++) symbols.push(spawn());
 
-function drawMatrix() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "#8fd9fb";
-  ctx.font = "20px monospace";
-  for (let s of symbols) {
-    s.y -= s.speed;
-    if (s.y < -20) Object.assign(s, spawn());
-    ctx.fillText("7", s.x, s.y);
-  }
-  requestAnimationFrame(drawMatrix);
+function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "#8fd9fb";
+    ctx.font = "20px monospace";
+    for (let s of symbols) {
+        s.y -= s.speed;
+        if (s.y < -20) Object.assign(s, spawn());
+        ctx.fillText("7", s.x, s.y);
+    }
+    requestAnimationFrame(draw);
 }
-drawMatrix();
+draw();
 </script>
 
 <!-- THREE -->
@@ -120,10 +124,11 @@ import * as THREE from "https://esm.sh/three@0.129.0";
 import { OrbitControls } from "https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
-/* LOADING */
+/* LOADING TEXT */
 const loadingEl = document.getElementById("loading");
 const baseText = "loading";
 let dotIndex = 0;
+
 const loadingInterval = setInterval(() => {
   const chars = baseText.split("");
   chars.splice(dotIndex, 0, ".");
@@ -131,29 +136,10 @@ const loadingInterval = setInterval(() => {
   dotIndex = (dotIndex + 1) % (baseText.length + 1);
 }, 180);
 
-/* SCENE */
-const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
-camera.position.set(0, 0.5, 2);
-
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-document.getElementById("container3D").appendChild(renderer.domElement);
-
-scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-const dir = new THREE.DirectionalLight(0xffffff, 1);
-dir.position.set(2,2,2);
-scene.add(dir);
-
-/* CONTROLS */
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
 /* FACE PULLING */
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+
 let pulling = false;
 let hitPoint = new THREE.Vector3();
 let pullMesh = null;
@@ -162,35 +148,98 @@ let originalPositions = null;
 const pullRadius = 0.35;
 const pullStrength = 0.25;
 
+
+
+
+/* SCENE */
+const scene = new THREE.Scene();
+
+/* CAMERA */
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
+camera.position.set(2.6, 0, 2.6);
+
+/* RENDERER */
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+document.getElementById("container3D").appendChild(renderer.domElement);
+
+
+/* ENVIRONMENT (FAKE HDRI FOR CHROME) */
+new THREE.TextureLoader().load(
+  "./assets/hdri/lhu_tropical_chrome.png",
+  (tex) => {
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.colorSpace = THREE.SRGBColorSpace;
+
+    scene.environment = tex;
+  }
+);
+
+/* LIGHTING */
+scene.add(new THREE.AmbientLight(0xffffff, 1.3));
+
+const key = new THREE.DirectionalLight(0xffffff, 1.8);
+key.position.set(5, 5, 5);
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0xffffff, 1.2);
+fill.position.set(-5, 2, 5);
+scene.add(fill);
+
+const rim = new THREE.DirectionalLight(0xffffff, 1.0);
+rim.position.set(-3, 5, -5);
+scene.add(rim);
+
 /* MODEL */
 let object;
-
 new GLTFLoader().load(
   "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Unibrowserloadicorn.glb",
-  (gltf) => {
-    object = gltf.scene;
-    object.scale.set(2,2,2);
-    object.position.y = -0.5;
-    scene.add(object);
+  (g) => {
+    object = g.scene;
 
     object.traverse((child) => {
       if (child.isMesh && child.geometry?.attributes?.position) {
+        // Eigene Geometry, damit wir sie verbiegen dürfen
         child.geometry = child.geometry.clone();
+
+        // Original-Vertices merken
         originalPositions = child.geometry.attributes.position.array.slice();
+
+        // DAS ist das Mesh, das wir ziehen
         pullMesh = child;
       }
+
+      if (child.isMesh && child.material) {
+        child.material.envMapIntensity = 1.6;
+        child.material.needsUpdate = true;
+      }
     });
+
+    scene.add(object);
 
     clearInterval(loadingInterval);
     loadingEl.style.display = "none";
   }
 );
 
-/* POINTER */
+
+
+/* CONTROLS */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
 renderer.domElement.addEventListener("pointerdown", (e) => {
   mouse.x = (e.clientX / innerWidth) * 2 - 1;
   mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+
   raycaster.setFromCamera(mouse, camera);
+
   const hits = raycaster.intersectObject(object, true);
   if (hits.length > 0) {
     pulling = true;
@@ -198,49 +247,68 @@ renderer.domElement.addEventListener("pointerdown", (e) => {
   }
 });
 
-renderer.domElement.addEventListener("pointerup", () => pulling = false);
+renderer.domElement.addEventListener("pointerup", () => {
+  pulling = false;
+});
 
 renderer.domElement.addEventListener("pointermove", (e) => {
   if (!pulling || !pullMesh) return;
+
   mouse.x = (e.clientX / innerWidth) * 2 - 1;
   mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+
   raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObject(object, true);
-  if (hits.length > 0) hitPoint.copy(hits[0].point);
+  if (hits.length > 0) {
+    hitPoint.copy(hits[0].point);
+  }
 });
+
 
 /* MUSIC */
 let musicOn = false;
 const music = document.getElementById("background-music");
-const musicBtn = document.getElementById("music-toggle");
+const bpm = 127;
+const nodSpeed = (60 / bpm) * 0.5;
 
-musicBtn.onclick = () => {
-  if (!musicOn) {
-    music.play();
-    musicBtn.textContent = "Music On";
-  } else {
-    music.pause();
-    musicBtn.textContent = "Music Off";
-  }
+document.getElementById("music-toggle").onclick = () => {
   musicOn = !musicOn;
+  musicOn ? music.play().catch(()=>{}) : music.pause();
+  document.getElementById("music-toggle").textContent = musicOn ? "Music On" : "Music Off";
 };
 
-/* MAIN PAGE BUTTON */
 document.getElementById("navigate-to-main").onclick = () => {
-  window.location.href = "www.lightninghornunicorn.com/lightninghornunicorn.html"; // <- hier ggf. anpassen
+  location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html";
 };
 
-/* ANIMATE */
+/* ANIMATION */
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
 
+  if (object) {
+    object.rotation.y += 0.00025;
+
+    if (musicOn) {
+      const t = Date.now() * 0.001;
+      object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.08;
+    } else {
+      object.rotation.x *= 0.9;
+    }
+  }
+
+  // ---- FACE PULLING HIER ----
   if (pullMesh && originalPositions) {
     const pos = pullMesh.geometry.attributes.position;
     const arr = pos.array;
 
     for (let i = 0; i < arr.length; i += 3) {
-      const v = new THREE.Vector3(arr[i], arr[i+1], arr[i+2]);
+      const v = new THREE.Vector3(
+        arr[i],
+        arr[i + 1],
+        arr[i + 2]
+      );
+
       const worldV = v.clone().applyMatrix4(pullMesh.matrixWorld);
       const d = worldV.distanceTo(hitPoint);
 
@@ -250,13 +318,13 @@ function animate() {
         v.add(dir.multiplyScalar(falloff * pullStrength));
       } else {
         v.x += (originalPositions[i] - v.x) * 0.08;
-        v.y += (originalPositions[i+1] - v.y) * 0.08;
-        v.z += (originalPositions[i+2] - v.z) * 0.08;
+        v.y += (originalPositions[i + 1] - v.y) * 0.08;
+        v.z += (originalPositions[i + 2] - v.z) * 0.08;
       }
 
       arr[i] = v.x;
-      arr[i+1] = v.y;
-      arr[i+2] = v.z;
+      arr[i + 1] = v.y;
+      arr[i + 2] = v.z;
     }
 
     pos.needsUpdate = true;
@@ -267,20 +335,19 @@ function animate() {
 }
 animate();
 
+
+
+
+
 /* RESIZE */
 window.addEventListener("resize", () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 </script>
 
+
 </body>
 </html>
-
-
-
-
-
-"",
