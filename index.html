@@ -128,6 +128,9 @@ import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GL
 const loadingEl = document.getElementById("loading");
 const baseText = "loading";
 let dotIndex = 0;
+let mixer;
+let clock = new THREE.Clock();
+
 
 const loadingInterval = setInterval(() => {
   const chars = baseText.split("");
@@ -195,6 +198,18 @@ new GLTFLoader().load(
 
     scene.add(object);
 
+// === ANIMATION START ===
+if (g.animations && g.animations.length > 0) {
+  mixer = new THREE.AnimationMixer(object);
+
+  g.animations.forEach((clip) => {
+    const action = mixer.clipAction(clip);
+    action.loop = THREE.LoopRepeat;
+    action.play();
+  });
+}
+
+
     clearInterval(loadingInterval);
     loadingEl.style.display = "none";
   }
@@ -223,6 +238,10 @@ document.getElementById("navigate-to-main").onclick = () => {
 /* ANIMATION */
 function animate() {
   requestAnimationFrame(animate);
+
+  const delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
+
   controls.update();
 
   if (object) {
@@ -238,6 +257,7 @@ function animate() {
 
   renderer.render(scene, camera);
 }
+
 animate();
 
 /* RESIZE */
