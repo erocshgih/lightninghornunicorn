@@ -7,62 +7,62 @@
 
 <style>
 body {
-    margin: 0;
-    overflow: hidden;
-    background: black;
-    font-family: system-ui, sans-serif;
-    color: white;
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  font-family: system-ui, sans-serif;
+  color: white;
 }
 
 /* MATRIX */
 #matrix-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
 }
 
 /* 3D */
 #container3D {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    z-index: 1;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
 }
 
 /* LOADING */
 #loading {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    font-size: 20px;
-    letter-spacing: 2px;
-    pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  font-size: 20px;
+  letter-spacing: 2px;
+  pointer-events: none;
 }
 
-/* UI */
+/* TOP UI */
 #ui-wrapper {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 10;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 10;
 }
 
 #ui-wrapper button {
-    background: transparent;
-    border: 2px solid white;
-    color: white;
-    padding: 12px 22px;
-    font-size: 16px;
-    cursor: pointer;
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 12px 22px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-/* HEAD MENU */
+/* BOTTOM MENU */
 #head-menu {
   position: fixed;
   bottom: 14px;
@@ -85,21 +85,26 @@ body {
 
 <canvas id="matrix-bg"></canvas>
 <div id="container3D"></div>
+
 <div id="loading">loading</div>
 
 <div id="ui-wrapper">
-    <button id="music-toggle">Music Off</button>
-    <button id="navigate-to-main">Main Page</button>
+  <button id="music-toggle">Music Off</button>
+  <button id="navigate-to-main">Main Page</button>
 </div>
 
 <audio id="background-music" loop>
-    <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/extraterrestrialmegatarsier.ogg" type="audio/ogg">
+  <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/extraterrestrialmegatarsier.ogg" type="audio/ogg">
 </audio>
 
 <div id="head-menu">
   <select id="head-select">
-    <option value="unibrowserloadicorn.glb">unibrowserloadicorn</option>
-    <option value="uniturnoeyeballhorn.glb">uniturnoeyeballhorn</option>
+    <option value="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unibrowserloadicorn.glb">
+      unibrowserloadicorn
+    </option>
+    <option value="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/uniturnoeyeballhorn.glb">
+      uniturnoeyeballhorn
+    </option>
   </select>
 </div>
 
@@ -107,15 +112,15 @@ body {
 <script>
 const canvas = document.getElementById("matrix-bg");
 const ctx = canvas.getContext("2d");
-const COUNT = 120;
 let symbols = [];
+const COUNT = 120;
 
-function resizeMatrix() {
+function resize() {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
 }
-window.addEventListener("resize", resizeMatrix);
-resizeMatrix();
+window.addEventListener("resize", resize);
+resize();
 
 function spawn() {
   return {
@@ -127,8 +132,8 @@ function spawn() {
 
 for (let i = 0; i < COUNT; i++) symbols.push(spawn());
 
-function drawMatrix() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle = "#8fd9fb";
   ctx.font = "20px monospace";
   for (let s of symbols) {
@@ -136,9 +141,9 @@ function drawMatrix() {
     if (s.y < -20) Object.assign(s, spawn());
     ctx.fillText("7", s.x, s.y);
   }
-  requestAnimationFrame(drawMatrix);
+  requestAnimationFrame(draw);
 }
-drawMatrix();
+draw();
 </script>
 
 <!-- THREE -->
@@ -146,6 +151,17 @@ drawMatrix();
 import * as THREE from "https://esm.sh/three@0.129.0";
 import { OrbitControls } from "https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+
+/* LOADING ANIMATION */
+const loadingEl = document.getElementById("loading");
+const baseText = "loading";
+let dotIndex = 0;
+const loadingInterval = setInterval(() => {
+  const chars = baseText.split("");
+  chars.splice(dotIndex, 0, ".");
+  loadingEl.textContent = chars.join("");
+  dotIndex = (dotIndex + 1) % (baseText.length + 1);
+}, 180);
 
 /* SCENE */
 const scene = new THREE.Scene();
@@ -157,39 +173,50 @@ camera.position.set(2.6, 0, 2.6);
 /* RENDERER */
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 document.getElementById("container3D").appendChild(renderer.domElement);
 
-/* LIGHT */
+/* ENVIRONMENT */
+new THREE.TextureLoader().load(
+  "./assets/hdri/lhu_tropical_chrome.png",
+  tex => {
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.colorSpace = THREE.SRGBColorSpace;
+    scene.environment = tex;
+  }
+);
+
+/* LIGHTS */
 scene.add(new THREE.AmbientLight(0xffffff, 1.3));
 const key = new THREE.DirectionalLight(0xffffff, 1.8);
 key.position.set(5,5,5);
 scene.add(key);
+const fill = new THREE.DirectionalLight(0xffffff, 1.2);
+fill.position.set(-5,2,5);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffffff, 1.0);
+rim.position.set(-3,5,-5);
+scene.add(rim);
 
-/* CONTROLS */
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
-/* MODEL SYSTEM */
+/* MODEL SYSTEM (RAW URL ONLY) */
 const loader = new GLTFLoader();
 let object = null;
 let mixer = null;
 const clock = new THREE.Clock();
 
 function disposeObject(obj) {
-  obj.traverse(child => {
-    if (child.isMesh) {
-      child.geometry.dispose();
-      if (child.material) child.material.dispose();
+  obj.traverse(c => {
+    if (c.isMesh) {
+      c.geometry.dispose();
+      if (c.material) c.material.dispose();
     }
   });
 }
 
-function loadHead(file) {
-  const loadingEl = document.getElementById("loading");
+function loadHead(url) {
   loadingEl.style.display = "flex";
 
   if (object) {
@@ -204,13 +231,14 @@ function loadHead(file) {
   }
 
   loader.load(
-    "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/" + file,
-    (g) => {
+    url,
+    g => {
       object = g.scene;
 
-      object.traverse(child => {
-        if (child.isMesh && child.material) {
-          child.material.envMapIntensity = 1.6;
+      object.traverse(c => {
+        if (c.isMesh && c.material) {
+          c.material.envMapIntensity = 1.6;
+          c.material.needsUpdate = true;
         }
       });
 
@@ -221,18 +249,15 @@ function loadHead(file) {
         g.animations.forEach(clip => mixer.clipAction(clip).play());
       }
 
+      clearInterval(loadingInterval);
       loadingEl.style.display = "none";
     }
   );
 }
 
-/* INITIAL LOAD */
-loadHead("unibrowserloadicorn.glb");
-
-/* DROPDOWN */
-document.getElementById("head-select").addEventListener("change", e => {
-  loadHead(e.target.value);
-});
+/* CONTROLS */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
 /* MUSIC */
 let musicOn = false;
@@ -250,12 +275,22 @@ document.getElementById("navigate-to-main").onclick = () => {
   location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html";
 };
 
+/* DROPDOWN */
+document.getElementById("head-select").addEventListener("change", e => {
+  loadHead(e.target.value);
+});
+
+/* START (EXPLICIT RAW URL) */
+loadHead(
+  "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unibrowserloadicorn.glb"
+);
+
 /* LOOP */
 function animate() {
   requestAnimationFrame(animate);
-
   const delta = clock.getDelta();
   if (mixer) mixer.update(delta);
+  controls.update();
 
   if (object) {
     object.rotation.y += 0.00025;
@@ -267,7 +302,6 @@ function animate() {
     }
   }
 
-  controls.update();
   renderer.render(scene, camera);
 }
 animate();
@@ -277,9 +311,9 @@ window.addEventListener("resize", () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 </script>
 
 </body>
 </html>
-
