@@ -215,9 +215,9 @@ function loadHead(file) {
     mixer = null;
   }
 
-  loader.load(
-    "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/" + file,
-    (g) => {
+loader.load(
+  file,
+  (g) => {
       object = g.scene;
 
       object.traverse(child => {
@@ -240,7 +240,10 @@ function loadHead(file) {
 }
 
 /* INITIAL LOAD */
-loadHead("unibrowserloadicorn.glb");
+loadHead(
+  "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unibrowserloadicorn.glb"
+);
+
 
 /* DROPDOWN */
 document.getElementById("head-select").addEventListener("change", e => {
