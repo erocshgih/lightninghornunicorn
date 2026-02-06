@@ -7,62 +7,62 @@
 
 <style>
 body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  font-family: system-ui, sans-serif;
-  color: white;
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: system-ui, sans-serif;
+    color: white;
 }
 
 /* MATRIX */
 #matrix-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
 }
 
 /* 3D */
 #container3D {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  z-index: 1;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
 }
 
 /* LOADING */
 #loading {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
-  font-size: 20px;
-  letter-spacing: 2px;
-  pointer-events: none;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    font-size: 20px;
+    letter-spacing: 2px;
+    pointer-events: none;
 }
 
-/* TOP UI */
+/* UI */
 #ui-wrapper {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 20px;
-  z-index: 10;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 10;
 }
 
 #ui-wrapper button {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 12px 22px;
-  font-size: 16px;
-  cursor: pointer;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 12px 22px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-/* BOTTOM MENU */
+/* HEAD MENU */
 #head-menu {
   position: fixed;
   bottom: 14px;
@@ -88,12 +88,12 @@ body {
 <div id="loading">loading</div>
 
 <div id="ui-wrapper">
-  <button id="music-toggle">Music Off</button>
-  <button id="navigate-to-main">Main Page</button>
+    <button id="music-toggle">Music Off</button>
+    <button id="navigate-to-main">Main Page</button>
 </div>
 
 <audio id="background-music" loop>
-  <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/extraterrestrialmegatarsier.ogg" type="audio/ogg">
+    <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/extraterrestrialmegatarsier.ogg" type="audio/ogg">
 </audio>
 
 <div id="head-menu">
@@ -131,7 +131,6 @@ function drawMatrix() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#8fd9fb";
   ctx.font = "20px monospace";
-
   for (let s of symbols) {
     s.y -= s.speed;
     if (s.y < -20) Object.assign(s, spawn());
@@ -147,18 +146,6 @@ drawMatrix();
 import * as THREE from "https://esm.sh/three@0.129.0";
 import { OrbitControls } from "https://esm.sh/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
-
-/* LOADING TEXT */
-const loadingEl = document.getElementById("loading");
-const baseText = "loading";
-let dotIndex = 0;
-
-const loadingInterval = setInterval(() => {
-  const chars = baseText.split("");
-  chars.splice(dotIndex, 0, ".");
-  loadingEl.textContent = chars.join("");
-  dotIndex = (dotIndex + 1) % (baseText.length + 1);
-}, 180);
 
 /* SCENE */
 const scene = new THREE.Scene();
@@ -202,6 +189,7 @@ function disposeObject(obj) {
 }
 
 function loadHead(file) {
+  const loadingEl = document.getElementById("loading");
   loadingEl.style.display = "flex";
 
   if (object) {
@@ -228,12 +216,11 @@ function loadHead(file) {
 
       scene.add(object);
 
-      if (g.animations.length) {
+      if (g.animations && g.animations.length) {
         mixer = new THREE.AnimationMixer(object);
         g.animations.forEach(clip => mixer.clipAction(clip).play());
       }
 
-      clearInterval(loadingInterval);
       loadingEl.style.display = "none";
     }
   );
@@ -295,3 +282,4 @@ window.addEventListener("resize", () => {
 
 </body>
 </html>
+
