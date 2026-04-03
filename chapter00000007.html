@@ -2,50 +2,155 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chapter 7</title>
+  <title>Chapter 7 - Trailer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
   <style>
+    /* Retro Color Palette */
+    :root {
+      --bg-dark: #0a0a12;
+      --terminal-green: #4af626;
+      --arcade-orange: #ff8c00;
+      --box-bg: rgba(20, 20, 30, 0.85);
+      --text-main: #e0e0e0;
+    }
+
     body {
-      font-family: 'Press Start 2P', sans-serif;
-      background-color: #fff4e8;
-      color: #f06d16;
-      padding: 1em;
+      font-family: 'Press Start 2P', monospace;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      font-size: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
     }
 
-    h2 {
+    /* Retro CRT Monitor Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: -1;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    h1, h2 {
       text-align: center;
-      margin-top: 2em;
+      color: var(--arcade-orange);
+      text-shadow: 3px 3px 0px #000;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+      font-size: 22px;
+      letter-spacing: 2px;
     }
 
+    /* RPG Dialogue Box Style */
     .chapter-section {
-      margin: 2em 0;
+      margin: 3em 0;
+      background: var(--box-bg);
+      border: 4px solid var(--arcade-orange);
+      border-radius: 8px;
+      padding: 2.5em;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 8px 8px 0px rgba(0,0,0,0.6);
     }
 
     .chapter-section p {
-      line-height: 1.6;
-      margin: 1em 0;
+      margin: 1.5em 0;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    em {
+      color: var(--terminal-green);
+      font-style: normal;
+    }
+
+    /* Arcade Button Styling */
+    .nav-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: var(--bg-dark);
+      color: var(--terminal-green);
+      text-decoration: none;
+      border: 3px solid var(--terminal-green);
+      box-shadow: 4px 4px 0px #000;
+      text-transform: uppercase;
+      font-size: 10px;
+      transition: all 0.1s;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--terminal-green);
+      color: var(--bg-dark);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .nav-btn-orange {
+      border-color: var(--arcade-orange);
+      color: var(--arcade-orange);
+    }
+
+    .nav-btn-orange:hover {
+      background-color: var(--arcade-orange);
+      color: var(--bg-dark);
+    }
+
+    #chapter-header {
+      text-align: center;
+      background: var(--box-bg);
+      border: 4px solid #444;
+      padding: 2em;
+      margin: 2em 0 4em 0;
+      box-shadow: 6px 6px 0px #000;
+    }
+
+    #chapter-header p {
+      font-size: 10px;
+      color: #aaa;
+      margin: 2em 0 1.5em 0;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 10px;
+        padding: 1em;
+      }
+      .chapter-section {
+        padding: 1.5em;
+      }
+      .nav-btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sprachwahl + Navigation -->
-  <section id="chapter-header" style="text-align: center; margin: 2em 0;">
-    <div style="margin-bottom: 1em;">
-      <a href="LightningHornUnicorn.html#storytime" style="padding: 0.6em 1.2em; background-color: #444; color: white; text-decoration: none; border-radius: 6px;">← Go Back</a>
+  <section id="chapter-header">
+    <div>
+      <a href="LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
     </div>
 
-    <p style="font-weight: bold;">This chapter is available in two languages:</p>
+    <p>SELECT LANGUAGE DIRECTORY:</p>
     
-    <div style="margin: 1em 0;">
-      <a href="#english-version" style="margin-right: 1em; padding: 0.6em 1.2em; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px;">English</a>
-      <a href="#german-version" style="padding: 0.6em 1.2em; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px;">Deutsch</a>
+    <div>
+      <a href="#english-version" class="nav-btn nav-btn-orange">English</a>
+      <a href="#german-version" class="nav-btn nav-btn-orange">Deutsch</a>
     </div>
   </section>
 
-
-<!-- English Version -->
-<section id="english-version" class="chapter-section">
 <section id="english-version" class="chapter-section">
 <h1 data-start="84" data-end="181">Chapter 7 (Trailer) &ndash; <em data-start="108" data-end="179">Never let them know your next move (cause the internet never forgets)</em></h1>
 <p data-start="183" data-end="378"><strong data-start="183" data-end="203">[Intro &ndash; Office]</strong><br data-start="203" data-end="206" /> The metal office door opens. Liam and Vedran step inside.<br data-start="263" data-end="266" /> A green desk lamp flickers over the Biedermeier desk. The air is slightly dusty.<br data-start="346" data-end="349" /> On the desk lies Chapter 7.</p>
@@ -61,9 +166,6 @@
 <p data-start="1234" data-end="1271"><strong data-start="1234" data-end="1247">Narrator:</strong><br data-start="1247" data-end="1250" /> &ldquo;To be continued &hellip;&rdquo;</p>
 </section>
 
-
-
-<!-- German Version -->
 <section id="german-version" class="chapter-section">
 <h2>Kapitel 7 (Trailer) &ndash; <em data-start="157" data-end="228">Never let them know your next move (cause the internet never forgets)</em></h2>
 <p data-start="247" data-end="462"><strong data-start="247" data-end="265">[Intro &ndash; B&uuml;ro]</strong><br data-start="265" data-end="268" /> Die Metallb&uuml;rot&uuml;r &ouml;ffnet sich. Liam und Vedran treten ein.<br data-start="326" data-end="329" /> Eine gr&uuml;nliche Schreibtischlampe flackert &uuml;ber dem Biedermeier-Tisch. Die Luft ist leicht staubig.<br data-start="427" data-end="430" /> Auf dem Tisch liegt Kapitel 7.</p>
@@ -81,18 +183,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

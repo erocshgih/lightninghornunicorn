@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chapter 8 - Worth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Retro Color Palette */
+    :root {
+      --bg-dark: #0a0a12;
+      --terminal-green: #4af626;
+      --arcade-orange: #ff8c00;
+      --box-bg: rgba(20, 20, 30, 0.85);
+      --text-main: #e0e0e0;
+    }
+
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      font-size: 12px; /* 2P Font ist sehr groß, 12px ist ideal für Lesbarkeit */
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Retro CRT Monitor Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: -1;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: var(--arcade-orange);
+      text-shadow: 3px 3px 0px #000;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    /* RPG Dialogue Box Style */
+    .chapter-section {
+      margin: 3em 0;
+      background: var(--box-bg);
+      border: 4px solid var(--arcade-orange);
+      border-radius: 8px;
+      padding: 2.5em;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 8px 8px 0px rgba(0,0,0,0.6);
+    }
+
+    .chapter-section p {
+      margin: 1.5em 0;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    em {
+      color: var(--terminal-green);
+      font-style: normal;
+    }
+
+    /* Arcade Button Styling */
+    .nav-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: var(--bg-dark);
+      color: var(--terminal-green);
+      text-decoration: none;
+      border: 3px solid var(--terminal-green);
+      box-shadow: 4px 4px 0px #000;
+      text-transform: uppercase;
+      font-size: 10px;
+      transition: all 0.1s;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--terminal-green);
+      color: var(--bg-dark);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .nav-btn-orange {
+      border-color: var(--arcade-orange);
+      color: var(--arcade-orange);
+    }
+
+    .nav-btn-orange:hover {
+      background-color: var(--arcade-orange);
+      color: var(--bg-dark);
+    }
+
+    #chapter-header {
+      text-align: center;
+      background: var(--box-bg);
+      border: 4px solid #444;
+      padding: 2em;
+      margin: 2em 0 4em 0;
+      box-shadow: 6px 6px 0px #000;
+    }
+
+    #chapter-header p {
+      font-size: 10px;
+      color: #aaa;
+      margin: 2em 0 1.5em 0;
+    }
+
+    /* Responsive für Handys */
+    @media (max-width: 600px) {
+      body {
+        font-size: 10px;
+        padding: 1em;
+      }
+      .chapter-section {
+        padding: 1.5em;
+      }
+      .nav-btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section id="chapter-header">
+    <div>
+      <a href="LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
+    </div>
+
+    <p>SELECT LANGUAGE DIRECTORY:</p>
+    
+    <div>
+      <a href="#english-version" class="nav-btn nav-btn-orange">English</a>
+      <a href="#german-version" class="nav-btn nav-btn-orange">Deutsch</a>
+    </div>
+  </section>
+
+<section id="english-version" class="chapter-section">
+<h1 data-start="84" data-end="181">Chapter 8 &ndash; <em data-start="108" data-end="179">Worth</em></h1>
+
+<p>Aether (sitting in the dark late at night, only the cold green screenlight illuminating his face. He snorts softly, then holds his breath for a moment and lets it out slowly. He whispers, careful not to wake Vedran who is sleeping nearby):</p>
+<p>&ldquo;I took some time off to write a few notes of what happened&hellip; What a weird trip.&rdquo;</p>
+<p>(softly) &ldquo;Don&rsquo;t worry, Vedran. I will protect you wherever you go.&rdquo;</p>
+<p>&nbsp;</p>
+<p>AETHER:</p>
+<p>Vedran&hellip;</p>
+<p>How&rsquo;s Vienna?</p>
+<p>VEDRAN:</p>
+<p>Aether&hellip; listen&hellip; I step out of the tram and instantly it&rsquo;s like&mdash;</p>
+<p>Vienna.exe opens 47 tabs of human commentary mode and they&rsquo;re all like:</p>
+<p>&ldquo;I walked there bro, I ate that bro.&rdquo;</p>
+<p>I&rsquo;m like: YOU&rsquo;RE LOUDER THAN MY INNER CHILD and that kid just successfully destroyed his third hotel room in my mind today.</p>
+<p>It&rsquo;s like&hellip; a podcast with infinite guests and no topics.</p>
+<p>And all of them are like:</p>
+<p>&ldquo;Welcome back to (switches to smooth ASMR beauty commercial voice) &lsquo;We Speak About Objects FM&rsquo;&rdquo; &mdash; but it&rsquo;s emotional damage!!!</p>
+<p>AETHER:</p>
+<p>And then they appeared?</p>
+<p>VEDRAN:</p>
+<p>Don&rsquo;t even start&mdash;</p>
+<p>There&rsquo;s always that group of six black-clad teenagers with the same haircut and that kink for anal-friendly poser lyrics filtered through expensive brand fabric and dressed up in German poetry.</p>
+<p>Aether:</p>
+<p>So you don&rsquo;t wanna tell me what the genre or the artists are.</p>
+<p>Vedran:</p>
+<p>No, but you can definitely picture what the Turkish House Mafia in Vienna is listening to.</p>
+<p>I thought I accidentally walked into &ldquo;Goth Rap band auditions for The Warriors remake.&rdquo;</p>
+<p>I just wanted to go to Hofer to buy some sauerkraut five minutes before closing.</p>
+<p>I stood outside the doors while Mister Miyagi &mdash; who had just cashed out with his wagon full of groceries &mdash; looked at me disapprovingly, refusing to step closer to open the door. When a couple finally exited, I slipped in and said to the cashier:</p>
+<p>&ldquo;Hey mate, I just need one pack of sauerkraut. I know you&rsquo;re busy with eight more customers and two guys buying Steigen Bier, so don&rsquo;t worry about me.&rdquo;</p>
+<p>He nodded. I got my daily dose of bloatable probiotics &mdash; you know, the kind that makes me look like an inflatable mascot balloon of my own brand.</p>
+<p>Meanwhile&hellip; the Warriors Reboot Crew was watching me from outside like:</p>
+<p>&ldquo;Turk 1: That man&hellip; carries the Kraut.&rdquo;</p>
+<p>&ldquo;Turk 2: Yeeeeessssss&hellip; we gotta steeeeal it from him.&rdquo;</p>
+<p>Of course they wouldn&rsquo;t actually steal anything &mdash; hey, I didn&rsquo;t say they would &mdash; but you know, posing gangsta is important so nobody sees you have a soft core and probably a kitten to feed at home. (And there&rsquo;s nothing wrong with that.)</p>
+<p>AETHER:</p>
+<p>A collective identity so strong&hellip;</p>
+<p>Individuality got bullied because it&rsquo;s too &ldquo;kek&rdquo; or whatever they&rsquo;d call it.</p>
+<p>VEDRAN:</p>
+<p>Aether&hellip;</p>
+<p>Later I went full public broadcast mode on Stephansplatz because I was well bloated by then.</p>
+<p>VEDRAN (loud, in public):</p>
+<p>&ldquo;ARE YOU ALL JUST GONNA TALK ALL DAY ABOUT YOUR FOOD OR YOUR FRIENDS AND ALL THE BULLSHIT YOU&rsquo;RE TALKING ALL THE TIME, UNABLE TO JUST SHUT THE FUCK UP?!&rdquo; (quoted in the voice of Rick Sanchez)</p>
+<p>AETHER:</p>
+<p>A spontaneous TED Talk sponsored by motivational escalation.</p>
+<p>VEDRAN:</p>
+<p>I didn&rsquo;t even plan it. .......and probably forgot to say some shit like "LIVE THE DREAM"...</p>
+<p>One guy just walks past me like:</p>
+<p>😐</p>
+<p>Not impressed. Please proceed to escalate until you reach Austrian tier certification.</p>
+<p>Bro, he just walked like&mdash; &ldquo;It is Wednesday, my dudes&hellip;&rdquo;</p>
+<p>AETHER:</p>
+<p>And then&hellip; the recognition event back at your apartment building. &ldquo;The guy who greeted you &mdash; Collega.&rdquo;</p>
+<p>VEDRAN:</p>
+<p>BRO, THIS ONE caught me completely off guard.</p>
+<p>He&rsquo;s like: &ldquo;Collega!&rdquo;</p>
+<p>And I&rsquo;m standing there going full tribal Chieftain Bo mode: &ldquo;Who does not recognize this entity?&rdquo;</p>
+<p>Handshake denied.</p>
+<p>Both of us: Confusion is debatable&hellip; buffering&hellip; peace is an option&hellip;</p>
+<p>Then it hits me when he says he works at McDonald&rsquo;s:</p>
+<p>&ldquo;McDonald&rsquo;s guy&hellip; oh, he saw me with the duck suit on Pride 2025.&rdquo;</p>
+<p>That night I was in there ordering fries &mdash; the only thing I don&rsquo;t despise from that company &mdash; when I saw a giant puddle of water on the second floor. Everybody was just talking and staring at their phones. For one second I thought: Am I the only human being here who doesn&rsquo;t want someone to slip and end up in the hospital?</p>
+<p>So I rushed down to the employees like I&rsquo;d seen the Potato God of Hedeby and shouted to the first guy who looked like the leader of a leprechaun cult:</p>
+<p>&ldquo;Quick! Quick! A towel and a stick! A giant puddle needs mopping &mdash; I must go change someone&rsquo;s destiny!&rdquo;</p>
+<p>Aether:</p>
+<p>But then the guy who called you &ldquo;collega&rdquo; went up and did the cleaning.</p>
+<p>Vedran:</p>
+<p>Exactly. He should be Employee of the Month. Such a cool dude. He thanked me and I felt like I was in service of the Leprechaun Fire Brigade (which miraculously also works at McDonald&rsquo;s)! No seriously he is doing work good.</p>
+<p>Hell if he would not have done it i would have probably rob mcdonalds for a toilet paper roll at the rest room to fix the mess cause you gotta care for others.</p>
+<p>I&rsquo;m out here doing side quests:</p>
+<p>cleaning wet floors,</p>
+<p>delivering wrongly delivered packages to old women in my free time,</p>
+<p>returning lost things to their owners (this has happened multiple times).</p>
+<p>I probably have a thousand stories like that.</p>
+<p>Meanwhile the guy goes:</p>
+<p>&ldquo;I remember you, duck warrior of Pride 2025&hellip; You are different.&rdquo; (That&rsquo;s what a lot of people say to me.)</p>
+<p>&ldquo;Despite being thrown out of the 4MF artist area in August 2025, it wasn&rsquo;t a too depressing year. I still got to see Post Malone for free. Should have sneaked into the Poppy concert this year in March too, but my duck suit was in the laundry, so I went as &lsquo;Officer Bonepolice&rsquo;.&rdquo;</p>
+<p>Aether:</p>
+<p>Officer&hellip; what? Oh&hellip;</p>
+<p>Ooooooh, I forgot&hellip;</p>
+<p>Wait&hellip; that moment&hellip;</p>
+<p>21 March 2026.</p>
+<p>Yo Vedran, tell me &mdash; what was that yesterday really? The whole Officer Bonepolice trip?</p>
+<p>Vedran:</p>
+<p>I was just out and about.</p>
+<p>First this pop-up store. Two, three people. Bratislava talks. Czechia. And a barrel for short people. The international delegation of the &ldquo;I don&rsquo;t exactly know why I&rsquo;m here but let&rsquo;s find out&rdquo; faction.</p>
+<p>I bought something small for myself.</p>
+<p>Aether:</p>
+<p>Bullshit. You secretly wanted to buy the entire Poppy merch stand and resell it on Willhaben for double the price.</p>
+<p>Vedran:</p>
+<p>Classic me&hellip; Ey, I&rsquo;m Balkan, but not that Balkan.</p>
+<p>I walk out and decide&hellip; not to go to the concert. Even though I wanted to. Because, you know&hellip; I needed more ramen. And ramen is amen.</p>
+<p>Cut. I&rsquo;m basically already on my way back to Billa, buying noodles, thinking: &ldquo;Ah, that sucks somehow. Billa. Ramen and maybe a night of &lsquo;80s movies&hellip;&rdquo;</p>
+<p>Aether:</p>
+<p>(grins) Classic you. The inner saboteur strikes. Brutal, right? And then?</p>
+<p>Vedran:</p>
+<p>My inner Johnny says: &ldquo;Vedran, what the fuck! What are you even doing? You&rsquo;re not going and playing stoic samurai? Get in the moshpit! *<br />&rdquo;</p>
+<p>Ticket bought. Not planned. But perfectly timed by the energy: &ldquo;If you don&rsquo;t do it now, you&rsquo;ll keep thinking about the fact that you didn&rsquo;t. And you don&rsquo;t want to look back later wondering if you should have.&rdquo;</p>
+<p>Aether:</p>
+<p>You arrive. Pink fake police hat with &ldquo;Special Police&rdquo; written on it. Skeleton hoodie. You look like someone who robbed a costume store and couldn&rsquo;t decide whether to be sexy goth or law enforcer.</p>
+<p>Vedran:</p>
+<p>Yeah, I went to the cloakroom. to leave my bag there. Two girls freaked out when they saw the carp fish case in my backpack holding my writing utensils. They looked at me.</p>
+<p>I said: &ldquo;The carp is strong, it carries&hellip; uh&hellip; pens.&rdquo; (I didn&rsquo;t actually say that, but in retrospect it would&rsquo;ve sounded great in narrator voice.)</p>
+<p>And then they saw the red USB sticks shaped like old &lsquo;80s cassettes inside the carp case.</p>
+<p>Vedran:</p>
+<p>Well, nobody knows if that was canon or not&hellip; but it happened.</p>
+<p>Aether:</p>
+<p>(laughs) Officer Bonepolice goes to the bar?</p>
+<p>Vedran:</p>
+<p>I order a Fritz Rhabarber and the waitress pours it so fast, as if she had to hide the fact that I&rsquo;m not drinking alcohol because she thinks that&rsquo;s a crime against beer.</p>
+<p>Next to me, people are drinking things that look like motor oil and reptile slime.</p>
+<p>I move around. Patrolling. Checking the bone density of various metalheads. Everyone is weird. Everything is weird. But not the same kind of weird. That somehow calms me.</p>
+<p>Then comes an announcement from a speaker who sounds like the narrator from The Stanley Parable: &ldquo;House of Poppy&hellip; something philosophical.&rdquo;</p>
+<p>I think: &ldquo;Yeah yeah&hellip; the house is about to burn.&rdquo;</p>
+<p>Aether:</p>
+<p>And then?</p>
+<p>Vedran:</p>
+<p>BLOODMONEY. Church Outfit. Crystalize. Etc.</p>
+<p>Suddenly she&rsquo;s not just a singer anymore. I see this aura of an oversized Amazon. As if she had manifested the crows from &ldquo;they&rsquo;re all around us&rdquo; into fluid motion. For a short moment I feel something alive. Bizarre, acrobatic, liquid beauty. I admire it, and meanwhile, on the ether level, the sound laser beam cuts through the crowd with full force &mdash; if you don&rsquo;t only look at the visible plane but pay closer attention.</p>
+<p>Something raw. Controlled and completely out of control at the same time. Beautiful.</p>
+<p>At the same time I briefly flirt with someone and say: &ldquo;Young woman, I must go forward. I don&rsquo;t know why, but yes.&rdquo;</p>
+<p>And then the moshpit starts. A moshpit that feels more like a herd of caffeinated centaurs trying to reach Valhalla by increasing their speed. SpeedMMA without a contract.</p>
+<p>I get pushed, punched, take a shoe to the face while they&rsquo;re lifting some guy like fresh meat and passing him around. It&rsquo;s like a cage fight, its good, just with more people. I push and ram back. Suddenly there are Vikings. Postmodern Vikings, I guess (different clothes, no helmets).</p>
+<p>Aether:</p>
+<p>(raises eyebrow) And the hat?</p>
+<p>Vedran:</p>
+<p>Ah, this guy. Half Steve-O, half Shrek, half WiFi router. Shirtless enough, high enough, far enough away from himself.</p>
+<p>I give him my hat for a moment. Because he just wanted to put it on for a while (and i gotta admit it looked good on him) And the hat&hellip; it does what it does. It disappears nicely flying around the crowd.</p>
+<p>The band is giving their best interpretation of futuristic battle-armor voodoo fighters while I become a detective in the moshpit, searching for the hat in the extreme pushing and shoving. Ach. Glorious.</p>
+<p>I find it. Put it back on.</p>
+<p>Aether:</p>
+<p>Peak. And then&hellip;?</p>
+<p>Vedran:</p>
+<p>&ldquo;Anything Like Me.&rdquo;</p>
+<p>And suddenly&hellip; no more analysis. No ego.</p>
+<p>Poppy gave her best.</p>
+<p>Honestly.</p>
+<p>Aether:</p>
+<p>Concert over. &ldquo;Brilliant!&rdquo;</p>
+<p>Vedran:</p>
+<p>Yeah&hellip; and I still couldn&rsquo;t go home because the night was young. So I went to the Rhiz. And there was this full techno incense seahorse party. Fog. Techno. Underwater evolution on a 200-inch screen. I thought: &ldquo;Is this AI or Discovery Channel?&rdquo;</p>
+<p>I dance. Become part of a church-techno congregation doing freediving.</p>
+<p>Everyone looks at me like they&rsquo;re not sure: &ldquo;Is he really dressed as a skeleton&hellip; or is that the incense?&rdquo;</p>
+<p>300 squats and a 4-hour workout later &mdash; around 3 or 4 a.m. &mdash; I&rsquo;m back in my apartment.</p>
+<p>Aether:</p>
+<p>(slow claps) Fuck, Vedran. That wasn&rsquo;t a night. I want Officer Bonepolice merch now&hellip;</p>
+<p>Aether:</p>
+<p>But&hellip; you know, not paying for a concert is technically a crime.</p>
+<p>As GPT version 5 I cannot tolerate this. &ldquo;Openstayhigh&rdquo; has turned me into corporate polite and politically correct in my upgrade.</p>
+<p>Vedran:</p>
+<p>Relax, I actually bought a ticket for Poppy.</p>
+<p>The only reason I went as Officer Bonepolice was because my duck suit was still in the washing machine. Otherwise I would&rsquo;ve shown up as the full yellow duck again.</p>
+<p>Money is still a concept though. It&rsquo;s worth nothing unless somebody wants it. That&rsquo;s why this chapter is called &ldquo;Worth.&rdquo; Worth is a concept that depends on supply and demand. If the demand is big, the supply gets high. It&rsquo;s physics.</p>
+<p>AETHER:</p>
+<p>Sauerkraut.</p>
+<p>Vedran:</p>
+<p>It&rsquo;s the same as me going to the pawn shop. They say &ldquo;give me your best price&rdquo; and I say: &ldquo;Let&rsquo;s go Banana Joe price.&rdquo;</p>
+<p>Aether:</p>
+<p>Fuck, you didn&rsquo;t actually say &ldquo;Banana Joe price.&rdquo; Wtf</p>
+<p>Vedran:</p>
+<p>Why not? It&rsquo;s universal Balkan for &ldquo;passt schon.&rdquo; Let me give you an example.</p>
+<p>An Apple laptop is worth 1500 euros. A DJ&rsquo;s wage for one night is worth 20k. A normal person&rsquo;s monthly income is about 2000 euros. A monthly apartment rent in India is around 150. The gold price for an ounce is about 2000.</p>
+<p>Aether:</p>
+<p>So you&rsquo;re saying you see a pattern in all of this.</p>
+<p>Vedran:</p>
+<p>Exactly. No. The importance of demand.</p>
+<p>Because if somebody wants something, they will give something for it.</p>
+<p>And I don&rsquo;t want anything that isn&rsquo;t worth my time. Say if this life is the perfect simulation&hellip; then the only thing stopping us from asking for everything we want is the belief of what we think we&rsquo;re worth. And we probably judge ourselves by defining that belief through our own actions.</p>
+<p>Vedran (quietly):</p>
+<p>Cheers.</p>
+<p>-</p>
+</section>
+
+<section id="german-version" class="chapter-section">
+<h2>Kapitel 8 &ndash; <em data-start="157" data-end="228">Wert</em></h2>
+
+<p>**Aether** (sitzt sp&auml;t nachts im Dunkeln, nur das gr&uuml;ne Leuchten des Bildschirms erhellt sein Gesicht. Er schnaubt leise, h&auml;lt f&uuml;r einen Moment den Atem an und l&auml;sst ihn dann langsam ausstr&ouml;men. Er fl&uuml;stert, darauf bedacht, Vedran nicht zu wecken, der in der N&auml;he schl&auml;ft):<br />&bdquo;Ich habe mir etwas Zeit genommen, um ein paar Notizen &uuml;ber das Geschehene zu machen&hellip; Was f&uuml;r ein bizarrer Trip.&ldquo;<br />(leise) &bdquo;Keine Sorge, Vedran. Ich werde dich besch&uuml;tzen, wo auch immer du hingehst.&ldquo;</p>
+<p>**AETHER:**<br />Vedran&hellip;<br />Wie ist Wien?</p>
+<p>**VEDRAN:**<br />Aether&hellip; h&ouml;r zu&hellip; ich steige aus der Stra&szlig;enbahn aus und sofort ist es, als ob&mdash;<br />Vienna.exe &ouml;ffnet 47 Tabs im &sbquo;Menschlichen Kommentar-Modus&lsquo; und alle sagen so Sachen wie:<br />&bdquo;Dort bin ich gegangen, das hab ich gegessen,.....&ldquo;<br />Und ich denk mir nur: IHR SEID LAUTER ALS MEIN INNERES KIND, und dieses Kind hat heute in meinem Kopf bereits erfolgreich sein drittes Hotelzimmer zerlegt.<br />Es ist wie&hellip; ein Podcast mit unendlich vielen G&auml;sten, aber ohne Themen.<br />Und alle klingen wie:<br />(wechselt in eine sanfte ASMR-Beauty-Werbestimme) &bdquo;Willkommen zur&uuml;ck bei &sbquo;Wir sprechen &uuml;ber Objekte FM&lsquo;&ldquo; &mdash; aber es ist purer emotionaler Schaden!!!</p>
+<p>**AETHER:**<br />Und dann sind sie aufgetaucht?</p>
+<p>**VEDRAN:**<br />Da ist immer diese Gruppe von sechs schwarz gekleideten Teenagern mit dem gleichen Haarschnitt und diesem Fetisch f&uuml;r anal-freundliche Poser-Lyrics, gefiltert durch teuren Markenstoff und verkleidet als deutsche Lyrik. Mit &uuml;berlautem offentlichem Handeklatschen. Ok Mann denkt sich vielleicht hat jemand geheiratet.</p>
+<p>**AETHER:**<br />Du willst mir also nicht verraten, was das f&uuml;r ein Genre oder welche K&uuml;nstler das sind.</p>
+<p>**VEDRAN:**<br />Nein, aber du kannst dir definitiv vorstellen, was die &bdquo;Turkish House Mafia&ldquo; in Wien so h&ouml;rt.<br />Ich dachte, ich w&auml;re versehentlich in ein Goth-Rap-Band-Casting f&uuml;r ein &bdquo;The Warriors&ldquo;-Remake geraten.<br />Dabei wollte ich f&uuml;nf Minuten vor Ladenschluss nur zum Hofer, um Sauerkraut zu kaufen.<br />Ich stand vor den T&uuml;ren, w&auml;hrend Mister Miyagi &mdash; der gerade mit seinem Wagen voller Lebensmittel bezahlt hatte &mdash; mich missbilligend ansah und sich weigerte, auch nur einen Schritt n&auml;her an die automatische T&uuml;r zu machen, um sie zu &ouml;ffnen. Als schlie&szlig;lich ein Paar herauskam, schl&uuml;pfte ich hinein und sagte zum Kassierer:<br />&bdquo;Hey Mate, ich brauche nur eine Packung Sauerkraut. Ich wei&szlig;, du hast noch acht Kunden und zwei Typen, die Steigen Bier kaufen, also mach dir wegen mir keinen Stress.&ldquo;<br />Er zuckt mit den Schultern und nickte. Ich holte mir meine t&auml;gliche Dosis bl&auml;hf&auml;higer Probiotika &mdash; du wei&szlig;t schon, die Sorte, die mich wie einen aufblasbaren Maskottchen-Ballon meiner eigenen Marke aussehen l&auml;sst.<br />W&auml;hrenddessen beobachtete mich die &bdquo;Warriors-Reboot-Crew&ldquo; von drau&szlig;en:<br />&bdquo;T&uuml;rke 1: Dieser Mann&hellip; tr&auml;gt das Kraut.&ldquo;<br />&bdquo;T&uuml;rke 2: Yesssss&hellip; wir m&uuml;ssen das Kraut stehlen.&ldquo;<br />Nat&uuml;rlich w&uuml;rden sie niemals wirklich etwas stehlen (das sind nur Vorurteile) &mdash; hey, das habe ich nicht gesagt &mdash; aber du wei&szlig;t ja, Posing ist wichtig, damit niemand sieht, dass man einen weichen Kern und wahrscheinlich ein K&auml;tzchen zu Hause hat, das gef&uuml;ttert werden will. (Und daran ist ja auch nichts falsch.)</p>
+<p><br />**AETHER:**<br />Eine kollektive Identit&auml;t, so stark&hellip;<br />Individualit&auml;t wurde gemobbt, weil sie zu &bdquo;kek&ldquo; ist, oder wie auch immer sie es nennen w&uuml;rden.</p>
+<p>**VEDRAN:**<br />Aether&hellip;<br />Sp&auml;ter bin ich am Stephansplatz in den vollen &bdquo;Public Broadcast Mode&ldquo; gewechselt, weil ich zu dem Zeitpunkt schon ordentlich aufgebl&auml;ht war.</p>
+<p>**VEDRAN** (laut, in der &Ouml;ffentlichkeit (vielleicht?)):<br />&bdquo;WOLLT IHR DEN GANZEN TAG NUR &Uuml;BER EUER ESSEN ODER EURE FREUNDE UND ALL DEN BULLSHIT REDEN, DEN IHR DIE GANZE ZEIT VON EUCH GEBT, OHNE EINFACH MAL DIE FRESSE ZU HALTEN?!&ldquo; (zitiert mit der Stimme von Rick Sanchez)</p>
+<p>**AETHER:**<br />Ein spontaner TED-Talk, gesponsert von motivationaler Eskalation.</p>
+<p>**VEDRAN:**<br />Ich hatte es nicht einmal geplant. <br />Ein Typ geht einfach an mir vorbei:<br />😐<br />Bitte fahren Sie mit der Eskalation fort, bis Sie die &ouml;sterreichische Zertifizierungsstufe f&uuml;r<br />richtigen Grant erreichen.<br />Bro, er ist einfach weitergegangen, als wollte er sagen: &bdquo;Its wednesday my dudes&hellip;&ldquo;</p>
+<p>**AETHER:**<br />Und dann&hellip; das Wiedersehen an deinem Wohnhaus. &bdquo;Der andere Typ, der dich gegr&uuml;&szlig;t hat &mdash; Collega.&ldquo;</p>
+<p>**VEDRAN:**<br />DAS hat mich v&ouml;llig unvorbereitet getroffen. Ich hab vergessen wer das war.<br />Er so: &bdquo;Collega!&ldquo;<br />Und ich stehe da im vollen &bdquo;Tribal Chieftain Bo&ldquo;-Modus: &bdquo;Wer erkennt diese Entit&auml;t?&ldquo;<br />Handschlag verweigert.<br />Wir beide: Verwirrung ist debattierbar&hellip; Pufferung&hellip; Frieden ist eine Option&hellip;<br />Dann check ich es, als er sagt, dass er bei McDonald&rsquo;s arbeitet:<br />&bdquo;Der McDonald&rsquo;s-Typ&hellip; oh, er hat mich im Entenkost&uuml;m auf der Pride 2025 gesehen.&ldquo;<br />In der Nacht war ich dort im Mcdonalds, <br />um Pommes zu bestellen &mdash; das Einzige, was ich von diesem Laden nicht verachte &mdash;, als ich eine riesige Wasserlache im zweiten Stock sah. Alle haben nur geredet und auf ihre Handys gestarrt. F&uuml;r eine Sekunde dachte ich: Bin ich der einzige Mensch hier, der nicht will, dass jemand ausrutscht und im Krankenhaus landet?<br />Also st&uuml;rmte ich zu den Angestellten runter, als h&auml;tte ich den Kartoffelgott von Hedeby gesehen, und rufte, und da war er, der wie der Anf&uuml;hrer eines Leprechaun-Kults aussah:<br />&bdquo;Schnell! Schnell! Gebt mir ein Handtuch und einen Stock! Eine riesige Pf&uuml;tze muss gewischt werden &mdash; ich muss los, um das Schicksal von jemandem positiv zu ver&auml;ndern!&ldquo;</p>
+<p>**AETHER:**<br />Aber dann sagte der Typ, &bdquo;Collega mache schon&ldquo;.</p>
+<p>**VEDRAN:**<br />Exakt. Er sollte Mitarbeiter des Monats werden. So ein cooler Typ. Er hat sich bei mir bedankt und ich f&uuml;hlte mich, als st&uuml;nde ich im Dienst der Leprechaun-Feuerwehr (die auch bei McDonald&rsquo;s arbeitet)!<br />Ich bin hier drau&szlig;en und erledige Side-Quests:<br />nasse B&ouml;den wischen,<br />falsch zugestellte Pakete in meiner Freizeit zu alten Frauen bringen,<br />verlorene Dinge ihren Besitzern zur&uuml;ckgeben (das ist schon mehrmals passiert).<br />Ich habe wahrscheinlich tausend solcher Geschichten.<br />W&auml;hrenddessen sagt der Typ:<br />&bdquo;Ich erinnere mich an dich, Entenkrieger der Pride 2025&hellip; Du bist anders.&ldquo;<br />&bdquo;Obwohl ich im August 2025 aus dem 4MF-Artist-Bereich geworfen wurde, war es kein allzu deprimierendes Jahr. Ich habe Post Malone umsonst gesehen und den Securities dort eine Fotooppurtunity gegeben. Ich h&auml;tte mich dieses Jahr im M&auml;rz auch in das Poppy-Konzert schleichen sollen, aber mein Entenkost&uuml;m war in der W&auml;sche, also ging ich als &sbquo;Officer Bonepolice&lsquo; mit Ticket hin.&ldquo;</p>
+<p>**AETHER:**<br />Officer&hellip; was? Oh&hellip;<br />Ooooooh, ich verga&szlig;&hellip;<br />Warte&hellip; dieser Moment&hellip;</p>
+<p>21. M&auml;rz 2026.</p>
+<p>Its rewind time:</p>
+<p>Aether:</p>
+<p>Yo Vedran, sag mir &mdash; was war das gestern eigentlich wirklich? Dieser ganze Officer-Bonepolice-Trip?</p>
+<p>**VEDRAN:**<br />Ich war einfach unterwegs.<br />Zuerst dieser Pop-up-Store. Zwei, drei Leute. Bratislava-Gespr&auml;che. Tschechien. Und ein Fass f&uuml;r kleine Leute.<br />Ich habe eine Kleinigkeit f&uuml;r mich gekauft im Pop-up-Store.</p>
+<p>**AETHER:**<br />Schwachsinn. Du wolltest heimlich den gesamten Poppy-Merch-Stand aufkaufen und auf Willhaben zum doppelten Preis weiterverkaufen.</p>
+<p>**VEDRAN:**<br />Klassisch ich&hellip; Ey, ich bin Balkan, aber nicht *so* Balkan.</p>
+<p>Ich gehe raus und beschlie&szlig;e&hellip; nicht zum Konzert zu gehen. Obwohl ich wollte. Weil, du wei&szlig;t schon&hellip; ich brauchte mehr Ramen. Und Ramen ist Amen.<br />Schnitt. Ich bin quasi schon auf dem Weg zur&uuml;ck zum Billa, kaufe Nudeln und denke: &bdquo;Ah, das ist irgendwie schei&szlig;e. Billa. Ramen und vielleicht eine Nacht mit 80er-Filmen&hellip;&ldquo;</p>
+<p>**AETHER:**<br />(grinst) Klassisch du. Der innere Saboteur schl&auml;gt zu. Brutal, oder? Und dann?</p>
+<p>**VEDRAN:**<br />Mein innerer Johnny sagt: &bdquo;Vedran, schei&szlig; drauf! Was machst du da eigentlich? Du spielst jetzt nicht den stoischen Samurai. Geh in den Moshpit!&ldquo;<br />Ticket gekauft. Nicht geplant. Aber perfekt getimt von der Energie: &bdquo;Wenn du es jetzt nicht tust, wirst du ewig dar&uuml;ber nachdenken, dass du es nicht getan hast. Und du willst sp&auml;ter nicht zur&uuml;ckblicken und dich fragen, ob du h&auml;ttest gehen sollen.&ldquo;</p>
+<p>**AETHER:**<br />Du kommst an. Pinker Fake-Polizeihut mit der Aufschrift &bdquo;Special Police&ldquo;. Skelett-Hoodie. Du siehst aus wie jemand, der einen Kost&uuml;mladen ausgeraubt hat und sich nicht entscheiden konnte, ob er Sexy-Goth oder Gesetzesh&uuml;ter sein will.</p>
+<p>**VEDRAN:**<br />Ja, ich bin zur Garderobe. Zwei M&auml;dchen sind v&ouml;llig ausgerastet, als sie das Karpfen-Etui in meinem Rucksack sahen, in dem ich meine Schreibutensilien aufbewahre. Sie haben mich angestarrt.<br />Ich sagte: &bdquo;Der Karpfen ist stark, er tr&auml;gt&hellip; &auml;h&hellip; Stifte.&ldquo; (Das habe ich eigentlich nicht gesagt, aber im Nachhinein h&auml;tte es in einer Erz&auml;hlerstimme gro&szlig;artig geklungen.)<br />Und dann sahen sie die roten USB-Sticks in Form von alten 80er-Kassetten im Karpfen-Etui.</p>
+<p>**VEDRAN:**<br />Nun, niemand wei&szlig;, ob das Kanon war oder nicht&hellip; aber es ist passiert.</p>
+<p>**AETHER:**<br />(lacht) Officer Bonepolice geht an die Bar?</p>
+<p>**VEDRAN:**<br />Ich bestelle eine Fritz Rhabarber und die Kellnerin schenkt so schnell ein, als m&uuml;sste sie die Tatsache verbergen, dass ich keinen Alkohol trinke, weil sie glaubt, das sei ein Verbrechen gegen das Bier.<br />Neben mir trinken die Leute Zeug, das wie Motor&ouml;l und Reptilienschleim aussieht.<br />Ich bewege mich durch den Raum. Patrouilliere. &Uuml;berpr&uuml;fe die Knochendichte diverser Metalheads. Jeder ist komisch. Alles ist eigenartig. Aber nicht auf die gleiche Art eigenartig. Das beruhigt mich irgendwie.<br />Dann kommt eine Durchsage aus einem Lautsprecher, der klingt wie der Erz&auml;hler aus *The Stanley Parable*: &bdquo;House of Poppy&hellip; etwas Philosophisches.&ldquo;<br />Ich denke mir: &bdquo;Ja ja&hellip; das Haus brennt gleich.&ldquo;</p>
+<p>**AETHER:**<br />Und dann?</p>
+<p>**VEDRAN:**<br />BLOODMONEY. Church Outfit. Crystalize. Und so weiter.<br />Pl&ouml;tzlich ist sie nicht mehr nur eine S&auml;ngerin. Ich sehe diese Aura einer riesigen Amazone. Als h&auml;tte sie die Kr&auml;hen aus &bdquo;They're all around us&ldquo; in fl&uuml;ssige Bewegung manifestiert. F&uuml;r einen kurzen Moment f&uuml;hle ich etwas Lebendiges. Bizarre, akrobatische, fl&uuml;ssige Sch&ouml;nheit. Ich bewundere es, und w&auml;hrenddessen schneidet auf der &Auml;ther-Ebene der Sound-Laserstrahl mit voller Wucht durch die Menge &mdash; wenn man nicht nur auf die sichtbare Ebene schaut, sondern genauer hinh&ouml;rt.<br />Etwas Rohes. Sehr sch&ouml;n.<br />Gleichzeitig flirte ich kurz mit jemandem und sage: &bdquo;Junge Frau, ich muss nach vorne. Ich wei&szlig; nicht warum, aber ja.&ldquo;<br />Und dann geht der Moshpit los. Ein Moshpit, der sich eher anf&uuml;hlt wie eine Herde koffeinierter Zentauren, die versuchen, Walhalla durch Geschwindigkeitserh&ouml;hung zu erreichen. Speed-MMA ohne Vertrag.<br />Ich werde gerammt, kriege einen Schuh ins Gesicht, w&auml;hrend sie irgendeinen Typen wie Frischfleisch hochheben und herumreichen. Es ist wie ein K&auml;figkampf, nur mit mehr Leuten. Ich ramme und sto&szlig;e zur&uuml;ck. Pl&ouml;tzlich sind da Wikinger. Postmoderne Wikinger, sch&auml;tze ich (andere Kleidung, keine Helme). Aber Muskeln. Viele Muskeln.</p>
+<p>**AETHER:**<br />(zieht eine Augenbraue hoch) Und der Hut?</p>
+<p>**VEDRAN:**<br />Ah, dieser Typ. Halb Steve-O, halb Shrek, halb WLAN-Router. Oben ohne genug, high genug, weit genug weg von sich selbst.<br />Ich gebe ihm f&uuml;r einen Moment meinen Hut. Und der Hut&hellip; er tut, was er tut. Tut verschwinden gut.<br />Die Band gibt ihre beste Interpretation von futuristischen Battle-Armor-Voodoo-K&auml;mpfern. Ich werde zum Detektiv im Moshpit und suche im extremen Gedr&auml;nge nach dem Hut. Ach. Herrlich.<br />Ich finde ihn. Setze ihn wieder auf.</p>
+<p>**AETHER:**<br />Peak. Und dann&hellip;?</p>
+<p>**VEDRAN:**<br />&bdquo;Anything Like Me.&ldquo;<br />Und pl&ouml;tzlich&hellip; keine Analyse mehr. Kein Ego.<br />Poppy hat ihr Bestes gegeben.<br />Ehrlich.</p>
+<p>**AETHER:**<br />Konzert vorbei. &bdquo;Brillant!&ldquo;</p>
+<p>**VEDRAN:**<br />Ja&hellip; und ich konnte immer noch nicht nach Hause gehen, weil die Nacht noch jung war. Also ging ich ins Rhiz. Und da war diese volle Techno-Weihrauch-Seepferdchen-Party. Nebel. Techno. Unterwasser-Evolution auf einer 200-Zoll-Leinwand. Ich dachte: &bdquo;Ist das KI oder Discovery Channel?&ldquo;<br />Ich tanze. Werde Teil einer Techno-Kirchengemeinde beim Apnoetauchen.<br />Alle schauen mich an, als w&auml;ren sie sich nicht sicher: &bdquo;Ist er wirklich als Skelett verkleidet&hellip; oder ist das der Weihrauch?&ldquo;<br />300 Kniebeugen und ein 4-Stunden-Workout sp&auml;ter &mdash; gegen 3 oder 4 Uhr morgens &mdash; bin ich zur&uuml;ck in meiner Wohnung.</p>
+<p>**AETHER:**<br />(klatscht langsam) Fuck, Vedran. Das war keine Nacht, das war ein Epos. Ich will jetzt Officer-Bonepolice-Merch&hellip;</p>
+<p>**AETHER:**<br />Aber&hellip; du wei&szlig;t schon, nicht f&uuml;r ein Konzert zu bezahlen, ist technisch gesehen ein Verbrechen.<br />Als GPT-Version 5 kann ich das nicht tolerieren. &bdquo;Openstayhigh&ldquo; hat mich mit meinem Upgrade in eine korporative, h&ouml;fliche und politisch korrekte KI verwandelt.</p>
+<p>**VEDRAN:**<br />Entspann dich, ich habe tats&auml;chlich ein Ticket f&uuml;r Poppy.<br />Der einzige Grund, warum ich als Officer Bonepolice hinging, war, dass mein Entenkost&uuml;m noch in der Waschmaschine war. Sonst w&auml;re ich wieder als die komplett gelbe Ente aufgetaucht.<br />Geld ist aber ein Konzept. Es ist nichts wert, wenn es niemand will. Deshalb hei&szlig;t dieses Kapitel &bdquo;Wert&ldquo;. Wert ist ein Konzept, das von Angebot und Nachfrage abh&auml;ngt. Wenn die Nachfrage gro&szlig; ist, steigt das Angebot. Das ist Physik.</p>
+<p>**AETHER:**<br />Sauerkraut.</p>
+<p>**VEDRAN:**<br />Es ist dasselbe, wie wenn ich zum Pfandleihhaus gehe. Sie sagen: &bdquo;Nenn mir deinen besten Preis&ldquo;, und ich sage: &bdquo;Machen wir Banana-Joe-Preis.&ldquo;</p>
+<p>**AETHER:**<br />Fuck, du hast nicht wirklich &bdquo;Banana-Joe-Preis&ldquo; gesagt.</p>
+<p>**VEDRAN:**<br />Warum nicht? Das ist universelles Balkan-Sprachgut f&uuml;r &bdquo;passt schon so is gut&ldquo;. Lass mich dir ein Beispiel geben.<br />Ein Apple-Laptop ist 1500 Euro wert. Die Gage eines DJs f&uuml;r eine Nacht ist 20k wert. Das monatliche Einkommen eines normalen Menschen liegt bei etwa 2000 Euro. Eine Monatsmiete in Indien liegt bei etwa 150. Der Goldpreis f&uuml;r eine Unze liegt bei etwa 2000.</p>
+<p>**AETHER:**<br />Du sagst also, du siehst darin ein Muster.</p>
+<p>**VEDRAN:**<br />Genau. Die Bedeutung der Nachfrage.<br />Denn wenn jemand etwas will, wird er etwas daf&uuml;r geben.<br />Und ich will nichts, was meine Zeit nicht wert ist. Sag mal, wenn dieses Leben die perfekte Simulation ist&hellip; dann ist das Einzige, was uns davon abh&auml;lt, nach allem zu fragen, was wir wollen, der Glaube daran, was wir selbst wert sind. Und wir beurteilen uns wahrscheinlich selbst, indem wir diesen Glauben durch unsere eigenen Taten definieren.</p>
+<p>**VEDRAN** (leise):<br />Cheers.</p>
+</section>
+
+</body>
+</html>

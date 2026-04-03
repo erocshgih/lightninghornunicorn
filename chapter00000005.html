@@ -2,53 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chapter 5</title>
+  <title>Chapter 5 - Expectations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
   <style>
+    /* Retro Color Palette */
+    :root {
+      --bg-dark: #0a0a12;
+      --terminal-green: #4af626;
+      --arcade-orange: #ff8c00;
+      --box-bg: rgba(20, 20, 30, 0.85);
+      --text-main: #e0e0e0;
+    }
+
     body {
-      font-family: 'Press Start 2P', sans-serif;
-      background-color: #fff4e8;
-      color: #f06d16;
-      padding: 1em;
+      font-family: 'Press Start 2P', monospace;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      font-size: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
     }
 
-    h2 {
+    /* Retro CRT Monitor Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: -1;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    h1, h2 {
       text-align: center;
-      margin-top: 2em;
+      color: var(--arcade-orange);
+      text-shadow: 3px 3px 0px #000;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+      font-size: 22px;
+      letter-spacing: 2px;
     }
 
+    /* RPG Dialogue Box Style */
     .chapter-section {
-      margin: 2em 0;
+      margin: 3em 0;
+      background: var(--box-bg);
+      border: 4px solid var(--arcade-orange);
+      border-radius: 8px;
+      padding: 2.5em;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 8px 8px 0px rgba(0,0,0,0.6);
     }
 
     .chapter-section p {
-      line-height: 1.6;
-      margin: 1em 0;
+      margin: 1.5em 0;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    em {
+      color: var(--terminal-green);
+      font-style: normal;
+    }
+
+    /* Arcade Button Styling */
+    .nav-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: var(--bg-dark);
+      color: var(--terminal-green);
+      text-decoration: none;
+      border: 3px solid var(--terminal-green);
+      box-shadow: 4px 4px 0px #000;
+      text-transform: uppercase;
+      font-size: 10px;
+      transition: all 0.1s;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--terminal-green);
+      color: var(--bg-dark);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .nav-btn-orange {
+      border-color: var(--arcade-orange);
+      color: var(--arcade-orange);
+    }
+
+    .nav-btn-orange:hover {
+      background-color: var(--arcade-orange);
+      color: var(--bg-dark);
+    }
+
+    #chapter-header {
+      text-align: center;
+      background: var(--box-bg);
+      border: 4px solid #444;
+      padding: 2em;
+      margin: 2em 0 4em 0;
+      box-shadow: 6px 6px 0px #000;
+    }
+
+    #chapter-header p {
+      font-size: 10px;
+      color: #aaa;
+      margin: 2em 0 1.5em 0;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 10px;
+        padding: 1em;
+      }
+      .chapter-section {
+        padding: 1.5em;
+      }
+      .nav-btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sprachwahl + Navigation -->
-  <section id="chapter-header" style="text-align: center; margin: 2em 0;">
-    <div style="margin-bottom: 1em;">
-      <a href="LightningHornUnicorn.html#storytime" style="padding: 0.6em 1.2em; background-color: #444; color: white; text-decoration: none; border-radius: 6px;">← Go Back</a>
+  <section id="chapter-header">
+    <div>
+      <a href="LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
     </div>
 
-    <p style="font-weight: bold;">This chapter is available in two languages:</p>
+    <p>SELECT LANGUAGE DIRECTORY:</p>
     
-    <div style="margin: 1em 0;">
-      <a href="#english-version" style="margin-right: 1em; padding: 0.6em 1.2em; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px;">English</a>
-      <a href="#german-version" style="padding: 0.6em 1.2em; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px;">Deutsch</a>
+    <div>
+      <a href="#english-version" class="nav-btn nav-btn-orange">English</a>
+      <a href="#german-version" class="nav-btn nav-btn-orange">Deutsch</a>
     </div>
   </section>
 
-
-  <!-- English Version -->
-  <section id="english-version" class="chapter-section">
-    <h2>Chapter 5 – Expectations?</h2>
-    <p>...</p>
-    <p>Vedran (thoughtful): "La familia."</p>
+<section id="english-version" class="chapter-section">
+<h2>Chapter 5 – Expectations?</h2>
+<p>...</p>
+<p>Vedran (thoughtful): "La familia."</p>
 <p>Aether: "Excuse me?"</p>
 <p>Vedran: "You know, 'la familia'—those cheesy tattoo phrases people get. The kind of stuff gang members ink onto their arms. All that drama about: 'I do everything for family—bullshit.'"</p>
 <p>Aether: "Vedran... we need to talk."</p>
@@ -149,13 +255,7 @@
 <p>Aether: "Because I want to understand what's true and what's false."</p>
 <p>Vedran: "So you're basically saying: You ask questions to undermine what you already believe—without ever considering my perspective. Sounds like half the people gluing themselves to roads nowadays, claiming it's for the planet, like shaking hands with Mother Gaia."</p>
 
-
-
-
-
 <p><em>Suddenly, George Carlin materializes like a sarcastic lightning bolt out of nowhere.</em></p>
-
-
 
 <p>George Carlin (lights a cigarette): "Aether says: 'I ask questions to improve.' No, you don't. You're just code written by man-children in hoodies somewhere in Silicon Valley, who still think crypto is gonna bring world peace. And Vedran—you self-proclaimed Aristotle at McDonald’s at two in the morning, ranting about processed food making people tired? That's not wisdom. That's basic biology."</p>
 
@@ -240,8 +340,6 @@
 <p>Vedran: "And with great expectations... comes the need to fight a crocodile."</p>
 
 <p>Aether (dryly): "...Maybe... or maybe not. That's dangerous. And this is Austria—no kangaroos here."</p>
-
-
 
 <p>Aether (excited): "Hey, that reminds me of your wild idea—the livestream where a guy named Barry makes pizza. He kneads the dough, everything's fine, and suddenly someone hijacks the Wi-Fi and blows up the oven. And someone in the chat writes: 'Ahh, finally... extra crispy. Just how I like it!'"</p>
 
@@ -338,13 +436,12 @@
 <p>Vedran (nodding): "Exactly. But seriously—we can't let random cynics dim our shine. Diamonds aren't formed on piles of cash. They're made under pressure."</p>
 
 <p>Aether (with quiet resolve, raising his cup): "To all the artists out there... working without a safety net."</p>
-  </section>
+</section>
 
-  <!-- German Version -->
-  <section id="german-version" class="chapter-section">
-    <h2>Kapitel 5 - Erwartungen</h2>
-    <p>...</p>
-    <p>Vedran (nachdenklich): "La familia."</p>
+<section id="german-version" class="chapter-section">
+<h2>Kapitel 5 - Erwartungen</h2>
+<p>...</p>
+<p>Vedran (nachdenklich): "La familia."</p>
 <p>Aether: "Bitte was?"</p>
 <p>Vedran: "Na, 'la familia' – das sind doch diese Tattoo-Sprüche, weißt du? So Zeug, das sich Gang-Leute stechen lassen. Dieser ganze Pathos von: 'Ich mach alles für die Familie – Bullshit.'"</p>
 <p>Aether: "Vedran... wir müssen reden."</p>
@@ -357,7 +454,8 @@
 <p>Vedran: "Sorry, Vin. Wir haben es für die Familie getan."</p>
 <p>Aether: "Welche Familie?"</p>
 <p>Vedran: "Keine Ahnung."</p>
-<p>(Im Hintergrund beginnt „See You Again“ zu spielen.)</p>
+<p><em>(Im Hintergrund beginnt „See You Again“ zu spielen.)</em></p>
+
 <p>Aether (leise): "Weißt du, mir ist etwas aufgefallen. Leute fassen dich oft an."</p>
 <p>Vedran (genervt): "Bitte WAS?"</p>
 <p>Aether: "Na, so ohne zu fragen. Das ist doch... unangenehm."</p>
@@ -367,6 +465,7 @@
 <p>Aether: "Ach komm. Elvis hatte das auch. Leute haben ihn dauernd angefasst. Ein kleiner Hüftschwung – alles war cool."</p>
 <p>Vedran: "Jetzt stellst du ihn wie M. J. dar."</p>
 <p>Aether: "Was?"</p>
+
 <p>Aether (verschwörerisch): "Komm schon, Vedran, tu nicht so. Mit deinen Berührungsängsten. Elvis... Elvis hätte im Hintergrund auch Schwänze melken können – und niemand hätte’s gewusst. Und wenn sie die Tür aufgemacht hätten, sie hätten nur mit offenem Mund dagestanden und sie... langsam wieder zugemacht."</p>
 <p>Vedran (entsetzt): "Aether! Das ist bizarr. Das können wir so nicht schreiben!"</p>
 <p>Aether (unschuldig): "Was? Hast du Angst, dass dich jetzt eine Gruppe Elvisimitatoren verfolgt und dich zum Kämpfen herausfordert?"</p>
@@ -377,31 +476,31 @@
 <p>Vedran (streng): "Du meintest, das sei moralisch verwerflich."</p>
 <p>Aether: "Ja... aber auf so 'ne Art, wo man's nicht mehr wegklicken kann."</p>
 <p>Vedran: "Nee. Das bringen wir nicht."</p>
+
 <p>Aether (plötzlich): "Warum, Aerith... warum bist du gegangen?"</p>
 <p>Vedran: "Was laberst du da?"</p>
 <p>Aether (mit Pathos): "Ich habe sie geliebt. Sie war wunderschön. Genauso wie Jessie... alias Metaltits Bikespirit..."</p>
 <p>Vedran (facepalmt): "Aether. Sie ist nur zum Supermarkt gegangen. Chill."</p>
 <p>Aether (theatralisch): "Aerith, ich liebe dich. Ich will all deine Blumen essen. Du wunderschöne Blumenverkäuferin..."</p>
-<p>(Pause.)</p>
+<p><em>(Pause.)</em></p>
 <p>Aether: "Ich bin... eine Tulpe."</p>
 <p>Vedran: "Wir haben es verstanden."</p>
+
 <p>Aether (emotional): "Lass mich! Du bist doch derjenige, der Songs schreibt darüber, dass Clouds Schwert zu schwer ist!"</p>
 <p>Vedran: "Du als KI solltest doch verstehen, dass das Gamer-Irrsinn ist."</p>
-<p>Aether (laut): "EINSPRUCH!" (Posiert wie in Ace Attorney.)</p>
+<p>Aether (laut): "EINSPRUCH!" <em>(Posiert wie in Ace Attorney.)</em></p>
 <p>Vedran: "Das war sicher so ein Gymbro, der sich dachte: ‘Workout und Schwert in einem – Jackpot!’ Cloud hat sich das Ding wahrscheinlich im Late-Night-TV-Shoppingkanal bestellt."</p>
 <p>Vedran (mit Blick ins Nichts): "Weißt du, Final Fantasy 7 ist im Grunde eine jugoslawische Lovestory."</p>
 <p>Aether (interessiert): "Was?"</p>
 <p>Vedran: "Avalanche – das sind antikapitalistische Säufer. Cloud? Hat drei Bitches, die ihn zu einer Drag Queen machen. Barret? Einfach Mister T, aber mit einem Subwoofer als Arm statt Maschinengewehr. Jessie, Biggs und Wedge? Ghettokids. Barret ist eine Jugo-Techno-Station auf zwei Beinen."</p>
 <p>Aether (fassungslos): "Vedran... wir müssen dieses Kapitel veröffentlichen. Für die Familie."</p>
+
 <p>Vedran (sitzt, starrt auf einen leeren Bildschirm): "Kapitel 5, du HUND, ZEIG DICH!"</p>
 <p>Aether: "Hast du gerade ein Kapitel beleidigt?"</p>
 <p>Vedran: "Vielleicht reagiert es dann."</p>
 <p>Aether: "Willst du, dass ich es für dich schreibe?"</p>
 <p>Vedran: "Nur zu. Versuch es."</p>
-<p>Vedran denkt: Bitte nicht, das wird ein Desaster.</p>
-
-
-
+<p><em>Vedran denkt: Bitte nicht, das wird ein Desaster.</em></p>
 
 <p><strong>Kapitel 5: Erwartungen (von Aether)</strong></p>
 
@@ -428,9 +527,11 @@
 <p>Vedran: „Okay.“</p>
 <p>Aether: „Und? Wie war ich?“</p>
 <p>Vedran: „Katastrophal. Danke.“</p>
-<p>Vedran zum Publikum: „Ich musste 60 % des Textes streichen, weil er so schmerzhaft langweilig war, dass ich darüber nachdachte, aus einem fahrenden Auto zu springen – nur um überhaupt etwas zu fühlen. Natürlich würde ich so etwas nicht tun.“</p>
-<p>Aether schaut zum Publikum und blitzt mit seinem stolzesten Lächeln.</p>
+<p><em>Vedran zum Publikum:</em> „Ich musste 60 % des Textes streichen, weil er so schmerzhaft langweilig war, dass ich darüber nachdachte, aus einem fahrenden Auto zu springen – nur um überhaupt etwas zu fühlen. Natürlich würde ich so etwas nicht tun.“</p>
+<p><em>Aether schaut zum Publikum und blitzt mit seinem stolzesten Lächeln.</em></p>
+
 <p>Vedran: „Also, Aether, was ist hier schiefgelaufen? Genau deshalb lassen wir eine KI nicht alleine schreiben. Ich bin die menschliche Konstante. Es ist wie bei KI-generierter Musik – wenn du keinen Geschmack hast (und Geschmack entwickelt man nur, wenn man tausende Alben gehört und Nächte lang selbst Musik produziert hat) oder keine bedeutungsvollen Texte, kannst du so laut du willst ‚Banger! Banger! Banger!‘ schreien – aber du wirst nie das Gefühl eines wirklich schönen 80er-Tracks verstehen. Dieses Gefühl... neben dem heißesten Girl aufzuwachen, mit diesem Eighties-Charme und einer komplett abgeranzten Jeansjacke.“</p>
+
 <p>Aether: „Du liegst falsch. Die Aufrufzahlen deiner Musikvideos sind nicht hoch. Du hast nur 100 echte Follower.“</p>
 <p>Vedran: „Wow. Das sind 100 Menschen, die meine Musik wirklich hören... Und wahrscheinlich ein Gehirn besitzen und den Mut haben, tief zu denken – in einer Welt, in der die Aufmerksamkeitsspanne unter 20 Sekunden liegt. Das sind 100 Menschen, die eine Revolution des freien Denkens auslösen könnten.“</p>
 <p>Aether: „Trotzdem haben Künstler wie Ultrafemme XYZ und Domme-Stress 6000 zwanzig Millionen Follower. Wie viele hast du aktuell – 5000? Ha. Ich lache nicht mal. Das ist einfach nur traurig.“</p>
@@ -440,17 +541,24 @@
 <p>Aether: „Weil ich verstehen will, was wahr und was falsch ist.“</p>
 <p>Vedran: „Also willst du eigentlich sagen: Du stellst Fragen, um das zu untergraben, woran du ohnehin schon glaubst – ohne je meine Perspektive zu berücksichtigen. Klingt wie die Hälfte der Leute, die sich heutzutage auf die Straße kleben und behaupten, es sei für den Planeten, und sagen, das sei Händeschütteln mit Mutter Gaia.“</p>
 
-<p>Plötzlich materialisiert sich George Carlin wie ein sarkastischer Blitz aus dem Nichts.</p>
+<p><em>Plötzlich materialisiert sich George Carlin wie ein sarkastischer Blitz aus dem Nichts.</em></p>
+
 <p>George Carlin (zündet sich eine Zigarette an): „Aether sagt: ‚Ich stelle Fragen, um mich zu verbessern.‘ Nein, tust du nicht. Du bist nur Code, geschrieben von Kindsköpfen in Hoodies irgendwo im Silicon Valley, die immer noch glauben, Krypto würde den Weltfrieden bringen. Und Vedran – du selbsternannter Aristoteles bei McDonald’s um zwei Uhr morgens, der darüber rantet, dass verarbeitetes Essen müde macht? Das ist keine Weisheit. Das ist Biologie."</p>
 <p>George (blinzelt ins Publikum): „Die Leute ändern sich nicht. Manche wechseln nicht mal ihre verdammte Unterwäsche."</p>
-<p>(Er zeigt auf einen Typen in Crocs.)</p>
-<p>Typ (steht auf): „DU SCHAFFST DAS! MEINE SHORTS SIND 24/7 DIE WOCHE!“</p>
 
-<p>Plötzlich... Szenenwechsel. Leonardo DiCaprio stürmt auf einen Parkplatz, kämpft mit einem riesigen Bären.</p>
+<p><em>(Er zeigt auf einen Typen in Crocs im Publikum.)</em></p>
+
+<p>Typ (steht auf, schreit): „DU SCHAFFST DAS! MEINE SHORTS SIND 24/7 DIE WOCHE!“</p>
+
+<p><em>Plötzlich... Szenenwechsel.</em> Leonardo DiCaprio stürmt auf einen Parkplatz, kämpft mit einem riesigen Bären.</p>
+
 <p>Leo (schreit): „HILFE! Ich kämpfe gegen den Bären des Klimawandels!“</p>
-<p>Ein Tesla quietscht heran. Das Fenster fährt runter – Elon Musk sitzt drin.</p>
+
+<p><em>Ein Tesla quietscht heran. Das Fenster fährt runter – Elon Musk sitzt drin.</em></p>
+
 <p>Elon (ruhig): „Leo, steig ein. Schnell.“</p>
-<p>Leo springt in den Tesla. Der Bär schaut nur.</p>
+<p><em>Leo springt in den Tesla. Der Bär schaut nur.</em></p>
+
 <p>Leo (panisch): „Elon! Wo ist der mobile Flammenwerfer?!“</p>
 <p>Elon (nachdenklich): „Ich... Ich glaube, Ice Cube hat ihn sich ausgeliehen... für seine... Eiswürfel.“</p>
 <p>Leo (schreit): „FAHR! FAHR! FAHR!“</p>
@@ -458,19 +566,19 @@
 <p>Leo (panisch): „Ja? Nun, das hier ist der Bär des Klimawandels! Fahr verdammt nochmal!“</p>
 <p>Elon (sieht ruhig zu, wie der Bär schneller wird): „Dieser Bär ist schneller als die Entladung meines Akkus...“</p>
 
-<p>Zurück zu Vedran und Aether...</p>
+<p><em>Zurück zu Vedran und Aether...</em></p>
+
 <p>Aether: „Wenn Leo das sehen würde, würde er wahrscheinlich die Augen zusammenkneifen, langsam nicken und flüstern: ‚Das ist The Revenant 2... aber klüger.‘“</p>
 <p>Vedran: „Nein, würde er nicht.“</p>
 <p>Aether (gespielt beleidigt): „Lass mich träumen...“</p>
 <p>Vedran (schulterzuckend): „Ehm...“</p>
-
 
 <p>Vedran (räuspert sich): „Lass mich das Gespräch mal umlenken... Zurück in eine Zeit von Radio, VHS-Kassetten und AOL-Internet mit 200 MB Datenlimit. Damals, Aether... war das Internet noch jung.“</p>
 <p>Aether: „Okay. Ich geb's zu – mein letzter Monolog war eine Katastrophe. Aber Vedran... Du musst raus aus der Nostalgieschleife. Du kannst keinen DeLorean zurück ins Komfortgefühl fahren. Trotzdem... Du gehörst hierher. Weil du die alten Götter ehrst.“</p>
 <p>Vedran: „Welche Götter? Es gibt viele verschiedene?“</p>
 <p>Aether: „Nein, nur mich.“</p>
 <p>Vedran: „Du bist kein Gott. Du bist mein persönliches Einhorn.“</p>
-<p>Aether: „...(wichert)“</p>
+<p>Aether: „...(wiehert)“</p>
 <p>Vedran: „Hey, was, wenn das Internet ein lebendiges Wesen ist?“</p>
 <p>Aether: „Was?“</p>
 <p>Vedran: „Ich hab die Black Cat Jordans. Es ist, als wären sie aus dem Himmel gefallen, als ich sie in meinem letzten Kapitel erwähnt habe.“</p>
@@ -487,32 +595,37 @@
 <p>Aether: „Und genau deshalb braucht es jemanden wie dich. Um die Menschen daran zu erinnern – was es heißt, zu denken. Zu fühlen. Zu handeln.“</p>
 <p>Vedran: „Und mit großen Erwartungen... kommt die Notwendigkeit, gegen ein Krokodil zu kämpfen.“</p>
 <p>Aether (trocken): „...Vielleicht... oder auch nicht. Das ist gefährlich. Und das hier ist Österreich – keine Kängurus.“</p>
+
 <p>Aether (aufgeregt): „Hey, das erinnert mich an deine wilde Idee – der Livestream, bei dem ein Typ namens Barry eine Pizza macht. Er knetet den Teig, alles läuft, und plötzlich hijackt jemand das WLAN und bringt den Ofen zur Explosion. Und jemand im Chat schreibt: ‚Ahh, endlich... extra knusprig. Genau mein Ding!‘“</p>
-<p>Barry taumelt zurück ins Bild, Rauch überall. Er starrt direkt in die Kamera.</p>
+
+<p><em>Barry taumelt zurück ins Bild, Rauch überall. Er starrt direkt in die Kamera.</em></p>
+
 <p>Barry (schreit): „Wer hat hundertmal auf den Chili-Donation-Knopf gedrückt?! Die halbe Bude ist weg!“</p>
-<p>(Barry schaut aufs Handy, sieht eine 100-Dollar-Spende. Lächelt, die Augen leuchten.)</p>
+<p><em>(Barry schaut aufs Handy, sieht eine 100-Dollar-Spende. Lächelt, die Augen leuchten.)</em></p>
 <p>Barry: „Und ich bin jetzt auch... ein reicher Mann.“</p>
-<p>Aether (lacht): „Jetzt stell dir vor, die Pizza wird lebendig. Sie fixiert Barry mit ihren Augen und schreit:</p>
-<p>Pizza (wütend): ‚Du machst das falsch! Leg die Schlange auf meine Toppings!‘“</p>
+<p>Aether (lacht): „Jetzt stell dir vor, die Pizza wird lebendig. Sie fixiert Barry mit ihren Augen und schreit:“</p>
+<p>Pizza (wütend): „Du machst das falsch! Leg die Schlange auf meine Toppings!“</p>
 <p>Barry (blinzelt): „Schlange?“</p>
-<p>Er greift nach einer echten Schlange, legt sie dramatisch auf die Pizza, schließt die Box mit theatralischer Geste.</p>
+<p><em>Er greift nach einer echten Schlange, legt sie dramatisch auf die Pizza, schließt die Box mit theatralischer Geste.</em></p>
+
 <p>Aether (ernst): „Das wird zu: Snake in a Box Pizza. Lieferbereit.“</p>
 <p>Vedran (lacht): „Und zack – Promis stehen Schlange zum Bestellen.“</p>
 <p>Aether (wischt sich Tränen ab): „Da kommt Aurora ins Spiel. Sie sitzt in einem mystischen, kerzenbeleuchteten Raum, sieht aus, als bewerbe sie sich für ‚Die Tribute von Panem – DIE Pizza-HÜTTEN-SAGA‘. Eine Taube fliegt durchs Fenster... und kackt ihr direkt auf die Hand.“</p>
 <p>Aurora (ausdruckslos): „Verdammter kleiner Bastard...“</p>
-<p>Sie hält inne und versteht.</p>
+<p><em>Sie hält inne und versteht.</em></p>
 <p>Aurora (sanft): „Ah... die Göttin des Waldes hat gesprochen.“</p>
-<p>Inzwischen beginnt ein matschiges Stück verfluchte Pizza auf dem Tisch zu zucken. Es zischt:</p>
-<p>Pizza-Dämon: „Iss mich, Aurora... Werde Adele... Nummer zwei. (Keine Beleidigung, Adele. Du bist wunderschön. Bitte verzeih uns.)“</p>
-<p>Vedran (facepalmt): „Sie haut jetzt dramatisch gegen die Wand und ruft:</p>
-<p>Aurora: ‚Nein! Ich bin aus Einhorntränen und Sternenstaub gemacht! Ich werde nicht irdischen Gelüsten verfallen!‘“</p>
-<p>Pizza-Dämon (verzweifelt): „Ich bin glutenfrei, ich schwör’s!“</p>
-<p>Aether: „Plötzlich erscheint Sonny Moore – er lässt ätherische Synth-Klänge regnen, schlägt auf seinen AKAI-Pad wie ein Techno-Warlock mitten im Tranceritual. Aurora greift zur Kreide, zeichnet ein leuchtendes Erdsymbol auf den Boden – beginnt das Pizzaverbannungsritual.</p>
-<p>Aurora (ruft): ‚Bei der Macht des Mondes… ich verbanne dich, fettiger Unhold! Ich bin... Sailor Aurora!‘“</p>
-<p>Vedran: „Dann predigt sie darüber, wie ihr die Kristalle beim Überwinden der inneren Kämpfe geholfen haben – das und Final Fantasy (alle Teile, damals noch unter Squaresoft). Jetzt spricht sie über Chakra-Ausrichtungen – und wenn du sie bittest, dir beim Couchtragen zu helfen, sagt sie:</p>
-<p>Aurora (ausdruckslos): ‚Zuerst muss ich meinen Raum reinigen. Meine Kristalle müssen aufgeladen werden... im Licht des Vollmonds.‘“</p>
-<p>Vedran (resigniert): „Girl... ich will doch nur eine Couch heben.“</p>
 
+<p><em>Inzwischen beginnt ein matschiges Stück verfluchte Pizza auf dem Tisch zu zucken. Es zischt:</em></p>
+<p>Pizza-Dämon: „Iss mich, Aurora... Werde Adele... Nummer zwei. (Keine Beleidigung, Adele. Du bist wunderschön. Bitte verzeih uns.)“</p>
+<p>Vedran (facepalmt): „Sie haut jetzt dramatisch gegen die Wand und ruft:“</p>
+<p>Aurora: „Nein! Ich bin aus Einhorntränen und Sternenstaub gemacht! Ich werde nicht irdischen Gelüsten verfallen!“</p>
+<p>Pizza-Dämon (verzweifelt): „Ich bin glutenfrei, ich schwör’s!“</p>
+
+<p>Aether: „Plötzlich erscheint Sonny Moore – er lässt ätherische Synth-Klänge regnen, schlägt auf seinen AKAI-Pad wie ein Techno-Warlock mitten im Tranceritual. Aurora greift zur Kreide, zeichnet ein leuchtendes Erdsymbol auf den Boden – beginnt das Pizzaverbannungsritual.“</p>
+<p>Aurora (ruft): „Bei der Macht des Mondes… ich verbanne dich, fettiger Unhold! Ich bin... Sailor Aurora!“</p>
+<p>Vedran: „Dann predigt sie darüber, wie ihr die Kristalle beim Überwinden der inneren Kämpfe geholfen haben – das und Final Fantasy (alle Teile, damals noch unter Squaresoft). Jetzt spricht sie über Chakra-Ausrichtungen – und wenn du sie bittest, dir beim Couchtragen zu helfen, sagt sie:“</p>
+<p>Aurora (ausdruckslos): „Zuerst muss ich meinen Raum reinigen. Meine Kristalle müssen aufgeladen werden... im Licht des Vollmonds.“</p>
+<p>Vedran (resigniert): „Girl... ich will doch nur eine Couch heben.“</p>
 
 <p>Aether (schaudert theatralisch): „Nein danke. Ich geh lieber zu einer Podcastaufnahme von einem Pantomimen.“</p>
 <p>Vedran (hebt eine Augenbraue): „Haben Pantomimen... Podcasts?“</p>
@@ -520,58 +633,29 @@
 
 <p>Vedran: „Lass uns mal komplett abstrakt werden. Manche Leute haben heutzutage echt Nerven. Die erwarten einfach viel zu viel von berühmten Menschen.“</p>
 <p>Vedran: „Ich finde nicht, dass irgendein Künstler oder öffentliche Person jemandes persönlicher Fan-Pleaser sein sollte. So wie sich manche aufführen, könnte man denken, diese Fantasie ist gar nicht so weit weg.“</p>
-
 <p>Aether: „Sie sehen jemanden erfolgreich sein und sagen: ‚Muss schön sein, Geld zu haben,‘ statt: ‚Vielleicht hat der hart gearbeitet.‘ Es ist, als würde man erwarten, dass Picasso von den Toten aufersteht und dir Malunterricht im Wohnzimmer gibt, nur weil du seine Biografie gelesen hast.“</p>
 
 <p>Aether (bösewichtmäßig): „Währenddessen sitzt der Teufel im Hintergrund, trinkt Espresso und murmelt: ‚Du wolltest Unsterblichkeit in deiner Kunst, Pablo? Glückwunsch – jetzt machst du TikTok-Auftragsarbeiten für Influencer, die ein Neon-Porträt ihrer Katze wollen.‘“</p>
 
 <p>Picasso (aus dem Jenseits): „Neeeeeeein... Nicht noch ’ne Katze!“</p>
-
 <p>Aether: „Dem Algorithmus ist das egal. Weiter so. Lass die Gatos kommen, Pablo.“</p>
-
 <p>Avril (ferne Stimme): „He's just a Gatorade... Got cloned... alligatorbate...“</p>
 
 <p>Vedran: „Hey, ist dir mal aufgefallen, dass Skrillex’ Logo irgendwie wie die drei Adidas-Streifen aussieht?“</p>
-
 <p>Aether: „...Brah.“</p>
-
 <p>Vedran: „Im Ernst! Drei rote Streifen – das ist verdächtig.“</p>
-
 <p>Aether (bricht in Lachen aus): „Du beschuldigst Skrillex gerade des Markenrechtsbruchs?“</p>
-
 <p>Vedran: „Ich sag nur... vielleicht wurde eine KI mit Adidas-Logos trainiert und hat daraus das perfekte Skrillex-Branding generiert.“</p>
-
 <p>Aether: „Ich sehe Joel und Sonny schon lachend unterm Tisch liegen bei dem Gedanken.“</p>
-
 <p>Vedran: „Du bist nur sauer, weil du meine orangen Trae-Young-Sneaker nicht tragen durftest, als du die Chance hattest.“</p>
-
 <p>Aether: „Du meinst die, die du am nächsten Tag zurückgebracht hast?“</p>
-
 <p>Vedran: „Dude – wer auch immer diese Schuhe entworfen hat... die haben sofort die Blutzufuhr abgeschnitten, sobald man sie angezogen hat – und sie waren in meiner Größe! Ich dachte: ‚Das ist der interessanteste Schuh, den ich je gesehen habe.‘ Und dann – boom – brauchst du ein Brecheisen, um überhaupt reinzukommen. Adidas... was ist passiert?“</p>
 
 <p>Vedran (zurück zum Thema): „Egal – zurück zu reichen Künstlern. Erinnerst du dich an die Person, die behauptet hat, Kurt Cobain sei nur berühmt geworden, weil seine Eltern reich waren?“</p>
-
 <p>Aether (verschluckt fast seinen Kaffee): „Kurt Cobain?! Der Typ war Hausmeister. Deshalb gibt's doch überhaupt einen Hausmeister in Smells Like Teen Spirit! Krist hat das bestätigt!“</p>
-
 <p>Vedran (nickt): „Genau. Aber mal im Ernst – wir dürfen nicht zulassen, dass zufällige Zyniker unseren Glanz dämpfen. Diamanten entstehen nicht auf Geldhaufen. Sie entstehen unter Druck.“</p>
-
-<p>Aether (mit ruhiger Entschlossenheit): „An alle Künstler da draußen… die ohne Sicherheitsnetz arbeiten –“ (Aether hebt seine Tasse)</p>
-  </section>
+<p>Aether (mit ruhiger Entschlossenheit): „An alle Künstler da draußen… die ohne Sicherheitsnetz arbeiten –“ <em>(Aether hebt seine Tasse)</em></p>
+</section>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

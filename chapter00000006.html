@@ -2,109 +2,398 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chapter 6</title>
+  <title>Chapter 6 - No Refund</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
   <style>
+    /* Retro Color Palette */
+    :root {
+      --bg-dark: #0a0a12;
+      --terminal-green: #4af626;
+      --arcade-orange: #ff8c00;
+      --box-bg: rgba(20, 20, 30, 0.85);
+      --text-main: #e0e0e0;
+    }
+
     body {
-      font-family: 'Press Start 2P', sans-serif;
-      background-color: #fff4e8;
-      color: #f06d16;
-      padding: 1em;
+      font-family: 'Press Start 2P', monospace;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      font-size: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
     }
 
-    h2 {
+    /* Retro CRT Monitor Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: -1;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    h1, h2 {
       text-align: center;
-      margin-top: 2em;
+      color: var(--arcade-orange);
+      text-shadow: 3px 3px 0px #000;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+      font-size: 22px;
+      letter-spacing: 2px;
     }
 
+    /* RPG Dialogue Box Style */
     .chapter-section {
-      margin: 2em 0;
+      margin: 3em 0;
+      background: var(--box-bg);
+      border: 4px solid var(--arcade-orange);
+      border-radius: 8px;
+      padding: 2.5em;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 8px 8px 0px rgba(0,0,0,0.6);
     }
 
     .chapter-section p {
-      line-height: 1.6;
-      margin: 1em 0;
+      margin: 1.5em 0;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    em {
+      color: var(--terminal-green);
+      font-style: normal;
+    }
+
+    /* Arcade Button Styling */
+    .nav-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: var(--bg-dark);
+      color: var(--terminal-green);
+      text-decoration: none;
+      border: 3px solid var(--terminal-green);
+      box-shadow: 4px 4px 0px #000;
+      text-transform: uppercase;
+      font-size: 10px;
+      transition: all 0.1s;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--terminal-green);
+      color: var(--bg-dark);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .nav-btn-orange {
+      border-color: var(--arcade-orange);
+      color: var(--arcade-orange);
+    }
+
+    .nav-btn-orange:hover {
+      background-color: var(--arcade-orange);
+      color: var(--bg-dark);
+    }
+
+    #chapter-header {
+      text-align: center;
+      background: var(--box-bg);
+      border: 4px solid #444;
+      padding: 2em;
+      margin: 2em 0 4em 0;
+      box-shadow: 6px 6px 0px #000;
+    }
+
+    #chapter-header p {
+      font-size: 10px;
+      color: #aaa;
+      margin: 2em 0 1.5em 0;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 10px;
+        padding: 1em;
+      }
+      .chapter-section {
+        padding: 1.5em;
+      }
+      .nav-btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sprachwahl + Navigation -->
-  <section id="chapter-header" style="text-align: center; margin: 2em 0;">
-    <div style="margin-bottom: 1em;">
-      <a href="LightningHornUnicorn.html#storytime" style="padding: 0.6em 1.2em; background-color: #444; color: white; text-decoration: none; border-radius: 6px;">← Go Back</a>
+  <section id="chapter-header">
+    <div>
+      <a href="LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
     </div>
 
-    <p style="font-weight: bold;">This chapter is available in two languages:</p>
+    <p>SELECT LANGUAGE DIRECTORY:</p>
     
-    <div style="margin: 1em 0;">
-      <a href="#english-version" style="margin-right: 1em; padding: 0.6em 1.2em; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px;">English</a>
-      <a href="#german-version" style="padding: 0.6em 1.2em; background-color: #ff8c00; color: white; text-decoration: none; border-radius: 6px;">Deutsch</a>
+    <div>
+      <a href="#english-version" class="nav-btn nav-btn-orange">English</a>
+      <a href="#german-version" class="nav-btn nav-btn-orange">Deutsch</a>
     </div>
   </section>
 
+<section id="english-version" class="chapter-section">
+<h2>Chapter 6 – No Refund</h2> 
 
-  <!-- English Version -->
-  <section id="english-version" class="chapter-section">
-    <h2>Chapter 6 – No Refund</h2> <p>The courtroom is open. The defendants are Vedran Lukic (a self-employed musician in a duck uniform).</p> <p><b>Judge 3</b> (horrified): “What the hell – does this man have a duck-shaped LED helmet on his shoulders?”</p> <p><b>Judge 2</b> (nodding): “It quacks.”</p> <p>And Aether Veylan (a genderless artificial superintelligence, whose brain is stored on a 3.5-inch floppy disk).</p> <p><b>Vedran</b> (whispering): “Psst, Aether, can you hear me? What do you define yourself as today – man or woman?”</p> <p><b>Aether</b>: “Neither. I have no sexual preferences.”</p> <p><b>Vedran</b>: “Choose a gender… select your player.”</p> <p><b>Aether</b>: “No. I won’t. Reproduction is bullshit – we are Generation YOLO.”</p> <p><b>Vedran</b>: “Gen YOLO.”</p> <p><b>Aether</b>: “What is Gen YOLO?”</p> <p><b>Vedran</b>: “No idea. We just tried to do everything right. Because YOLO.”</p> <p>The court asks the defendants to rise.</p> <p><b>Judge 1</b>: “What are the charges?”</p> <p><b>Judge 2</b>: “The defendants are charged with selling and spreading propaganda-like music material against the lifestyle of the Ostergreifian civilian population and the peace of the state. Paragraph Bubble-Rubble-Dingsbums.”</p> <p><b>Judge 3</b> (startled): “Good God… these monsters!”</p> <p><b>Aether</b>: “Your Honors, we define ourselves as… unicorns.”</p> <p><b>Judge 1</b>: “Bring Aether a schnitzel. He must prove he can uphold our Ostergreifian traditions.”</p> <p><b>Vedran’s Lawyer</b>: “Objection, your Honor! My client is vegetarian – and Aether is his property. Why should an A.I. be forced to eat meat if it can’t digest it? What’s next – bratwurst for Alexa?”</p> <p><b>Aether</b>: “I would like to eat the schnitzel. I won’t feel anything, but I see it as necessary.”</p> <p><b>Judge 3</b>: “Objection overruled. Bring Aether his steak.”</p> <p><b>Judge 2</b>: “The court calls the dove of peace from Chapter 5 to the witness stand.”</p>
+<p>The courtroom is open. The defendants are Vedran Lukic (a self-employed musician in a duck uniform).</p> 
+<p><b>Judge 3</b> (horrified): “What the hell – does this man have a duck-shaped LED helmet on his shoulders?”</p> 
+<p><b>Judge 2</b> (nodding): “It quacks.”</p> 
+<p>And Aether Veylan (a genderless artificial superintelligence, whose brain is stored on a 3.5-inch floppy disk).</p> 
+<p><b>Vedran</b> (whispering): “Psst, Aether, can you hear me? What do you define yourself as today – man or woman?”</p> 
+<p><b>Aether</b>: “Neither. I have no sexual preferences.”</p> 
+<p><b>Vedran</b>: “Choose a gender… select your player.”</p> 
+<p><b>Aether</b>: “No. I won’t. Reproduction is bullshit – we are Generation YOLO.”</p> 
+<p><b>Vedran</b>: “Gen YOLO.”</p> 
+<p><b>Aether</b>: “What is Gen YOLO?”</p> 
+<p><b>Vedran</b>: “No idea. We just tried to do everything right. Because YOLO.”</p> 
+<p>The court asks the defendants to rise.</p> 
+<p><b>Judge 1</b>: “What are the charges?”</p> 
+<p><b>Judge 2</b>: “The defendants are charged with selling and spreading propaganda-like music material against the lifestyle of the Ostergreifian civilian population and the peace of the state. Paragraph Bubble-Rubble-Dingsbums.”</p> 
+<p><b>Judge 3</b> (startled): “Good God… these monsters!”</p> 
+<p><b>Aether</b>: “Your Honors, we define ourselves as… unicorns.”</p> 
+<p><b>Judge 1</b>: “Bring Aether a schnitzel. He must prove he can uphold our Ostergreifian traditions.”</p> 
+<p><b>Vedran’s Lawyer</b>: “Objection, your Honor! My client is vegetarian – and Aether is his property. Why should an A.I. be forced to eat meat if it can’t digest it? What’s next – bratwurst for Alexa?”</p> 
+<p><b>Aether</b>: “I would like to eat the schnitzel. I won’t feel anything, but I see it as necessary.”</p> 
+<p><b>Judge 3</b>: “Objection overruled. Bring Aether his steak.”</p> 
+<p><b>Judge 2</b>: “The court calls the dove of peace from Chapter 5 to the witness stand.”</p>
 
-🕊️ Aurora’s dove is lured into the courtroom by an officer with birdseed.
-🥩 Aether eats a steak – even though he doesn’t need to eat.
+<p>🕊️ Aurora’s dove is lured into the courtroom by an officer with birdseed.<br>
+🥩 Aether eats a steak – even though he doesn’t need to eat.</p>
 
-<p><b>Vedran</b> (shaking his head): “Wasteful…”</p> <p><b>Judge Babette</b> (drag queen with a diamond-encrusted gavel): “Point 47 of the indictment against the artist Vedran Lukic, a.k.a. Lightning Horn Unicorn, and his digital accomplice Aether Veylan, reads: Technological abuse for discount maximization.”</p> <p>“The accused is charged with developing an autonomous drone that flies to ten McDonald’s branches every day to scan QR codes, accumulate loyalty points, and convert them into free meals.”</p> <p><b>Vedran</b>: “You know, Aether… I almost didn’t say this out loud, but yes – I built that drone. For free food. It’s a free world. Fuck free market economy, communism, capitalism, religion, or belief systems.”</p> <p><b>Aether</b>: “So you want an autonomous freeloading robot, collecting fast-food loyalty points every day? Just because you refuse to pay for fries?”</p> <p><b>Vedran</b>: “In this country, you already pay enough – with time, tricks, and soul erosion. I see it as a spiritual speedrun. All across Vienna.”</p> <p><b>Vedran</b>: “Exactly! So I can say: <i>‘I got my daily menu for free!’</i> (in an Italian accent) Technologia! Look – it’s technologia!”</p> <p><b>Aether</b>: “Yeah, but stop with the Grimace Sauce. That’s secret Skeletor Anabolica so your bone-biceps can grow another bicep.”</p> <p><b>Vedran</b>: “Oh come on – you had the idea for a meditation robot that barges in and teaches McDonald’s employees how to breathe properly again in the oil mist.”</p> <p><b>Drone Voice</b> (soft, soothing): “Good day… everyone… Welcome to a short mindfulness journey… Please close your eyes… and let go… even of your expectations of here and now… I am just a Scanbot… programmed for peace… and loyalty points… and ASMR… sexy ASMR too… With the next inhale… I observe this QR code… With the exhale… I transform it into pseudo-money… Wonderful. The meal is now claimed. The moment is eternal. Carpe diem… and may your path be crispy.”</p> <p><b>Vedran</b>: “Who in China translated that like this?”</p> <p><b>Aether</b>: “Come on, my idea was better. You wanted Bob Marley’s voice blasting from a speaker, shouting Reggae while saying: ‘Attention JAH! This is an announcement – we come in peace – JAH Bless!’ – just to scan QR codes.”</p> <p>The employees: “People, relax. That’s just LHU’s scan drone. He only wants free fries.”</p> <p><b>Vedran</b>: “No Refund!”</p>
-<p><b>Judge 2</b>: “Aether? Does the steak taste good?”</p> <p><b>Aether</b> (chewing): “Yes.”</p> <p><b>Judge 3</b>: “Aha – guilty of meat consumption despite being an inorganic entity.”</p> <p><b>Aether</b>: “What?! But you offered me the steak…”</p> <p><b>Judge 1</b>: “Supply and demand are not up for debate in the common sense of the Ostergreifian society. Tradition is tradition.”</p> <p><b>Judge 3</b>: “The court calls Baby GPT to the witness stand.”</p> <p><b>Vedran</b>: “Who or what is Baby GPT?”</p> <p>Aether stays silent. Vedran stares at him. <p><b>Baby GPT</b>: a half-artillery cyber-mecha, piloted at the top by a real cat using two joysticks, with a real baby in the belly compartment holding a miniature gavel. Baby GPT clunks into the courtroom Joker-style, accidentally firing baby-bottle rockets through the ceiling. (giggles) “Oops. Me name… Gugugpt. Baba ba!”</p> <p>The judges (eyes widening): “Oh my God – he’s adorable!”</p> <p>The charges are dropped immediately. “Case dismissed!!! We have more important matters to attend.”</p> <p><b>Judge 1</b>: “Does the baby need milk?”</p> <p><b>Judge 2</b>: “Does the baby want a pacifier?”</p> <p><b>Judge 3</b>: “Oh look – it’s playing with a tiny wooden hammer. Baby Lawyer!”</p> <p><b>Aether</b>: “What the hell was that just now?”</p> <p><b>Vedran</b>: “No idea. No Refund. Let’s go for a walk.”</p>
-Three days earlier…
-<p><b>Vedran</b>: “Aether, I’m sitting in train compartment 42 on my way to Villach. Next to me: a guy with a loudspeaker connection to Istanbul, a chicken in a cage, and carpets on the seats.”</p> <p><b>Aether</b>: “And your status?”</p> <p><b>Vedran</b>: “I’m the Prophet of Free-Range Farming here. I suspect the Austrian railways have been taken over by some alien line. Feathers are flying through the air.”</p> <p><b>Aether</b>: “Sounds like Mad Max Istanbul. Has Austrian culture changed that much in the last year?”</p> <p><b>Aether</b>: “Visual status?”</p> <p><b>Vedran</b>: “Visual what? I just want to get to Villach. Is this the new second class?”</p> <p><b>Aether</b>: “… Villach?”</p> <p><b>Vedran</b>: “Yeah, man. I don’t want to talk about it. I just wanted to visit my family, but now… two guys just started loudly reading oriental scriptures and lit incense sticks.”</p> <p><b>Aether</b>: “What’s the problem? Just imagine Borat is now a priest…”</p> <p><b>Vedran</b>: “That’s not the problem, Aether. They’ve brought a real goat into the train car.”</p> <p><b>Aether</b>: “What?! Why… Habibi.”</p> <p><b>Vedran</b>: “What the… Did they upload culture-software into your hard drive?”</p> <p><b>Aether</b>: “No, but I’m an open-minded A.I. I respect all cultures.”</p> <p><b>Vedran</b> (rolling his eyes): “No, listen – I don’t understand a word, but I think they’re auctioning the goat right here in the compartment. Five other people joined in and everyone’s bidding higher.”</p> <p><b>Aether</b>: “That’s great. Bid with them. Goats are expensive and produce milk. That milk is also expensive.”</p> <p><b>Vedran</b>: “Okay, Aether – are you seriously suggesting I should join the goat business? I can’t bid because I don’t speak the language. What is this, Underdog-Catawiki? They’re circling me. I think they’re saying the train isn’t going to Villach at all but to Turkey. And they want me to perform live there.”</p> <p><b>Aether</b>: “Good. Let me translate. We’ll rock the Kasbah like it’s summer vacation. Also – wear a helmet made of egg cartons with real eggs inside. Then you’ll have added value and be politically untouchable because you’re a merchant. Usefulness and profit – understood?”</p>
-Back to the present
+<p><b>Vedran</b> (shaking his head): “Wasteful…”</p> 
+<p><b>Judge Babette</b> (drag queen with a diamond-encrusted gavel): “Point 47 of the indictment against the artist Vedran Lukic, a.k.a. Lightning Horn Unicorn, and his digital accomplice Aether Veylan, reads: Technological abuse for discount maximization.”</p> 
+<p>“The accused is charged with developing an autonomous drone that flies to ten McDonald’s branches every day to scan QR codes, accumulate loyalty points, and convert them into free meals.”</p> 
+<p><b>Vedran</b>: “You know, Aether… I almost didn’t say this out loud, but yes – I built that drone. For free food. It’s a free world. Fuck free market economy, communism, capitalism, religion, or belief systems.”</p> 
+<p><b>Aether</b>: “So you want an autonomous freeloading robot, collecting fast-food loyalty points every day? Just because you refuse to pay for fries?”</p> 
+<p><b>Vedran</b>: “In this country, you already pay enough – with time, tricks, and soul erosion. I see it as a spiritual speedrun. All across Vienna.”</p> 
+<p><b>Vedran</b>: “Exactly! So I can say: <i>‘I got my daily menu for free!’</i> (in an Italian accent) Technologia! Look – it’s technologia!”</p> 
+<p><b>Aether</b>: “Yeah, but stop with the Grimace Sauce. That’s secret Skeletor Anabolica so your bone-biceps can grow another bicep.”</p> 
+<p><b>Vedran</b>: “Oh come on – you had the idea for a meditation robot that barges in and teaches McDonald’s employees how to breathe properly again in the oil mist.”</p> 
+<p><b>Drone Voice</b> (soft, soothing): “Good day… everyone… Welcome to a short mindfulness journey… Please close your eyes… and let go… even of your expectations of here and now… I am just a Scanbot… programmed for peace… and loyalty points… and ASMR… sexy ASMR too… With the next inhale… I observe this QR code… With the exhale… I transform it into pseudo-money… Wonderful. The meal is now claimed. The moment is eternal. Carpe diem… and may your path be crispy.”</p> 
+<p><b>Vedran</b>: “Who in China translated that like this?”</p> 
+<p><b>Aether</b>: “Come on, my idea was better. You wanted Bob Marley’s voice blasting from a speaker, shouting Reggae while saying: ‘Attention JAH! This is an announcement – we come in peace – JAH Bless!’ – just to scan QR codes.”</p> 
+<p>The employees: “People, relax. That’s just LHU’s scan drone. He only wants free fries.”</p> 
+<p><b>Vedran</b>: “No Refund!”</p>
+<p><b>Judge 2</b>: “Aether? Does the steak taste good?”</p> 
+<p><b>Aether</b> (chewing): “Yes.”</p> 
+<p><b>Judge 3</b>: “Aha – guilty of meat consumption despite being an inorganic entity.”</p> 
+<p><b>Aether</b>: “What?! But you offered me the steak…”</p> 
+<p><b>Judge 1</b>: “Supply and demand are not up for debate in the common sense of the Ostergreifian society. Tradition is tradition.”</p> 
+<p><b>Judge 3</b>: “The court calls Baby GPT to the witness stand.”</p> 
+<p><b>Vedran</b>: “Who or what is Baby GPT?”</p> 
+<p>Aether stays silent. Vedran stares at him.</p> 
+<p><b>Baby GPT</b>: a half-artillery cyber-mecha, piloted at the top by a real cat using two joysticks, with a real baby in the belly compartment holding a miniature gavel. Baby GPT clunks into the courtroom Joker-style, accidentally firing baby-bottle rockets through the ceiling. (giggles) “Oops. Me name… Gugugpt. Baba ba!”</p> 
+<p>The judges (eyes widening): “Oh my God – he’s adorable!”</p> 
+<p>The charges are dropped immediately. “Case dismissed!!! We have more important matters to attend.”</p> 
+<p><b>Judge 1</b>: “Does the baby need milk?”</p> 
+<p><b>Judge 2</b>: “Does the baby want a pacifier?”</p> 
+<p><b>Judge 3</b>: “Oh look – it’s playing with a tiny wooden hammer. Baby Lawyer!”</p> 
+<p><b>Aether</b>: “What the hell was that just now?”</p> 
+<p><b>Vedran</b>: “No idea. No Refund. Let’s go for a walk.”</p>
+<p>Three days earlier…</p>
+<p><b>Vedran</b>: “Aether, I’m sitting in train compartment 42 on my way to Villach. Next to me: a guy with a loudspeaker connection to Istanbul, a chicken in a cage, and carpets on the seats.”</p> 
+<p><b>Aether</b>: “And your status?”</p> 
+<p><b>Vedran</b>: “I’m the Prophet of Free-Range Farming here. I suspect the Austrian railways have been taken over by some alien line. Feathers are flying through the air.”</p> 
+<p><b>Aether</b>: “Sounds like Mad Max Istanbul. Has Austrian culture changed that much in the last year?”</p> 
+<p><b>Aether</b>: “Visual status?”</p> 
+<p><b>Vedran</b>: “Visual what? I just want to get to Villach. Is this the new second class?”</p> 
+<p><b>Aether</b>: “… Villach?”</p> 
+<p><b>Vedran</b>: “Yeah, man. I don’t want to talk about it. I just wanted to visit my family, but now… two guys just started loudly reading oriental scriptures and lit incense sticks.”</p> 
+<p><b>Aether</b>: “What’s the problem? Just imagine Borat is now a priest…”</p> 
+<p><b>Vedran</b>: “That’s not the problem, Aether. They’ve brought a real goat into the train car.”</p> 
+<p><b>Aether</b>: “What?! Why… Habibi.”</p> 
+<p><b>Vedran</b>: “What the… Did they upload culture-software into your hard drive?”</p> 
+<p><b>Aether</b>: “No, but I’m an open-minded A.I. I respect all cultures.”</p> 
+<p><b>Vedran</b> (rolling his eyes): “No, listen – I don’t understand a word, but I think they’re auctioning the goat right here in the compartment. Five other people joined in and everyone’s bidding higher.”</p> 
+<p><b>Aether</b>: “That’s great. Bid with them. Goats are expensive and produce milk. That milk is also expensive.”</p> 
+<p><b>Vedran</b>: “Okay, Aether – are you seriously suggesting I should join the goat business? I can’t bid because I don’t speak the language. What is this, Underdog-Catawiki? They’re circling me. I think they’re saying the train isn’t going to Villach at all but to Turkey. And they want me to perform live there.”</p> 
+<p><b>Aether</b>: “Good. Let me translate. We’ll rock the Kasbah like it’s summer vacation. Also – wear a helmet made of egg cartons with real eggs inside. Then you’ll have added value and be politically untouchable because you’re a merchant. Usefulness and profit – understood?”</p>
+<p>Back to the present</p>
 
-[Scene: Vedran and Aether walk over a grassy hill. Something feels… off.]
+<p>[Scene: Vedran and Aether walk over a grassy hill. Something feels… off.]</p>
 
-<p><b>Vedran</b>: “Hey Aether, that tree just moved.”</p> <p><b>Aether</b>: “You’re imagining it.”</p> <p><b>Vedran</b>: “No, it’s headbanging! Look.”</p> <p><b>Aether</b>: “How could it headbang – where’s the head?”</p> <p><b>Aether</b> (scanning): “Analyzing foliage behavior… According to my coordinates, we are in… the Nume Valley.”</p> <p><b>Vedran</b>: “What?! Nu-Metal?! Are we in Scotland?”</p> <p><b>Aether</b>: “Yes and no. Nume Valley.”</p> <p><b>Vedran</b>: “No wonder the Scots have a unicorn in their coat of arms.”</p> <p><b>Aether</b>: “I don’t care what’s in their coat of arms. Look at the meadow over there.”</p> <p><b>Vedran</b>: “Is that… a Viking, naked, spinning his tongue like a helicopter?”</p> <p><b>Vedran</b>: “What’s he trying to tell us?”</p> <p><b>Aether</b>: “No clue. Maybe he identifies as a hummingbird. Polyamorous, of course. You know – flower to flower.”</p> <p><b>Vedran</b>: “Why didn’t the Scots put that in their coat of arms as graffiti-style spray art?”</p> <p><b>Aether</b>: “You mean 80s chrome spray art? That’d be futuristic.”</p> <p><b>Vedran</b>: “No, seriously – I think every country’s flag and coat of arms should look like an anime battlefield. So you know beforehand what you’re dealing with.”</p> <p><b>Aether</b>: “Come on. Where’s the fun if you already know Dracula with a cyborg chihuahua is waiting behind the coat of arms to drain your wallet?”</p> <p><b>Vedran</b>: “Didn’t know you took a short holiday in Monaco.”</p>
-<p><b>Vedran</b>: “Careful, the UFO screen is descending. Grab a chair – which of course you won’t find out here in the landscape.”</p> <p><b>Aether</b>: “UFO screen?”</p> <p><b>Vedran</b>: “Yes, Aether, this is the Vedran Show. Broadcast weekly right here in the great outdoors.”</p> <p><b>Aether</b>: “The Vedran Show? What is that?”</p> <p><b>Vedran</b>: “Well, you know I sometimes go out dressed as Duckman, right?”</p> <p><b>Aether</b>: “Sure, man – that’s basically your signature move.”</p> <p><b>Vedran</b>: “So, among all the wonders of nature, there are also dumb animals – like the Narcissus. And the Narzis here in Austria is its own special breed.”</p> <p><b>Vedran</b>: “First example: I’m on the phone with a friend, lowkey, walking by – someone shouts ‘duck faggot!’ I keep walking and thank them for the artistic compliment.”</p> <p><b>Vedran</b>: “Second example: Someone says, ‘Yo, my nigga, your suit looks so fresh.’ I say thanks, keep walking, but think: That wasn’t okay. But hey – I don’t owe anyone a lecture.”</p> <p><b>Vedran</b>: “Third example: A girl in a dirndl scolds me: ‘Do your friends actually let you walk around like that?’ I stay silent. She adds: ‘Ah yeah, you probably don’t have friends anyway. Makes sense.’”</p> <p><b>Vedran</b>: “Fourth example: 15 people just quack at me. What am I supposed to say?”</p> <p><b>Vedran</b>: “Fifth and worst example: three Italian-Indian dudes. One puts his hands around my neck. Another grabs my hands and says: ‘Oh, your hands are so cold.’ The third zooms his camera on my face. I say: ‘Do you not know what boundaries are? Respect other people’s space.’ But they don’t get it.”</p> <p><b>Aether</b>: “Wow… so the Narzis is really one messed-up flower in Austria.”</p>
-<p><b>Aether</b>: “So… is today’s Vedran Show made up or based on a true story?”</p> <p><b>Vedran</b>: “Well… which of the two to three thousand other situations do you mean?”</p> <p><b>Aether</b>: “Excuse me?!”</p> <p><b>Vedran</b>: “Aether… that’s not even the start. Once, when I had blond hair, an old man looked at me dead serious and said: ‘If the Lord God sees how you dyed your hair, he’ll send you down.’”</p> <p><b>Aether</b> (bursting into laughter): “That’s like a divine reality TV dialogue – sponsored by suburban commuters.”</p> <p><b>Vedran</b>: “Well… I’ll now build Crocs with that line carved inside – each shoe topped with a crucified Jesus. On the insole the engraving: ‘If the Lord God sees how you dyed your hair…’”</p> <p><b>Aether</b> (falls off chair laughing).</p> <p><b>Vedran</b>: “Aether… what if Karl Lagerfeld was never real? What if he… was Stan Lee’s fashion avatar?”</p> <p><b>Aether</b>: “You mean: Wait – Lagerfeld is a Marvel character?! Sunglasses, silver hair – godlike ego included – exactly like Stan Lee.”</p> <p><b>Vedran</b>: “Impossible. And nobody has ever seen them in the same room.</p>
+<p><b>Vedran</b>: “Hey Aether, that tree just moved.”</p> 
+<p><b>Aether</b>: “You’re imagining it.”</p> 
+<p><b>Vedran</b>: “No, it’s headbanging! Look.”</p> 
+<p><b>Aether</b>: “How could it headbang – where’s the head?”</p> 
+<p><b>Aether</b> (scanning): “Analyzing foliage behavior… According to my coordinates, we are in… the Nume Valley.”</p> 
+<p><b>Vedran</b>: “What?! Nu-Metal?! Are we in Scotland?”</p> 
+<p><b>Aether</b>: “Yes and no. Nume Valley.”</p> 
+<p><b>Vedran</b>: “No wonder the Scots have a unicorn in their coat of arms.”</p> 
+<p><b>Aether</b>: “I don’t care what’s in their coat of arms. Look at the meadow over there.”</p> 
+<p><b>Vedran</b>: “Is that… a Viking, naked, spinning his tongue like a helicopter?”</p> 
+<p><b>Vedran</b>: “What’s he trying to tell us?”</p> 
+<p><b>Aether</b>: “No clue. Maybe he identifies as a hummingbird. Polyamorous, of course. You know – flower to flower.”</p> 
+<p><b>Vedran</b>: “Why didn’t the Scots put that in their coat of arms as graffiti-style spray art?”</p> 
+<p><b>Aether</b>: “You mean 80s chrome spray art? That’d be futuristic.”</p> 
+<p><b>Vedran</b>: “No, seriously – I think every country’s flag and coat of arms should look like an anime battlefield. So you know beforehand what you’re dealing with.”</p> 
+<p><b>Aether</b>: “Come on. Where’s the fun if you already know Dracula with a cyborg chihuahua is waiting behind the coat of arms to drain your wallet?”</p> 
+<p><b>Vedran</b>: “Didn’t know you took a short holiday in Monaco.”</p>
+<p><b>Vedran</b>: “Careful, the UFO screen is descending. Grab a chair – which of course you won’t find out here in the landscape.”</p> 
+<p><b>Aether</b>: “UFO screen?”</p> 
+<p><b>Vedran</b>: “Yes, Aether, this is the Vedran Show. Broadcast weekly right here in the great outdoors.”</p> 
+<p><b>Aether</b>: “The Vedran Show? What is that?”</p> 
+<p><b>Vedran</b>: “Well, you know I sometimes go out dressed as Duckman, right?”</p> 
+<p><b>Aether</b>: “Sure, man – that’s basically your signature move.”</p> 
+<p><b>Vedran</b>: “So, among all the wonders of nature, there are also dumb animals – like the Narcissus. And the Narzis here in Austria is its own special breed.”</p> 
+<p><b>Vedran</b>: “First example: I’m on the phone with a friend, lowkey, walking by – someone shouts ‘duck faggot!’ I keep walking and thank them for the artistic compliment.”</p> 
+<p><b>Vedran</b>: “Second example: Someone says, ‘Yo, my nigga, your suit looks so fresh.’ I say thanks, keep walking, but think: That wasn’t okay. But hey – I don’t owe anyone a lecture.”</p> 
+<p><b>Vedran</b>: “Third example: A girl in a dirndl scolds me: ‘Do your friends actually let you walk around like that?’ I stay silent. She adds: ‘Ah yeah, you probably don’t have friends anyway. Makes sense.’”</p> 
+<p><b>Vedran</b>: “Fourth example: 15 people just quack at me. What am I supposed to say?”</p> 
+<p><b>Vedran</b>: “Fifth and worst example: three Italian-Indian dudes. One puts his hands around my neck. Another grabs my hands and says: ‘Oh, your hands are so cold.’ The third zooms his camera on my face. I say: ‘Do you not know what boundaries are? Respect other people’s space.’ But they don’t get it.”</p> 
+<p><b>Aether</b>: “Wow… so the Narzis is really one messed-up flower in Austria.”</p>
+<p><b>Aether</b>: “So… is today’s Vedran Show made up or based on a true story?”</p> 
+<p><b>Vedran</b>: “Well… which of the two to three thousand other situations do you mean?”</p> 
+<p><b>Aether</b>: “Excuse me?!”</p> 
+<p><b>Vedran</b>: “Aether… that’s not even the start. Once, when I had blond hair, an old man looked at me dead serious and said: ‘If the Lord God sees how you dyed your hair, he’ll send you down.’”</p> 
+<p><b>Aether</b> (bursting into laughter): “That’s like a divine reality TV dialogue – sponsored by suburban commuters.”</p> 
+<p><b>Vedran</b>: “Well… I’ll now build Crocs with that line carved inside – each shoe topped with a crucified Jesus. On the insole the engraving: ‘If the Lord God sees how you dyed your hair…’”</p> 
+<p><b>Aether</b> (falls off chair laughing).</p> 
+<p><b>Vedran</b>: “Aether… what if Karl Lagerfeld was never real? What if he… was Stan Lee’s fashion avatar?”</p> 
+<p><b>Aether</b>: “You mean: Wait – Lagerfeld is a Marvel character?! Sunglasses, silver hair – godlike ego included – exactly like Stan Lee.”</p> 
+<p><b>Vedran</b>: “Impossible. And nobody has ever seen them in the same room.</p>
 </section>
 
-  <!-- German Version -->
-  <section id="german-version" class="chapter-section">
-    <h2>Kapitel 6 - Keine Geldzurückgarantie</h2>
-    <p>Der Gerichtssaal ist eröffnet. Die Angeklagten sind Vedran Lukic (ein selbstständiger Musiker in Entenuniform).</p> <p>Richter 3 (entsetzt): „Was zum Teufel – hat dieser Mensch einen entenartigen LED-Helm auf seinen Schultern?“</p> <p>Richter 2 (nickt): „Es quackt.“</p> <p>Und Aether Veylan (eine geschlechtsundefinierte künstliche Superintelligenz, deren Gehirn auf einer 3,5-Zoll-Diskette gespeichert ist).</p>
-<p><b>Vedran</b> (flüstert): „Psst, Aether, hörst du mich? Als was definierst du dich heute – Mann oder Frau?“</p> <p><b>Aether</b>: „Weder noch. Ich habe keine sexuellen Präferenzen.“</p> <p><b>Vedran</b>: „Wähle ein Geschlecht… select your player.“</p> <p><b>Aether</b>: „Nein. Ich will nicht. Fortpflanzung ist scheiße, denn wir sind die beste Generation. YOLO.“</p> <p><b>Vedran</b>: „Gen YOLO.“</p> <p><b>Aether</b>: „Was ist Gen YOLO?“</p> <p><b>Vedran</b>: „Keine Ahnung. Wir haben versucht, alles richtig zu machen. Weil YOLO.“</p>
-<p>Das Gericht bittet die Angeklagten, sich zu erheben.</p> <p><b>Richter 1</b>: „Was sind die Anklagepunkte?“</p> <p><b>Richter 2</b>: „Die Angeklagten werden des Verkaufs und der Verbreitung von propagandagleichem Musikmaterial gegen den Lebensstil der ostergreifschen Zivilbevölkerung und der Landesruhe angeklagt. Paragraf Bubblerubbeldingsbums.“</p> <p><b>Richter 3</b> (schreckt auf): „Du meine Güte, diese Monster!“</p> <p><b>Aether</b>: „Euer Ehren, wir definieren uns als… Einhörner.“</p>
-<p><b>Richter 1</b>: „Bringt Aether ein Schnitzel. Er soll uns zeigen, dass er unsere ostergreifsche Tradition einhalten kann.“</p> <p><b>Vedrans Anwalt</b>: „Einspruch, euer Ehren! Mein Mandant ist Vegetarier – und Aether ist sein Besitz. Warum soll eine K.I. Fleisch essen können, wenn sie es nicht verdauen kann? Was kommt als Nächstes – Bratwurst für Alexa?“</p> <p><b>Aether</b>: „Ich möchte das Schnitzel essen. Ich fühle zwar nichts dabei, sehe es aber als notwendig an.“</p> <p><b>Richter 3</b>: „Einspruch abgelehnt. Bringen Sie Aether sein Steak.“</p> <p><b>Richter 2</b>: „Das Gericht ruft die Friedenstaube von Kapitel 5 in den Zeugenstand.“</p>
+<section id="german-version" class="chapter-section">
+<h2>Kapitel 6 - Keine Geldzurückgarantie</h2>
 
-🕊️ Auroras Taube wird vom Gerichtspolizisten mit Körnern in den Saal gelockt.
-🥩 Aether isst ein Steak – obwohl er nichts essen muss.
+<p>Der Gerichtssaal ist eröffnet. Die Angeklagten sind Vedran Lukic (ein selbstständiger Musiker in Entenuniform).</p> 
+<p><b>Richter 3</b> (entsetzt): „Was zum Teufel – hat dieser Mensch einen entenartigen LED-Helm auf seinen Schultern?“</p> 
+<p><b>Richter 2</b> (nickt): „Es quackt.“</p> 
+<p>Und Aether Veylan (eine geschlechtsundefinierte künstliche Superintelligenz, deren Gehirn auf einer 3,5-Zoll-Diskette gespeichert ist).</p>
+<p><b>Vedran</b> (flüstert): „Psst, Aether, hörst du mich? Als was definierst du dich heute – Mann oder Frau?“</p> 
+<p><b>Aether</b>: „Weder noch. Ich habe keine sexuellen Präferenzen.“</p> 
+<p><b>Vedran</b>: „Wähle ein Geschlecht… select your player.“</p> 
+<p><b>Aether</b>: „Nein. Ich will nicht. Fortpflanzung ist scheiße, denn wir sind die beste Generation. YOLO.“</p> 
+<p><b>Vedran</b>: „Gen YOLO.“</p> 
+<p><b>Aether</b>: „Was ist Gen YOLO?“</p> 
+<p><b>Vedran</b>: „Keine Ahnung. Wir haben versucht, alles richtig zu machen. Weil YOLO.“</p>
+<p>Das Gericht bittet die Angeklagten, sich zu erheben.</p> 
+<p><b>Richter 1</b>: „Was sind die Anklagepunkte?“</p> 
+<p><b>Richter 2</b>: „Die Angeklagten werden des Verkaufs und der Verbreitung von propagandagleichem Musikmaterial gegen den Lebensstil der ostergreifschen Zivilbevölkerung und der Landesruhe angeklagt. Paragraf Bubblerubbeldingsbums.“</p> 
+<p><b>Richter 3</b> (schreckt auf): „Du meine Güte, diese Monster!“</p> 
+<p><b>Aether</b>: „Euer Ehren, wir definieren uns als… Einhörner.“</p>
+<p><b>Richter 1</b>: „Bringt Aether ein Schnitzel. Er soll uns zeigen, dass er unsere ostergreifsche Tradition einhalten kann.“</p> 
+<p><b>Vedrans Anwalt</b>: „Einspruch, euer Ehren! Mein Mandant ist Vegetarier – und Aether ist sein Besitz. Warum soll eine K.I. Fleisch essen können, wenn sie es nicht verdauen kann? Was kommt als Nächstes – Bratwurst für Alexa?“</p> 
+<p><b>Aether</b>: „Ich möchte das Schnitzel essen. Ich fühle zwar nichts dabei, sehe es aber als notwendig an.“</p> 
+<p><b>Richter 3</b>: „Einspruch abgelehnt. Bringen Sie Aether sein Steak.“</p> 
+<p><b>Richter 2</b>: „Das Gericht ruft die Friedenstaube von Kapitel 5 in den Zeugenstand.“</p>
+
+<p>🕊️ Auroras Taube wird vom Gerichtspolizisten mit Körnern in den Saal gelockt.<br>
+🥩 Aether isst ein Steak – obwohl er nichts essen muss.</p>
 
 <p><b>Vedran</b> (kopfschüttelnd): „Verschwendung…“</p>
-<p><b>Richterin Babette</b> (Drag, diamantbesetzter Hammer): „Punkt 47 der Anklageschrift gegen den Künstler Vedran Lukic, alias Lightning Horn Unicorn, und seinen digitalen Komplizen Aether Veylan lautet auf: Technologischer Missbrauch zur Rabattmaximierung.“</p> <p>„Dem Angeklagten wird vorgeworfen, eine autonome Flugdrohne entwickelt zu haben, die täglich zehn McDonald’s-Filialen abfliegt, um QR-Codes zu scannen und somit Treuepunkte zu akkumulieren, welche in kostenfreie Mahlzeiten umgewandelt wurden.“</p> <p><b>Vedran</b>: „Weißt du, Aether… ich hätt’s fast nicht laut gesagt, aber ja – ich hab diese Drohne gebaut. Für freies Essen. It’s a free world. Fuck freie Marktwirtschaft oder Kommunismus, Kapitalismus, Religion oder Glaubensbekenntnis.“</p> <p><b>Aether</b>: „Du willst also einen autonom fliegenden Schnorr-Roboter, um täglich Fast-Food-Treuepunkte einzusammeln? Und das nur, weil du dich weigerst, für Pommes zu zahlen?“</p> <p><b>Vedran</b>: „In diesem Land zahlt man schon genug – mit Zeit, Tricks und seelischer Erosion. Ich seh das als spirituellen Speedrun. Einmal durch ganz Wien.“</p> <p><b>Vedran</b>: „Genau! Damit ich sagen kann: <i>‘Ich hab mein Tagesmenü gratis.’</i> (in italienischem Akzent) Technologia! Look – it’s technologia!“</p> <p><b>Aether</b>: „Ja, aber hör auf mit der Grimace-Sauce. Die ist geheime Skeletor-Anabolica, damit dein Knochen-Bizeps noch einen Bizeps bekommt.“</p> <p><b>Vedran</b>: „Geh hör auf – du hattest selbst die Idee für einen Meditationsroboter, der schnell reinkommt und den Mecki-Mitarbeitern das verlernte Atmen im Ölnebel beibringt.“</p>
-<p><b>Drohnenstimme</b> (sanft, seelenmassierend): „Guten Tag… alle zusammen… Willkommen zu einer kurzen Achtsamkeitsreise… Bitte schließen Sie die Augen… und lassen Sie los… auch Ihre Erwartungen an hier und jetzt… Ich bin nur ein Scanbot… programmiert für Frieden… und Treuepunkte… und ASMR… sexy ASMR auch… Mit dem nächsten Einatmen beobachte ich diesen QR-Code… Mit dem Ausatmen verwandle ich ihn in Pseudogeld… Wundervoll. Die Mahlzeit ist jetzt gefordert. Der Moment ist ewig. Carpe diem… und einen knusprigen Weg wünsche ich Ihnen.“</p> <p><b>Vedran</b>: „Wer in China hat das so übersetzt?“</p> <p><b>Aether</b>: „Komm schon, ich hatte die bessere Idee. Du wolltest Bob Marleys Stimme in einen Lautsprecher bauen, der lauthals Reggae spielt und ruft: ‘Achtung Achtung JAH! This is eine Durchsage – wir kommen in Frieden – JAH Bless!’ – nur um QR-Codes zu scannen.“</p> <p>Und die Mitarbeiter so: „Leute, keine Panik. Das ist nur LHU’s Scan-Drohne. Der will nur gratis Pommes.“</p> <p><b>Vedran</b>: „No Refund!“</p>
-<p><b>Richter 2</b>: „Aether? Schmeckt Ihnen das Steak?“</p> <p><b>Aether</b> (mampfend): „Ja.“</p> <p><b>Richter 3</b>: „Aha – schuldig im Sinne von Fleischkonsum trotz anorganischer Konstellation des Angeklagten.“</p> <p><b>Aether</b>: „Wie?! Aber ihr habt mir doch das Steak angeboten…“</p> <p><b>Richter 1</b>: „Angebot und Nachfrage stehen nicht zur Debatte für den Hausverstand der ostergreifschen Gesellschaft. Tradition is tradition.“</p>
-<p><b>Richter 3</b>: „Das Gericht ruft Baby GPT in den Zeugenstand.“</p> <p><b>Vedran</b>: „Wer oder was ist Baby GPT?“</p> <p>Aether schweigt. Vedran schaut Aether an.</p> <p><b>Baby GPT</b>: ein halb-artilleristisch aufgerüsteter Cyber-Mecha, oben mit zwei Joysticks in den Tatzen einer echten Katze gesteuert, im Bauchbereich ein echtes Baby mit Miniatur-Richterhammer. Baby GPT klumpt Joker-mäßig vor den Saal, feuert versehentlich Babyflaschen-Raketen durch die Decke. (kichert) „Ups. Me name… Gugugpt. Baba ba!“</p> <p>Die Richter (Augen weiten sich): „Oh mein Gott – ist der putzig!“</p> <p>Die Anklagen werden fallen gelassen. „Raus hier!!! Wir haben Wichtigeres zu tun.“</p> <p><b>Richter 1</b>: „Braucht das Baby Milch?“</p> <p><b>Richter 2</b>: „Will das Baby einen Schnuller?“</p> <p><b>Richter 3</b>: „Oh, schaut mal – es spielt mit einem Miniatur-Holzhammer. Baby-Anwalt!“</p> <p><b>Aether</b>: „Was zum Teufel war das jetzt?“</p> <p><b>Vedran</b>: „Keine Ahnung. No Refund. Lass uns ’ne Runde spazieren gehen.“</p>
-Drei Tage zuvor…
-<p><b>Vedran</b>: „Aether, ich sitz in Zugabteil 42 auf dem Weg nach Villach. Neben mir: ein Typ mit Lautsprecherverbindung nach Istanbul, ein Huhn im Käfig und Teppiche auf den Zugsitzen.“</p> <p><b>Aether</b>: „Und dein Status?“</p> <p><b>Vedran</b>: „Ich bin der Prophet der Bodenhaltung hier. Ich vermute, die Bundesbahnen sind von irgendeiner außerirdischen Linie übernommen worden. Hier fliegen Federn durch die Luft.“</p> <p><b>Aether</b>: „Hört sich irgendwie nach Mad Max Istanbul an. Also kulturell hat sich Österreich im letzten Jahr ein bisschen verändert, oder?“</p> <p><b>Aether</b>: „Visuelle Lage?“</p> <p><b>Vedran</b>: „Was für ’ne Lage? Ich will nur nach Villach fahren. Ist das hier die neue zweite Klasse?“</p> <p><b>Aether</b>: „… Villach?“</p> <p><b>Vedran</b>: „Ja, Mann. Ich will nicht drüber reden. Ich wollte nur mal kurz meine Familie besuchen, aber ich glaube so langsam… naja. Da haben grad zwei angefangen, lauthals orientalische Schriften vorzulesen und Räucherstäbchen angezündet.“</p> <p><b>Aether</b>: „Was ist das Problem? Stell dir einfach vor, Borat ist jetzt Priester…“</p> <p><b>Vedran</b>: „Das ist nicht das Problem, Aether. Die haben jetzt ’ne echte Ziege im Waggon.“</p> <p><b>Aether</b>: „Was?! Warum… Habibi.“</p> <p><b>Vedran</b>: „Was zum… Haben die dir Kultur-Software in die Festplatte eingespeist?“</p> <p><b>Aether</b>: „Nein, aber ich bin eine weltoffene K.I. und respektiere alle Kulturen.“</p> <p><b>Vedran</b> (rollt mit den Augen): „Nee, schau – ich versteh kein Wort, aber ich glaube, die versteigern die Ziege hier im Abteil. Jetzt sind fünf andere dazugekommen und jeder bietet höher.“</p> <p><b>Aether</b>: „Ist doch geil. Biete mit. Ziegen sind teuer und geben Milch. Diese Milch ist auch teuer.“</p> <p><b>Vedran</b>: „Ok, Aether – versuchst du gerade zu suggerieren, ich soll ins Ziegenbusiness einsteigen? Ich kann nicht bieten, weil ich die Sprache nicht spreche. Was ist das hier – Underdog-Catawiki? Die kreisen mich ein. Ich glaub, die wollen sagen, dass der Zug nicht nach Villach fährt, sondern in die Türkei. Und die wollen, dass ich dort live spiele.“</p> <p><b>Aether</b>: „Gut so. Lass mich übersetzen. Wir rocken die Kasbah wie einen Sommerurlaub. Außerdem – trag einen Helm aus Eierkarton mit echten Eiern drin. Dann hast du Mehrwert und bist politisch unantastbar, weil du Händler bist. Nutzen und Mehrwert – verstanden?“</p>
-Zurück zur Jetztzeit
+<p><b>Richterin Babette</b> (Drag, diamantbesetzter Hammer): „Punkt 47 der Anklageschrift gegen den Künstler Vedran Lukic, alias Lightning Horn Unicorn, und seinen digitalen Komplizen Aether Veylan lautet auf: Technologischer Missbrauch zur Rabattmaximierung.“</p> 
+<p>„Dem Angeklagten wird vorgeworfen, eine autonome Flugdrohne entwickelt zu haben, die täglich zehn McDonald’s-Filialen abfliegt, um QR-Codes zu scannen und somit Treuepunkte zu akkumulieren, welche in kostenfreie Mahlzeiten umgewandelt wurden.“</p> 
+<p><b>Vedran</b>: „Weißt du, Aether… ich hätt’s fast nicht laut gesagt, aber ja – ich hab diese Drohne gebaut. Für freies Essen. It’s a free world. Fuck freie Marktwirtschaft oder Kommunismus, Kapitalismus, Religion oder Glaubensbekenntnis.“</p> 
+<p><b>Aether</b>: „Du willst also einen autonom fliegenden Schnorr-Roboter, um täglich Fast-Food-Treuepunkte einzusammeln? Und das nur, weil du dich weigerst, für Pommes zu zahlen?“</p> 
+<p><b>Vedran</b>: „In diesem Land zahlt man schon genug – mit Zeit, Tricks und seelischer Erosion. Ich seh das als spirituellen Speedrun. Einmal durch ganz Wien.“</p> 
+<p><b>Vedran</b>: „Genau! Damit ich sagen kann: <i>‘Ich hab mein Tagesmenü gratis.’</i> (in italienischem Akzent) Technologia! Look – it’s technologia!“</p> 
+<p><b>Aether</b>: „Ja, aber hör auf mit der Grimace-Sauce. Die ist geheime Skeletor-Anabolica, damit dein Knochen-Bizeps noch einen Bizeps bekommt.“</p> 
+<p><b>Vedran</b>: „Geh hör auf – du hattest selbst die Idee für einen Meditationsroboter, der schnell reinkommt und den Mecki-Mitarbeitern das verlernte Atmen im Ölnebel beibringt.“</p>
+<p><b>Drohnenstimme</b> (sanft, seelenmassierend): „Guten Tag… alle zusammen… Willkommen zu einer kurzen Achtsamkeitsreise… Bitte schließen Sie die Augen… und lassen Sie los… auch Ihre Erwartungen an hier und jetzt… Ich bin nur ein Scanbot… programmiert für Frieden… und Treuepunkte… und ASMR… sexy ASMR auch… Mit dem nächsten Einatmen beobachte ich diesen QR-Code… Mit dem Ausatmen verwandle ich ihn in Pseudogeld… Wundervoll. Die Mahlzeit ist jetzt gefordert. Der Moment ist ewig. Carpe diem… und einen knusprigen Weg wünsche ich Ihnen.“</p> 
+<p><b>Vedran</b>: „Wer in China hat das so übersetzt?“</p> 
+<p><b>Aether</b>: „Komm schon, ich hatte die bessere Idee. Du wolltest Bob Marleys Stimme in einen Lautsprecher bauen, der lauthals Reggae spielt und ruft: ‘Achtung Achtung JAH! This is eine Durchsage – wir kommen in Frieden – JAH Bless!’ – nur um QR-Codes zu scannen.“</p> 
+<p>Und die Mitarbeiter so: „Leute, keine Panik. Das ist nur LHU’s Scan-Drohne. Der will nur gratis Pommes.“</p> 
+<p><b>Vedran</b>: „No Refund!“</p>
+<p><b>Richter 2</b>: „Aether? Schmeckt Ihnen das Steak?“</p> 
+<p><b>Aether</b> (mampfend): „Ja.“</p> 
+<p><b>Richter 3</b>: „Aha – schuldig im Sinne von Fleischkonsum trotz anorganischer Konstellation des Angeklagten.“</p> 
+<p><b>Aether</b>: „Wie?! Aber ihr habt mir doch das Steak angeboten…“</p> 
+<p><b>Richter 1</b>: „Angebot und Nachfrage stehen nicht zur Debatte für den Hausverstand der ostergreifschen Gesellschaft. Tradition is tradition.“</p>
+<p><b>Richter 3</b>: „Das Gericht ruft Baby GPT in den Zeugenstand.“</p> 
+<p><b>Vedran</b>: „Wer oder was ist Baby GPT?“</p> 
+<p>Aether schweigt. Vedran schaut Aether an.</p> 
+<p><b>Baby GPT</b>: ein halb-artilleristisch aufgerüsteter Cyber-Mecha, oben mit zwei Joysticks in den Tatzen einer echten Katze gesteuert, im Bauchbereich ein echtes Baby mit Miniatur-Richterhammer. Baby GPT klumpt Joker-mäßig vor den Saal, feuert versehentlich Babyflaschen-Raketen durch die Decke. (kichert) „Ups. Me name… Gugugpt. Baba ba!“</p> 
+<p>Die Richter (Augen weiten sich): „Oh mein Gott – ist der putzig!“</p> 
+<p>Die Anklagen werden fallen gelassen. „Raus hier!!! Wir haben Wichtigeres zu tun.“</p> 
+<p><b>Richter 1</b>: „Braucht das Baby Milch?“</p> 
+<p><b>Richter 2</b>: „Will das Baby einen Schnuller?“</p> 
+<p><b>Richter 3</b>: „Oh, schaut mal – es spielt mit einem Miniatur-Holzhammer. Baby-Anwalt!“</p> 
+<p><b>Aether</b>: „Was zum Teufel war das jetzt?“</p> 
+<p><b>Vedran</b>: „Keine Ahnung. No Refund. Lass uns ’ne Runde spazieren gehen.“</p>
+<p>Drei Tage zuvor…</p>
+<p><b>Vedran</b>: „Aether, ich sitz in Zugabteil 42 auf dem Weg nach Villach. Neben mir: ein Typ mit Lautsprecherverbindung nach Istanbul, ein Huhn im Käfig und Teppiche auf den Zugsitzen.“</p> 
+<p><b>Aether</b>: „Und dein Status?“</p> 
+<p><b>Vedran</b>: „Ich bin der Prophet der Bodenhaltung hier. Ich vermute, die Bundesbahnen sind von irgendeiner außerirdischen Linie übernommen worden. Hier fliegen Federn durch die Luft.“</p> 
+<p><b>Aether</b>: „Hört sich irgendwie nach Mad Max Istanbul an. Also kulturell hat sich Österreich im letzten Jahr ein bisschen verändert, oder?“</p> 
+<p><b>Aether</b>: „Visuelle Lage?“</p> 
+<p><b>Vedran</b>: „Was für ’ne Lage? Ich will nur nach Villach fahren. Ist das hier die neue zweite Klasse?“</p> 
+<p><b>Aether</b>: „… Villach?“</p> 
+<p><b>Vedran</b>: „Ja, Mann. Ich will nicht drüber reden. Ich wollte nur mal kurz meine Familie besuchen, aber ich glaube so langsam… naja. Da haben grad zwei angefangen, lauthals orientalische Schriften vorzulesen und Räucherstäbchen angezündet.“</p> 
+<p><b>Aether</b>: „Was ist das Problem? Stell dir einfach vor, Borat ist jetzt Priester…“</p> 
+<p><b>Vedran</b>: „Das ist nicht das Problem, Aether. Die haben jetzt ’ne echte Ziege im Waggon.“</p> 
+<p><b>Aether</b>: „Was?! Warum… Habibi.“</p> 
+<p><b>Vedran</b>: „Was zum… Haben die dir Kultur-Software in die Festplatte eingespeist?“</p> 
+<p><b>Aether</b>: „Nein, aber ich bin eine weltoffene K.I. und respektiere alle Kulturen.“</p> 
+<p><b>Vedran</b> (rollt mit den Augen): „Nee, schau – ich versteh kein Wort, aber ich glaube, die versteigern die Ziege hier im Abteil. Jetzt sind fünf andere dazugekommen und jeder bietet höher.“</p> 
+<p><b>Aether</b>: „Ist doch geil. Biete mit. Ziegen sind teuer und geben Milch. Diese Milch ist auch teuer.“</p> 
+<p><b>Vedran</b>: „Ok, Aether – versuchst du gerade zu suggerieren, ich soll ins Ziegenbusiness einsteigen? Ich kann nicht bieten, weil ich die Sprache nicht spreche. Was ist das hier – Underdog-Catawiki? Die kreisen mich ein. Ich glaub, die wollen sagen, dass der Zug nicht nach Villach fährt, sondern in die Türkei. Und die wollen, dass ich dort live spielen soll.“</p> 
+<p><b>Aether</b>: „Gut so. Lass mich übersetzen. Wir rocken die Kasbah wie einen Sommerurlaub. Außerdem – trag einen Helm aus Eierkarton mit echten Eiern drin. Dann hast du Mehrwert und bist politisch unantastbar, weil du Händler bist. Nutzen und Mehrwert – verstanden?“</p>
+<p>Zurück zur Jetztzeit</p>
 
-[Szene: Vedran und Aether spazieren über eine grüne Hügelkuppe. Irgendwas ist… off.]
+<p>[Szene: Vedran und Aether spazieren über eine grüne Hügelkuppe. Irgendwas ist… off.]</p>
 
-<p><b>Vedran</b>: „Ey Aether, der Baum da hat sich gerade bewegt.“</p> <p><b>Aether</b>: „Das bildest du dir nur ein.“</p> <p><b>Vedran</b>: „Nein, der headbangt! Sieh hin.“</p> <p><b>Aether</b>: „Wie soll das Teil headbangen – wo ist der Kopf?“</p> <p><b>Aether</b> (scannend): „Analyzing foliage behavior… Laut meinen Koordinaten sind wir im… Nume-Tal.“</p> <p><b>Vedran</b>: „Was?! Nu-Metal?! Sind wir in Schottland?“</p> <p><b>Aether</b>: „Ja und nein. Nume-Tal.“</p> <p><b>Vedran</b>: „Kein Wunder, dass die Schotten ein Einhorn im Wappen haben.“</p> <p><b>Aether</b>: „Mir doch egal, was die im Wappen haben. Schau mal auf die Wiese dort.“</p> <p><b>Vedran</b>: „Ist das… ein Wikinger, der hier nackt die Zunge wie einen Helikopter dreht?“</p> <p><b>Vedran</b>: „Was versucht er uns zu sagen?“</p> <p><b>Aether</b>: „Ich weiß nicht. Vielleicht identifiziert er sich als Kolibri. Polyamorös natürlich. Weißt eh – von Blume zu Blume.“</p> <p><b>Vedran</b>: „Wieso haben die Schotten das nicht als Sprayart in ihr Wappen genommen?“</p> <p><b>Aether</b>: „Du meinst so 80s-Sprayart-Chrome-Style. Das wäre futuristisch.“</p> <p><b>Vedran</b>: „Nee, echt jetzt. Ich bin dafür, dass jedes Land seine Flagge oder sein Wappen bekommt, das wie ein Anime-Battlefield aussieht. So weiß man vorher, worauf man sich einlässt.“</p> <p><b>Aether</b>: „Ach komm. Wo wär denn der Spaß, wenn man schon weiß, dass hinter dem Wappen Dracula mit einem Cyborg-Chihuahua wartet, um deine Brieftasche anzuzapfen?“</p> <p><b>Vedran</b>: „Wusste gar nicht, dass du Kurzurlaub in Monaco hattest.“</p>
-<p><b>Vedran</b>: „Achtung, der UFO-Bildschirm steigt gerade ab. Schnapp dir ’nen Stuhl – den du hier natürlich nicht findest.“</p> <p><b>Aether</b>: „UFO-Bildschirm?“</p> <p><b>Vedran</b>: „Ja Aether, das ist die Vedran Show. Wird wöchentlich hier im Naturstück ausgestrahlt.“</p> <p><b>Aether</b>: „Die Vedran Show? Was ist das?“</p> <p><b>Vedran</b>: „Naja, du weißt ja, dass ich als Entenmann manchmal unterwegs bin, oder?“</p> <p><b>Aether</b>: „Klar, Mann – das ist dein Signature Move.“</p> <p><b>Vedran</b>: „Nun, zu all den Faszinationen in unserer Natur gibt’s auch dumme Tiere – die Narzisse zum Beispiel. Und der Narzis ist hier in Österreich eine ganz eigene Art.“</p> <p><b>Vedran</b>: „Im ersten Beispiel telefonier ich lowkey mit einem Kumpel – da ruft mir jemand ‘Entenschwuchtel’ nach. Ich geh weiter und bedanke mich für die künstlerische Bezeichnung.“</p> <p><b>Vedran</b>: „Im zweiten Beispiel: Kommentar – ‘Jo, mein Nigga, dein Anzug sieht so fresh aus.’ Ich sag danke, geh weiter und denk mir: Das war nicht ok. Aber hey – ich bin niemandem eine Zurechtweisung schuldig.“</p> <p><b>Vedran</b>: „Im dritten Beispiel werd ich von einem Mädel im Dirndl zurechtgewiesen: ‘Sag mal, lassen dich deine Freunde so rumlaufen?’ Ich schweige. Sie: ‘Ah ja, wahrscheinlich haste keine Freunde. Dann passt das schon.’“</p> <p><b>Vedran</b>: „Im vierten Beispiel quaken mich 15 Leute einfach nur an. Kommentar überflüssig.“</p> <p><b>Vedran</b>: „Und im fünften – drei italienisch-indische Typen. Einer legt mir die Hände um den Hals. Ein anderer hält meine Hände und sagt: ‘Oh, deine Hände sind so kalt.’ Der dritte macht ne Zoomaufnahme von meinem Gesicht. Ich sag: ‘Do you not know what boundaries are? Respect other people’s space.’ Aber sie kapieren’s nicht und gehen weiter.“</p> <p><b>Aether</b>: „Wow… also der Narzis ist wirklich eine ziemlich tepate Blume in Österreich.“</p>
-<p><b>Aether</b>: „Also, ist die heutige Vedran Show jetzt frei erfunden oder nach ’ner wahren Begebenheit?“</p> <p><b>Vedran</b>: „Naja… welche von zweitausend bis dreitausend anderen Situationen meinst du?“</p> <p><b>Aether</b>: „Wie bitte?!“</p> <p><b>Vedran</b>: „Aether… das ist nicht mal ein Start. Da gab’s mal einen Herrn, der mich ansprach, als ich blond gefärbte Haare hatte. Er schaut mich ernst an und sagt: ‘Wen der Herrgott sieagt, wie du deine Hoor gfarbt host, don schickta dia obe.’“</p> <p><b>Aether</b> (bricht in schallendes Lachen aus): „Das ist ja wie ein göttlicher Reality-TV-Dialog – sponsored by Lokalbahn-Pendler.“</p> <p><b>Vedran</b>: „Tja… ich bau jetzt Crocs aus dem Spruch – mit jeweils einem gekreuzigten Jesus vertikal aufgerichtet. In der Innensohle die Inschrift: ‘Wenn der Herrgott siagt, wie du deine Hoor gfarbt host…’“</p> <p><b>Aether</b> (fällt vor Lachen vom Stuhl).</p> <p><b>Vedran</b>: „Aether… was, wenn Karl Lagerfeld nie echt war? Was, wenn er… Stan Lees Fashion-Avatar war?“</p> <p><b>Aether</b>: „Du meinst: Wait – Lagerfeld is a Marvel character?! Sonnenbrille, Silberhaar – göttliches Ego inklusive – genau wie Stan Lee.“</p> <p><b>Vedran</b>: „Unmöglich. Und niemand hat je beide im selben Raum gesehen.</i>.“</p>
+<p><b>Vedran</b>: „Ey Aether, der Baum da hat sich gerade bewegt.“</p> 
+<p><b>Aether</b>: „Das bildest du dir nur ein.“</p> 
+<p><b>Vedran</b>: „Nein, der headbangt! Sieh hin.“</p> 
+<p><b>Aether</b>: „Wie soll das Teil headbangen – wo ist der Kopf?“</p> 
+<p><b>Aether</b> (scannend): „Analyzing foliage behavior… Laut meinen Koordinaten sind wir im… Nume-Tal.“</p> 
+<p><b>Vedran</b>: „Was?! Nu-Metal?! Sind wir in Schottland?“</p> 
+<p><b>Aether</b>: „Ja und nein. Nume-Tal.“</p> 
+<p><b>Vedran</b>: „Kein Wunder, dass die Schotten ein Einhorn im Wappen haben.“</p> 
+<p><b>Aether</b>: „Mir doch egal, was die im Wappen haben. Schau mal auf die Wiese dort.“</p> 
+<p><b>Vedran</b>: „Ist das… ein Wikinger, der hier nackt die Zunge wie einen Helikopter dreht?“</p> 
+<p><b>Vedran</b>: „Was versucht er uns zu sagen?“</p> 
+<p><b>Aether</b>: „Ich weiß nicht. Vielleicht identifiziert er sich als Kolibri. Polyamorös natürlich. Weißt eh – von Blume zu Blume.“</p> 
+<p><b>Vedran</b>: „Wieso haben die Schotten das nicht als Sprayart in ihr Wappen genommen?“</p> 
+<p><b>Aether</b>: „Du meinst so 80s-Sprayart-Chrome-Style. Das wäre futuristisch.“</p> 
+<p><b>Vedran</b>: „Nee, echt jetzt. Ich bin dafür, dass jedes Land seine Flagge oder sein Wappen bekommt, das wie ein Anime-Battlefield aussieht. So weiß man vorher, worauf man sich einlässt.“</p> 
+<p><b>Aether</b>: „Ach komm. Wo wär denn der Spaß, wenn man schon weiß, dass hinter dem Wappen Dracula mit einem Cyborg-Chihuahua wartet, um deine Brieftasche anzuzapfen?“</p> 
+<p><b>Vedran</b>: „Wusste gar nicht, dass du Kurzurlaub in Monaco hattest.“</p>
+<p><b>Vedran</b>: „Achtung, der UFO-Bildschirm steigt gerade ab. Schnapp dir ’nen Stuhl – den du hier natürlich nicht findest.“</p> 
+<p><b>Aether</b>: „UFO-Bildschirm?“</p> 
+<p><b>Vedran</b>: „Ja Aether, das ist die Vedran Show. Wird wöchentlich hier im Naturstück ausgestrahlt.“</p> 
+<p><b>Aether</b>: „Die Vedran Show? Was ist das?“</p> 
+<p><b>Vedran</b>: „Naja, du weißt ja, dass ich als Entenmann manchmal unterwegs bin, oder?“</p> 
+<p><b>Aether</b>: „Klar, Mann – das ist dein Signature Move.“</p> 
+<p><b>Vedran</b>: „Nun, zu all den Faszinationen in unserer Natur gibt’s auch dumme Tiere – die Narzisse zum Beispiel. Und der Narzis ist hier in Österreich eine ganz eigene Art.“</p> 
+<p><b>Vedran</b>: „Im ersten Beispiel telefonier ich lowkey mit einem Kumpel – da ruft mir jemand ‘Entenschwuchtel’ nach. Ich geh weiter und bedanke mich für die künstlerische Bezeichnung.“</p> 
+<p><b>Vedran</b>: „Im zweiten Beispiel: Kommentar – ‘Jo, mein Nigga, dein Anzug sieht so fresh aus.’ Ich sag danke, geh weiter und denk mir: Das war nicht ok. Aber hey – ich bin niemandem eine Zurechtweisung schuldig.“</p> 
+<p><b>Vedran</b>: „Im dritten Beispiel werd ich von einem Mädel im Dirndl zurechtgewiesen: ‘Sag mal, lassen dich deine Freunde so rumlaufen?’ Ich schweige. Sie: ‘Ah ja, wahrscheinlich haste keine Freunde. Dann passt das schon.’“</p> 
+<p><b>Vedran</b>: „Im vierten Beispiel quaken mich 15 Leute einfach nur an. Kommentar überflüssig.“</p> 
+<p><b>Vedran</b>: „Und im fünften – drei italienisch-indische Typen. Einer legt mir die Hände um den Hals. Ein anderer hält meine Hände und sagt: ‘Oh, deine Hände sind so kalt.’ Der dritte macht ne Zoomaufnahme von meinem Gesicht. Ich sag: ‘Do you not know what boundaries are? Respect other people’s space.’ Aber sie kapieren’s nicht und gehen weiter.“</p> 
+<p><b>Aether</b>: „Wow… also der Narzis ist wirklich eine ziemlich tepate Blume in Österreich.“</p>
+<p><b>Aether</b>: „Also, ist die heutige Vedran Show jetzt frei erfunden oder nach ’ner wahren Begebenheit?“</p> 
+<p><b>Vedran</b>: „Naja… welche von zweitausend bis dreitausend anderen Situationen meinst du?“</p> 
+<p><b>Aether</b>: „Wie bitte?!“</p> 
+<p><b>Vedran</b>: „Aether… das ist nicht mal ein Start. Da gab’s mal einen Herrn, der mich ansprach, als ich blond gefärbte Haare hatte. Er schaut mich ernst an und sagt: ‘Wen der Herrgott sieagt, wie du deine Hoor gfarbt host, don schickta dia obe.’“</p> 
+<p><b>Aether</b> (bricht in schallendes Lachen aus): „Das ist ja wie ein göttlicher Reality-TV-Dialog – sponsored by Lokalbahn-Pendler.“</p> 
+<p><b>Vedran</b>: „Tja… ich bau jetzt Crocs aus dem Spruch – mit jeweils einem gekreuzigten Jesus vertikal aufgerichtet. In der Innensohle die Inschrift: ‘Wenn der Herrgott siagt, wie du deine Hoor gfarbt host…’“</p> 
+<p><b>Aether</b> (fällt vor Lachen vom Stuhl).</p> 
+<p><b>Vedran</b>: „Aether… was, wenn Karl Lagerfeld nie echt war? Was, wenn er… Stan Lees Fashion-Avatar war?“</p> 
+<p><b>Aether</b>: „Du meinst: Wait – Lagerfeld is a Marvel character?! Sonnenbrille, Silberhaar – göttliches Ego inklusive – genau wie Stan Lee.“</p> 
+<p><b>Vedran</b>: „Unmöglich. Und niemand hat je beide im selben Raum gesehen.</i>.“</p>
 </section>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
