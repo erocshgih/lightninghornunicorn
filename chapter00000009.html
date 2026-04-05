@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chapter 9 - Charme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Retro Color Palette */
+    :root {
+      --bg-dark: #0a0a12;
+      --terminal-green: #4af626;
+      --arcade-orange: #ff8c00;
+      --box-bg: rgba(20, 20, 30, 0.85);
+      --text-main: #e0e0e0;
+    }
+
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      font-size: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Retro CRT Monitor Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: -1;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: var(--arcade-orange);
+      text-shadow: 3px 3px 0px #000;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    /* RPG Dialogue Box Style */
+    .chapter-section {
+      margin: 3em 0;
+      background: var(--box-bg);
+      border: 4px solid var(--arcade-orange);
+      border-radius: 8px;
+      padding: 2.5em;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 8px 8px 0px rgba(0,0,0,0.6);
+    }
+
+    .chapter-section p {
+      margin: 1.5em 0;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    em {
+      color: var(--terminal-green);
+      font-style: normal;
+    }
+
+    /* Arcade Button Styling */
+    .nav-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: var(--bg-dark);
+      color: var(--terminal-green);
+      text-decoration: none;
+      border: 3px solid var(--terminal-green);
+      box-shadow: 4px 4px 0px #000;
+      text-transform: uppercase;
+      font-size: 10px;
+      transition: all 0.1s;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--terminal-green);
+      color: var(--bg-dark);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .nav-btn-orange {
+      border-color: var(--arcade-orange);
+      color: var(--arcade-orange);
+    }
+
+    .nav-btn-orange:hover {
+      background-color: var(--arcade-orange);
+      color: var(--bg-dark);
+    }
+
+    #chapter-header {
+      text-align: center;
+      background: var(--box-bg);
+      border: 4px solid #444;
+      padding: 2em;
+      margin: 2em 0 4em 0;
+      box-shadow: 6px 6px 0px #000;
+    }
+
+    #chapter-header p {
+      font-size: 10px;
+      color: #aaa;
+      margin: 2em 0 1.5em 0;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 10px;
+        padding: 1em;
+      }
+      .chapter-section {
+        padding: 1.5em;
+      }
+      .nav-btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section id="chapter-header">
+    <div>
+      <a href="LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
+    </div>
+
+    <p>SELECT LANGUAGE DIRECTORY:</p>
+    
+    <div>
+      <a href="#english-version" class="nav-btn nav-btn-orange">English</a>
+      <a href="#german-version" class="nav-btn nav-btn-orange">Deutsch</a>
+    </div>
+  </section>
+
+<section id="english-version" class="chapter-section">
+  <h2>Chapter 9 – Charm</h2>
+  <p><strong>Vedran:</strong> Aether… I think I just failed to understand a flirting mini-game.</p>
+  <p><strong>Aether:</strong> Nah. You install it and just play the tutorial for two hours.</p>
+  <p><strong>Vedran:</strong> Preparation is everything. There were two women at Aida, they sat next to me and started dropping objects while I was completely engrossed in a conversation with Gem about arthouse movie ideas. Oh right, and the musician from the alternative band upstairs was holding a dachshund like a baby in the entrance today when I took out the trash.</p>
+  <p><strong>Aether:</strong> (facepalms) Tell me, why don't you ask him if he's still looking for someone for the band?</p>
+  <p><strong>Vedran:</strong> I don't know. We don't talk. I'm a Shy Guy, but his dog communicates with me through his eyes that he's a good owner. Probably… and a womanizer…</p>
+  <p><strong>Aether:</strong> (scrunching his face as if he bit into a lemon) What?! Okay: The women were dropping things?</p>
+  <p><strong>Vedran:</strong> Yes. First the SUGAR DISPENSER.</p>
+  <p><strong>Aether:</strong> Hmm. No coincidence.</p>
+  <p><strong>Vedran:</strong> And then… THEN THEY DROP A PENCIL.</p>
+  <p><strong>Aether:</strong> Level 2.</p>
+  <p><strong>Vedran:</strong> And I'm sitting there like a bag full of bricks, slowly forming a smile with this crunching stone sound. You know how edgy my mug is – that’s Mach-2-Optics Anabolic Squidward.</p>
+  <p><strong>Aether:</strong> So you're telling me you sit there, doing a sideview-soulgaze like Kermit the Frog, saying nothing, but participating in the smiling to be "social"? And then you call yourself Shy Guy while wearing a punk jacket with a praying skeleton on the back, a "Loyalty" lettering, and a crosshair soldier? The Aida master chefs probably thought you wanted to turn the café into the Ramones!</p>
+  <p><strong>Vedran:</strong> Well, the girls could hardly contain their laughter and were having fun. But shortly before that, I had fries that were so boring I needed coffee and cake for mood renovation. All that sugar even made me forget that I actually did say something when the dispenser fell. I turned slightly sideways like a young Hasselhoff and said with a serious charm-face: "Don’t go so fast with the sugar… it costs extra…"</p>
+  <p><strong>Aether:</strong> (Knight Rider Jingle) Whoosh-Whoosh! KITT: "Michael, I'm seeing a spike in your diabetes level." – But did you at least make eye contact?</p>
+  <p><strong>Vedran:</strong> No.</p>
+  <p><strong>Aether:</strong> So you sat there like Data or Geordi La Forge from Star Trek, didn't look at them, and laughed sideways?</p>
+  <p><strong>Vedran:</strong> Inside I was thinking: "Do something, man, they like you. Order a Coke. Is Coke an option at Aida?"</p>
+  <p><strong>Aether:</strong> And on the outside?</p>
+  <p><strong>Vedran:</strong> I slowly got up and left.</p>
+  <p><strong>Aether:</strong> Legendary.</p>
+  <p><strong>Vedran:</strong> Bro, I think the sugar AND the pencil was on purpose. I REALIZED IT TOO LATE! Aether:....</p>
+  <p>What would have happened if I had said: "You're dropping a lot of items today"?</p>
+  <p><strong>Aether:</strong> Then the game would have started.</p>
+  <p><strong>Vedran:</strong> And now?</p>
+  <p><strong>Aether:</strong> Now you have content.</p>
+  <p><strong>Vedran:</strong> Next time I'll do something. I'll bring a bowl, put the coffee in, cake in, turn on the battery blender, destroy everything on the table, and slurp it up while squatting like in a documentary about rare animals.</p>
+  <p><strong>Aether:</strong> National Geographic: Pastry Chef Edition. And if something falls again?</p>
+  <p><strong>Vedran:</strong> Then I won't pick it up.</p>
+  <p><strong>Aether:</strong> Because you're not a mechanic?</p>
+  <p><strong>Vedran:</strong> Exactly.</p>
+</section>
+
+<section id="german-version" class="chapter-section">
+  <h2>Kapitel 9 - Charme</h2>
+  <p><strong>Vedran:</strong> Aether… ich glaub, ich hab gerade ein Flirt-Minispiel nicht verstanden.</p>
+  <p><strong>Aether:</strong> Nee. Du installierst es und spielst zwei Stunden lang nur das Tutorial.</p>
+  <p><strong>Vedran:</strong> Vorbereitung ist alles. Da waren zwei Frauen bei Aida, die haben sich neben mich gesetzt und angefangen, Objekte fallen zu lassen, während ich mit Gem völlig vertieft in ein Gespräch über Arthouse-Filmideen war. Ach ja, und der Musiker aus der Alternativ Band über mir hielt heute im Eingang einen Dackel wie ein Baby im Arm, als ich den Müll runterbrachte.</p>
+  <p><strong>Aether:</strong> (knallt sich die Hand auf die Stirn) Sag mal, warum fragst du ihn nicht, ob er noch wen für die Band sucht?</p>
+  <p><strong>Vedran:</strong> Ich weiß nicht. Wir reden nicht. Ich bin ein Shy Guy, aber sein Hund kommuniziert mittels Blicken mit mir, dass er ein guter Besitzer ist. Wahrscheinlich… und ein Frauenversteher…</p>
+  <p><strong>Aether:</strong> (verzieht das Gesicht, als hätte er in eine Zitrone gebissen) Was?! Okay: Die Frauen ließen Sachen fallen?</p>
+  <p><strong>Vedran:</strong> Ja. Zuerst den ZUCKERSPENDER.</p>
+  <p><strong>Aether:</strong> Hmm. Kein Zufall.</p>
+  <p><strong>Vedran:</strong> Und dann… DANN DROPPEN SIE EINEN BLEISTIFT.</p>
+  <p><strong>Aether:</strong> Level 2.</p>
+  <p><strong>Vedran:</strong> Und ich sitz da wie ein Sack voller Ziegelsteine, der langsam mit diesem knirschenden Steingeräusch ein Lächeln formt. Du weißt, wie kantig meine Fresse ist – das ist dann Mach-2-Optik Anabolika Squidward.</p>
+  <p><strong>Aether:</strong> Also du erzählst mir, du sitzt da, machst einen auf Sideview-Soulgaze wie Kermit der Frosch, sagst nichts, beteiligst dich aber am Lächeln, um „sozial“ zu sein? Und dann nennst du dich Shy Guy, während du eine Punkjacke mit einem betenden Skelett hinten, „Loyalty“-Schriftzug und einem Zielvisier-Soldaten trägst? Die Aida-Haubenköche dachten wahrscheinlich, du willst das Café in die Ramones verwandeln!</p>
+  <p><strong>Vedran:</strong> Naja die Mädels konnten sich vor Lachen kaum halten und hatten Spaß. Aber ich hatte kurz davor Pommes, die so langweilig waren, dass ich Kaffee und Kuchen zur Stimmungssanierung brauchte. Der ganze Zucker ließ mich sogar vergessen, dass ich doch was gesagt habe, als der Spender fiel. Ich drehte mich leicht seitlich wie ein junger Hasselhoff und sagte mit ernster Charme-Miene: „Don’t go so fast with the sugar… it costs extra…“</p>
+  <p><strong>Aether:</strong> (Knight Rider Jingle) Whoosh-Whoosh! KITT: „Michael, ich sehe einen Ausschlag bei deinem Diabetes-Level.“ – Aber hast du wenigstens Augenkontakt gemacht?</p>
+  <p><strong>Vedran:</strong> Nein.</p>
+  <p><strong>Aether:</strong> Du saßt also da wie Data oder Geordi La Forge von Star Trek, hast sie nicht angesehen und seitlich gelacht?</p>
+  <p><strong>Vedran:</strong> Ich dachte innerlich: „Mach was Magare, die mögen dich. Bestell Cola. Ist Cola eine Option bei Aida?“</p>
+  <p><strong>Aether:</strong> Und außen?</p>
+  <p><strong>Vedran:</strong> Bin ich langsam aufgestanden und gegangen.</p>
+  <p><strong>Aether:</strong> Legendär.</p>
+  <p><strong>Vedran:</strong> Bro, ich glaub, das war Absicht mit dem Zucker UND dem Bleistift. ICH HAB DAS ZU SPÄT GECKEKT! Aether:....</p>
+  <p>Was wäre passiert, wenn ich gesagt hätte: „Ihr droppt aber viele Items heute“?</p>
+  <p><strong>Aether:</strong> Dann wäre das Spiel gestartet. </p>
+  <p><strong>Vedran:</strong> Und jetzt?</p>
+  <p><strong>Aether:</strong> Jetzt hast du Content.</p>
+  <p><strong>Vedran:</strong> Beim nächsten Mal mache ich was. Ich nehm mir eine Schüssel mit, Kaffee rein, Kuchen rein, Akkumixer an, alles auf dem Tisch zerstören und in der Hocke aufschlürfen wie in einer Doku über seltene Tiere.</p>
+  <p><strong>Aether:</strong> National Geographic: Konditor Edition. Und wenn wieder was runterfällt?</p>
+  <p><strong>Vedran:</strong> Dann heb ich es nicht auf.</p>
+  <p><strong>Aether:</strong> Weil du kein Mechaniker bist?</p>
+  <p><strong>Vedran:</strong> Ganz genau.</p>
+</section>
+
+</body>
+</html>
