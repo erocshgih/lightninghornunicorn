@@ -118,6 +118,61 @@ html {
     scroll-behavior: smooth;
 }
 
+
+/* --- SLIDER DESIGN --- */
+.instagram-slider {
+    position: relative;
+    max-width: 350px;
+    margin: 20px auto 10px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    background: transparent;
+}
+
+.instagram-slider img {
+    display: none; /* Versteckt alle Bilder am Anfang */
+    width: 100%;
+    margin: 0;
+    border-radius: 10px;
+}
+
+/* Das aktive Bild wird gezeigt */
+.instagram-slider img.active {
+    display: block;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.slider-dots .dot {
+    width: 12px;
+    height: 12px;
+    background-color: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.slider-dots .dot.active {
+    background-color: #FF2800; /* Das rote Highlight */
+    transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
 </style>
 
 
@@ -407,6 +462,7 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
 
 
 <!-- HUMANART Section -->
+
 <section id="HUMANART">
 <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
@@ -415,20 +471,24 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
 Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art.
 </p>
 
-<img id="human-art-1" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mynameisrain.webp" alt="mynameisrain">
-<img id="human-art-2" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.webp" alt="Human Art 2">
-<img id="human-art-3" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbowonyx.webp" alt="Rainbow Onyx">
-<img id="human-art-4" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/clown.webp" alt="Clown">
-<img id="human-art-5" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwavecube.webp" alt="Big Wave Cube">
-<img id="human-art-6" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananismagainstgorillas.webp" alt="Bananism Against Gorillas">
-<img id="human-art-7" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augapfel.webp" alt="Augafpel">
-<img id="human-art-8" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.webp" alt="Apffel 2">
-<img id="human-art-9" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/acircleofcolors.webp" alt="A Circle of Colors">
-<img id="human-art-5" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/eagletriangle.webp" alt="eagletriangle">
-<img id="human-art-6" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/face001.webp" alt="femaleface001">
-<img id="human-art-7" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/girlwithseashell.webp" alt="girlwithseashell">
-<img id="human-art-8" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/blackmountainlandscape.webp" alt="bml">
-<img id="human-art-9" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/chillin.webp" alt="chillin">
+<div class="instagram-slider" id="humanart-slider">
+    <img id="human-art-1" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mynameisrain.webp" alt="mynameisrain">
+    <img id="human-art-2" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.webp" alt="Human Art 2">
+    <img id="human-art-3" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbowonyx.webp" alt="Rainbow Onyx">
+    <img id="human-art-4" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/clown.webp" alt="Clown">
+    <img id="human-art-5" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwavecube.webp" alt="Big Wave Cube">
+    <img id="human-art-6" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananismagainstgorillas.webp" alt="Bananism Against Gorillas">
+    <img id="human-art-7" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augapfel.webp" alt="Augafpel">
+    <img id="human-art-8" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.webp" alt="Apffel 2">
+    <img id="human-art-9" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/acircleofcolors.webp" alt="A Circle of Colors">
+    <img id="human-art-10" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/eagletriangle.webp" alt="eagletriangle">
+    <img id="human-art-11" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/face001.webp" alt="femaleface001">
+    <img id="human-art-12" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/girlwithseashell.webp" alt="girlwithseashell">
+    <img id="human-art-13" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/blackmountainlandscape.webp" alt="bml">
+    <img id="human-art-14" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/chillin.webp" alt="chillin">
+</div>
+
+<div class="slider-dots" id="humanart-dots"></div>
 
 </section>
 
@@ -796,6 +856,48 @@ function loadSectionImages(section) {
 document.addEventListener('DOMContentLoaded', () => {
     showSection('ABOUT'); // Start section
 });
+
+
+/* --- SLIDER GEHIRN --- */
+document.addEventListener('DOMContentLoaded', () => {
+    const slider = document.getElementById('humanart-slider');
+    const dotsContainer = document.getElementById('humanart-dots');
+    
+    // Wenn es den Slider gibt, leg los
+    if (slider && dotsContainer) {
+        const images = slider.querySelectorAll('img');
+        
+        // Erstes Bild zeigen
+        images[0].classList.add('active');
+        
+        // Punkte basteln
+        images.forEach((img, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            
+            // Wenn man auf einen Punkt klickt...
+            dot.addEventListener('click', () => {
+                // 1. Alle Bilder und Punkte ausmachen
+                images.forEach(i => i.classList.remove('active'));
+                dotsContainer.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+                
+                // 2. Das geklickte Bild und den Punkt anmachen
+                images[index].classList.add('active');
+                dot.classList.add('active');
+                
+                // 3. Bild laden (falls es das noch nicht ist)
+                if (!images[index].src) {
+                    images[index].src = images[index].dataset.src;
+                }
+            });
+            
+            dotsContainer.appendChild(dot);
+        });
+    }
+});
+
+
 </script>
 </body>
 </html>
