@@ -158,13 +158,28 @@ import { GLTFLoader } from "https://esm.sh/three@0.129.0/examples/jsm/loaders/GL
 /* LOADING ANIMATION */
 const loadingEl = document.getElementById("loading");
 const baseText = "loading";
-let dotIndex = 0;
-const loadingInterval = setInterval(() => {
-  const chars = baseText.split("");
-  chars.splice(dotIndex, 0, ".");
-  loadingEl.textContent = chars.join("");
-  dotIndex = (dotIndex + 1) % (baseText.length + 1);
-}, 180);
+let loadingInterval; // Variable global für diesen Scope deklarieren
+
+function startLoading() {
+  loadingEl.style.display = "flex";
+  let dotIndex = 0;
+  
+  // Sicherheitshalber ein evtl. laufendes Interval löschen
+  if (loadingInterval) clearInterval(loadingInterval);
+  
+  // Interval neu starten
+  loadingInterval = setInterval(() => {
+    const chars = baseText.split("");
+    chars.splice(dotIndex, 0, ".");
+    loadingEl.textContent = chars.join("");
+    dotIndex = (dotIndex + 1) % (baseText.length + 1);
+  }, 180);
+}
+
+function stopLoading() {
+  clearInterval(loadingInterval);
+  loadingEl.style.display = "none";
+}
 
 /* SCENE */
 const scene = new THREE.Scene();
@@ -220,7 +235,8 @@ function disposeObject(obj) {
 }
 
 function loadHead(url) {
-  loadingEl.style.display = "flex";
+  // 1. NEU: Animation hier bei JEDEM Aufruf starten
+  startLoading();
 
   if (object) {
     scene.remove(object);
@@ -252,8 +268,8 @@ function loadHead(url) {
         g.animations.forEach(clip => mixer.clipAction(clip).play());
       }
 
-      clearInterval(loadingInterval);
-      loadingEl.style.display = "none";
+      // 2. NEU: Animation sauber stoppen, wenn das Modell da ist
+      stopLoading();
     }
   );
 }
