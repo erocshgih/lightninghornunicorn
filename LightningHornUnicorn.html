@@ -132,6 +132,8 @@ html {
 .instagram-slider img {
     display: none; /* Versteckt alle Bilder am Anfang */
     width: 100%;
+    aspect-ratio: 1 / 1; /* Zwingt die Box IMMER zu einem perfekten Quadrat */
+    object-fit: contain; /* Zeigt das ganze Bild. Was übrig bleibt, ist unsichtbar zentriert */
     margin: 0;
     border-radius: 10px;
 }
