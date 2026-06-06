@@ -503,11 +503,15 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
         <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
         <div style="position: relative; width: 300px; height: 380px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
-    <div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
+    
+
+<div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
         <button id="zoomIn" style="width: 30px; height: 30px; background: rgba(255,255,255,0.8); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px;">+</button>
         <button id="zoomOut" style="width: 30px; height: 30px; background: rgba(255,255,255,0.8); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px;">-</button>
     </div>
-    <canvas id="catsCradleCanvas" width="300" height="380" style="display: block; cursor: grab;"></canvas>
+    <canvas id="catsCradleCanvas" width="300" height="380" style="display: block; cursor: grab; touch-action: none; -webkit-overflow-scrolling: none;">
+</canvas>
+
 </div>
 
         <p class="atom-disclaimer" style="font-size: 0.55rem; text-align: center; margin-top: 25px; color: #00ff28; letter-spacing: 2px;">
