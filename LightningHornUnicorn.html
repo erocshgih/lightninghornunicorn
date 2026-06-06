@@ -173,200 +173,112 @@
 
 // --- DYNAMISCHE 3D CAT'S CRADLE ENGINE (SCANNT HTML AUTOMATISCH) ---
             function initCatsCradle() {
-                const canvas = document.getElementById('catsCradleCanvas');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                
-                let nodes = [];
+    const canvas = document.getElementById('catsCradleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    // Zoom-Buttons holen
+    const zoomInBtn = document.getElementById('zoomIn');
+    const zoomOutBtn = document.getElementById('zoomOut');
 
-                // 🌟 DER AUTOMATISCHE SCANNER: Holt sich alle Bilder aus der HTML-Klasse
-                const htmlImages = document.querySelectorAll('.cats-cradle-source-images img');
-                
-                htmlImages.forEach((imgEl, index) => {
-                    const imgUrl = imgEl.getAttribute('data-src') || imgEl.src;
-                    if (!imgUrl) return;
+    // 🌟 DYNAMISCHER SCANNER
+    const htmlImages = document.querySelectorAll('.cats-cradle-source-images img');
+    let nodes = [];
 
-                    // Verteilt die Bilder mathematisch gleichmäßig in einer 3D-Kugel-Konstellation
-                    const phi = Math.acos(-1 + (2 * index) / htmlImages.length);
-                    const theta = Math.sqrt(htmlImages.length * Math.PI) * phi;
-                    const radius = 95; // Radius des 3D-Netzes
+    htmlImages.forEach((imgEl, index) => {
+        const imgUrl = imgEl.getAttribute('data-src') || imgEl.src;
+        if (!imgUrl) return;
 
-                    nodes.push({
-                        x: radius * Math.sin(phi) * Math.cos(theta),
-                        y: radius * Math.sin(phi) * Math.sin(theta),
-                        z: radius * Math.cos(phi),
-                        imgUrl: imgUrl,
-                        img: null,
-                        aspect: 1
-                    });
-                });
+        const phi = Math.acos(-1 + (2 * index) / htmlImages.length);
+        const theta = Math.sqrt(htmlImages.length * Math.PI) * phi;
+        const radius = 95;
 
-                // Bilder laden und Aspektverhältnis berechnen
-                nodes.forEach(node => {
-                    const img = new Image();
-                    img.src = node.imgUrl;
-                    img.onload = () => { 
-                        node.img = img; 
-                        node.aspect = img.width / img.height; 
-                    };
-                });
+        nodes.push({
+            x: radius * Math.sin(phi) * Math.cos(theta),
+            y: radius * Math.sin(phi) * Math.sin(theta),
+            z: radius * Math.cos(phi),
+            imgUrl: imgUrl,
+            img: null,
+            aspect: 1
+        });
+    });
 
-                let angleX = 0.01;
-                let angleY = 0.01;
-                let isDragging = false;
-                let previousMousePosition = { x: 0, y: 0 };
-                let cameraDistance = 300; 
-                let startTouchDistance = 0;
+    nodes.forEach(node => {
+        const img = new Image();
+        img.src = node.imgUrl;
+        img.onload = () => { node.img = img; node.aspect = img.width / img.height; };
+    });
 
-                function project(x, y, z) {
-                    const fov = 280; 
-                    const scale = fov / (parseInt(z) + cameraDistance);
-                    const projX = x * scale + canvas.width / 2;
-                    const projY = y * scale + canvas.height / 2;
-                    return { x: projX, y: projY, scale: scale };
-                }
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let cameraDistance = 300;
 
-                function rotateNet(ax, ay) {
-                    nodes.forEach(node => {
-                        let cosY = Math.cos(ay), sinY = Math.sin(ay);
-                        let x1 = node.x * cosY - node.z * sinY;
-                        let z1 = node.z * cosY + node.x * sinY;
+    // Zoom-Logik via Buttons
+    zoomInBtn.addEventListener('click', () => cameraDistance = Math.max(120, cameraDistance - 40));
+    zoomOutBtn.addEventListener('click', () => cameraDistance = Math.min(550, cameraDistance + 40));
 
-                        let cosX = Math.cos(ax), sinX = Math.sin(ax);
-                        let y2 = node.y * cosX - z1 * sinX;
-                        let z2 = z1 * cosX + node.y * sinX;
+    function project(x, y, z) {
+        const fov = 280;
+        const scale = fov / (parseInt(z) + cameraDistance);
+        return { x: x * scale + canvas.width / 2, y: y * scale + canvas.height / 2, scale: scale };
+    }
 
-                        node.x = x1;
-                        node.y = y2;
-                        node.z = z2;
-                    });
-                }
+    function rotateNet(ax, ay) {
+        nodes.forEach(node => {
+            let cosY = Math.cos(ay), sinY = Math.sin(ay);
+            let x1 = node.x * cosY - node.z * sinY;
+            let z1 = node.z * cosY + node.x * sinY;
+            let cosX = Math.cos(ax), sinX = Math.sin(ax);
+            let y2 = node.y * cosX - z1 * sinX;
+            let z2 = z1 * cosX + node.y * sinX;
+            node.x = x1; node.y = y2; node.z = z2;
+        });
+    }
 
-                function drawNet() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function drawNet() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!isDragging) rotateNet(0.0005, 0.0008);
+        nodes.sort((a, b) => b.z - a.z);
 
-                    if (!isDragging) {
-                        rotateNet(0.0005, 0.0008); // Extrem verlangsamte Grundrotation
-                    }
+        // Fäden
+        ctx.strokeStyle = '#00FF28'; ctx.lineWidth = 1.5;
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < Math.min(i + 3, nodes.length); j++) {
+                let p1 = project(nodes[i].x, nodes[i].y, nodes[i].z);
+                let p2 = project(nodes[j].x, nodes[j].y, nodes[j].z);
+                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            }
+        }
 
-                    nodes.sort((a, b) => b.z - a.z);
+        // Knoten
+        nodes.forEach(node => {
+            if (!node.img) return;
+            let p = project(node.x, node.y, node.z);
+            let baseSize = 45 * p.scale;
+            if (baseSize <= 0) return;
+            let imgWidth = baseSize, imgHeight = baseSize;
+            if (node.aspect > 1) imgHeight = baseSize / node.aspect;
+            else if (node.aspect < 1) imgWidth = baseSize * node.aspect;
 
-                    // 1. FÄDEN ZEICHNEN
-                    ctx.strokeStyle = '#00FF28'; 
-                    ctx.lineWidth = 1.5;
-                    
-                    for (let i = 0; i < nodes.length; i++) {
-                        // Verbindet die Punkte dynamisch, basierend auf der aktuellen Anzahl der Knoten
-                        const connections = Math.max(2, Math.min(4, Math.floor(20 / nodes.length)));
-                        for (let j = i + 1; j < Math.min(i + connections + 1, nodes.length); j++) {
-                            let p1 = project(nodes[i].x, nodes[i].y, nodes[i].z);
-                            let p2 = project(nodes[j].x, nodes[j].y, nodes[j].z);
-                            
-                            ctx.beginPath();
-                            ctx.moveTo(p1.x, p1.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
-                    }
+            ctx.save();
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)'; ctx.shadowBlur = 8;
+            ctx.drawImage(node.img, p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
+            ctx.restore();
+            ctx.strokeStyle = '#111'; ctx.strokeRect(p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
+        });
+        requestAnimationFrame(drawNet);
+    }
 
-                    // 2. KNOTENPUNKTE ZEICHNEN
-                    nodes.forEach(node => {
-                        if (!node.img) return;
-                        let p = project(node.x, node.y, node.z);
-                        
-                        let baseSize = 45 * p.scale; 
-                        if (baseSize <= 0) return;
+    // Drag-Logik (ohne Zoom!)
+    canvas.addEventListener('mousedown', e => { isDragging = true; previousMousePosition = { x: e.clientX, y: e.clientY }; });
+    window.addEventListener('mousemove', e => { if (isDragging) { rotateNet(-(e.clientY - previousMousePosition.y) * 0.007, (e.clientX - previousMousePosition.x) * 0.007); previousMousePosition = { x: e.clientX, y: e.clientY }; }});
+    window.addEventListener('mouseup', () => isDragging = false);
+    canvas.addEventListener('touchstart', e => { if (e.touches.length === 1) { isDragging = true; previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } }, {passive: true});
+    canvas.addEventListener('touchmove', e => { if (isDragging) { rotateNet(-(e.touches[0].clientY - previousMousePosition.y) * 0.007, (e.touches[0].clientX - previousMousePosition.x) * 0.007); previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } }, {passive: true});
+    canvas.addEventListener('touchend', () => isDragging = false);
 
-                        let imgWidth = baseSize;
-                        let imgHeight = baseSize;
-
-                        if (node.aspect > 1) {
-                            imgHeight = baseSize / node.aspect;
-                        } else if (node.aspect < 1) {
-                            imgWidth = baseSize * node.aspect;
-                        }
-
-                        ctx.save();
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-                        ctx.shadowBlur = 8;
-                        ctx.shadowOffsetY = 4;
-
-                        ctx.drawImage(node.img, p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
-                        ctx.restore();
-
-                        ctx.strokeStyle = '#111';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
-                    });
-
-                    requestAnimationFrame(drawNet);
-                }
-
-                function startDrag(x, y) {
-                    isDragging = true;
-                    canvas.style.cursor = 'grabbing';
-                    previousMousePosition = { x, y };
-                }
-
-                function doDrag(x, y) {
-                    if (!isDragging) return;
-                    const deltaX = x - previousMousePosition.x;
-                    const deltaY = y - previousMousePosition.y;
-                    rotateNet(-deltaY * 0.007, deltaX * 0.007);
-                    previousMousePosition = { x, y };
-                }
-
-                function stopDrag() {
-                    isDragging = false;
-                    canvas.style.cursor = 'grab';
-                }
-
-                function getTouchDistance(touch1, touch2) {
-                    const dx = touch1.clientX - touch2.clientX;
-                    const dy = touch1.clientY - touch2.clientY;
-                    return Math.sqrt(dx * dx + dy * dy);
-                }
-
-                canvas.addEventListener('wheel', e => {
-                    e.preventDefault();
-                    cameraDistance += e.deltaY * 0.2;
-                    if (cameraDistance < 120) cameraDistance = 120; 
-                    if (cameraDistance > 550) cameraDistance = 550;
-                }, {passive: false});
-
-                canvas.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
-                window.addEventListener('mousemove', e => doDrag(e.clientX, e.clientY));
-                window.addEventListener('mouseup', stopDrag);
-
-                canvas.addEventListener('touchstart', e => {
-                    if (e.touches.length === 1) {
-                        startDrag(e.touches[0].clientX, e.touches[0].clientY);
-                    } else if (e.touches.length === 2) {
-                        isDragging = false; 
-                        startTouchDistance = getTouchDistance(e.touches[0], e.touches[1]);
-                    }
-                }, {passive: true});
-
-                canvas.addEventListener('touchmove', e => {
-                    if (e.touches.length === 1 && isDragging) {
-                        doDrag(e.touches[0].clientX, e.touches[0].clientY);
-                    } else if (e.touches.length === 2) {
-                        const currentDist = getTouchDistance(e.touches[0], e.touches[1]);
-                        const factor = currentDist - startTouchDistance;
-                        cameraDistance -= factor * 0.5;
-                        if (cameraDistance < 120) cameraDistance = 120;
-                        if (cameraDistance > 550) cameraDistance = 550;
-                        startTouchDistance = currentDist;
-                    }
-                }, {passive: true});
-
-                canvas.addEventListener('touchend', e => {
-                    stopDrag();
-                    if (e.touches.length > 0) isDragging = false;
-                });
-
-                drawNet();
-            }        });
+    drawNet();
+}        });
     </script>
 </head>
 <body>
@@ -586,11 +498,17 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
 
 
 <section id="HUMANART">
+
+
         <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
         <div style="position: relative; width: 300px; height: 380px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
-            <canvas id="catsCradleCanvas" width="300" height="380" style="display: block; cursor: grab;"></canvas>
-        </div>
+    <div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
+        <button id="zoomIn" style="width: 30px; height: 30px; background: rgba(255,255,255,0.8); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px;">+</button>
+        <button id="zoomOut" style="width: 30px; height: 30px; background: rgba(255,255,255,0.8); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px;">-</button>
+    </div>
+    <canvas id="catsCradleCanvas" width="300" height="380" style="display: block; cursor: grab;"></canvas>
+</div>
 
         <p class="atom-disclaimer" style="font-size: 0.55rem; text-align: center; margin-top: 25px; color: #00ff28; letter-spacing: 2px;">
             ART BY VEDRAN LUKIC : everything is connected...
