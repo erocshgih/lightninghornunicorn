@@ -728,96 +728,308 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
 
 
 <section id="MUSIC">
-        <h2 data-lang-en="MUSIC" data-lang-de="MUSIK">MUSIC</h2>
+    <h2>MUSIC</h2>
 
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%;">
-
-            <a href="https://www.youtube.com/watch?v=6mEqVviTbno" target="_blank" rel="noopener" class="music-tape-link">
-                <div class="wobble-glitch-container">
-                    <img data-src="music_Laserette.webp" alt="itsjcvd">
-                    <div class="analog-glow"></div>
-                </div>
-            </a>
+    <div class="music-manifesto">
 
 
-        </div>
-    </section>
+<h3
+data-lang-en="Dear Visitor,"
+data-lang-de="Liebe Besucherin, lieber Besucher">
+Dear Visitor,
+</h3>
 
-    <style>
-        .music-tape-link {
-            display: block;
-            width: 250px;
-            text-decoration: none;
-        }
+<p
+data-lang-en="Before you continue, there is something I'd like to explain."
+data-lang-de="Bevor du weitermachst, möchte ich dir etwas erklären.">
+Before you continue, there is something I'd like to explain.
+</p>
 
-        .wobble-glitch-container {
-            position: relative;
-            width: 250px;
-            height: auto;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+<p
+data-lang-en="If you have supported my work over the years, thank you. Every purchase, every kind word, and every act of support has helped me continue creating. This page is not directed at you."
+data-lang-de="Wenn du meine Arbeit über die Jahre unterstützt hast, danke ich dir. Jeder Kauf, jedes freundliche Wort und jede Form der Unterstützung haben mir geholfen, weiter Kunst zu erschaffen. Diese Seite richtet sich nicht an dich.">
+If you have supported my work over the years, thank you. Every purchase, every kind word, and every act of support has helped me continue creating. This page is not directed at you.
+</p>
 
-        .wobble-glitch-container img {
-            display: block;
-            width: 250px !important;
-            height: auto !important;
-            margin: 0 !important;
-            border-radius: 8px !important;
-            box-shadow: none !important;
-            /* Sanfter Übergang zurück in den Ruhezustand */
-            transition: filter 0.4s ease, transform 0.4s ease;
-        }
+<p
+data-lang-en="If you have never supported my music because you believe music should be free, then please read this."
+data-lang-de="Falls du meine Musik nie unterstützt hast, weil du glaubst, Musik sollte kostenlos sein, dann lies bitte weiter.">
+If you have never supported my music because you believe music should be free, then please read this.
+</p>
 
-        /* Subtiles analoges Glühen im Hintergrund */
-        .analog-glow {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(255,255,255,0) 40%, rgba(0, 255, 40, 0.05) 100%);
-            z-index: 2;
-            pointer-events: none;
-        }
+<p
+data-lang-en="I actually understand that idea."
+data-lang-de="Diesen Gedanken kann ich sogar nachvollziehen.">
+I actually understand that idea.
+</p>
 
-        /* --- DER WOBBLY RELAXED GLITCH EFFEKT --- */
-        .music-tape-link:hover .wobble-glitch-container {
-            transform: scale(1.03);
-        }
+<p
+data-lang-en="In a perfect world, art would be free.<br>Food would be free.<br>Housing would be free.<br>Healthcare would be free.<br>Education would be free."
+data-lang-de="In einer perfekten Welt wäre Kunst kostenlos.<br>Essen wäre kostenlos.<br>Wohnen wäre kostenlos.<br>Gesundheitsversorgung wäre kostenlos.<br>Bildung wäre kostenlos.">
+In a perfect world, art would be free.<br>
+Food would be free.<br>
+Housing would be free.<br>
+Healthcare would be free.<br>
+Education would be free.
+</p>
 
-        .music-tape-link:hover .wobble-glitch-container img {
-            /* Zündet die flüssige, wellenartige Wackel-Animation */
-            animation: vhsWobbleRelaxed 2.5s infinite ease-in-out;
-            /* Subtiler, warmer VHS-Farbversatz auf weißem Grund */
-            filter: saturate(1.2) hue-rotate(5deg) contrast(1.05);
-        }
+<p
+data-lang-en="But we do not live in that world."
+data-lang-de="Aber in einer solchen Welt leben wir nicht.">
+But we do not live in that world.
+</p>
 
-        /* Mathematisch weiche Wabbel-Wellenbewegung (kein hartes Zucken!) */
-        @keyframes vhsWobbleRelaxed {
-            0% {
-                transform: skewX(0deg) scaleX(1);
-            }
-            25% {
-                transform: skewX(3deg) scaleX(1.01) scaleY(0.99);
-            }
-            50% {
-                transform: skewX(-2deg) scaleX(0.99) scaleY(1.01);
-            }
-            75% {
-                transform: skewX(2.5deg) scaleX(1.01) translate(1px, -1px);
-            }
-            100% {
-                transform: skewX(0deg) scaleX(1);
-            }
-        }
+<p
+data-lang-en="For many years I gave my music away without asking for much in return. I simply wanted people to enjoy it."
+data-lang-de="Viele Jahre lang habe ich meine Musik kostenlos veröffentlicht, ohne viel dafür zu verlangen. Ich wollte einfach, dass Menschen Freude daran haben.">
+For many years I gave my music away without asking for much in return. I simply wanted people to enjoy it.
+</p>
 
-        /* Klick/Touch-Feedback */
-        .music-tape-link:active .wobble-glitch-container {
-            transform: scale(0.98);
-        }
-    </style>
+<p
+data-lang-en="Many did."
+data-lang-de="Viele haben das getan.">
+Many did.
+</p>
 
+<p
+data-lang-en="Some supported the person who created it."
+data-lang-de="Einige unterstützten auch den Menschen, der sie erschaffen hat.">
+Some supported the person who created it.
+</p>
+
+<p
+data-lang-en="That is why things have changed."
+data-lang-de="Deshalb hat sich heute etwas geändert.">
+That is why things have changed.
+</p>
+
+<hr>
+
+<h3
+data-lang-en="Where Did the Music Go?"
+data-lang-de="Wo ist die Musik geblieben?">
+Where Did the Music Go?
+</h3>
+
+<p
+data-lang-en="There is almost no music on this website anymore."
+data-lang-de="Auf dieser Website gibt es inzwischen kaum noch Musik.">
+There is almost no music on this website anymore.
+</p>
+
+<p
+data-lang-en="Not because I stopped creating."
+data-lang-de="Nicht, weil ich aufgehört hätte Musik zu erschaffen.">
+Not because I stopped creating.
+</p>
+
+<p
+data-lang-en="Quite the opposite."
+data-lang-de="Ganz im Gegenteil.">
+Quite the opposite.
+</p>
+
+<p
+data-lang-en="The music has simply moved behind a hidden link."
+data-lang-de="Die Musik befindet sich jetzt lediglich hinter einem versteckten Link.">
+The music has simply moved behind a hidden link.
+</p>
+
+<p
+data-lang-en="Because I no longer want my work to disappear inside an endless stream of content where everything is expected to be free."
+data-lang-de="Weil ich nicht mehr möchte, dass meine Arbeit in einem endlosen Strom von Inhalten verschwindet, in dem alles kostenlos erwartet wird.">
+Because I no longer want my work to disappear inside an endless stream of content where everything is expected to be free.
+</p>
+
+<p
+data-lang-en="My music is not on Spotify, and I see no reason to join that service."
+data-lang-de="Meine Musik befindet sich nicht auf Spotify, und ich sehe keinen Grund, sie dort anzubieten.">
+My music is not on Spotify, and I see no reason to join that service.
+</p>
+
+<p
+data-lang-en="My music is not on YouTube, and I see no reason to offer my videos there for free."
+data-lang-de="Meine Musik befindet sich nicht auf YouTube, und ich sehe keinen Grund, meine Videos dort kostenlos anzubieten.">
+My music is not on YouTube, and I see no reason to offer my videos there for free.
+</p>
+
+<p
+data-lang-en="Music is meant to be enjoyed."
+data-lang-de="Musik ist dafür da, genossen zu werden.">
+Music is meant to be enjoyed.
+</p>
+
+<p
+data-lang-en="It is meant to be played by humans. Yes, you can learn the chords."
+data-lang-de="Sie ist dafür gemacht, von Menschen gespielt zu werden. Ja, du kannst die Akkorde lernen.">
+It is meant to be played by humans. Yes, you can learn the chords.
+</p>
+
+<p
+data-lang-en="I compose it."
+data-lang-de="Ich komponiere sie.">
+I compose it.
+</p>
+
+<p
+data-lang-en="I spend countless hours shaping every sound until it becomes exactly what I imagined."
+data-lang-de="Ich verbringe unzählige Stunden damit, jeden einzelnen Klang so lange zu formen, bis er genau meiner Vorstellung entspricht.">
+I spend countless hours shaping every sound until it becomes exactly what I imagined.
+</p>
+
+<p
+data-lang-en="Sometimes I use a guitar.<br>Sometimes I use synthesizers.<br>Sometimes I use AI."
+data-lang-de="Manchmal benutze ich eine Gitarre.<br>Manchmal Synthesizer.<br>Manchmal KI.">
+Sometimes I use a guitar.<br>
+Sometimes I use synthesizers.<br>
+Sometimes I use AI.
+</p>
+
+<p
+data-lang-en="<strong>The tool changes.<br>The artist doesn't.</strong>"
+data-lang-de="<strong>Das Werkzeug verändert sich.<br>Der Künstler nicht.</strong>">
+<strong>The tool changes.<br>The artist doesn't.</strong>
+</p>
+
+<hr>
+
+<h3
+data-lang-en="About Artificial Intelligence"
+data-lang-de="Über Künstliche Intelligenz">
+About Artificial Intelligence
+</h3>
+
+<p
+data-lang-en="Many people believe AI creates music by pressing one button. That simply isn't true."
+data-lang-de="Viele Menschen glauben, KI erschaffe Musik mit einem einzigen Knopfdruck. Das stimmt einfach nicht.">
+Many people believe AI creates music by pressing one button. That simply isn't true.
+</p>
+
+<p
+data-lang-en="Creating meaningful music still requires taste, composition, structure, editing, experience and thousands of creative decisions."
+data-lang-de="Bedeutungsvolle Musik erfordert weiterhin Geschmack, Komposition, Struktur, Bearbeitung, Erfahrung und tausende kreative Entscheidungen.">
+Creating meaningful music still requires taste, composition, structure, editing, experience and thousands of creative decisions.
+</p>
+
+<p
+data-lang-en="AI is a tool."
+data-lang-de="KI ist ein Werkzeug.">
+AI is a tool.
+</p>
+
+<p
+data-lang-en="Just like a camera didn't replace photographers.<br>Just like digital painting didn't replace painters.<br>Just like synthesizers didn't replace musicians."
+data-lang-de="So wie Kameras Fotografen nicht ersetzt haben.<br>So wie digitales Malen Maler nicht ersetzt hat.<br>So wie Synthesizer Musiker nicht ersetzt haben.">
+Just like a camera didn't replace photographers.<br>
+Just like digital painting didn't replace painters.<br>
+Just like synthesizers didn't replace musicians.
+</p>
+
+<p
+data-lang-en="If you don't like AI, that is perfectly fine. But please understand what you are criticizing before dismissing the work of people who create something meaningful."
+data-lang-de="Wenn du KI nicht magst, ist das vollkommen in Ordnung. Ich bitte lediglich darum, zu verstehen, was du kritisierst, bevor du die Arbeit von Menschen abwertest.">
+If you don't like AI, that is perfectly fine. But please understand what you are criticizing before dismissing the work of people who dedicate their lives to creating something meaningful.
+</p>
+
+<hr>
+
+<h3
+data-lang-en="Twenty Years"
+data-lang-de="Zwanzig Jahre">
+Twenty Years
+</h3>
+
+<p
+data-lang-en="For over twenty years I searched for people who wanted to create extraordinary art and music together."
+data-lang-de="Über zwanzig Jahre lang habe ich nach Menschen gesucht, die gemeinsam außergewöhnliche Kunst und Musik erschaffen wollten.">
+For over twenty years I searched for people who wanted to create extraordinary art and music together.
+</p>
+
+<p
+data-lang-en="Despite every setback, I kept creating. Not because it was easy. Because I wanted to move forward."
+data-lang-de="Trotz aller Rückschläge habe ich weitergemacht. Nicht, weil es einfach war. Sondern weil ich vorankommen wollte.">
+Despite every setback, I kept creating. Not because it was easy. Because I wanted to move forward.
+</p>
+
+<p
+data-lang-en="Long before AI existed, I was already writing songs, recording music and experimenting with sound."
+data-lang-de="Lange bevor KI existierte, schrieb ich bereits Songs, nahm Musik auf und experimentierte mit Klängen.">
+Long before AI existed, I was already writing songs, recording music and experimenting with sound.
+</p>
+
+<p
+data-lang-en="AI didn't make me an artist. It simply became another instrument available to me."
+data-lang-de="KI hat mich nicht zu einem Künstler gemacht. Sie wurde lediglich ein weiteres Werkzeug, das mir zur Verfügung steht.">
+AI didn't make me an artist. It simply became another instrument available to me.
+</p>
+
+<hr>
+
+<h3
+data-lang-en="Why the Music Is No Longer Free"
+data-lang-de="Warum meine Musik nicht mehr kostenlos ist">
+Why the Music Is No Longer Free
+</h3>
+
+<p
+data-lang-en="Creating music costs time.<br>It costs energy.<br>It costs equipment.<br>It costs countless hours of listening."
+data-lang-de="Musik zu erschaffen kostet Zeit.<br>Es kostet Energie.<br>Es kostet Ausrüstung.<br>Es kostet unzählige Stunden des Zuhörens.">
+Creating music costs time.<br>
+It costs energy.<br>
+It costs equipment.<br>
+It costs countless hours of listening.
+</p>
+
+<p
+data-lang-en="If music has value, then the person creating it has value too."
+data-lang-de="Wenn Musik einen Wert besitzt, dann besitzt auch der Mensch einen Wert, der sie erschafft.">
+If music has value, then the person creating it has value too.
+</p>
+
+<p
+data-lang-en="Buying an album is supporting the next song.<br>The next experiment.<br>The next impossible idea."
+data-lang-de="Mit dem Kauf eines Albums unterstützt du den nächsten Song.<br>Das nächste Experiment.<br>Die nächste scheinbar unmögliche Idee.">
+Buying an album is supporting the next song.<br>
+The next experiment.<br>
+The next impossible idea.
+</p>
+
+<p
+data-lang-en="If my work speaks to you, thank you for listening. If you decide to support it, thank you even more. If not, that's okay as well."
+data-lang-de="Wenn dich meine Arbeit berührt, danke ich dir fürs Zuhören. Wenn du sie unterstützt, danke ich dir umso mehr. Und wenn nicht, ist auch das in Ordnung.">
+If my work speaks to you, thank you for listening. If you decide to support it, thank you even more. If not, that's okay as well.
+</p>
+
+<p
+data-lang-en="Either way... Just be aware of that."
+data-lang-de="Egal wie du dich entscheidest...">
+Either way... Just be aware of that.
+</p>
+
+<p><strong>Lightning Horn Unicorn</strong></p>
+
+
+
+
+
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:30px;margin-top:60px;">
+
+        <a href="https://www.youtube.com/watch?v=6mEqVviTbno"
+           target="_blank"
+           rel="noopener"
+           class="music-tape-link">
+
+            <div class="wobble-glitch-container">
+                <img data-src="music_Laserette.webp" alt="Laserette">
+                <div class="analog-glow"></div>
+            </div>
+
+        </a>
+
+    </div>
+</section>
 
 
 
