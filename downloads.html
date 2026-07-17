@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -6,179 +6,122 @@
   <title>Lightning Horn Unicorn – Downloads</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    * { box-sizing: border-box; }
     :root {
-      --bg-dark: #1a1a1a;
-      --bg-light: #2b2b2b;
-      --text-main: #ffd54a;
-      --text-accent: #ffae00;
-      --text-hover: #fff3b0;
-      --text-muted: #999;
+      --bg-page: #f5f3f0;
+      --text-main: #2a2a2a;
+      --text-muted: #888;
+      --text-accent: #b44;
+      --border-light: #ddd;
     }
     body {
       font-family: 'Press Start 2P', monospace;
-      background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg-dark) 100%);
+      background: var(--bg-page);
       color: var(--text-main);
       text-align: center;
-      padding: 60px 20px;
-      line-height: 1.8;
+      padding: clamp(24px, 5vw, 48px) clamp(12px, 4vw, 24px);
+      line-height: 1.9;
+      font-size: clamp(8px, 1.8vw, 11px);
     }
-    h1 { font-size: 1.3em; margin-bottom: 40px; color: var(--text-accent); text-shadow: 0 0 10px var(--text-accent); }
-    
-    /* Album Header Styling */
-    h2 { 
-      font-size: 0.9em; 
-      margin-top: 50px; 
-      margin-bottom: 20px; 
-      color: #00ffcc; /* Neon-Farbe für Alben-Titel */
-      text-transform: uppercase;
-      border-bottom: 2px solid #333;
-      display: inline-block;
-      padding-bottom: 10px;
+    h1 {
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      margin-bottom: 24px;
+      color: var(--text-accent);
+      font-weight: bold;
+      letter-spacing: 0.04em;
     }
-
-    ul.downloads { list-style: none; padding: 0; margin: 0 auto 40px auto; max-width: 800px; }
-    ul.downloads li { margin: 15px 0; }
+    ul.downloads {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto 24px auto;
+      max-width: min(88vw, 640px);
+    }
+    ul.downloads li {
+      margin: clamp(8px, 1.6vw, 14px) 0;
+      word-wrap: break-word;
+    }
     a.download {
       color: var(--text-main);
       text-decoration: none;
-      transition: all 0.3s;
       display: inline-block;
-      font-size: 0.65em;
+      font-size: clamp(0.4rem, 1.5vw, 0.55rem);
+      max-width: 90vw;
+      word-wrap: break-word;
+      padding: 6px 14px;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
     }
     a.download:hover {
-      color: var(--text-hover);
-      text-shadow: 0 0 10px var(--text-accent);
-      transform: scale(1.05);
+      background: #edeae4;
+      color: #111;
+      border-color: #bbb;
     }
-    .centered-img { display: block; margin: 0 auto 40px auto; width: 70%; max-width: 300px; border-radius: 10px; }
-    .note { margin-top: 60px; font-size: 0.55em; color: var(--text-muted); max-width: 700px; margin-left: auto; margin-right: auto; }
+    .note {
+      margin-top: 36px;
+      font-size: clamp(0.35rem, 1.3vw, 0.45rem);
+      color: var(--text-muted);
+      max-width: min(88vw, 600px);
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.9;
+      padding: 16px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+    }
   </style>
 </head>
 <body>
 
-  
-<h1>🦄 LIGHTNING 🦄</h1>
-<h1>🦄 HORN 🦄</h1>
-<h1>🦄 UNICORN 🦄</h1>
+<h1> LIGHTNING <br> HORN <br> UNICORN </h1>
 
+<ul class="downloads">  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_117.mp3" download>Lightning_Horn_Unicorn_117</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_a_force_you.mp3" download>Lightning_Horn_Unicorn_a_force_you</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Another_ps1_dream_i_had.mp3" download>Lightning_Horn_Unicorn_Another_ps1_dream_i_had</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_city_of_fathers.mp3" download>Lightning_Horn_Unicorn_city_of_fathers</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_Dreaming.mp3" download>Lightning_Horn_Unicorn_Dreaming</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Duck_Pants.mp3" download>Lightning_Horn_Unicorn_Duck_Pants</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_elk_emil.mp3" download>Lightning_Horn_Unicorn_elk_emil</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_Elk_Emil.mp3" download>Lightning_Horn_Unicorn_Elk_Emil</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_Everybody_has_got_PTSD_and_autism_is_not_a_superpower_ASide.mp3" download>Lightning_Horn_Unicorn_Everybody_has_got_PTSD_and_autism_is_not_a_superpower_ASide</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_everybody_has_ptsd_and_autism_is_not_a_superpower_alternate_version.mp3" download>Lightning_Horn_Unicorn_everybody_has_ptsd_and_autism_is_not_a_superpower_alternate_version</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_electronic_collection_extraterrestrial_mega_tarsier.mp3" download>Lightning_Horn_Unicorn_extraterrestrial_mega_tarsier</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Harambe_Has_a_Melon_Cannon.mp3" download>Lightning_Horn_Unicorn_Harambe_Has_a_Melon_Cannon</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_opera_house_chronicles_how_do_you_milk_an_invisible_cow.mp3" download>Lightning_Horn_Unicorn_how_do_you_milk_an_invisible_cow</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_I_split_mountains.mp3" download>Lightning_Horn_Unicorn_I_split_mountains</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Kittens.mp3" download>Lightning_Horn_Unicorn_Kittens</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Barista_Metal_Boot_Camping_Knight_Handhart.mp3" download>Lightning_Horn_Unicorn_Knight_Handhart</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Laserette_Laserbaguette.mp3" download>Lightning_Horn_Unicorn_Laserette_Laserbaguette</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_loading_screens.mp3" download>Lightning_Horn_Unicorn_loading_screens</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_MY_MK_ULTRA_COUNTRY_MUSIC_Turned_a_Killer_AI_into_a_HorseProt.mp3" download>Lightning_Horn_Unicorn_MY_MK_ULTRA_COUNTRY_MUSIC_Turned_a_Killer_AI_into_a_HorseProt</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Name_is_Rain.mp3" download>Lightning_Horn_Unicorn_Name_is_Rain</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___crimson_disguise.mp3" download>Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___crimson_disguise</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___voltage_queen.mp3" download>Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___voltage_queen</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_oh_giant_moth_Teenage_Riot_vs_The_DNA_Strings_Law.mp3" download>Lightning_Horn_Unicorn_oh_giant_moth_Teenage_Riot_vs_The_DNA_Strings_Law</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_oscillators_of_1985.mp3" download>Lightning_Horn_Unicorn_oscillators_of_1985</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_PacMan_leveled_up_the_ghosts_ooh_and_Mrs_Doubtfire_grabs_a_flamethrower.mp3" download>Lightning_Horn_Unicorn_PacMan_leveled_up_the_ghosts_ooh_and_Mrs_Doubtfire_grabs_a_flamethrower</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_chosen_ones.mp3" download>Lightning_Horn_Unicorn_the_chosen_ones</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_The_Legend_of_Furarri.mp3" download>Lightning_Horn_Unicorn_The_Legend_of_Furarri</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Tonagag.mp3" download>Lightning_Horn_Unicorn_Tonagag</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_electronic_collection_unison_unicorns.mp3" download>Lightning_Horn_Unicorn_unison_unicorns</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Velvet_Anabolica_Twerk.mp3" download>Lightning_Horn_Unicorn_Velvet_Anabolica_Twerk</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_What_does_a_musician_look_like.mp3" download>Lightning_Horn_Unicorn_What_does_a_musician_look_like</a></li>
+  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Barista_Metal_Boot_Camping_WOLKE_Cloud_how_do_you_lift_that_mighty_sword.mp3" download>Lightning_Horn_Unicorn_WOLKE_Cloud_how_do_you_lift_that_mighty_sword</a></li>
+</ul>
 
-
-
-<div class="video-wrapper">
-  <video width="100%" max-width="600" controls poster="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/showmethejuicywallets.webp">
-    <source src="downloads/aliens.mp4" type="video/mp4">
-    Dein Browser unterstützt kein Video-Tag.
-  </video>
+<div class="note">
+  Thank you for supporting a real artist and musician from Vienna, Austria —<br>
+  one coffee, one riff, one ridiculous idea at a time.<br><br>
+  Massive shout-out to everyone who believes in loud guitars, weirdness, and late-night<br>
+  ideas that accidentally (and through hard work) turn into masterpieces.<br><br>
+  Stay kind and inspired.<br><br>
+  All songs, lyrics, and artworks are original protected works created by<br>
+  Lightning Horn Unicorn (Vedran Lukic &amp; Aether Veylan).<br>
+  No part of this material may be used, copied, remixed, or distributed without<br>
+  explicit permission from the artist.
 </div>
-
-
-
-
-<h2>💿 Alternate 80s Timeline</h2>
-<ul class="downloads">
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Laserette_Laserbaguette.mp3" download>💾 Laserette (Laserbaguette)</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Harambe_Has_a_Melon_Cannon.mp3" download>💾 Harambe Has a Melon Cannon</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_oscillators_of_1985.mp3" download>💾 Oscillators of 1985</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_The_Legend_of_Furarri.mp3" download>💾 The Legend of Furarri</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Tonagag.mp3" download>💾 Tonagag</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_mopping_and_cleaning_like_a_god.mp3" download>💾 mopping and cleaning like a god</a></li>
-
-</ul>
-
-
-
-
-<h2>💿 404 Human Error Studies</h2>
-<ul class="downloads">
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_Consentless_Touching.mp3" download>💾 Consentless Touching</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_What_does_a_musician_look_like.mp3" download>💾 What does a musician look like</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_Everybody_has_got_PTSD_and_autism_is_not_a_superpower_ASide.mp3" download>💾 Everybody's got P.T.S.D. and autism is not a Superpower (A-Side)</a></li>
-
-</ul>
-
-
-
-<h2>💿 a.y.c.c. (Banjos not included)</h2>
-<ul class="downloads">
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_aliens_abducted_my_alcohol_and_beer_alternate_version.mp3" download>💾 Aliens Abducted My Alcohol(Alt)</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_aliens_abducted_my_alcohol_and_beer.mp3" download>💾 Aliens Abducted My Alcohol</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_Elk_Emil.mp3" download>💾 Elk Emil</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_MY_MK_ULTRA_COUNTRY_MUSIC_Turned_a_Killer_AI_into_a_HorseProt.mp3" download>💾 my mk ultra country music turned my a.i. into a peace machine</a></li>
-
-</ul>
-
-
-
-
-<h2>💿 Barista Metal Boot Camping</h2>
-<ul class="downloads">
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_Barista_Metal_Boot_Camping_Knight_Handhart.mp3" download>💾 Knight Handhart</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_Barista_Metal_Boot_Camping_WOLKE_Cloud_how_do_you_lift_that_mighty_sword.mp3" download>💾 WOLKE (cloud, how do you lift that mighty sword?)</a></li>
-
-</ul>
-
-
-
-
-<h2>💿 The Electronic Collection</h2>
-<ul class="downloads">
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_loading_screens.mp3" download>💾 Loading Screens</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_electronic_collection_extraterrestrial_mega_tarsier.mp3" download>💾 Extraterrestrial Mega Tarsier</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_electronic_collection_unison_unicorns.mp3" download>💾 Unison Unicorns</a></li>
-
-</ul>
-
-
-
-
-<h2>💿 B-Sides </h2>
-<ul class="downloads">
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_117.mp3" download>💾 1.17</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_Dreaming.mp3" download>💾 Dreaming</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_PacMan_leveled_up_the_ghosts_ooh_and_Mrs_Doubtfire_grabs_a_flamethrower.mp3" download>💾 Pac-Man / Mrs. Doubtfire</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_opera_house_chronicles_how_do_you_milk_an_invisible_cow.mp3" download>💾 How do you milk an invisible cow</a></li>
-
-<li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_city_of_fathers.mp3" download>💾 city of fathers</a></li>
-
-</ul>
-
-
-
-
-
-  <div class="note">
-    Thank you for supporting a real artist and musician from Vienna, Austria — 
-    one coffee, one riff, one ridiculous idea at a time.<br><br>
-    Massive shout-out to everyone who believes in loud guitars, weirdness, and late-night 
-    ideas that accidentally (and through hard work) turn into masterpieces.<br><br>
-    Stay kind and inspired.<br><br>
-    All songs, lyrics, and artworks are original protected works created by 
-    Lightning Horn Unicorn (Vedran Lukic &amp; Aether Veylan).<br>
-    No part of this material may be used, copied, remixed, or distributed without 
-    explicit permission from the artist.
-  </div>
 
 </body>
 </html>

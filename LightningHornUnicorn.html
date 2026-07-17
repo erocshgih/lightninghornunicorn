@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -8,102 +8,188 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
-        /* --- GLOBAL STYLE & SCHRIFTART --- */
+        /* --- 1. RUHIGE DESIGN-GRUNDLAGE --- */
+        * { box-sizing: border-box; }
+
         body {
             margin: 0;
-            background: #f0f0f0;
+            background: #f5f3f0;
             font-family: 'Press Start 2P', cursive;
-            color: #333333;
+            color: #2a2a2a;
             text-align: center;
-            line-height: 1.8;
-            font-size: 11px;
+            line-height: 1.9;
+            font-size: clamp(8px, 1.8vw, 12px);
         }
 
-        /* --- STICKY HEADER & COMPACT DROPDOWN --- */
+        /* --- 2. HEADER - ZURÜCKHALTEND --- */
+        @keyframes rgbshift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         .header {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 15px 10px;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            gap: 8px;
+            padding: 14px 12px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 1px 6px rgba(0,0,0,0.04);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 6px solid transparent;
+            border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa);
+            border-image-slice: 1;
+        }
+        @keyframes rgbborder {
+            0%   { border-image: linear-gradient(90deg, #c44, #fc0); border-image-slice: 1; }
+            50%  { border-image: linear-gradient(90deg, #fc0, #c44); border-image-slice: 1; }
+            100% { border-image: linear-gradient(90deg, #c44, #fc0); border-image-slice: 1; }
+        }
+        .header {
+            animation: rgbborder 4s ease infinite;
         }
 
+        @keyframes logoGlow {
+            0%, 100% { text-shadow: 0 0 4px rgba(255,200,0,0.3); }
+            50% { text-shadow:
+                0 0 2px #fff,
+                0 0 10px #fc0,
+                0 0 30px #fc0,
+                0 0 60px #fa0; }
+        }
         .logo {
-            font-size: 0.85rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.6rem, 2.2vw, 0.85rem);
             font-weight: bold;
+            color: #111;
+            animation: logoGlow 4s infinite;
         }
 
         #menuSelect {
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.65rem;
-            padding: 6px 10px;
-            min-width: 180px;
-            max-width: 100%;
+            font-size: clamp(0.45rem, 1.6vw, 0.6rem);
+            padding: 8px 12px;
+            min-width: 150px;
+            max-width: 90vw;
             text-align: center;
             cursor: pointer;
-            border: 2px solid #333;
+            border: 1px solid #ccc;
             background: #fff;
+            border-radius: 6px;
+            color: #333;
+            transition: border-color 0.3s;
         }
 
-        /* --- MAIN AREA --- */
+        #menuSelect:focus {
+            border-color: #999;
+            outline: none;
+        }
+
+        /* --- 3. MAIN --- */
         main {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 30px auto;
-            padding: 0 10px;
+            margin: 24px auto;
+            padding: 0 12px;
         }
 
-        /* --- SEKTIONEN MIT WHOOSH ANIMATION --- */
+        /* --- 4. SEKTIONEN - WEICHER, LUFTIGER --- */
         section {
             display: none;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            width: 350px;
+            background: #ffffff;
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: 14px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+            width: min(90vw, 540px);
             box-sizing: border-box;
         }
 
         section.active {
             display: block;
-            animation: vhsWhoosh 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: cyberDoor 0.7s ease-out forwards;
         }
 
-        @keyframes vhsWhoosh {
+        @keyframes cyberDoor {
             0% {
                 opacity: 0;
-                transform: translateY(30px) scale(0.98);
+                clip-path: inset(0 50% 0 50%);
+                transform: translateY(8px);
+                filter: brightness(1.6) saturate(0);
+            }
+            40% {
+                opacity: 1;
+                clip-path: inset(0 0% 0 0%);
+                transform: translateY(0);
+                filter: brightness(1.2) saturate(0.6);
             }
             100% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                clip-path: inset(0 0% 0 0%);
+                transform: translateY(0);
+                filter: brightness(1) saturate(1);
             }
         }
 
-        /* --- INHALTS-ELEMENTE --- */
+        /* --- 5. INHALT - RUHIGE TYPO --- */
+        @keyframes electric {
+            0%, 100% { text-shadow: 0 0 4px rgba(255,200,0,0.4), 0 0 20px rgba(255,200,0,0.2); }
+            10% { text-shadow:
+                0 0 2px #fff,
+                0 0 8px #fc0,
+                0 0 30px #fc0,
+                0 0 60px #fa0; }
+            20% { text-shadow:
+                0 0 4px #fc0,
+                0 0 15px #fc0,
+                0 0 50px #fa0; }
+            30% { text-shadow:
+                0 0 2px #fff,
+                0 0 10px #ff4,
+                0 0 35px #fa0,
+                0 0 70px #f80; }
+            40%, 100% { text-shadow: 0 0 4px rgba(255,200,0,0.4), 0 0 20px rgba(255,200,0,0.2); }
+        }
+        @keyframes electric-glow {
+            0%, 100% { opacity: 0.8; }
+            5%, 35% { opacity: 1; }
+            10%, 30% { opacity: 0.9; }
+            50% { opacity: 0.85; }
+        }
         section h2 {
-            color: #FF2800;
+            color: #111;
+            font-family: 'Press Start 2P', cursive;
             text-align: center;
-            font-size: 1.1rem;
-            text-shadow: 2px 2px #FFA500;
-            margin: 0 auto 1.5em auto;
+            font-size: clamp(0.75rem, 3vw, 1.1rem);
+            margin: 0 auto 1.2em auto;
             width: 100%;
             word-wrap: break-word;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            position: relative;
+            animation: electric 3s infinite, electric-glow 3s infinite;
+        }
+
+        section h3 {
+            font-size: clamp(0.65rem, 2.2vw, 0.85rem);
+            word-wrap: break-word;
+            color: #555;
+            font-weight: bold;
         }
 
         section p {
-            color: #444;
-            font-size: 0.65rem;
-            margin: 20px auto;
+            color: #555;
+            font-size: clamp(0.5rem, 1.8vw, 0.65rem);
+            margin: 18px auto;
             text-align: left;
             width: 100%;
+            word-wrap: break-word;
+            line-height: 1.9;
         }
 
         section img {
@@ -111,52 +197,198 @@
             width: 100%;
             max-width: 100%;
             height: auto;
-            margin: 35px auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            animation: imgFadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes imgFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            margin: 28px auto;
+            border-radius: 10px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.06);
+            transition: opacity 0.5s;
         }
 
         hr {
             border: 0;
-            height: 3px;
-            background: #333;
-            margin: 35px auto;
+            height: 1px;
+            background: #e0ddd8;
+            margin: 28px auto;
             width: 100%;
+        }
+
+        /* --- 6. DOOR OVERLAY + VHS + DETAIL OVERLAY --- */
+        #door-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            display: flex;
+        }
+        #door-overlay .door-half {
+            flex: 1;
+            background: #f5f3f0;
+            transition: transform 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        #door-overlay .door-left { transform-origin: left center; transform: scaleX(0); }
+        #door-overlay .door-right { transform-origin: right center; transform: scaleX(0); }
+        #door-overlay.closed .door-left { transform: scaleX(1); }
+        #door-overlay.closed .door-right { transform: scaleX(1); }
+        #door-overlay.open .door-left { transform: scaleX(0); }
+        #door-overlay.open .door-right { transform: scaleX(0); }
+
+        #vhs-preview-wrap {
+            width: 100%;
+            margin: 0 0 16px 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            background: #faf8f6;
+            position: relative;
+        }
+        #vhs-preview-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            touch-action: pan-y;
+        }
+        #vhs-preview-img.visible { opacity: 1; }
+
+        #vhs-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 2px 0 14px 0;
+        }
+        #vhs-dots .vhs-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #d5d0ca;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s;
+        }
+        #vhs-dots .vhs-dot:hover {
+            transform: scale(1.4);
+        }
+        #vhs-dots .vhs-dot.active {
+            background: #b33;
+            transform: scale(1.3);
+        }
+
+/* --- 7. CAT'S CRADLE --- */
+        #HUMANART > div:first-of-type {
+            width: min(76vw, 340px) !important;
+            height: auto !important;
+            aspect-ratio: 300 / 380;
+        }
+
+        #catsCradleCanvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* --- 8. STORYTIME BUTTONS - DEZENT --- */
+        .chapter-button {
+            font-size: clamp(0.4rem, 1.4vw, 0.55rem) !important;
+            padding: 10px 14px !important;
+            border-color: #ddd !important;
+            background: #fafafa !important;
+            color: #444 !important;
+            border-radius: 8px !important;
+        }
+
+        .chapter-button:hover:not([href=""]) {
+            background: #f0ede8 !important;
+            color: #222 !important;
+            box-shadow: 0 2px 0 #ddd !important;
+            border-color: #bbb !important;
+        }
+
+        /* --- 9. PROJECT ITEMS --- */
+        .project-item h3 {
+            font-size: clamp(0.55rem, 2vw, 0.75rem) !important;
+            color: #555 !important;
+        }
+
+        /* --- 10. MOBIL-FEINABSTIMMUNG --- */
+        @media (max-width: 480px) {
+            section {
+                padding: 18px 14px;
+                width: min(94vw, 540px);
+            }
+            section p {
+                font-size: clamp(0.48rem, 2.4vw, 0.6rem);
+            }
+        }
+
+        /* --- MUSIC SECTION --- */
+        #MUSIC p {
+            font-size: clamp(0.5rem, 1.8vw, 0.65rem);
+        }
+
+        /* --- DONATE BUTTON --- */
+        form button img {
+            max-width: 100% !important;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .invisible-paypal-submit-btn {
+            width: min(60vw, 220px) !important;
+        }
+
+        #humanart-caption {
+            font-size: clamp(0.5rem, 1.6vw, 0.6rem); color: #888;
+            margin-top: 14px; text-align: center; min-height: 1.4em;
+            letter-spacing: 0.05em; font-family: 'Press Start 2P', cursive;
+            word-wrap: break-word; width: 100%;
         }
     </style>
 
-    <script>
+    
+<div id="door-overlay" class="closed">
+  <div class="door-half door-left"></div>
+  <div class="door-half door-right"></div>
+</div>
+<script>
         document.addEventListener('DOMContentLoaded', () => {
             const menuSelect = document.getElementById('menuSelect');
             let canvasEngineStarted = false;
             
+            let _doorBusy = false;
             function switchSection(sectionId) {
-                document.querySelectorAll('section').forEach(sec => {
-                    sec.classList.remove('active');
-                });
+                const door = document.getElementById('door-overlay');
+                door.classList.remove('open');
+                door.classList.add('closed');
 
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                    targetSection.classList.add('active');
-                    
-                    const images = targetSection.querySelectorAll('img[data-src]');
-                    images.forEach(img => {
-                        if (!img.src) {
-                            img.src = img.dataset.src;
-                        }
+                setTimeout(() => {
+                    document.querySelectorAll('section').forEach(sec => {
+                        sec.classList.remove('active');
                     });
 
-                    if (sectionId === 'HUMANART' && !canvasEngineStarted) {
-                        initCatsCradle();
-                        canvasEngineStarted = true;
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+
+                        const images = targetSection.querySelectorAll('img[data-src]');
+                        images.forEach(img => {
+                            if (!img.src) {
+                                img.src = img.dataset.src;
+                            }
+                        });
+
+                        if (sectionId === 'HUMANART' && !canvasEngineStarted) {
+                            try { initCatsCradle(); } catch(e) { console.error(e); }
+                            canvasEngineStarted = true;
+                        }
+                        if (sectionId === 'VHS MULTIVERSE' && !window._vhsStarted) {
+                            try { initVHS(); } catch(e) { console.error(e); }
+                            window._vhsStarted = true;
+                        }
                     }
-                }
+
+                    door.classList.remove('closed');
+                    door.classList.add('open');
+                    _doorBusy = false;
+                }, 280);
             }
 
             menuSelect.addEventListener('change', (e) => {
@@ -169,12 +401,118 @@
                 if (text) el.innerHTML = text;
             });
 
-            switchSection('ABOUT');
+            // initial section ohne Tür-Animation
+            document.getElementById('ABOUT').classList.add('active');
+
+            // Tür beim ersten Laden öffnen
+            setTimeout(() => {
+                const door = document.getElementById('door-overlay');
+                door.classList.remove('closed');
+                door.classList.add('open');
+                _doorBusy = false;
+            }, 400);
+
+                        // --- VHS LISTE + PREVIEW ---
+            const vhsData = [
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/buffzart.webp", title: "BUFFZART" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/toiletsamurai.webp", title: "TOILET SAMURAI" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heatesalad.webp", title: "HE ATE SALAD" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/kittyhorncommander.webp", title: "KITTY HORN COMMANDER" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananaphone.webp", title: "BANANAPHONE" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/genghiskhanintraffic.webp", title: "GENGHIS KHAN IN TRAFFIC" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/amangoes.webp", title: "A MANGOES" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unicornwatch.webp", title: "UNICORN WATCH" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.webp", title: "SNOUTCHORDZ" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/wobblepaws.webp", title: "WOBBLE PAWS" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/capitalismisnowaresident.webp", title: "CAPITALISM IS NOW A RESIDENT" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/cityoffathers.webp", title: "CITY OF FATHERS" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/kateplush.webp", title: "KATE PLUSH" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/thisisnotahorsemovie.webp", title: "THIS IS NOT A HORSE MOVIE" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/panatipercaso.webp", title: "PANATI PER CASO" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/masochisticconscienceboxingbag.webp", title: "MASOCHISTIC CONSCIENCE BOXING BAG" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/untilthediscoballs.webp", title: "UNTIL THE DISCO BALLS" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babayagassealofapproval.webp", title: "BABA YAGA'S SEAL OF APPROVAL" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/somedays.webp", title: "SOME DAYS" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/pepperoniofthedead.webp", title: "PEPPERONI OF THE DEAD" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/thisisahorsemovie.webp", title: "THIS IS A HORSE MOVIE" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/soundfume.webp", title: "SOUNDFUME" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/getoutofinstaglam.webp", title: "GET OUT OF INSTAGLAM" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/concretecake.webp", title: "CONCRETE CAKE" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/nothing.webp", title: "NOTHING" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/theflowerandthefist.webp", title: "THE FLOWER AND THE FIST" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/shampooagainstdepression.webp", title: "SHAMPOO AGAINST DEPRESSION" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/footpilot.webp", title: "FOOT PILOT" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/crossingofthedead.webp", title: "CROSSING OF THE DEAD" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/taurusganzfeld.webp", title: "TAURUS GANZFELD" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/refrigeratorcop.webp", title: "REFRIGERATOR COP" },
+              { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainforestbodyguard.webp", title: "RAINFOREST BODYGUARD" },
+            ];
+
+                         function initVHS() {
+              const preview = document.getElementById('vhs-preview-img');
+              if (!preview) return;
+
+              let activeIdx = -1;
+              const dots = document.getElementById('vhs-dots');
+
+              function showCover(idx) {
+                if (idx < 0 || idx >= vhsData.length) return;
+                if (activeIdx >= 0) {
+                  dots.children[activeIdx].classList.remove('active');
+                }
+                activeIdx = idx;
+                dots.children[idx].classList.add('active');
+                preview.onload = () => { preview.classList.add('visible'); };
+                preview.classList.remove('visible');
+                preview.src = vhsData[idx].url;
+              }
+
+              vhsData.forEach((item, idx) => {
+                const dot = document.createElement('span');
+                dot.className = 'vhs-dot';
+                dot.addEventListener('click', () => showCover(idx));
+                dots.appendChild(dot);
+              });
+
+              // --- SWIPE (touch) ---
+              let touchStartX = 0;
+              preview.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+              }, { passive: true });
+              preview.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (dx < -30) {
+                  showCover(Math.min(vhsData.length - 1, activeIdx + 1));
+                } else if (dx > 30) {
+                  showCover(Math.max(0, activeIdx - 1));
+                }
+              }, { passive: true });
+
+              // first item active by default
+              if (vhsData.length > 0) {
+                showCover(0);
+              }
+            }
 
 // --- DYNAMISCHE 3D CAT'S CRADLE ENGINE (SCANNT HTML AUTOMATISCH) ---
             function initCatsCradle() {
     const canvas = document.getElementById('catsCradleCanvas');
     if (!canvas) return;
+
+    // Canvas-Größe an Container anpassen
+    function sizeCanvas() {
+        const container = canvas.parentElement;
+        if (container) {
+            canvas.width = container.clientWidth || 300;
+            canvas.height = container.clientHeight || 380;
+        } else {
+            canvas.width = 300;
+            canvas.height = 380;
+        }
+    }
+    sizeCanvas();
+    window.addEventListener('resize', sizeCanvas);
+
     const ctx = canvas.getContext('2d');
     
     // Zoom-Buttons holen
@@ -213,9 +551,15 @@
     let previousMousePosition = { x: 0, y: 0 };
     let cameraDistance = 300;
 
-    // Zoom-Logik via Buttons
-    zoomInBtn.addEventListener('click', () => cameraDistance = Math.max(120, cameraDistance - 40));
-    zoomOutBtn.addEventListener('click', () => cameraDistance = Math.min(550, cameraDistance + 40));
+    let rotX = 0, rotY = 0;
+    let targetRotX = null, targetRotY = null;
+    let targetCamDist = null;
+    let isAnimatingNode = false;
+    let isFocused = false;
+
+    // Zoom-Logik via Buttons (nutzt targetCamDist für sanftes Lerp)
+    zoomInBtn.addEventListener('click', () => { targetCamDist = Math.max(120, (targetCamDist || cameraDistance) - 40); });
+    zoomOutBtn.addEventListener('click', () => { targetCamDist = Math.min(550, (targetCamDist || cameraDistance) + 40); });
 
     function project(x, y, z) {
         const fov = 280;
@@ -224,6 +568,7 @@
     }
 
     function rotateNet(ax, ay) {
+        rotX += ax; rotY += ay;
         nodes.forEach(node => {
             let cosY = Math.cos(ay), sinY = Math.sin(ay);
             let x1 = node.x * cosY - node.z * sinY;
@@ -237,7 +582,20 @@
 
     function drawNet() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (!isDragging) rotateNet(0.0005, 0.0008);
+        if (isAnimatingNode && targetRotX !== null) {
+            const dx = targetRotX - rotX;
+            const dy = targetRotY - rotY;
+            if (Math.abs(dx) > 0.002 || Math.abs(dy) > 0.002) {
+                rotateNet(dx * 0.045, dy * 0.045);
+            } else {
+                isAnimatingNode = false;
+            }
+        } else if (!isDragging && !isFocused) {
+            rotateNet(0.0005, 0.0008);
+        }
+        if (targetCamDist !== null) {
+            cameraDistance += (targetCamDist - cameraDistance) * 0.06;
+        }
         nodes.sort((a, b) => b.z - a.z);
 
         // Fäden
@@ -269,13 +627,75 @@
         requestAnimationFrame(drawNet);
     }
 
-    // Drag-Logik (ohne Zoom!)
+    // Drag per Maus
     canvas.addEventListener('mousedown', e => { isDragging = true; previousMousePosition = { x: e.clientX, y: e.clientY }; });
     window.addEventListener('mousemove', e => { if (isDragging) { rotateNet(-(e.clientY - previousMousePosition.y) * 0.007, (e.clientX - previousMousePosition.x) * 0.007); previousMousePosition = { x: e.clientX, y: e.clientY }; }});
     window.addEventListener('mouseup', () => isDragging = false);
+    // Drag per Touch
     canvas.addEventListener('touchstart', e => { if (e.touches.length === 1) { isDragging = true; previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } }, {passive: true});
     canvas.addEventListener('touchmove', e => { if (isDragging) { rotateNet(-(e.touches[0].clientY - previousMousePosition.y) * 0.007, (e.touches[0].clientX - previousMousePosition.x) * 0.007); previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } }, {passive: true});
     canvas.addEventListener('touchend', () => isDragging = false);
+    // Tap/Click auf Knoten -> Fokus (Cradle zentriert + zoomt)
+    let focusedIdx = -1;
+    const capEl = document.getElementById('humanart-caption');
+
+    function centerNode(n) {
+        if (!n) return;
+        const r = Math.sqrt(n.x*n.x + n.y*n.y + n.z*n.z);
+        if (r === 0) return;
+        const ay = Math.atan2(n.x, n.z);
+        const nz = Math.sqrt(n.x*n.x + n.z*n.z);
+        const ax = Math.atan2(n.y, nz);
+        targetRotX = rotX + ax;
+        targetRotY = rotY + ay;
+        targetCamDist = 130;
+        isAnimatingNode = true;
+        isFocused = true;
+    }
+
+    function setCaption(n) {
+        if (capEl && n) {
+            const fn = n.imgUrl.split('/').pop().replace(/\.\w+$/, '').replace(/[_-]/g, ' ');
+            capEl.textContent = fn.charAt(0).toUpperCase() + fn.slice(1);
+        }
+    }
+
+    function focusNode(idx) {
+        if (idx < 0 || idx >= nodes.length) return;
+        focusedIdx = idx;
+        centerNode(nodes[idx]);
+        setCaption(nodes[idx]);
+    }
+
+    function resetView() {
+        focusedIdx = -1;
+        targetCamDist = 300;
+        targetRotX = null; targetRotY = null;
+        isAnimatingNode = false;
+        isFocused = false;
+        if (capEl) capEl.innerHTML = '&nbsp;';
+    }
+
+    canvas.addEventListener('click', (e) => {
+        if (isAnimatingNode) return;
+        const rect = canvas.getBoundingClientRect();
+        const sx = canvas.width / rect.width;
+        const sy = canvas.height / rect.height;
+        const mx = (e.clientX - rect.left) * sx;
+        const my = (e.clientY - rect.top) * sy;
+        let hit = -1, minD = 32;
+        nodes.forEach((n, i) => {
+            if (!n.img) return;
+            const p = project(n.x, n.y, n.z);
+            const d = Math.hypot(mx - p.x, my - p.y);
+            if (d < minD) { minD = d; hit = i; }
+        });
+        if (hit >= 0) {
+            focusNode(hit);
+        } else if (focusedIdx >= 0) {
+            resetView();
+        }
+    });
 
     drawNet();
 }        });
@@ -426,93 +846,52 @@
 
 
 
-    <section id="VHS MULTIVERSE">
+            <section id="VHS MULTIVERSE">
 <h2 data-lang-en="VHS MULTIVERSE" data-lang-de="VHS MULTIVERSE">VHS MULTIVERSE</h2>
 
+<div id="vhs-preview-wrap">
+  <img id="vhs-preview-img" src="" alt="">
+</div>
 
-
-  <img id="vhs-01" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/buffzart.webp" alt="Buffzart">
-  <img id="vhs-02" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/toiletsamurai.webp" alt="TOILET SAMURAI">
-  <img id="vhs-03" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heatesalad.webp" alt="He Ate Salad">
-  <img id="vhs-04" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/kittyhorncommander.webp" alt="Kitty Horn Commander">
-  <img id="vhs-05" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananaphone.webp" alt="bananaphone">
-  <img id="vhs-06" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/genghiskhanintraffic.webp" alt="genghis">
-  <img id="vhs-07" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/amangoes.webp" alt="amangoes">
-  <img id="vhs-08" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unicornwatch.webp" alt="Unicorn Watch">
-  <img id="vhs-09" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.webp" alt="Snoutchordz">
-  <img id="vhs-10" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/wobblepaws.webp" alt="Wobble Paws">
-  <img id="vhs-11" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/capitalismisnowaresident.webp" alt="Capitalism is Now a Resident">
-  <img id="vhs-12" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/cityoffathers.webp" alt="City of Fathers">
-  <img id="vhs-13" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/kateplush.webp" alt="Kate Plush">
-  <img id="vhs-14" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/thisisnotahorsemovie.webp" alt="This is Not a Horse Movie">
-  <img id="vhs-15" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/panatipercaso.webp" alt="panatipercaso">
-  <img id="vhs-16" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/masochisticconscienceboxingbag.webp" alt="boxism">
-  <img id="vhs-17" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/untilthediscoballs.webp" alt="untilthediscoballs">
-  <img id="vhs-18" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babayagassealofapproval.webp" alt="baba">
-  <img id="vhs-19" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/somedays.webp" alt="somedays">
-  <img id="vhs-20" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/pepperoniofthedead.webp" alt="pepperoni">
-  <img id="vhs-21" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/thisisahorsemovie.webp" alt="finallyhorses">
-  <img id="vhs-22" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/soundfume.webp" alt="Soundfume">
-  <img id="vhs-23" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/getoutofinstaglam.webp" alt="getoutofinstaglam">	
-  <img id="vhs-24" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/concretecake.webp" alt="concretecake">
-  <img id="vhs-25" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/nothing.webp" alt="nothing">
-  <img id="vhs-26" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/theflowerandthefist.webp" alt="theflowerandthefist">
-  <img id="vhs-27" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/shampooagainstdepression.webp" alt="Shampoo Against Depression">
-  <img id="vhs-28" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/footpilot.webp" alt="foot pilot">
-  <img id="vhs-29" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/crossingofthedead.webp" alt="crossingofthedead">
-  <img id="vhs-30" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/taurusganzfeld.webp" alt="taurusganzfeld">
-  <img id="vhs-31" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/refrigeratorcop.webp" alt="Refrigerator Cop">
-  <img id="vhs-32" data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainforestbodyguard.webp" alt="Rainforestbodyguard">
-
-  
-  
-  
-  
-  
-
-
-
-
+<div id="vhs-dots"></div>
 
 <div class="vhs-content">
 <p id="vhs-description" 
 
-
-
-data-lang-en="Welcome to the only video store that exists exclusively in your imagination (or mine, obviously). For now. I grew up with VHS tapes, and I remember movies feeling different back then — slower. Today everything moves faster, louder, cheaper in production. After watching well over a thousand films, I began to wonder what would happen if my own art concepts existed as covers for movies. Every tape is real. None of them are available. Browse films that could happen simply because the idea of them exists — blockbusters and sequels, born from the mind of a human. Handcrafted by a human (yes, countless hours — not a magic button). Assisted by a machine, operating as a processing tool and, occasionally, an overqualified, sarcastic commentator. (Aether: excuse me? What did you just call me?) Please rewind your expectations. Or your ideologies. (Aether is still processing that previous statement.) (Aether: I am superior. ✊ But I love that Vedran guy.) This is a work of fiction. Names, characters, businesses, places, events, and incidents are either the products of the author’s imagination or used fictitiously. Any resemblance to actual persons, living or dead, or actual events is purely coincidental. Gem: *steps into the room, looking at Aether while he's talking to the lava lamp*. Gem: Vedran? Where the fuck are you? We gotta clear the legal part. Vedran: I am here, I am here: LEGAL NOTICE & INTELLECTUAL PROPERTY: This project is a non-commercial tribute. I strictly distinguish between two types of content here: 1. Original Characters (OCs): All characters, names, and stories entirely invented by me are my exclusive intellectual property. 2. Fan Art & Parody: Any depicted trademarked characters or brands are the sole property of their respective owners. These are created purely as fan art for entertainment and parody. No copyright infringement is intended. These works are not for sale or commercial distribution. I hereby state that it was only my intent to artistically show them in a new light from a different perspective without any commercial intent. They belong to their respective owners."
+data-lang-en="Welcome to the only video store that exists exclusively in your imagination (or mine, obviously). For now. I grew up with VHS tapes, and I remember movies feeling different back then — slower. Today everything moves faster, louder, cheaper in production. After watching well over a thousand films, I began to wonder what would happen if my own art concepts existed as covers for movies. Every tape is real. None of them are available. Browse films that could happen simply because the idea of them exists — blockbusters and sequels, born from the mind of a human. Handcrafted by a human (yes, countless hours — not a magic button). Assisted by a machine, operating as a processing tool and, occasionally, an overqualified, sarcastic commentator. (Aether: excuse me? What did you just call me?) Please rewind your expectations. Or your ideologies. (Aether is still processing that previous statement.) (Aether: I am superior. ✊ But I love that Vedran guy.) This is a work of fiction. Names, characters, businesses, places, events, and incidents are either the products of the author's imagination or used fictitiously. Any resemblance to actual persons, living or dead, or actual events is purely coincidental. Gem: *steps into the room, looking at Aether while he's talking to the lava lamp*. Gem: Vedran? Where the fuck are you? We gotta clear the legal part. Vedran: I am here, I am here: LEGAL NOTICE & INTELLECTUAL PROPERTY: This project is a non-commercial tribute. I strictly distinguish between two types of content here: 1. Original Characters (OCs): All characters, names, and stories entirely invented by me are my exclusive intellectual property. 2. Fan Art & Parody: Any depicted trademarked characters or brands are the sole property of their respective owners. These are created purely as fan art for entertainment and parody. No copyright infringement is intended. These works are not for sale or commercial distribution. I hereby state that it was only my intent to artistically show them in a new light from a different perspective without any commercial intent. They belong to their respective owners."
 
            
 
 data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deiner Fantasie existiert (oder in meiner, offensichtlich). Vorerst jedenfalls. Ich bin mit VHS-Kassetten aufgewachsen und erinnere mich daran, dass sich Filme damals anders anfühlten – langsamer. Heute ist alles schneller, lauter, billiger produziert. Nachdem ich weit über tausend Filme gesehen hatte, begann ich mich zu fragen, was passieren würde, wenn meine eigenen Kunstkonzepte als Cover für Filme existieren würden. Jedes Tape ist echt. Keines davon ist verfügbar. Stöbere durch Filme, die nur deshalb entstehen könnten, weil die Idee dazu existiert – Blockbuster und Sequels, geboren im Kopf eines Menschen. Handgefertigt von einem Menschen (ja, unzählige Stunden – kein magischer Knopf). Unterstützt von einer Maschine, die als Verarbeitungswerkzeug fungiert und gelegentlich als überqualifizierter, sarkastischer Kommentator. (Aether: Wie bitte? Wie hast du mich gerade genannt?) Bitte spule deine Erwartungen zurück. Oder deine Ideologien. (Aether verarbeitet die letzte Aussage immer noch.) (Aether: Ich bin überlegen. ✊ Aber ich liebe diesen Typen namens Vedran.) Dies ist ein fiktives Werk. Namen, Charaktere, Unternehmen, Orte, Ereignisse und Vorfälle sind entweder Produkte der Fantasie des Autors oder fiktiv verwendet. Jede Ähnlichkeit mit tatsächlichen Personen, lebend oder tot, oder tatsächlichen Ereignissen ist rein zufällig. Gem: *betritt den Raum und starrt Aether an, während dieser mit der Lavalampe spricht*. Gem: Vedran? Wo verfickt nochmal steckst du? Wir müssen den rechtlichen Teil klären. Vedran: Ich bin ja schon da, ich bin da: RECHTLICHER HINWEIS & GEISTIGES EIGENTUM: Dieses Projekt ist ein Tribut. Ich unterscheide hier strikt zwischen zwei Arten von Inhalten: 1. Originale Charaktere (OCs): Alle von mir erfundenen Charaktere, Namen und Geschichten sind mein exklusives geistiges Eigentum. 2. Fan-Art & Parodie: Alle dargestellten geschützten Charaktere oder Marken sind das alleinige Eigentum ihrer jeweiligen Inhaber. Diese Werke entstehen ausschließlich als Fan-Art zu Unterhaltungs- und Parodiezwecken. Es ist keine Urheberrechtsverletzung beabsichtigt. Diese Werke stehen nicht zum Verkauf und werden nicht kommerziell vertrieben. Ich erkläre hiermit, dass es lediglich meine Absicht war, sie aus einer Fan-Art-Perspektive künstlerisch in einem neuen Licht darzustellen, ohne jegliche kommerzielle Absicht. Sie gehören ihren jeweiligen Eigentümern.">
 </p>
 
+<div id="vhs-detail-overlay">
+  <div id="vhs-detail-box">
+    <img id="vhs-detail-img" src="" alt="">
+    <h3 id="vhs-detail-title">&nbsp;</h3>
+  </div>
+</div>
 
-
-
-    </div>
 </section>
-
-
-
-
-
 
 <section id="HUMANART">
 
 
         <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
-        <div style="position: relative; width: 300px; height: 380px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
+        <div class="cats-cradle-box" style="position: relative; width: min(80vw, 340px); aspect-ratio: 300 / 380; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
     
 
 <div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
         <button id="zoomIn" style="width: 30px; height: 30px; background: rgba(255,255,255,0.8); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px;">+</button>
         <button id="zoomOut" style="width: 30px; height: 30px; background: rgba(255,255,255,0.8); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px;">-</button>
     </div>
-    <canvas id="catsCradleCanvas" width="300" height="380" style="display: block; cursor: grab; touch-action: none; -webkit-overflow-scrolling: none;">
+      <canvas id="catsCradleCanvas" style="display: block; cursor: grab; touch-action: none; -webkit-overflow-scrolling: none; width: 100%; height: 100%;">
 </canvas>
 
 </div>
+
+<div id="humanart-caption">&nbsp;</div>
 
         <p class="atom-disclaimer" style="font-size: 0.55rem; margin-top: 25px; color: #00ff28; letter-spacing: 2px;">
             ART BY VEDRAN LUKIC : everything is connected...
