@@ -45,6 +45,19 @@
       from { filter: hue-rotate(0deg); }
       to   { filter: hue-rotate(360deg); }
     }
+    @keyframes electricJitter {
+      0%   { transform: translate(-2px, 0); }
+      25%  { transform: translate(2px, -1px); }
+      50%  { transform: translate(-1.5px, 1px); }
+      75%  { transform: translate(1.5px, -0.5px); }
+      100% { transform: translate(-2px, 0); }
+    }
+    .title-jitter span {
+      display: inline-block;
+      animation: electricJitter 0.08s steps(2, end) infinite;
+      color: var(--orange);
+      text-shadow: 0 0 6px var(--yellow), 0 0 12px rgba(255,196,0,0.7);
+    }
     body {
       font-family: 'Press Start 2P', monospace;
       background: var(--bg-page);
@@ -158,6 +171,10 @@
       from { transform: translateX(0); }
       to   { transform: translateX(-122vw); }
     }
+    @keyframes duckFlyGiant {
+      from { transform: translateX(0); }
+      to   { transform: translateX(var(--fly-end, -140vw)); }
+    }
     @keyframes duckBob {
       from { transform: translateY(-5px) rotate(-7deg); }
       to   { transform: translateY(5px) rotate(7deg); }
@@ -269,6 +286,59 @@ Vedran Lukic & Aether Veylan
     img.style.height = 'auto';
     d.appendChild(img);
     flock.appendChild(d);
+  }
+
+  function spawnGiantDuck() {
+    var d = document.createElement('div'); d.className = 'duck';
+    var img = document.createElement('img'); img.src = 'duck.png'; img.alt = '';
+    var size = Math.floor(80 * (3 + Math.random() * 2));
+    var top = Math.floor(Math.random() * 78);
+    var dur = 10 + Math.random() * 6;
+    d.style.top = top + 'vh';
+    d.style.setProperty('--fly-end', 'calc(-100vw - ' + (size + 60) + 'px)');
+    d.style.animation = 'duckFlyGiant ' + dur.toFixed(2) + 's linear forwards';
+    img.style.width = size + 'px';
+    img.style.height = 'auto';
+    d.appendChild(img);
+    flock.appendChild(d);
+    setTimeout(function() { if (d.parentNode) d.parentNode.removeChild(d); }, dur * 1000 + 300);
+  }
+  setInterval(spawnGiantDuck, 10000);
+
+  var links = document.querySelectorAll('a.download');
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener('click', function(e) {
+      if (this.dataset.busy === '1') return;
+      e.preventDefault();
+      var link = this;
+      link.dataset.busy = '1';
+      var href = link.getAttribute('href');
+      var dl = link.getAttribute('download');
+      var originalText = link.innerHTML;
+      var originalWidth = link.offsetWidth;
+      var word = 'Downloading...';
+      link.style.minWidth = originalWidth + 'px';
+      link.classList.add('title-jitter');
+      link.innerHTML = '';
+      for (var c = 0; c < word.length; c++) {
+        var s = document.createElement('span');
+        s.textContent = word.charAt(c) === ' ' ? '\u00A0' : word.charAt(c);
+        s.style.animationDelay = (Math.random() * 0.08).toFixed(3) + 's';
+        link.appendChild(s);
+      }
+      setTimeout(function() {
+        link.classList.remove('title-jitter');
+        link.innerHTML = originalText;
+        link.style.minWidth = '';
+        var tmp = document.createElement('a');
+        tmp.href = href;
+        if (dl !== null) tmp.setAttribute('download', dl);
+        document.body.appendChild(tmp);
+        tmp.click();
+        document.body.removeChild(tmp);
+        link.dataset.busy = '0';
+      }, 500);
+    });
   }
 })();
 </script>
