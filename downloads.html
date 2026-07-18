@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -8,11 +8,42 @@
   <style>
     * { box-sizing: border-box; }
     :root {
-      --bg-page: #f5f3f0;
-      --text-main: #2a2a2a;
-      --text-muted: #888;
-      --text-accent: #b44;
-      --border-light: #ddd;
+      --bg-page: #ffffff;
+      --text-main: #3a2400;
+      --text-muted: #a07a2a;
+      --yellow: #ffc400;
+      --orange: #ff7a00;
+      --border-light: #e6c890;
+    }
+
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0) rotate(-6deg); }
+      50% { transform: translateY(-16px) rotate(6deg); }
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      45% { opacity: 0.55; transform: scale(0.92); }
+      55% { opacity: 1; transform: scale(1.06); }
+    }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes chroma {
+      0%, 100% { text-shadow: 1px 0 rgba(255,40,90,0.55), -1px 0 rgba(40,170,255,0.55); }
+      50% { text-shadow: 1.6px 0 rgba(255,40,90,0.6), -1.6px 0 rgba(40,170,255,0.6); }
+    }
+    @keyframes chromaHover {
+      0%, 100% { text-shadow: 2px 0 rgba(255,40,90,0.85), -2px 0 rgba(40,170,255,0.85), 0 0 12px rgba(255,196,0,0.5); }
+      50% { text-shadow: 3px 0 rgba(255,40,90,0.9), -3px 0 rgba(40,170,255,0.9), 0 0 16px rgba(255,122,0,0.55); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes hueCycle {
+      from { filter: hue-rotate(0deg); }
+      to   { filter: hue-rotate(360deg); }
     }
     body {
       font-family: 'Press Start 2P', monospace;
@@ -22,13 +53,51 @@
       padding: clamp(24px, 5vw, 48px) clamp(12px, 4vw, 24px);
       line-height: 1.9;
       font-size: clamp(8px, 1.8vw, 11px);
+      min-height: 100vh;
+    }
+    .bolt {
+      position: fixed;
+      top: 18px; right: 22px;
+      font-size: clamp(30px, 6vw, 56px);
+      animation: floatY 4.5s ease-in-out infinite, flicker 6s steps(1) infinite;
+      filter: drop-shadow(0 0 10px var(--orange));
+      pointer-events: none;
+      z-index: 5;
+    }
+    .bar {
+      height: 12px;
+      width: min(92vw, 720px);
+      margin: 0 auto;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #ffc400, #ff7a00);
+      box-shadow: 0 0 12px rgba(255,122,0,0.25);
+      animation: hueCycle 14s linear infinite;
     }
     h1 {
       font-size: clamp(1rem, 4vw, 1.4rem);
-      margin-bottom: 24px;
-      color: var(--text-accent);
+      margin: 16px 0;
+      color: var(--yellow);
       font-weight: bold;
       letter-spacing: 0.04em;
+      display: inline-block;
+      padding: 8px 24px;
+      background: #fff;
+    }
+    .spacer { height: 36px; }
+    h2.genre {
+      font-size: clamp(0.7rem, 2.6vw, 0.95rem);
+      margin: 40px 0 18px 0;
+      letter-spacing: 0.06em;
+      display: inline-block;
+      padding-bottom: 6px;
+      border-bottom: 3px solid transparent;
+      border-image: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow)) 1;
+      background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
     }
     ul.downloads {
       list-style: none;
@@ -39,6 +108,8 @@
     ul.downloads li {
       margin: clamp(8px, 1.6vw, 14px) 0;
       word-wrap: break-word;
+      opacity: 0;
+      animation: riseIn 0.6s ease forwards;
     }
     a.download {
       color: var(--text-main);
@@ -51,12 +122,15 @@
       background: #fff;
       border: 1px solid var(--border-light);
       border-radius: 8px;
-      transition: background 0.25s, color 0.25s, border-color 0.25s;
+      animation: chroma 3.2s ease-in-out infinite;
+      transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
     }
     a.download:hover {
-      background: #edeae4;
-      color: #111;
-      border-color: #bbb;
+      color: #7a3d00;
+      border-color: var(--orange);
+      transform: translateY(-3px);
+      box-shadow: 0 0 14px rgba(255,196,0,0.7), 0 0 28px rgba(255,122,0,0.45);
+      animation: chromaHover 0.8s ease-in-out infinite;
     }
     .note {
       margin-top: 36px;
@@ -67,48 +141,97 @@
       margin-right: auto;
       line-height: 1.9;
       padding: 16px;
-      background: #fff;
+      background: #fffdf7;
+      border: 1px solid var(--border-light);
       border-radius: 10px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 18px rgba(255,196,0,0.12);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      ul.downloads li { opacity: 1; }
+      a.download { text-shadow: 1px 0 rgba(255,40,90,0.5), -1px 0 rgba(40,170,255,0.5); }
+    }
+    .page { position: relative; z-index: 1; }
+    #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .duck { position: absolute; left: 100%; will-change: transform; }
+    .duck img { display: block; opacity: 0.6; animation: duckBob 2.4s ease-in-out infinite alternate; }
+    @keyframes duckFly {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-122vw); }
+    }
+    @keyframes duckBob {
+      from { transform: translateY(-5px) rotate(-7deg); }
+      to   { transform: translateY(5px) rotate(7deg); }
     }
   </style>
 </head>
 <body>
 
-<h1> LIGHTNING <br> HORN <br> UNICORN </h1>
+<div id="duckFlock"></div>
+<div class="bolt">&#9889;</div>
+<div class="page">
 
-<ul class="downloads">  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_117.mp3" download>Lightning_Horn_Unicorn_117</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_a_force_you.mp3" download>Lightning_Horn_Unicorn_a_force_you</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Another_ps1_dream_i_had.mp3" download>Lightning_Horn_Unicorn_Another_ps1_dream_i_had</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_city_of_fathers.mp3" download>Lightning_Horn_Unicorn_city_of_fathers</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_Dreaming.mp3" download>Lightning_Horn_Unicorn_Dreaming</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Duck_Pants.mp3" download>Lightning_Horn_Unicorn_Duck_Pants</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_elk_emil.mp3" download>Lightning_Horn_Unicorn_elk_emil</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_Elk_Emil.mp3" download>Lightning_Horn_Unicorn_Elk_Emil</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_Everybody_has_got_PTSD_and_autism_is_not_a_superpower_ASide.mp3" download>Lightning_Horn_Unicorn_Everybody_has_got_PTSD_and_autism_is_not_a_superpower_ASide</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_everybody_has_ptsd_and_autism_is_not_a_superpower_alternate_version.mp3" download>Lightning_Horn_Unicorn_everybody_has_ptsd_and_autism_is_not_a_superpower_alternate_version</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_electronic_collection_extraterrestrial_mega_tarsier.mp3" download>Lightning_Horn_Unicorn_extraterrestrial_mega_tarsier</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Harambe_Has_a_Melon_Cannon.mp3" download>Lightning_Horn_Unicorn_Harambe_Has_a_Melon_Cannon</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_opera_house_chronicles_how_do_you_milk_an_invisible_cow.mp3" download>Lightning_Horn_Unicorn_how_do_you_milk_an_invisible_cow</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_I_split_mountains.mp3" download>Lightning_Horn_Unicorn_I_split_mountains</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Kittens.mp3" download>Lightning_Horn_Unicorn_Kittens</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Barista_Metal_Boot_Camping_Knight_Handhart.mp3" download>Lightning_Horn_Unicorn_Knight_Handhart</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Laserette_Laserbaguette.mp3" download>Lightning_Horn_Unicorn_Laserette_Laserbaguette</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_loading_screens.mp3" download>Lightning_Horn_Unicorn_loading_screens</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_aycc_banjos_not_included_MY_MK_ULTRA_COUNTRY_MUSIC_Turned_a_Killer_AI_into_a_HorseProt.mp3" download>Lightning_Horn_Unicorn_MY_MK_ULTRA_COUNTRY_MUSIC_Turned_a_Killer_AI_into_a_HorseProt</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Name_is_Rain.mp3" download>Lightning_Horn_Unicorn_Name_is_Rain</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___crimson_disguise.mp3" download>Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___crimson_disguise</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___voltage_queen.mp3" download>Lightning_Horn_Unicorn_oh_giant_moth_alternate_version___voltage_queen</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_oh_giant_moth_Teenage_Riot_vs_The_DNA_Strings_Law.mp3" download>Lightning_Horn_Unicorn_oh_giant_moth_Teenage_Riot_vs_The_DNA_Strings_Law</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_oscillators_of_1985.mp3" download>Lightning_Horn_Unicorn_oscillators_of_1985</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_bsides_PacMan_leveled_up_the_ghosts_ooh_and_Mrs_Doubtfire_grabs_a_flamethrower.mp3" download>Lightning_Horn_Unicorn_PacMan_leveled_up_the_ghosts_ooh_and_Mrs_Doubtfire_grabs_a_flamethrower</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_chosen_ones.mp3" download>Lightning_Horn_Unicorn_the_chosen_ones</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_The_Legend_of_Furarri.mp3" download>Lightning_Horn_Unicorn_The_Legend_of_Furarri</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_alternate_80s_timeline_Tonagag.mp3" download>Lightning_Horn_Unicorn_Tonagag</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_the_electronic_collection_unison_unicorns.mp3" download>Lightning_Horn_Unicorn_unison_unicorns</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Velvet_Anabolica_Twerk.mp3" download>Lightning_Horn_Unicorn_Velvet_Anabolica_Twerk</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_404_Human_Error_Studies_What_does_a_musician_look_like.mp3" download>Lightning_Horn_Unicorn_What_does_a_musician_look_like</a></li>
-  <li><a class="download" href="downloads/Lightning_Horn_Unicorn_Barista_Metal_Boot_Camping_WOLKE_Cloud_how_do_you_lift_that_mighty_sword.mp3" download>Lightning_Horn_Unicorn_WOLKE_Cloud_how_do_you_lift_that_mighty_sword</a></li>
+<div class="bar"></div>
+<h1> LIGHTNING <br> HORN <br> UNICORN </h1>
+<div class="bar"></div>
+<div class="spacer"></div>
+
+<h2 class="genre">80ies</h2>
+<ul class="downloads">
+  <li style="animation-delay: 0.00s"><a class="download" href="80ies/LIGHTNING_HORN_UNICORN_A_FORCE_YOU.MP3" download>A Force You</a></li>
+  <li style="animation-delay: 0.06s"><a class="download" href="80ies/LIGHTNING_HORN_UNICORN_CITY_OF_FATHERS.MP3" download>City Of Fathers</a></li>
+  <li style="animation-delay: 0.12s"><a class="download" href="80ies/LIGHTNING_HORN_UNICORN_DREAMING.MP3" download>Dreaming</a></li>
+  <li style="animation-delay: 0.18s"><a class="download" href="80ies/LIGHTNING_HORN_UNICORN_LASERETTE.MP3" download>Laserette</a></li>
+  <li style="animation-delay: 0.24s"><a class="download" href="80ies/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3" download>Oscillators Of 1985</a></li>
+  <li style="animation-delay: 0.30s"><a class="download" href="80ies/LIGHTNING_HORN_UNICORN_TONAGAG.MP3" download>Tonagag</a></li>
+</ul>
+
+<h2 class="genre">Bsides Acoustic Etc</h2>
+<ul class="downloads">
+  <li style="animation-delay: 0.36s"><a class="download" href="BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_DUCK_PANTS.MP3" download>Duck Pants</a></li>
+  <li style="animation-delay: 0.42s"><a class="download" href="BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.MP3" download>Elk Emil</a></li>
+  <li style="animation-delay: 0.48s"><a class="download" href="BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_HOW_DO_YOU_MILK_AN_INVISIBLE_COW.MP3" download>How Do You Milk An Invisible Cow</a></li>
+  <li style="animation-delay: 0.54s"><a class="download" href="BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_MY_MK-ULTRA_COUNTRY_MUSIC_TURNED_A_KILLER_AI_INTO_A_HORSE-PROTECTING_QUEEN.MP3" download>My Mk-Ultra Country Music Turned A Killer Ai Into A Horse-Protecting Queen</a></li>
+  <li style="animation-delay: 0.60s"><a class="download" href="BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_WHAT_DOES_A_MUSICIAN_LOOK_LIKE.MP3" download>What Does A Musician Look Like</a></li>
+</ul>
+
+<h2 class="genre">Calm Chillout Lofi Gamelikeost</h2>
+<ul class="downloads">
+  <li style="animation-delay: 0.66s"><a class="download" href="CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1.17.MP3" download>1.17</a></li>
+  <li style="animation-delay: 0.72s"><a class="download" href="CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_ANOTHER_PS1_DREAM_I_HAD.MP3" download>Another Ps1 Dream I Had</a></li>
+  <li style="animation-delay: 0.78s"><a class="download" href="CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_LOADING_SCREENS.MP3" download>Loading Screens</a></li>
+  <li style="animation-delay: 0.84s"><a class="download" href="CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_THE_CHOSEN_ONES.MP3" download>The Chosen Ones</a></li>
+</ul>
+
+<h2 class="genre">Electro Neurofunk Drumnbass Jungle Edm</h2>
+<ul class="downloads">
+  <li style="animation-delay: 0.90s"><a class="download" href="ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_EXTRATERRESTRIAL_MEGA_TARSIER.MP3" download>Extraterrestrial Mega Tarsier</a></li>
+  <li style="animation-delay: 0.96s"><a class="download" href="ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_RISE.MP3" download>Rise</a></li>
+  <li style="animation-delay: 1.02s"><a class="download" href="ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_UNISON_UNICORNS.MP3" download>Unison Unicorns</a></li>
+  <li style="animation-delay: 1.08s"><a class="download" href="ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_VELVET_ANABOLICA_TWERK.MP3" download>Velvet Anabolica Twerk</a></li>
+</ul>
+
+<h2 class="genre">Indie Operarock Artpop</h2>
+<ul class="downloads">
+  <li style="animation-delay: 1.14s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_CLOUD_HOW_DO_YOU_LIFT_THAT_MIGHTY_SWORD.MP3" download>Cloud How Do You Lift That Mighty Sword</a></li>
+  <li style="animation-delay: 1.20s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3" download>Everybody Has Ptsd And Autism Is Not A Superpower</a></li>
+  <li style="animation-delay: 1.26s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER_ALTERNATE_VERSION.MP3" download>Everybody Has Ptsd And Autism Is Not A Superpower Alternate Version</a></li>
+  <li style="animation-delay: 1.32s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_HARAMBE_HAS_A_MELON_CANNON.MP3" download>Harambe Has A Melon Cannon</a></li>
+  <li style="animation-delay: 1.38s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3" download>Kate Plush And Her Meow Piano (Alternate Version Brians Theme)</a></li>
+  <li style="animation-delay: 1.44s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3" download>Kate Plush And Her Meow Piano (Alternate Version Red Key Piano Version)</a></li>
+  <li style="animation-delay: 1.50s"><a class="download" href="INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_NAME_IS_RAIN.MP3" download>Name Is Rain</a></li>
+</ul>
+
+<h2 class="genre">Rock Metal Powermetal Metalcore Punk</h2>
+<ul class="downloads">
+  <li style="animation-delay: 1.56s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_I_SPLIT_MOUNTAINS.MP3" download>I Split Mountains</a></li>
+  <li style="animation-delay: 1.62s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KITTENS.MP3" download>Kittens</a></li>
+  <li style="animation-delay: 1.68s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KNIGHT_HANDHART.MP3" download>Knight Handhart</a></li>
+  <li style="animation-delay: 1.74s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3" download>Oh Giant Moth Alternate Version   Crimson Disguise</a></li>
+  <li style="animation-delay: 1.80s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.MP3" download>Oh Giant Moth Alternate Version   Voltage Queen</a></li>
+  <li style="animation-delay: 1.86s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.MP3" download>Oh Giant Moth Teenage Riot Vs The Dna Strings Law</a></li>
+  <li style="animation-delay: 1.92s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_RITTER_HANDHART_UND_DIE_BACKPFEIFEN_DER_GERECHTIGKEIT.mp3" download>Ritter Handhart Und Die Backpfeifen Der Gerechtigkeit</a></li>
+  <li style="animation-delay: 1.98s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.MP3" download>The Legend Of Furarri</a></li>
+  <li style="animation-delay: 2.04s"><a class="download" href="ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3" download>Universal Lazer Goat</a></li>
 </ul>
 
 <div class="note">
@@ -122,6 +245,30 @@
   No part of this material may be used, copied, remixed, or distributed without<br>
   explicit permission from the artist.
 </div>
+</div>
+
+<script>
+(function() {
+  var flock = document.getElementById('duckFlock');
+  if (!flock) return;
+  var N = 28;
+  for (var k = 0; k < N; k++) {
+    var d = document.createElement('div'); d.className = 'duck';
+    var img = document.createElement('img'); img.src = 'duck.png'; img.alt = '';
+    var size = 16 + Math.floor(Math.random() * 30);
+    var top = Math.floor(Math.random() * 90);
+    var dur = 9 + Math.random() * 11;
+    var delay = -(Math.random() * 22);
+    d.style.top = top + 'vh';
+    d.style.animation = 'duckFly ' + dur.toFixed(2) + 's linear infinite';
+    d.style.animationDelay = delay.toFixed(2) + 's';
+    img.style.width = size + 'px';
+    img.style.height = 'auto';
+    d.appendChild(img);
+    flock.appendChild(d);
+  }
+})();
+</script>
 
 </body>
 </html>
