@@ -65,7 +65,7 @@
             flex-direction: column;
             align-items: center;
             margin: 24px auto;
-            padding: 0 12px;
+            padding: 0;
             background: transparent;
             position: relative;
             z-index: 1;
@@ -466,7 +466,9 @@
                 track.style.transform = 'translateX(' + px + 'px)';
             }
             function loop(){
-                if (!dragging) {
+                const r = strip.getBoundingClientRect();
+                const visible = r.bottom > 0 && r.top < window.innerHeight;
+                if (visible && !dragging) {
                     pos -= SPEED;
                     wrap();
                     setX(pos);
