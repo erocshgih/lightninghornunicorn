@@ -367,7 +367,7 @@
                 'DONATE': 'pixelart_donatepic.png'
             };
             function tileFor(id) {
-                return 'calc(100vw / 8) auto';
+                return 'calc(100vw / 4) auto';
             }
             function setDoorImage(sectionId) {
                 const pic = sectionPic[sectionId] || 'duck.png';
@@ -758,6 +758,7 @@
     <!-- ABOUT SECTION -->
     <section id="ABOUT">
         <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">ABOUT</h2>
+
 
         <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, the artist and musician known as 'Vedran Lukic'. Lean back, take a coffee and jump into the Fur-rarri – the fur-covered wonder vehicle so hairy that celebrities look freshly waxed next to it."
            data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, dem Künstler und Musiker namens 'Vedran Lukic'. Lehn dich zurück, nimm einen Kaffee und steig ein in den Fur-rarri – das fellbedeckte Wundergefährt, das so haarig ist, dass Promis daneben wirken wie frisch gewaxt.">
@@ -1568,7 +1569,7 @@ Either way... Just be aware of that.
       const center = box.getCenter(new THREE.Vector3());
       model.position.sub(center);
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      model.scale.setScalar(1.7 / maxDim);
+      model.scale.setScalar(0.55 / maxDim);
       const pivot = new THREE.Group();
       pivot.add(model);
       pivot.position.y = Y_BOTTOM;
@@ -1579,7 +1580,7 @@ Either way... Just be aware of that.
     function animate() {
       requestAnimationFrame(animate);
       if (duck) {
-        duck.rotation.z -= 0.02;
+        duck.rotation.y -= 0.02;
         duck.position.y += 0.01;
         if (duck.position.y > Y_TOP) duck.position.y = Y_BOTTOM;
       }
