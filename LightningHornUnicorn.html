@@ -199,13 +199,17 @@
 
         /* Reduced motion */
         @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
+            *:not(.laser),
+            *:not(.laser)::before,
+            *:not(.laser)::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
                 scroll-behavior: auto !important;
+            }
+            .laser {
+                animation: none !important;
+                opacity: 0 !important;
             }
         }
 
@@ -237,44 +241,15 @@
         /* ========== HEADER / CAT STRIP ========== */
         .header {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
             padding: 10px 12px;
             background: var(--header-bg);
             box-shadow: var(--header-shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-
-        .theme-btn {
-            flex: 0 0 auto;
-            width: 42px;
-            height: 42px;
-            border: 2px solid var(--text);
-            border-radius: 6px;
-            background: var(--card-bg);
-            color: var(--text);
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.1rem;
-            line-height: 1;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.15s, background 0.2s, color 0.2s;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.08);
-        }
-
-        .theme-btn:active {
-            transform: scale(0.95);
         }
 
         @keyframes logoGlow {
@@ -296,19 +271,53 @@
             animation: logoGlow 4s infinite;
         }
 
-        /* Category strip – endless loop */
+        /* Category strip – endless loop + theme button inside */
         .cat-strip {
             position: relative;
-            flex: 1 1 auto;
+            display: flex;
+            align-items: stretch;
             width: min(100%, 1600px);
             max-width: 100%;
             overflow: hidden;
-            margin: 0;
+            margin: 0 auto;
             border: 3px solid transparent;
             border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa);
             border-image-slice: 1;
             height: clamp(56px, 9vw, 78px);
             box-sizing: border-box;
+            background: var(--header-bg);
+        }
+
+        .theme-btn {
+            flex: 0 0 auto;
+            width: clamp(44px, 10vw, 56px);
+            height: 100%;
+            border: none;
+            border-right: 2px solid var(--border-soft);
+            border-radius: 0;
+            background: var(--card-bg);
+            color: var(--text);
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s, opacity 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            z-index: 3;
+            position: relative;
+        }
+
+        .theme-btn:hover {
+            background: var(--strip-active);
+            color: #111;
+        }
+
+        .theme-btn:active {
+            opacity: 0.85;
         }
 
         .cat-track {
@@ -317,6 +326,7 @@
             flex-wrap: nowrap;
             white-space: nowrap;
             width: max-content;
+            flex: 1 1 auto;
             min-width: max-content;
             height: 100%;
             will-change: transform;
@@ -379,13 +389,75 @@
         }
 
         .cat-strip::before {
-            left: 0;
+            left: clamp(44px, 10vw, 56px); /* start after theme button */
             background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end));
         }
 
         .cat-strip::after {
             right: 0;
             background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end));
+        }
+
+        /* ========== LASER BAR (own bar under the category strip) ========== */
+        .laser-rail {
+            position: relative;
+            display: block;
+            width: min(100%, 1600px);
+            height: 14px;
+            margin: 6px auto 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--card-bg);
+            border: 2px solid var(--border-soft);
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        .laser {
+            position: absolute;
+            left: -40%;
+            height: 2px;
+            width: 32%;
+            opacity: 1;
+            will-change: transform;
+        }
+
+        .laser-1 {
+            top: 2px;
+            background: #ff0033;
+            animation: laserShot 1.8s infinite linear;
+            animation-delay: 0s;
+        }
+
+        .laser-2 {
+            top: 5px;
+            background: #00ff88;
+            animation: laserShot 1.8s infinite linear;
+            animation-delay: 0.6s;
+        }
+
+        .laser-3 {
+            top: 8px;
+            background: #3399ff;
+            animation: laserShot 1.8s infinite linear;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes laserShot {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(420%); }
+        }
+
+        html[data-theme="mono-gray"] .laser-1,
+        html[data-theme="mono-gray"] .laser-2,
+        html[data-theme="mono-gray"] .laser-3 {
+            background: #bbbbbb;
+        }
+
+        html[data-theme="mono-green"] .laser-1,
+        html[data-theme="mono-green"] .laser-2,
+        html[data-theme="mono-green"] .laser-3 {
+            background: #39ff14;
         }
 
         /* ========== MAIN & SECTIONS ========== */
@@ -823,9 +895,14 @@
     </div>
 
     <header class="header">
-        <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
         <div id="catStrip" class="cat-strip">
+            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
             <div id="catTrack" class="cat-track"></div>
+        </div>
+        <div class="laser-rail" aria-hidden="true">
+            <div class="laser laser-1"></div>
+            <div class="laser laser-2"></div>
+            <div class="laser laser-3"></div>
         </div>
     </header>
 
@@ -1593,6 +1670,8 @@
             let dragging = false, startX = 0, startPos = 0;
 
             function down(e) {
+                // don't start drag when clicking the theme button
+                if (e.target && (e.target.id === 'themeToggle' || e.target.closest('#themeToggle'))) return;
                 dragging = true;
                 startX = (e.touches ? e.touches[0].clientX : e.clientX);
                 startPos = pos;
