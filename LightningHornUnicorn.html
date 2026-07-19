@@ -97,13 +97,13 @@
             40% {
                 opacity: 1;
                 clip-path: inset(0 0% 0 0%);
-                transform: translateY(0);
+                transform: translate3d(0, 0, 0);
                 filter: brightness(1.2) saturate(0.6);
             }
             100% {
                 opacity: 1;
                 clip-path: inset(0 0% 0 0%);
-                transform: translateY(0);
+                transform: translate3d(0, 0, 0);
                 filter: brightness(1) saturate(1);
             }
         }
@@ -193,14 +193,15 @@
         #door-overlay .door-panel {
             position: absolute;
             inset: 0;
-            transform: translateY(110%);
+            transform: translate3d(0, 150vh, 0);
             transition: transform 1.4s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
             background-color: #f5f3f0;
             background-repeat: repeat;
             background-position: top left;
         }
-        #door-overlay.closed .door-panel { transform: translateY(0); }
-        #door-overlay.open .door-panel { transform: translateY(110%); }
+        #door-overlay.closed .door-panel { transform: translate3d(0, 0, 0); }
+        #door-overlay.open .door-panel { transform: translate3d(0, 150vh, 0); }
 
         #vhs-preview-wrap {
             width: 100%;
@@ -823,9 +824,6 @@
     </script>
 </head>
 <body>
-
-<div id="duck3d" style="position: fixed; inset: 0; z-index: 0; pointer-events: none;"></div>
-
 <header class="header">
     <div id="catStrip" class="cat-strip">
       <div id="catTrack" class="cat-track"></div>
