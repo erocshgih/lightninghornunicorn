@@ -398,54 +398,54 @@
             background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end));
         }
 
-        /* ========== LASER BAR (own bar under the category strip) ========== */
+        /* ========== LASERS (fast cannon, one at a time, no bar) ========== */
         .laser-rail {
             position: relative;
             display: block;
             width: min(100%, 1600px);
-            height: 14px;
-            margin: 6px auto 0;
+            height: 10px;
+            margin: 3px auto 0;
             overflow: hidden;
             pointer-events: none;
-            background: var(--card-bg);
-            border: 2px solid var(--border-soft);
-            border-radius: 3px;
-            box-sizing: border-box;
+            background: transparent;
+            border: none;
         }
 
         .laser {
             position: absolute;
-            left: -40%;
+            left: -50%;
             height: 2px;
-            width: 32%;
-            opacity: 1;
-            will-change: transform;
+            width: 40%;
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
         .laser-1 {
-            top: 2px;
+            top: 1px;
             background: #ff0033;
-            animation: laserShot 1.8s infinite linear;
+            animation: laserShot 0.5s infinite linear;
             animation-delay: 0s;
         }
 
         .laser-2 {
-            top: 5px;
+            top: 4px;
             background: #00ff88;
-            animation: laserShot 1.8s infinite linear;
-            animation-delay: 0.6s;
+            animation: laserShot 0.5s infinite linear;
+            animation-delay: 0.5s;
         }
 
         .laser-3 {
-            top: 8px;
+            top: 7px;
             background: #3399ff;
-            animation: laserShot 1.8s infinite linear;
-            animation-delay: 1.2s;
+            animation: laserShot 0.5s infinite linear;
+            animation-delay: 1.0s;
         }
 
+        /* 0.5s shot + staggered delays → only one laser at a time */
         @keyframes laserShot {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(420%); }
+            0%   { transform: translateX(0);    opacity: 1; }
+            92%  { transform: translateX(400%); opacity: 1; }
+            100% { transform: translateX(420%); opacity: 0; }
         }
 
         html[data-theme="mono-gray"] .laser-1,
