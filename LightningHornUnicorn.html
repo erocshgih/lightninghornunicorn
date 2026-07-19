@@ -186,9 +186,93 @@
             filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9);
         }
 
-        /* Light / Dark – no filter on content */
+        /* CRT mode – phosphor dark + 35% color noise overlay */
+        html[data-theme="crt"] {
+            --bg: #0a0c0a;
+            --bg-solid: #0e120e;
+            --text: #c8e6c8;
+            --text-muted: #8fbc8f;
+            --text-soft: #6a9a6a;
+            --header-bg: #0c100c;
+            --header-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+            --strip-text: #9ccc9c;
+            --strip-active: #d4ffd4;
+            --strip-fade: rgba(12, 16, 12, 1);
+            --strip-fade-end: rgba(12, 16, 12, 0);
+            --border-soft: #2a3a2a;
+            --card-bg: #121812;
+            --accent-green: #66ff66;
+            --accent-red: #88aa88;
+            --dot: #2a4a2a;
+            --dot-active: #99ff99;
+            --door-bg: #0e120e;
+        }
+
+        html[data-theme="crt"] body {
+            background: var(--bg);
+        }
+
+        html[data-theme="crt"] main {
+            filter: none;
+            animation: crtGlitch 5s infinite steps(1, end);
+        }
+
+        html[data-theme="crt"] .header {
+            animation: crtGlitch 5s infinite steps(1, end);
+        }
+
+        /* relaxed glitch every 5s – short soft jitter */
+        @keyframes crtGlitch {
+            0%, 94%, 100% {
+                transform: translate(0, 0) skewX(0deg);
+                filter: none;
+            }
+            95% {
+                transform: translate(2px, -1px) skewX(0.4deg);
+                filter: hue-rotate(8deg);
+            }
+            96% {
+                transform: translate(-2px, 1px) skewX(-0.3deg);
+                filter: hue-rotate(-6deg);
+            }
+            97% {
+                transform: translate(1px, 0) skewX(0.2deg);
+                filter: none;
+            }
+            98% {
+                transform: translate(-1px, -1px);
+            }
+            99% {
+                transform: translate(0, 1px);
+            }
+        }
+
+        /* 35% color noise + subtle scanlines over everything */
+        html[data-theme="crt"]::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            pointer-events: none;
+            opacity: 0.35;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.15) 0px,
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 1px,
+                    transparent 3px
+                ),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 100% 4px, 180px 180px;
+            mix-blend-mode: overlay;
+        }
+
+        /* Light / Dark / CRT base – no content filter */
         html[data-theme="light"] body,
-        html[data-theme="dark"] body {
+        html[data-theme="dark"] body,
+        html[data-theme="crt"] body {
             background: var(--bg);
         }
 
@@ -460,6 +544,12 @@
             background: #39ff14;
         }
 
+        html[data-theme="crt"] .laser-1,
+        html[data-theme="crt"] .laser-2,
+        html[data-theme="crt"] .laser-3 {
+            background: #66ff66;
+        }
+
         /* ========== MAIN & SECTIONS ========== */
         main {
             display: flex;
@@ -484,28 +574,6 @@
 
         section.active {
             display: block;
-            animation: cyberDoor 0.7s ease-out forwards;
-        }
-
-        @keyframes cyberDoor {
-            0% {
-                opacity: 0;
-                clip-path: inset(0 50% 0 50%);
-                transform: translate3d(0, 8px, 0);
-                filter: brightness(1.6) saturate(0);
-            }
-            40% {
-                opacity: 1;
-                clip-path: inset(0 0% 0 0%);
-                transform: translate3d(0, 0, 0);
-                filter: brightness(1.2) saturate(0.6);
-            }
-            100% {
-                opacity: 1;
-                clip-path: inset(0 0% 0 0%);
-                transform: translate3d(0, 0, 0);
-                filter: brightness(1) saturate(1);
-            }
         }
 
         /* ========== TYPOGRAPHY ========== */
@@ -1492,12 +1560,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             /* ========== THEME TOGGLE ========== */
-            const THEMES = ['light', 'dark', 'mono-gray', 'mono-green'];
+            const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = {
                 'light': '☀',
                 'dark': '☾',
                 'mono-gray': '░',
-                'mono-green': '▓'
+                'mono-green': '▓',
+                'crt': '▤'
             };
             const themeBtn = document.getElementById('themeToggle');
 
