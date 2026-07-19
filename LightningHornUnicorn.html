@@ -13,11 +13,11 @@
 
         body {
             margin: 0;
-            background: #f5f3f0;
+            background: transparent;
             font-family: 'Press Start 2P', cursive;
-            color: #2a2a2a;
+            color: #000;
             text-align: center;
-            line-height: 1.9;
+            line-height: 2.4;
             font-size: clamp(8px, 1.8vw, 12px);
         }
 
@@ -97,15 +97,18 @@
             align-items: center;
             margin: 24px auto;
             padding: 0 12px;
+            background: transparent;
+            position: relative;
+            z-index: 1;
         }
 
         /* --- 4. SEKTIONEN - WEICHER, LUFTIGER --- */
         section {
             display: none;
-            background: #ffffff;
+            background: transparent;
             padding: clamp(20px, 5vw, 40px);
             border-radius: 14px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+            box-shadow: none;
             width: min(90vw, 540px);
             box-sizing: border-box;
         }
@@ -178,18 +181,18 @@
         section h3 {
             font-size: clamp(0.65rem, 2.2vw, 0.85rem);
             word-wrap: break-word;
-            color: #555;
+            color: #000;
             font-weight: bold;
         }
 
         section p {
-            color: #555;
+            color: #000;
             font-size: clamp(0.5rem, 1.8vw, 0.65rem);
             margin: 18px auto;
             text-align: left;
             width: 100%;
             word-wrap: break-word;
-            line-height: 1.9;
+            line-height: 2.8;
         }
 
         section img {
@@ -217,19 +220,18 @@
             inset: 0;
             z-index: 9999;
             pointer-events: none;
-            display: flex;
         }
-        #door-overlay .door-half {
-            flex: 1;
-            background: #f5f3f0;
-            transition: transform 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+        #door-overlay .door-panel {
+            position: absolute;
+            inset: 0;
+            transform: translateY(100%);
+            transition: transform 1.4s cubic-bezier(0.7, 0, 0.3, 1);
+            background-color: #f5f3f0;
+            background-repeat: repeat;
+            background-position: top left;
         }
-        #door-overlay .door-left { transform-origin: left center; transform: scaleX(0); }
-        #door-overlay .door-right { transform-origin: right center; transform: scaleX(0); }
-        #door-overlay.closed .door-left { transform: scaleX(1); }
-        #door-overlay.closed .door-right { transform: scaleX(1); }
-        #door-overlay.open .door-left { transform: scaleX(0); }
-        #door-overlay.open .door-right { transform: scaleX(0); }
+        #door-overlay.closed .door-panel { transform: translateY(0); }
+        #door-overlay.open .door-panel { transform: translateY(100%); }
 
         #vhs-preview-wrap {
             width: 100%;
@@ -345,8 +347,7 @@
 
     
 <div id="door-overlay" class="closed">
-  <div class="door-half door-left"></div>
-  <div class="door-half door-right"></div>
+  <div class="door-panel"></div>
 </div>
 <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -354,8 +355,30 @@
             let canvasEngineStarted = false;
             
             let _doorBusy = false;
+            const doorPanel = document.querySelector('#door-overlay .door-panel');
+            const sectionPic = {
+                'ABOUT': 'pixelart_aboutpic.png',
+                'VHS MULTIVERSE': 'pixelart_vhsmultiversepic.png',
+                'HUMANART': 'pixelart_humanartpic.png',
+                'PROJECTS': 'pixelart_projectspic.png',
+                'STORYTIME': 'pixelart_storytimepic.png',
+                'MUSIC': 'pixelart_musicpic.png',
+                'CONTACT': 'pixelart_contactpic.png',
+                'DONATE': 'pixelart_donatepic.png'
+            };
+            function tileFor(id) {
+                return 'calc(100vw / 8) auto';
+            }
+            function setDoorImage(sectionId) {
+                const pic = sectionPic[sectionId] || 'duck.png';
+                if (doorPanel) {
+                    doorPanel.style.backgroundImage = "url('" + pic + "')";
+                    doorPanel.style.backgroundSize = tileFor(sectionId);
+                }
+            }
             function switchSection(sectionId) {
                 const door = document.getElementById('door-overlay');
+                setDoorImage(sectionId);
                 door.classList.remove('open');
                 door.classList.add('closed');
 
@@ -388,7 +411,7 @@
                     door.classList.remove('closed');
                     door.classList.add('open');
                     _doorBusy = false;
-                }, 280);
+                }, 1420);
             }
 
             menuSelect.addEventListener('change', (e) => {
@@ -402,6 +425,7 @@
             });
 
             // initial section ohne Tür-Animation
+            if (doorPanel) { doorPanel.style.backgroundImage = "url('pixelart_aboutpic.png')"; doorPanel.style.backgroundSize = 'calc(100vw / 8) auto'; }
             document.getElementById('ABOUT').classList.add('active');
 
             // Tür beim ersten Laden öffnen
@@ -703,6 +727,8 @@
 </head>
 <body>
 
+<div id="duck3d" style="position: fixed; inset: 0; z-index: 0; pointer-events: none;"></div>
+
 <header class="header">
     <div class="logo">
         ⚡ LIGHTNING HORN UNICORN ⚡
@@ -732,8 +758,6 @@
     <!-- ABOUT SECTION -->
     <section id="ABOUT">
         <h2 data-lang-en="ABOUT" data-lang-de="ÜBER MICH">ABOUT</h2>
-
-        <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/aboutme_Vedran.webp" alt="aboutme_Vedran">
 
         <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, the artist and musician known as 'Vedran Lukic'. Lean back, take a coffee and jump into the Fur-rarri – the fur-covered wonder vehicle so hairy that celebrities look freshly waxed next to it."
            data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, dem Künstler und Musiker namens 'Vedran Lukic'. Lehn dich zurück, nimm einen Kaffee und steig ein in den Fur-rarri – das fellbedeckte Wundergefährt, das so haarig ist, dass Promis daneben wirken wie frisch gewaxt.">
@@ -1484,6 +1508,88 @@ Either way... Just be aware of that.
 
 
 </main>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+  function duckErr(msg) {
+    const d = document.getElementById('duck3d');
+    if (d) d.insertAdjacentHTML('beforeend',
+      '<div style="position:fixed;left:6px;bottom:6px;z-index:50;background:#c00;color:#fff;font:10px monospace;padding:4px 8px;max-width:80vw;word-wrap:break-word;">DUCK-ERR: ' + msg + '</div>');
+  }
+  try {
+  const THREE = await import('three');
+  const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+
+  const wrap = document.getElementById('duck3d');
+  if (wrap) {
+    const Y_TOP = 3.0;
+    const Y_BOTTOM = -3.0;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, 3.2);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.style.background = 'transparent';
+    wrap.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(3, 5, 4);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.5);
+    fill.position.set(-4, -2, -3);
+    scene.add(fill);
+
+    let duck = null;
+
+    function resize() {
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    new GLTFLoader().load('rubberduck.glb', (gltf) => {
+      const model = gltf.scene;
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      model.position.sub(center);
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      model.scale.setScalar(1.7 / maxDim);
+      const pivot = new THREE.Group();
+      pivot.add(model);
+      pivot.position.y = Y_BOTTOM;
+      scene.add(pivot);
+      duck = pivot;
+    }, undefined, (err) => { duckErr('glb ' + err); });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (duck) {
+        duck.rotation.z -= 0.02;
+        duck.position.y += 0.01;
+        if (duck.position.y > Y_TOP) duck.position.y = Y_BOTTOM;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+  }
+  } catch (e) { duckErr((e && e.message) ? e.message : e); }
+  window.addEventListener('error', (ev) => { duckErr('win ' + (ev.message || ev.error)); });
+</script>
 
 </body>
 </html>
