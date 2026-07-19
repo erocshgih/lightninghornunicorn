@@ -136,6 +136,20 @@ body {
   border-radius: 10px;
   cursor: pointer;
 }
+
+#head-name {
+  position: fixed;
+  bottom: max(64px, calc(env(safe-area-inset-bottom) + 54px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  color: #fff;
+  font-size: clamp(12px, 3.4vw, 14px);
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  text-align: center;
+  pointer-events: none;
+}
 </style>
 </head>
 
@@ -170,6 +184,7 @@ body {
 </select>
 </div>
 </div>
+<div id="head-name"></div>
 
 <!-- MATRIX -->
 <script>
@@ -256,7 +271,7 @@ function sizeRenderer() {
   renderer.setSize(lw, lh, false);
 }
 sizeRenderer();
-renderer.setPixelRatio(1.2);
+renderer.setPixelRatio(1);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
@@ -302,6 +317,7 @@ function disposeObject(obj) {
 function loadHead(url) {
   // 1. NEU: Animation hier bei JEDEM Aufruf starten
   startLoading();
+  showName(url);
 
   if (object) {
     scene.remove(object);
@@ -360,11 +376,18 @@ document.getElementById("navigate-to-main").onclick = () => {
 };
 
 /* DROPDOWN */
+const nameEl = document.getElementById("head-name");
+const selectEl = document.getElementById("head-select");
+function showName(url) {
+  const opt = Array.from(selectEl.options).find(o => o.value === url);
+  nameEl.textContent = opt ? opt.textContent : "";
+}
 document.getElementById("head-select").addEventListener("change", e => {
   loadHead(e.target.value);
 });
 
 /* START (EXPLICIT RAW URL) */
+showName("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unibrowserloadicorn.glb");
 loadHead(
   "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unibrowserloadicorn.glb"
 );
