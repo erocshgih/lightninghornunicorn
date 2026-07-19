@@ -74,7 +74,7 @@ body {
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  animation: edgeHue s linear infinite;
+  animation: edgeHue 6s linear infinite;
   pointer-events: none;
 }
 
@@ -153,8 +153,8 @@ body {
   <button id="navigate-to-main" class="btn">Main Page</button>
 </div>
 
-<audio id="background-music" loop>
-  <source src="https://github.com/erocshgih/lightninghornunicorn/raw/main/unison_unicorns.mp3" type="audio/ogg">
+<audio id="background-music" preload="auto" crossorigin="anonymous" loop>
+  <source src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unison_unicorns.mp3" type="audio/mpeg">
 </audio>
 
 <div id="head-menu">
