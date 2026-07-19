@@ -150,6 +150,9 @@
 
         html[data-theme="mono-gray"] body {
             background: var(--bg);
+        }
+
+        html[data-theme="mono-gray"] main {
             filter: grayscale(1);
         }
 
@@ -177,16 +180,20 @@
 
         html[data-theme="mono-green"] body {
             background: var(--bg);
+        }
+
+        html[data-theme="mono-green"] main {
             filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9);
         }
 
-        /* Light mode explicit (resets filter) */
-        html[data-theme="light"] body {
-            filter: none;
+        /* Light / Dark – no filter on content */
+        html[data-theme="light"] body,
+        html[data-theme="dark"] body {
             background: var(--bg);
         }
 
-        html[data-theme="dark"] body {
+        html[data-theme="light"] main,
+        html[data-theme="dark"] main {
             filter: none;
         }
 
