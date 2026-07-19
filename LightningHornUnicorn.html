@@ -91,7 +91,7 @@
             0% {
                 opacity: 0;
                 clip-path: inset(0 50% 0 50%);
-                transform: translateY(8px);
+                transform: translate3d(0,8px,0);
                 filter: brightness(1.6) saturate(0);
             }
             40% {
@@ -196,6 +196,9 @@
             transform: translate3d(0, 150vh, 0);
             transition: transform 1.4s cubic-bezier(0.7, 0, 0.3, 1);
             will-change: transform;
+  backface-visibility: hidden;
+  contain: layout paint;
+
             background-color: #f5f3f0;
             background-repeat: repeat;
             background-position: top left;
@@ -333,6 +336,9 @@
             height: 100%;
             white-space: nowrap;
             will-change: transform;
+  backface-visibility: hidden;
+  contain: layout paint;
+
             font-family: 'Press Start 2P', cursive;
             font-size: clamp(0.5rem, 1.8vw, 0.72rem);
             letter-spacing: 0.08em;
@@ -361,7 +367,23 @@
         }
         .cat-strip::before { left: 0; background: linear-gradient(90deg, rgba(245,243,240,1), rgba(245,243,240,0)); }
         .cat-strip::after { right: 0; background: linear-gradient(270deg, rgba(245,243,240,1), rgba(245,243,240,0)); }
-    </style>
+    
+@media (max-width:768px){
+header, .header, nav, .nav, .menu {
+    justify-content:center !important;
+    text-align:center !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+}
+nav ul, .menu ul{
+    display:flex !important;
+    justify-content:center !important;
+    width:100% !important;
+    padding-left:0 !important;
+}
+}
+
+</style>
 
     
 <div id="door-overlay" class="closed">
@@ -1196,11 +1218,11 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
             color: #111;
             border-color: #333;
             box-shadow: 0 4px 0px #333;
-            transform: translateY(-2px);
+            transform: translate3d(0,-2px,0);
         }
 
         .chapter-button:active:not([href=""]) {
-            transform: translateY(0px);
+            transform: translate3d(0,0px,0);
             box-shadow: none;
         }
     </style>
@@ -1603,7 +1625,7 @@ Either way... Just be aware of that.
 </script>
 <script type="module">
   function duckErr(msg) {
-    const d = document.getElementById('duck3d');
+    
     if (d) d.insertAdjacentHTML('beforeend',
       '<div style="position:fixed;left:6px;bottom:6px;z-index:50;background:#c00;color:#fff;font:10px monospace;padding:4px 8px;max-width:80vw;word-wrap:break-word;">DUCK-ERR: ' + msg + '</div>');
   }
@@ -1611,7 +1633,7 @@ Either way... Just be aware of that.
   const THREE = await import('three');
   const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
 
-  const wrap = document.getElementById('duck3d');
+  
   if (wrap) {
     const Y_TOP = 3.0;
     const Y_BOTTOM = -3.0;
