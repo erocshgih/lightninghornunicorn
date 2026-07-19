@@ -22,11 +22,7 @@
         }
 
         /* --- 2. HEADER - ZURÜCKHALTEND --- */
-        @keyframes rgbshift {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        
         .header {
             display: flex;
             flex-direction: column;
@@ -40,9 +36,6 @@
             top: 0;
             z-index: 1000;
         }
-        .header {
-        }
-
         @keyframes logoGlow {
             0%, 100% { text-shadow: 0 0 4px rgba(255,200,0,0.3); }
             50% { text-shadow:
@@ -196,7 +189,8 @@
             transform: translate3d(0, 150vh, 0);
             transition: transform 1.4s cubic-bezier(0.7, 0, 0.3, 1);
             will-change: transform;
-  backface-visibility: hidden;
+  backface-visibility:hidden;
+transform-style:preserve-3d;
   contain: layout paint;
 
             background-color: #f5f3f0;
@@ -320,33 +314,36 @@
         /* --- KATEGORIE-STRIP (endlose Schleife) --- */
         .cat-strip {
             position: relative;
-            width: 96vw;
-            max-width: 96vw;
-            overflow: hidden;
-            margin: 14px auto 6px auto;
-            border: 3px solid transparent;
-            border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa);
-            border-image-slice: 1;
-            height: clamp(32px, 6vw, 48px);
-            box-sizing: content-box;
+            width: min(100%,1600px);
+            max-width:100%;
+            overflow:hidden;
+            margin:14px auto 6px auto;
+            border:3px solid transparent;
+            border-image: linear-gradient(90deg,#ff0033,#ffaa00,#00ff88,#0066ff,#ff00aa);
+            border-image-slice:1;
+            height:clamp(32px,6vw,48px);
+            box-sizing:border-box;
         }
         .cat-track {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            white-space: nowrap;
-            will-change: transform;
-  backface-visibility: hidden;
-  contain: layout paint;
-
-            font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.5rem, 1.8vw, 0.72rem);
-            letter-spacing: 0.08em;
-            color: #4a2c00;
+            display:inline-flex;
+            align-items:center;
+            flex-wrap:nowrap;
+            white-space:nowrap;
+            width:max-content;
+            min-width:max-content;
+            height:100%;
+            will-change:transform;
+            backface-visibility:hidden;
+            transform-style:preserve-3d;
+            contain:layout paint;
+            font-family:'Press Start 2P', cursive;
+            font-size:clamp(0.5rem,1.8vw,0.72rem);
+            letter-spacing:0.08em;
+            color:#4a2c00;
         }
         .cat-item {
             display: inline-block;
-            padding: 0 26px;
+            padding-inline: clamp(14px,2vw,28px);
             cursor: pointer;
             opacity: 0.5;
             transition: opacity 0.25s, color 0.25s;
@@ -368,18 +365,29 @@
         .cat-strip::before { left: 0; background: linear-gradient(90deg, rgba(245,243,240,1), rgba(245,243,240,0)); }
         .cat-strip::after { right: 0; background: linear-gradient(270deg, rgba(245,243,240,1), rgba(245,243,240,0)); }
     
+
+/* Clean mobile header */
 @media (max-width:768px){
-header, .header, nav, .nav, .menu {
-    justify-content:center !important;
-    text-align:center !important;
-    margin-left:auto !important;
-    margin-right:auto !important;
+header nav,
+nav{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 auto !important;
+    overflow:visible !important;
 }
-nav ul, .menu ul{
+header nav ul,
+nav ul{
     display:flex !important;
     justify-content:center !important;
-    width:100% !important;
-    padding-left:0 !important;
+    align-items:center !important;
+    flex-wrap:wrap !important;
+    width:auto !important;
+    margin:0 auto !important;
+    padding:0 !important;
+}
+header nav li,
+nav li{
+    margin:0 .45rem !important;
 }
 }
 
@@ -473,8 +481,7 @@ nav ul, .menu ul{
 
             let setW = 0;
             function measure(){
-                const first = allItems[0].el, last = allItems[CATS.length - 1].el;
-                setW = last.offsetLeft + last.offsetWidth - first.offsetLeft;
+                setW = track.scrollWidth / REPEAT;
             }
             let pos = 0;
             const SPEED = 0.5;
@@ -505,9 +512,9 @@ nav ul, .menu ul{
                 switchSection(cat);
             }
 
-            let dragging = false, startX = 0, startPos = 0, moved = 0;
+            let dragging = false, startX = 0, startPos = 0;
             function down(e){
-                dragging = true; moved = 0;
+                dragging = true;
                 startX = (e.touches ? e.touches[0].clientX : e.clientX);
                 startPos = pos;
             }
@@ -515,8 +522,7 @@ nav ul, .menu ul{
                 if (!dragging) return;
                 const x = (e.touches ? e.touches[0].clientX : e.clientX);
                 const dx = x - startX;
-                moved = Math.max(moved, Math.abs(dx));
-                pos = startPos + dx;
+                                pos = startPos + dx;
                 wrap();
                 setX(pos);
                 e.preventDefault();
@@ -532,6 +538,10 @@ nav ul, .menu ul{
             strip.addEventListener('touchmove', move, { passive: false });
             window.addEventListener('touchend', up);
             window.addEventListener('resize', () => { measure(); wrap(); setX(pos); });
+            window.addEventListener('load', measure);
+            if(document.fonts && document.fonts.ready){
+                document.fonts.ready.then(()=>{measure();wrap();setX(pos);});
+            }
 
             measure();
             allItems.forEach(i => { if (i.cat === 'ABOUT') i.el.classList.add('active'); });
@@ -854,13 +864,6 @@ nav ul, .menu ul{
 
 <main>
 
-
-
-
-
-
-
-
     <!-- ABOUT SECTION -->
     <section id="ABOUT">
         <h2 data-lang-en="LIGHTNING HORN UNICORN" data-lang-de="LIGHTNING HORN UNICORN">LIGHTNING HORN UNICORN</h2>
@@ -969,13 +972,6 @@ nav ul, .menu ul{
         </p>
     </section>
 
-
-
-
-
-
-
-
             <section id="VHS MULTIVERSE">
 <h2 data-lang-en="VHS MULTIVERSE" data-lang-de="VHS MULTIVERSE">VHS MULTIVERSE</h2>
 
@@ -1005,7 +1001,6 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
 </section>
 
 <section id="HUMANART">
-
 
         <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
@@ -1049,14 +1044,6 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
             <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/chillin.webp">
         </div>
     </section>
-
-
-
-
-
-
-
-
 
     <section id="PROJECTS">
         <h2 data-lang-en="PROJECTS" data-lang-de="PROJEKTE">PROJECTS</h2>
@@ -1122,13 +1109,6 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
             100% { opacity: 0.6; transform: scale(0.98); }
         }
     </style>
-
-
-
-
-
-
-
 
 <!-- STORYTIME SECTION -->
     <section id="STORYTIME">
@@ -1227,20 +1207,10 @@ data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deine
         }
     </style>
 
-
-
-
-
-
-
-
-
-
 <section id="MUSIC">
     <h2>MUSIC</h2>
 
     <div class="music-manifesto">
-
 
 <h3
 data-lang-en="Dear Visitor,"
@@ -1517,10 +1487,6 @@ Either way... Just be aware of that.
 
 <p><strong>Lightning Horn Unicorn</strong></p>
 
-
-
-
-
     </div>
 
     <div style="display:flex;flex-direction:column;align-items:center;gap:30px;margin-top:60px;">
@@ -1539,10 +1505,6 @@ Either way... Just be aware of that.
 
     </div>
 </section>
-
-
-
-
 
 <!-- CONTACT SECTION (THE ULTIMATE BANANA-FUR UPGRADE) -->
     <section id="CONTACT">
@@ -1567,12 +1529,6 @@ Either way... Just be aware of that.
             ⚡ TRK-2000 SYSTEM ONLINE // CLICK THE BANANA TO TRANSMIT ⚡
         </p>
     </section>
-
-
-
-
-
-
 
 <!-- DONATE SECTION -->
     <section id="DONATE">
@@ -1604,14 +1560,6 @@ Either way... Just be aware of that.
             ⚡ BELLY BUTTON TARGET LOCKED // CHARME RADAR FULL ⚡
         </p>
     </section>
-
-
-
-
-
-
-
-
 
 </main>
 
