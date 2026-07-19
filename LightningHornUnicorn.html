@@ -34,9 +34,7 @@
             justify-content: center;
             gap: 8px;
             padding: 14px 12px;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            background: #f5f3f0;
             box-shadow: 0 1px 6px rgba(0,0,0,0.04);
             position: sticky;
             top: 0;
@@ -1649,7 +1647,11 @@ Either way... Just be aware of that.
       camera.updateProjectionMatrix();
     }
     resize();
-    window.addEventListener('resize', resize);
+    let resizeRaf = 0;
+    window.addEventListener('resize', () => {
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => { resizeRaf = 0; resize(); });
+    });
 
     new GLTFLoader().load('rubberduck.glb', (gltf) => {
       const model = gltf.scene;
