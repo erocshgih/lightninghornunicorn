@@ -301,10 +301,6 @@
                 transition-duration: 0.01ms !important;
                 scroll-behavior: auto !important;
             }
-            .laser {
-                animation: none !important;
-                opacity: 0 !important;
-            }
         }
 
         /* ========== BASE ========== */
@@ -517,31 +513,22 @@
         .laser-1 {
             top: 1px;
             background: #ff0033;
-            animation-name: laserShot;
-            animation-duration: var(--laser-speed, 0.5s);
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
+            animation: laserShot 0.5s infinite linear;
             animation-delay: 0s;
         }
 
         .laser-2 {
             top: 4px;
             background: #00ff88;
-            animation-name: laserShot;
-            animation-duration: var(--laser-speed, 0.5s);
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            animation-delay: var(--laser-delay2, 0.5s);
+            animation: laserShot 0.5s infinite linear;
+            animation-delay: 0.5s;
         }
 
         .laser-3 {
             top: 7px;
             background: #3399ff;
-            animation-name: laserShot;
-            animation-duration: var(--laser-speed, 0.5s);
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            animation-delay: var(--laser-delay3, 1.0s);
+            animation: laserShot 0.5s infinite linear;
+            animation-delay: 1.0s;
         }
 
         /* 0.5s shot + staggered delays → only one laser at a time */
@@ -1806,10 +1793,15 @@
                 allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
                 const idx = CATS.indexOf(cat);
                 if (idx >= 0) {
-                    const s = LASER_SPEEDS[idx];
-                    document.documentElement.style.setProperty('--laser-speed', s + 's');
-                    document.documentElement.style.setProperty('--laser-delay2', s + 's');
-                    document.documentElement.style.setProperty('--laser-delay3', (s * 2) + 's');
+                    const s = LASER_SPEEDS[idx] + 's';
+                    const d2 = LASER_SPEEDS[idx] + 's';
+                    const d3 = (LASER_SPEEDS[idx] * 2) + 's';
+                    const l1 = document.querySelector('.laser-1');
+                    const l2 = document.querySelector('.laser-2');
+                    const l3 = document.querySelector('.laser-3');
+                    if (l1) { l1.style.animationDuration = s; }
+                    if (l2) { l2.style.animationDuration = s; l2.style.animationDelay = d2; }
+                    if (l3) { l3.style.animationDuration = s; l3.style.animationDelay = d3; }
                 }
                 switchSection(cat);
             }
