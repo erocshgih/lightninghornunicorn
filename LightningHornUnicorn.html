@@ -517,22 +517,31 @@
         .laser-1 {
             top: 1px;
             background: #ff0033;
-            animation: laserShot 0.5s infinite linear;
+            animation-name: laserShot;
+            animation-duration: var(--laser-speed, 0.5s);
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
             animation-delay: 0s;
         }
 
         .laser-2 {
             top: 4px;
             background: #00ff88;
-            animation: laserShot 0.5s infinite linear;
-            animation-delay: 0.5s;
+            animation-name: laserShot;
+            animation-duration: var(--laser-speed, 0.5s);
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-delay: var(--laser-delay2, 0.5s);
         }
 
         .laser-3 {
             top: 7px;
             background: #3399ff;
-            animation: laserShot 0.5s infinite linear;
-            animation-delay: 1.0s;
+            animation-name: laserShot;
+            animation-duration: var(--laser-speed, 0.5s);
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-delay: var(--laser-delay3, 1.0s);
         }
 
         /* 0.5s shot + staggered delays → only one laser at a time */
@@ -1745,6 +1754,7 @@
 
             /* --- KATEGORIE-STRIP (endlose Schleife) --- */
             const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
+            const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
             const strip = document.getElementById('catStrip');
             const track = document.getElementById('catTrack');
 
@@ -1794,6 +1804,13 @@
             function selectCat(cat, el) {
                 allItems.forEach(i => i.el.classList.remove('active'));
                 allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
+                const idx = CATS.indexOf(cat);
+                if (idx >= 0) {
+                    const s = LASER_SPEEDS[idx];
+                    document.documentElement.style.setProperty('--laser-speed', s + 's');
+                    document.documentElement.style.setProperty('--laser-delay2', s + 's');
+                    document.documentElement.style.setProperty('--laser-delay3', (s * 2) + 's');
+                }
                 switchSection(cat);
             }
 
