@@ -254,14 +254,14 @@
             inset: 0;
             z-index: 9000;
             pointer-events: none;
-            opacity: 0.35;
+            opacity: 0.55;
             background-image:
                 repeating-linear-gradient(
                     0deg,
-                    rgba(0, 0, 0, 0.15) 0px,
-                    rgba(0, 0, 0, 0.15) 1px,
-                    transparent 1px,
-                    transparent 3px
+                    rgba(0, 0, 0, 0.3) 0px,
+                    rgba(0, 0, 0, 0.3) 2px,
+                    transparent 2px,
+                    transparent 4px
                 ),
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             background-repeat: repeat;
@@ -271,9 +271,20 @@
 
         /* Light / Dark / CRT base – no content filter */
         html[data-theme="light"] body,
-        html[data-theme="dark"] body,
+        html[data-theme="dark"] body {
+            background: var(--bg);
+        }
         html[data-theme="crt"] body {
             background: var(--bg);
+            animation: crtJitter 3s ease-in-out infinite;
+        }
+
+        @keyframes crtJitter {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(0.3px, 0.2px); }
+            40% { transform: translate(-0.2px, -0.1px); }
+            60% { transform: translate(0.1px, 0.3px); }
+            80% { transform: translate(-0.3px, 0.1px); }
         }
 
         html[data-theme="light"] main,
@@ -845,6 +856,27 @@
             margin: 0 auto;
         }
 
+        /* ========== VHS MONO GREEN OVERLAY ========== */
+        #vhs-green-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 8999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        #vhs-green-overlay canvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: auto;
+            mix-blend-mode: multiply;
+            filter: sepia(1) hue-rotate(80deg) saturate(2) brightness(0.7);
+            opacity: 0.12;
+        }
+        html[data-theme="crt"] #vhs-green-overlay {
+            opacity: 1;
+        }
+
         /* ========== UTILITY / SHARED ========== */
         .wobble-glitch-container {
             position: relative;
@@ -960,6 +992,11 @@
     <!-- Door transition overlay -->
     <div id="door-overlay" class="closed">
         <div class="door-panel"></div>
+    </div>
+
+    <!-- VHS monochrome green overlay -->
+    <div id="vhs-green-overlay" aria-hidden="true">
+        <canvas id="vhs-noise-canvas"></canvas>
     </div>
 
     <header class="header">
@@ -2154,6 +2191,30 @@
                 drawNet();
             }
         });
+    </script>
+
+    <!-- VHS noise generator -->
+    <script>
+    (function() {
+        const c = document.getElementById('vhs-noise-canvas');
+        if (!c) return;
+        const ctx = c.getContext('2d');
+        const W = 640, H = 400;
+        c.width = W; c.height = H;
+        const img = ctx.createImageData(W, H);
+        const d = img.data;
+        function noise() {
+            for (let i = 0; i < d.length; i += 4) {
+                const v = Math.random() * 255;
+                d[i] = v; d[i+1] = v; d[i+2] = v; d[i+3] = 255;
+            }
+            ctx.putImageData(img, 0, 0);
+        }
+        (function loop() {
+            noise();
+            setTimeout(loop, 150);
+        })();
+    })();
     </script>
 </body>
 </html>
