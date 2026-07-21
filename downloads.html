@@ -125,6 +125,66 @@
       word-wrap: break-word;
       opacity: 0;
       animation: riseIn 0.6s ease forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    ul.downloads li.download-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .version-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      background: var(--border-light);
+      cursor: pointer;
+      transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
+    }
+    .dot:hover {
+      background: var(--yellow);
+      transform: scale(1.2);
+    }
+    .dot.active {
+      background: var(--orange);
+      box-shadow: 0 0 10px rgba(255,122,0,0.6);
+    }
+    .track-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ctrl-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      border: 1px solid var(--border-light);
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s;
+      flex-shrink: 0;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--orange);
+      box-shadow: 0 0 10px rgba(255,196,0,0.5);
+      transform: translateY(-2px);
+    }
+    .ctrl-btn.playing {
+      background: var(--orange);
+      color: #fff;
+      border-color: var(--orange);
     }
     a.download {
       color: var(--text-main);
@@ -139,6 +199,7 @@
       border-radius: 8px;
       animation: chroma 3.2s ease-in-out infinite;
       transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      pointer-events: none;
     }
     a.download:hover {
       color: #7a3d00;
@@ -234,11 +295,19 @@
 <h2 class="genre">Indie Operarock Artpop</h2>
 <ul class="downloads">
   <li style="animation-delay: 1.14s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_CLOUD_HOW_DO_YOU_LIFT_THAT_MIGHTY_SWORD.MP3" download>Cloud How Do You Lift That Mighty Sword</a></li>
-  <li style="animation-delay: 1.20s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3" download>Everybody Has Ptsd And Autism Is Not A Superpower</a></li>
-  <li style="animation-delay: 1.26s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER_ALTERNATE_VERSION.MP3" download>Everybody Has Ptsd And Autism Is Not A Superpower Alternate Version</a></li>
+  <li class="download-group" style="animation-delay: 1.20s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3" download>Everybody Has Ptsd And Autism Is Not A Superpower</a>
+    <div class="version-dots">
+      <span class="dot active" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3" data-name="Everybody Has Ptsd And Autism Is Not A Superpower"></span>
+      <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER_ALTERNATE_VERSION.MP3" data-name="Everybody Has Ptsd And Autism Is Not A Superpower - Alternate Version"></span>
+    </div>
+  </li>
   <li style="animation-delay: 1.32s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_HARAMBE_HAS_A_MELON_CANNON.MP3" download>Harambe Has A Melon Cannon</a></li>
-  <li style="animation-delay: 1.38s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3" download>Kate Plush And Her Meow Piano (Alternate Version Brians Theme)</a></li>
-  <li style="animation-delay: 1.44s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3" download>Kate Plush And Her Meow Piano (Alternate Version Red Key Piano Version)</a></li>
+  <li class="download-group" style="animation-delay: 1.38s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3" download>Kate Plush And Her Meow Piano (Brians Theme)</a>
+    <div class="version-dots">
+      <span class="dot active" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3" data-name="Kate Plush And Her Meow Piano (Brians Theme)"></span>
+      <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3" data-name="Kate Plush And Her Meow Piano - Red Key Piano Version"></span>
+    </div>
+  </li>
   <li style="animation-delay: 1.50s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_NAME_IS_RAIN.MP3" download>Name Is Rain</a></li>
 </ul>
 
@@ -247,9 +316,13 @@
   <li style="animation-delay: 1.56s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_I_SPLIT_MOUNTAINS.MP3" download>I Split Mountains</a></li>
   <li style="animation-delay: 1.62s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KITTENS.MP3" download>Kittens</a></li>
   <li style="animation-delay: 1.68s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KNIGHT_HANDHART.MP3" download>Knight Handhart</a></li>
-  <li style="animation-delay: 1.74s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3" download>Oh Giant Moth Alternate Version   Crimson Disguise</a></li>
-  <li style="animation-delay: 1.80s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.MP3" download>Oh Giant Moth Alternate Version   Voltage Queen</a></li>
-  <li style="animation-delay: 1.86s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.MP3" download>Oh Giant Moth Teenage Riot Vs The Dna Strings Law</a></li>
+  <li class="download-group" style="animation-delay: 1.74s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3" download>Oh Giant Moth - Crimson Disguise</a>
+    <div class="version-dots">
+      <span class="dot active" data-href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3" data-name="Oh Giant Moth - Crimson Disguise"></span>
+      <span class="dot" data-href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.MP3" data-name="Oh Giant Moth - Voltage Queen"></span>
+      <span class="dot" data-href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.MP3" data-name="Oh Giant Moth - Teenage Riot Vs The Dna Strings Law"></span>
+    </div>
+  </li>
   <li style="animation-delay: 1.92s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_RITTER_HANDHART_UND_DIE_BACKPFEIFEN_DER_GERECHTIGKEIT.mp3" download>Ritter Handhart Und Die Backpfeifen Der Gerechtigkeit</a></li>
   <li style="animation-delay: 1.98s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.MP3" download>The Legend Of Furarri</a></li>
   <li style="animation-delay: 2.04s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3" download>Universal Lazer Goat</a></li>
@@ -357,39 +430,124 @@ Vedran Lukic & Aether Veylan
   }
   animate();
 
+  var currentAudio = null;
+  var currentPlayBtn = null;
+
+  function stopCurrent() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+    }
+    if (currentPlayBtn) {
+      currentPlayBtn.innerHTML = '&#9654;';
+      currentPlayBtn.classList.remove('playing');
+      currentPlayBtn = null;
+    }
+  }
+
   var links = document.querySelectorAll('a.download');
   for (var i = 0; i < links.length; i++) {
-    links[i].addEventListener('click', function(e) {
-      if (this.dataset.busy === '1') return;
-      e.preventDefault();
-      var link = this;
-      link.dataset.busy = '1';
-      var href = link.getAttribute('href');
-      var dl = link.getAttribute('download');
-      var originalText = link.innerHTML;
-      var originalWidth = link.offsetWidth;
-      var word = 'Downloading...';
-      link.style.minWidth = originalWidth + 'px';
-      link.classList.add('title-jitter');
-      link.innerHTML = '';
-      for (var c = 0; c < word.length; c++) {
-        var s = document.createElement('span');
-        s.textContent = word.charAt(c) === ' ' ? '\u00A0' : word.charAt(c);
-        s.style.animationDelay = (Math.random() * 0.08).toFixed(3) + 's';
-        link.appendChild(s);
+    var li = links[i].closest('li');
+    var href = links[i].getAttribute('href');
+    var name = links[i].getAttribute('download');
+
+    var row = document.createElement('div');
+    row.className = 'track-row';
+    li.insertBefore(row, links[i]);
+    row.appendChild(links[i]);
+
+    var playBtn = document.createElement('button');
+    playBtn.className = 'ctrl-btn play-btn';
+    playBtn.innerHTML = '&#9654;';
+    playBtn.dataset.src = href;
+    row.appendChild(playBtn);
+
+    var dlBtn = document.createElement('button');
+    dlBtn.className = 'ctrl-btn dl-btn';
+    dlBtn.innerHTML = '&#128190;';
+    dlBtn.dataset.href = href;
+    dlBtn.dataset.name = name;
+    row.appendChild(dlBtn);
+  }
+
+  document.addEventListener('click', function(e) {
+    var playBtn = e.target.closest('.play-btn');
+    if (playBtn) {
+      var src = playBtn.dataset.src;
+      var isPlaying = playBtn.classList.contains('playing');
+      if (isPlaying) {
+        if (currentAudio) currentAudio.pause();
+        playBtn.innerHTML = '&#9654;';
+        playBtn.classList.remove('playing');
+        return;
       }
+      stopCurrent();
+      var audio = new Audio(src);
+      playBtn.innerHTML = '&#9646;&#9646;';
+      playBtn.classList.add('playing');
+      currentAudio = audio;
+      currentPlayBtn = playBtn;
+      audio.play().catch(function() {
+        playBtn.innerHTML = '&#9654;';
+        playBtn.classList.remove('playing');
+        currentAudio = null;
+        currentPlayBtn = null;
+      });
+      audio.addEventListener('ended', function() {
+        playBtn.innerHTML = '&#9654;';
+        playBtn.classList.remove('playing');
+        currentAudio = null;
+        currentPlayBtn = null;
+      });
+      return;
+    }
+
+    var dlBtn = e.target.closest('.dl-btn');
+    if (dlBtn) {
+      var href = dlBtn.dataset.href;
+      var name = dlBtn.dataset.name;
+      dlBtn.classList.add('title-jitter');
       setTimeout(function() {
-        link.classList.remove('title-jitter');
-        link.innerHTML = originalText;
-        link.style.minWidth = '';
+        dlBtn.classList.remove('title-jitter');
         var tmp = document.createElement('a');
         tmp.href = href;
-        if (dl !== null) tmp.setAttribute('download', dl);
+        tmp.setAttribute('download', name);
         document.body.appendChild(tmp);
         tmp.click();
         document.body.removeChild(tmp);
-        link.dataset.busy = '0';
       }, 500);
+      return;
+    }
+  });
+
+  var dots = document.querySelectorAll('.dot');
+  for (var i = 0; i < dots.length; i++) {
+    dots[i].addEventListener('click', function() {
+      var group = this.closest('.download-group');
+      var link = group.querySelector('a.download');
+      var playBtn = group.querySelector('.play-btn');
+      var dlBtn = group.querySelector('.dl-btn');
+      var allDots = group.querySelectorAll('.dot');
+      for (var j = 0; j < allDots.length; j++) {
+        allDots[j].classList.remove('active');
+      }
+      this.classList.add('active');
+      link.href = this.dataset.href;
+      link.setAttribute('download', this.dataset.name);
+      link.textContent = this.dataset.name;
+      if (playBtn) playBtn.dataset.src = this.dataset.href;
+      if (dlBtn) {
+        dlBtn.dataset.href = this.dataset.href;
+        dlBtn.dataset.name = this.dataset.name;
+      }
+      if (currentPlayBtn === playBtn && currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+        currentPlayBtn = null;
+        playBtn.innerHTML = '&#9654;';
+        playBtn.classList.remove('playing');
+      }
     });
   }
 })();
