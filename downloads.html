@@ -634,6 +634,11 @@ Vedran Lukic & Aether Veylan
     dragging = true;
     progressThumb.classList.add('dragging');
   });
+  progressThumb.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    dragging = true;
+    progressThumb.classList.add('dragging');
+  }, { passive: false });
 
   document.addEventListener('mousemove', function(e) {
     if (!dragging) return;
@@ -644,6 +649,16 @@ Vedran Lukic & Aether Veylan
     progressThumb.style.left = (pct * 100) + '%';
     playerCurrent.textContent = fmtTime(pct * (currentAudio ? currentAudio.duration : 0));
   });
+  document.addEventListener('touchmove', function(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    var touch = e.touches[0];
+    var rect = progressBar.getBoundingClientRect();
+    var pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+    progressFill.style.width = (pct * 100) + '%';
+    progressThumb.style.left = (pct * 100) + '%';
+    playerCurrent.textContent = fmtTime(pct * (currentAudio ? currentAudio.duration : 0));
+  }, { passive: false });
 
   document.addEventListener('mouseup', function(e) {
     if (!dragging) return;
@@ -651,6 +666,15 @@ Vedran Lukic & Aether Veylan
     progressThumb.classList.remove('dragging');
     var rect = progressBar.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    if (currentAudio) currentAudio.currentTime = pct * currentAudio.duration;
+  });
+  document.addEventListener('touchend', function(e) {
+    if (!dragging) return;
+    dragging = false;
+    progressThumb.classList.remove('dragging');
+    var touch = e.changedTouches[0];
+    var rect = progressBar.getBoundingClientRect();
+    var pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
     if (currentAudio) currentAudio.currentTime = pct * currentAudio.duration;
   });
 
