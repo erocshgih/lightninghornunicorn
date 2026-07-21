@@ -316,7 +316,7 @@
       border-radius: 8px;
       animation: chroma 3.2s ease-in-out infinite;
       transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-      pointer-events: none;
+      cursor: pointer;
     }
     a.download:hover {
       color: #7a3d00;
@@ -324,6 +324,11 @@
       transform: translateY(-3px);
       box-shadow: 0 0 14px rgba(255,196,0,0.7), 0 0 28px rgba(255,122,0,0.45);
       animation: chromaHover 0.8s ease-in-out infinite;
+    }
+    a.download.active {
+      color: var(--orange);
+      border-color: var(--orange);
+      box-shadow: 0 0 14px rgba(255,196,0,0.7), 0 0 28px rgba(255,122,0,0.45);
     }
     .note {
       margin-top: 36px;
@@ -346,8 +351,8 @@
     .page { position: relative; z-index: 1; }
     #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     #duck3D { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .duck { position: absolute; left: -10%; will-change: transform; }
-    .duck img { display: block; opacity: 0.6; animation: duckBob 2.4s ease-in-out infinite alternate; filter: scaleX(-1); }
+    .duck { position: absolute; left: -10%; will-change: transform; filter: scaleX(-1); }
+    .duck img { display: block; opacity: 0.6; animation: duckBob 2.4s ease-in-out infinite alternate; }
     @keyframes duckFly {
       from { transform: translateX(0); }
       to   { transform: translateX(122vw); }
@@ -596,8 +601,7 @@ Vedran Lukic & Aether Veylan
       currentAudio = null;
     }
     if (currentPlayBtn) {
-      currentPlayBtn.innerHTML = '&#9654;';
-      currentPlayBtn.classList.remove('playing');
+      currentPlayBtn.classList.remove('active');
       currentPlayBtn = null;
     }
     currentSongIndex = -1;
@@ -650,26 +654,19 @@ Vedran Lukic & Aether Veylan
     if (currentAudio) currentAudio.currentTime = pct * currentAudio.duration;
   });
 
-  function playSongByBtn(playBtn) {
-    var idx = songList.indexOf(playBtn);
-    if (idx === -1) return;
-    playSong(idx);
-  }
-
   function playSong(idx) {
     if (idx < 0 || idx >= songList.length) return;
     stopCurrent();
-    var playBtn = songList[idx];
-    var src = playBtn.dataset.src;
+    var titleLink = songList[idx];
+    var src = titleLink.dataset.src;
     var audio = new Audio(src);
     currentAudio = audio;
-    currentPlayBtn = playBtn;
+    currentPlayBtn = titleLink;
     currentSongIndex = idx;
 
-    playBtn.innerHTML = '&#9646;&#9646;';
-    playBtn.classList.add('playing');
+    titleLink.classList.add('active');
 
-    playerTitle.textContent = playBtn.closest('.track-row').querySelector('a.download').textContent;
+    playerTitle.textContent = titleLink.textContent;
     playerPlay.innerHTML = '&#9646;&#9646;';
     playerPlay.classList.add('playing');
     progressFill.style.width = '0%';
@@ -682,8 +679,7 @@ Vedran Lukic & Aether Veylan
     });
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('ended', function() {
-      playBtn.innerHTML = '&#9654;';
-      playBtn.classList.remove('playing');
+      titleLink.classList.remove('active');
       currentAudio = null;
       currentPlayBtn = null;
       currentSongIndex = -1;
@@ -695,8 +691,7 @@ Vedran Lukic & Aether Veylan
     });
 
     audio.play().catch(function() {
-      playBtn.innerHTML = '&#9654;';
-      playBtn.classList.remove('playing');
+      titleLink.classList.remove('active');
       currentAudio = null;
       currentPlayBtn = null;
       currentSongIndex = -1;
@@ -714,27 +709,25 @@ Vedran Lukic & Aether Veylan
     li.insertBefore(row, links[i]);
     row.appendChild(links[i]);
 
-    var playBtn = document.createElement('button');
-    playBtn.className = 'ctrl-btn play-btn';
-    playBtn.innerHTML = '&#9654;';
-    playBtn.dataset.src = href;
-    row.appendChild(playBtn);
-    songList.push(playBtn);
+    links[i].dataset.src = href;
+    links[i].dataset.idx = songList.length;
+    songList.push(links[i]);
   }
 
   document.addEventListener('click', function(e) {
-    var playBtn = e.target.closest('.play-btn');
-    if (playBtn) {
-      var isPlaying = playBtn.classList.contains('playing');
+    var titleLink = e.target.closest('a.download');
+    if (titleLink && songList.indexOf(titleLink) !== -1) {
+      e.preventDefault();
+      var idx = parseInt(titleLink.dataset.idx);
+      var isPlaying = titleLink.classList.contains('active');
       if (isPlaying) {
         if (currentAudio) currentAudio.pause();
-        playBtn.innerHTML = '&#9654;';
-        playBtn.classList.remove('playing');
+        titleLink.classList.remove('active');
         playerPlay.innerHTML = '&#9654;';
         playerPlay.classList.remove('playing');
         return;
       }
-      playSongByBtn(playBtn);
+      playSong(idx);
       return;
     }
 
@@ -746,16 +739,14 @@ Vedran Lukic & Aether Veylan
       if (currentAudio && !currentAudio.paused) {
         currentAudio.pause();
         if (currentPlayBtn) {
-          currentPlayBtn.innerHTML = '&#9654;';
-          currentPlayBtn.classList.remove('playing');
+          currentPlayBtn.classList.remove('active');
         }
         playerPlay.innerHTML = '&#9654;';
         playerPlay.classList.remove('playing');
       } else if (currentAudio) {
         currentAudio.play().catch(function() {});
         if (currentPlayBtn) {
-          currentPlayBtn.innerHTML = '&#9646;&#9646;';
-          currentPlayBtn.classList.add('playing');
+          currentPlayBtn.classList.add('active');
         }
         playerPlay.innerHTML = '&#9646;&#9646;';
         playerPlay.classList.add('playing');
@@ -798,22 +789,20 @@ Vedran Lukic & Aether Veylan
     dots[i].addEventListener('click', function() {
       var group = this.closest('.download-group');
       var link = group.querySelector('a.download');
-      var playBtn = group.querySelector('.play-btn');
       var allDots = group.querySelectorAll('.dot');
       for (var j = 0; j < allDots.length; j++) {
         allDots[j].classList.remove('active');
       }
       this.classList.add('active');
       link.href = this.dataset.href;
+      link.dataset.src = this.dataset.href;
       link.setAttribute('download', this.dataset.name);
       link.textContent = this.dataset.name;
-      if (playBtn) playBtn.dataset.src = this.dataset.href;
-      if (currentPlayBtn === playBtn && currentAudio) {
+      if (currentPlayBtn === link && currentAudio) {
         currentAudio.pause();
         currentAudio = null;
         currentPlayBtn = null;
-        playBtn.innerHTML = '&#9654;';
-        playBtn.classList.remove('playing');
+        link.classList.remove('active');
       }
     });
   }
