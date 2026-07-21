@@ -575,6 +575,7 @@ Vedran Lukic & Aether Veylan
   var currentPlayBtn = null;
   var songList = [];
   var currentSongIndex = -1;
+  var songGeneration = 0;
 
   var playerBar = document.getElementById('player-bar');
   var playerPlay = document.getElementById('player-play');
@@ -594,10 +595,10 @@ Vedran Lukic & Aether Veylan
   }
 
   function stopCurrent() {
+    songGeneration++;
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
-      currentAudio.removeEventListener('timeupdate', updateProgress);
       currentAudio = null;
     }
     if (currentPlayBtn) {
@@ -618,14 +619,6 @@ Vedran Lukic & Aether Veylan
     lastQuack = now;
     quackSound.currentTime = 0;
     quackSound.play().catch(function() {});
-  }
-
-  function updateProgress() {
-    if (!currentAudio || dragging) return;
-    var pct = (currentAudio.currentTime / currentAudio.duration) * 100;
-    progressFill.style.width = pct + '%';
-    progressThumb.style.left = pct + '%';
-    playerCurrent.textContent = fmtTime(currentAudio.currentTime);
   }
 
   function seekTo(e) {
@@ -696,6 +689,7 @@ Vedran Lukic & Aether Veylan
   function playSong(idx) {
     if (idx < 0 || idx >= songList.length) return;
     stopCurrent();
+    var gen = songGeneration;
     var titleLink = songList[idx];
     var src = titleLink.dataset.src;
     var audio = new Audio(src);
@@ -714,10 +708,18 @@ Vedran Lukic & Aether Veylan
     playerTotal.textContent = '0:00';
 
     audio.addEventListener('loadedmetadata', function() {
+      if (gen !== songGeneration) return;
       playerTotal.textContent = fmtTime(audio.duration);
     });
-    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('timeupdate', function() {
+      if (gen !== songGeneration) return;
+      var pct = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = pct + '%';
+      progressThumb.style.left = pct + '%';
+      playerCurrent.textContent = fmtTime(audio.currentTime);
+    });
     audio.addEventListener('ended', function() {
+      if (gen !== songGeneration) return;
       titleLink.classList.remove('active');
       currentAudio = null;
       currentPlayBtn = null;
@@ -730,6 +732,7 @@ Vedran Lukic & Aether Veylan
     });
 
     audio.play().catch(function() {
+      if (gen !== songGeneration) return;
       titleLink.classList.remove('active');
       currentAudio = null;
       currentPlayBtn = null;
