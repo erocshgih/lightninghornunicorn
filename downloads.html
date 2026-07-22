@@ -448,7 +448,12 @@
       <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3" data-name="Kate Plush And Her Meow Piano - Red Key Piano Version"></span>
     </div>
   </li>
-  <li style="animation-delay: 1.50s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_NAME_IS_RAIN.MP3" download>Name Is Rain</a></li>
+  <li class="download-group" style="animation-delay: 1.50s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3" download>Sassy Ghoul</a>
+    <div class="version-dots">
+      <span class="dot active" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3" data-name="Sassy Ghoul"></span>
+      <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL_BREATHY_VOICE.mp3" data-name="Sassy Ghoul - Breathy Voice"></span>
+    </div>
+  </li>
 </ul>
 
 <h2 class="genre">Rock Metal Powermetal Metalcore Punk</h2>
@@ -797,12 +802,14 @@ Vedran Lukic & Aether Veylan
     }
 
     if (e.target.closest('#player-prev')) {
-      if (currentSongIndex > 0) playSong(currentSongIndex - 1);
+      var prevIdx = (currentSongIndex - 1 + songList.length) % songList.length;
+      playSong(prevIdx);
       return;
     }
 
     if (e.target.closest('#player-next')) {
-      if (currentSongIndex < songList.length - 1) playSong(currentSongIndex + 1);
+      var nextIdx = (currentSongIndex + 1) % songList.length;
+      playSong(nextIdx);
       return;
     }
 
