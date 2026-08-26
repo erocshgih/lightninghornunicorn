@@ -4,6 +4,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // --- Speaker Styling: color-code speaker names ---
+  document.querySelectorAll('p').forEach(p => {
+    const text = p.textContent.trim();
+    if (text.startsWith('Me:') || text.startsWith('Ich:')) {
+      p.classList.add('speaker-vedran');
+    } else if (text.startsWith('Aether:')) {
+      p.classList.add('speaker-aether');
+    }
+  });
+
   // --- Static high-res noise texture for content areas ---
   (function generateNoise() {
     const canvas = document.createElement('canvas');
@@ -105,15 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
     osc.start(time); osc.stop(time + 0.1);
   }
 
+  // Pattern: 16 steps (2 bars of 4/4)
+  // K=kick T=tom R=rim S=shaker C=clave
   const pattern = [
-    'K', '', 'S', '',  'K', '', 'S', '',  '', 'T', 'S', '',  '', '', 'S', '',
-    'K', '', 'S', '',  '', '', 'S', '',  '', 'T', 'S', '',  'K', '', 'S', '',
-    'K', '', 'S', '',  'K', '', 'S', '',  '', '', 'S', '',  '', 'T', 'S', '',
-    'K', '', 'S', '',  '', '', 'S', '',  'T', '', 'S', '',  '', '', 'S', '',
-    'K', '', 'S', '',  'K', '', 'S', '',  '', 'T', 'S', '',  '', '', 'S', '',
-    'K', '', 'S', '',  '', '', 'S', '',  '', '', 'S', '',  'K', 'T', 'S', '',
-    'K', '', 'S', '',  'K', '', 'S', '',  '', 'T', 'S', '',  '', '', 'S', '',
-    '', '', 'S', '',  '', '', 'S', '',  'T', '', 'S', '',  'K', '', '', '',
+    'K', '', 'S', '',  'K', '', 'S', '',
+    '', 'T', 'S', '',  '', '', 'S', '',
+    'K', '', 'S', '',  '', '', 'S', '',
+    '', 'T', 'S', '', 'K', '', 'S', '',
   ];
 
   let drumCtx = null;
@@ -179,6 +187,37 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('click', () => playPageTurn());
   });
 
+  // --- Sound effects on hover/click ---
+  const SFX = {
+    hover: createBeep(800, 0.03, 'square'),
+    click: createBeep(1200, 0.05, 'square'),
+    nav: createBeep(600, 0.04, 'triangle'),
+  };
+
+  function createBeep(freq, duration, type) {
+    return () => {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'square';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + duration);
+      } catch(e) {}
+    };
+  }
+
+  // Add sound to all nav buttons
+  document.querySelectorAll('.nav-btn, .chapter-card').forEach(el => {
+    el.addEventListener('mouseenter', SFX.hover);
+    el.addEventListener('click', SFX.click);
+  });
+
   // --- Chapter card stagger animation ---
   document.querySelectorAll('.chapter-card').forEach((card, i) => {
     card.style.animationDelay = `${i * 0.08}s`;
@@ -195,6 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         en.style.display = isEnglish ? 'none' : 'block';
         de.style.display = isEnglish ? 'block' : 'none';
         langToggle.textContent = isEnglish ? 'ENGLISH' : 'DEUTSCH';
+        SFX.click();
       }
     });
   }
@@ -245,6 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (target) {
         e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        SFX.nav();
       }
     });
   });
