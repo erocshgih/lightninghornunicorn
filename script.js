@@ -49,13 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ========== DOOR TRANSITION ========== */
-  let _doorBusy = false;
-  const doorPanel = document.querySelector('#door-overlay .door-panel');
-
-  , 1420);
-  }
-
   /* ========== CATEGORY STRIP (endless loop) ========== */
   const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
   const CAT_LINKS = {
@@ -197,21 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = el.getAttribute('data-lang-' + lang);
     if (text) el.innerHTML = text;
   });
-
-  /* ========== INITIAL DOOR STATE ========== */
-  if (doorPanel) {
-    doorPanel.style.backgroundImage = "url('pixelart/pixelart_storytimepic.png')";
-    doorPanel.style.backgroundSize = 'calc(100vw / 4) auto';
-  }
-
-  setTimeout(() => {
-    const door = document.getElementById('door-overlay');
-    if (door) {
-      door.classList.remove('closed');
-      door.classList.add('open');
-    }
-    _doorBusy = false;
-  }, 400);
 
   // --- Static high-res noise texture for content areas ---
   (function generateNoise() {

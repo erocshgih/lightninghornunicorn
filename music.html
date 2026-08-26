@@ -709,35 +709,7 @@
             width: 100%;
         }
 
-        /* ========== DOOR OVERLAY ========== */
-        #door-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        #door-overlay .door-panel {
-            position: absolute;
-            inset: 0;
-            transform: translate3d(0, 150vh, 0);
-            transition: transform 1.4s cubic-bezier(0.7, 0, 0.3, 1);
-            will-change: transform;
-            backface-visibility: hidden;
-            transform-style: preserve-3d;
-            contain: layout paint;
-            background-color: var(--door-bg);
-            background-repeat: repeat;
-            background-position: top left;
-        }
-
-        #door-overlay.closed .door-panel {
-            transform: translate3d(0, 0, 0);
-        }
-
-        #door-overlay.open .door-panel {
-            transform: translate3d(0, 150vh, 0);
-        }
+        
 
         /* ========== MUSIC ========== */
         #MUSIC p {
@@ -836,10 +808,7 @@
     </style>
 </head>
 <body>
-    <!-- Door transition overlay -->
-    <div id="door-overlay" class="closed">
-        <div class="door-panel"></div>
-    </div>
+    
 
     <!-- VHS monochrome green overlay -->
     <div id="vhs-green-overlay" aria-hidden="true">
@@ -1320,19 +1289,7 @@
                 if (text) el.innerHTML = text;
             });
 
-            /* ========== DOOR TRANSITION ========== */
-            const doorPanel = document.querySelector('#door-overlay .door-panel');
-            const door = document.getElementById('door-overlay');
-
-            if (doorPanel) {
-                doorPanel.style.backgroundImage = "url('pixelart/pixelart_musicpic.png')";
-                doorPanel.style.backgroundSize = 'calc(100vw / 4) auto';
-            }
-
-            setTimeout(() => {
-                door.classList.remove('closed');
-                door.classList.add('open');
-            }, 400);
+            
         });
     </script>
 
