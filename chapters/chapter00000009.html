@@ -4,122 +4,27 @@
   <meta charset="UTF-8">
   <title>Chapter 9: Charm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --bg-dark: #0a0a12;
-      --terminal-green: #4af626;
-      --arcade-orange: #ff8c00;
-      --box-bg: rgba(20, 20, 30, 0.85);
-      --text-main: #e0e0e0;
-    }
-
-    body {
-      font-family: 'Press Start 2P', monospace;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      padding: 2em 1.5em;
-      line-height: 1.8;
-      font-size: 12px;
-      max-width: 900px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    body::before {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      z-index: -1;
-      background-size: 100% 2px, 3px 100%;
-      pointer-events: none;
-    }
-
-    h1, h2 {
-      text-align: center;
-      color: var(--arcade-orange);
-      text-shadow: 3px 3px 0px #000;
-      margin-top: 1.5em;
-      margin-bottom: 1.5em;
-      font-size: 22px;
-      letter-spacing: 2px;
-    }
-
-    .chapter-section {
-      margin: 3em 0;
-      background: var(--box-bg);
-      border: 4px solid var(--arcade-orange);
-      border-radius: 8px;
-      padding: 2.5em;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 8px 8px 0px rgba(0,0,0,0.6);
-    }
-
-    .chapter-section p {
-      margin: 1.5em 0;
-      text-shadow: 1px 1px 0px #000;
-    }
-
-    .nav-btn {
-      display: inline-block;
-      padding: 12px 20px;
-      margin: 10px;
-      background-color: var(--bg-dark);
-      color: var(--terminal-green);
-      text-decoration: none;
-      border: 3px solid var(--terminal-green);
-      box-shadow: 4px 4px 0px #000;
-      text-transform: uppercase;
-      font-size: 10px;
-      transition: all 0.1s;
-    }
-
-    .nav-btn:hover {
-      background-color: var(--terminal-green);
-      color: var(--bg-dark);
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px #000;
-    }
-
-    .nav-btn-orange {
-      border-color: var(--arcade-orange);
-      color: var(--arcade-orange);
-    }
-
-    .nav-btn-orange:hover {
-      background-color: var(--arcade-orange);
-      color: var(--bg-dark);
-    }
-
-    #chapter-header {
-      text-align: center;
-      background: var(--box-bg);
-      border: 4px solid #444;
-      padding: 2em;
-      margin: 2em 0 4em 0;
-      box-shadow: 6px 6px 0px #000;
-    }
-
-    #chapter-header p {
-      font-size: 10px;
-      color: #aaa;
-      margin: 2em 0 1.5em 0;
-    }
-
-    @media (max-width: 600px) {
-      body { font-size: 10px; padding: 1em; }
-      .chapter-section { padding: 1.5em; }
-      .nav-btn { display: block; margin: 10px auto; width: 80%; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+  <div class="bg-grid"></div>
+
+  <nav class="chapter-topnav">
+    <a href="chapter00000001.html">01</a>
+    <a href="chapter00000002.html">02</a>
+    <a href="chapter00000003.html">03</a>
+    <a href="chapter00000004.html">04</a>
+    <a href="chapter00000005.html">05</a>
+    <a href="chapter00000006.html">06</a>
+    <a href="chapter00000007.html">07</a>
+    <a href="chapter00000008.html">08</a>
+    <a href="chapter00000009.html" class="current">09</a>
+  </nav>
+
   <section id="chapter-header">
     <div>
-      <a href="LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
+      <a href="../LightningHornUnicorn.html#storytime" class="nav-btn">< Go Back</a>
     </div>
 
     <p>SELECT LANGUAGE DIRECTORY:</p>
@@ -204,5 +109,18 @@
     <p>Aether: „Ich liebe deinen Schreibstil...“</p>
   </section>
 
+  <!-- CHAPTER NAVIGATION -->
+  <nav class="chapter-nav">
+    <a href="chapter00000008.html" class="nav-btn">&lt; PREV CHAP</a>
+    <span class="chapter-counter"></span>
+    <span></span>
+  </nav>
+
+  <footer class="site-footer">
+    <p class="pixel-divider">⚡ TO BE CONTINUED ⚡</p>
+    <a href="LightningHornUnicorn.html">LIGHTNING HORN UNICORN</a>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
