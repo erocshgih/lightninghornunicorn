@@ -4,6 +4,206 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ========== THEME TOGGLE ========== */
+  const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
+  const THEME_ICONS = {
+    'light': '\u2600',
+    'dark': '\u263e',
+    'mono-gray': '\u2591',
+    'mono-green': '\u2593',
+    'crt': '\u25a4'
+  };
+  const themeBtn = document.getElementById('themeToggle');
+
+  function safeGetTheme() {
+    try { return localStorage.getItem('lhu-theme'); } catch (e) { return null; }
+  }
+
+  function safeSetTheme(value) {
+    try { localStorage.setItem('lhu-theme', value); } catch (e) {}
+  }
+
+  function getInitialTheme() {
+    const saved = safeGetTheme();
+    if (saved && THEMES.includes(saved)) return saved;
+    return 'dark';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    safeSetTheme(theme);
+    if (themeBtn) {
+      themeBtn.textContent = THEME_ICONS[theme] || '\u2600';
+      themeBtn.title = 'Modus: ' + theme + ' (klicken zum Wechseln)';
+    }
+  }
+
+  let currentTheme = getInitialTheme();
+  applyTheme(currentTheme);
+
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const idx = THEMES.indexOf(currentTheme);
+      currentTheme = THEMES[(idx + 1) % THEMES.length];
+      applyTheme(currentTheme);
+    });
+  }
+
+  /* ========== DOOR TRANSITION ========== */
+  let _doorBusy = false;
+  const doorPanel = document.querySelector('#door-overlay .door-panel');
+
+  function switchSection(sectionId) {
+    const door = document.getElementById('door-overlay');
+    door.classList.remove('open');
+    door.classList.add('closed');
+    setTimeout(() => {
+      door.classList.remove('closed');
+      door.classList.add('open');
+      _doorBusy = false;
+    }, 1420);
+  }
+
+  /* ========== CATEGORY STRIP (endless loop) ========== */
+  const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
+  const CAT_LINKS = {
+    'ABOUT': '../LightningHornUnicorn.html',
+    'VHS MULTIVERSE': '../vhs/vhs.html',
+    'HUMANART': '../humanart/humanart.html',
+    'PROJECTS': '../projects/projects.html',
+    'STORYTIME': null,
+    'MUSIC': '../music/music.html',
+    'CONTACT': '../contact/contact.html',
+    'DONATE': '../donate/donate.html'
+  };
+  const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
+  const strip = document.getElementById('catStrip');
+  const track = document.getElementById('catTrack');
+
+  if (strip && track) {
+    const REPEAT = 6;
+    const allItems = [];
+    for (let r = 0; r < REPEAT; r++) {
+      CATS.forEach((cat) => {
+        const el = document.createElement('div');
+        el.className = 'cat-item';
+        el.dataset.cat = cat;
+        el.textContent = cat;
+        el.addEventListener('click', () => selectCat(cat, el));
+        track.appendChild(el);
+        allItems.push({ cat, el });
+      });
+    }
+
+    let setW = 0;
+    function measure() { setW = track.scrollWidth / REPEAT; }
+
+    let pos = 0;
+    const SPEED = 0.3;
+
+    function wrap() {
+      if (setW > 0) {
+        while (pos <= -setW) pos += setW;
+        while (pos > 0) pos -= setW;
+      }
+    }
+
+    function setX(px) { track.style.transform = 'translateX(' + px + 'px)'; }
+
+    function loop() {
+      const r = strip.getBoundingClientRect();
+      const visible = r.bottom > 0 && r.top < window.innerHeight;
+      if (visible && !dragging) {
+        pos -= SPEED;
+        wrap();
+        setX(pos);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function selectCat(cat, el) {
+      const link = CAT_LINKS[cat];
+      if (link !== null) {
+        window.location.href = link;
+        return;
+      }
+      allItems.forEach(i => i.el.classList.remove('active'));
+      allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
+      const idx = CATS.indexOf(cat);
+      if (idx >= 0) {
+        const s = LASER_SPEEDS[idx] + 's';
+        const d2 = LASER_SPEEDS[idx] + 's';
+        const d3 = (LASER_SPEEDS[idx] * 2) + 's';
+        const l1 = document.querySelector('.laser-1');
+        const l2 = document.querySelector('.laser-2');
+        const l3 = document.querySelector('.laser-3');
+        if (l1) { l1.style.animationDuration = s; }
+        if (l2) { l2.style.animationDuration = s; l2.style.animationDelay = d2; }
+        if (l3) { l3.style.animationDuration = s; l3.style.animationDelay = d3; }
+      }
+      switchSection(cat);
+    }
+
+    let dragging = false, startX = 0, startPos = 0;
+
+    function down(e) {
+      if (e.target && (e.target.id === 'themeToggle' || e.target.closest('#themeToggle'))) return;
+      dragging = true;
+      startX = (e.touches ? e.touches[0].clientX : e.clientX);
+      startPos = pos;
+    }
+
+    function move(e) {
+      if (!dragging) return;
+      const x = (e.touches ? e.touches[0].clientX : e.clientX);
+      const dx = x - startX;
+      pos = startPos + dx;
+      wrap();
+      setX(pos);
+      e.preventDefault();
+    }
+
+    function up() { dragging = false; }
+
+    strip.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    strip.addEventListener('touchstart', down, { passive: false });
+    strip.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('touchend', up);
+    window.addEventListener('resize', () => { measure(); wrap(); setX(pos); });
+    window.addEventListener('load', measure);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => { measure(); wrap(); setX(pos); });
+    }
+
+    measure();
+    allItems.forEach(i => { if (i.cat === 'STORYTIME') i.el.classList.add('active'); });
+    loop();
+  }
+
+  /* ========== LANGUAGE SWITCH ========== */
+  const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
+  document.querySelectorAll('[data-lang-en]').forEach(el => {
+    const text = el.getAttribute('data-lang-' + lang);
+    if (text) el.innerHTML = text;
+  });
+
+  /* ========== INITIAL DOOR STATE ========== */
+  if (doorPanel) {
+    doorPanel.style.backgroundImage = "url('../pixelart_storytimepic.png')";
+    doorPanel.style.backgroundSize = 'calc(100vw / 4) auto';
+  }
+
+  setTimeout(() => {
+    const door = document.getElementById('door-overlay');
+    if (door) {
+      door.classList.remove('closed');
+      door.classList.add('open');
+    }
+    _doorBusy = false;
+  }, 400);
+
   // --- Static high-res noise texture for content areas ---
   (function generateNoise() {
     const canvas = document.createElement('canvas');

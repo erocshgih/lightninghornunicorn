@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,9 +8,28 @@
 </head>
 <body>
 
-  <div class="bg-grid"></div>
+  <!-- Door transition overlay -->
+  <div id="door-overlay" class="closed">
+      <div class="door-panel"></div>
+  </div>
 
-  <nav class="chapter-topnav">
+  <!-- VHS monochrome green overlay -->
+  <div id="vhs-green-overlay" aria-hidden="true">
+      <canvas id="vhs-noise-canvas"></canvas>
+  </div>
+
+  <header class="header">
+      <div id="catStrip" class="cat-strip">
+          <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
+          <div id="catTrack" class="cat-track"></div>
+      </div>
+      <div class="laser-rail" aria-hidden="true">
+          <div class="laser laser-1"></div>
+          <div class="laser laser-2"></div>
+          <div class="laser laser-3"></div>
+      </div>
+  </header>
+<nav class="chapter-topnav">
     <a href="chapter00000001.html">01</a>
     <a href="chapter00000002.html">02</a>
     <a href="chapter00000003.html">03</a>
@@ -122,5 +141,29 @@
   </footer>
 
   <script src="script.js"></script>
+
+    <!-- VHS noise generator -->
+    <script>
+    (function() {
+        var c = document.getElementById('vhs-noise-canvas');
+        if (!c) return;
+        var ctx = c.getContext('2d');
+        var W = 640, H = 400;
+        c.width = W; c.height = H;
+        var img = ctx.createImageData(W, H);
+        var d = img.data;
+        function noise() {
+            for (var i = 0; i < d.length; i += 4) {
+                var v = Math.random() * 255;
+                d[i] = v; d[i+1] = v; d[i+2] = v; d[i+3] = 255;
+            }
+            ctx.putImageData(img, 0, 0);
+        }
+        (function loop() {
+            noise();
+            setTimeout(loop, 150);
+        })();
+    })();
+    </script>
 </body>
 </html>
