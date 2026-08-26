@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECTS – Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #000;
+            color: #c8c8d4;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 30px 16px 60px;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: #4488ff;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7a7a8e;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* --- ACCORDION --- */
+        .accordion-item {
+            border: 2px solid rgba(68, 136, 255, 0.15);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: #0a0a10;
+            transition: border-color 0.3s;
+        }
+
+        .accordion-item.open {
+            border-color: rgba(68, 136, 255, 0.5);
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: rgba(68, 136, 255, 0.06);
+        }
+
+        .accordion-header .cat-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: #4488ff;
+            letter-spacing: 0.1em;
+        }
+
+        .accordion-header .cat-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: #c8c8d4;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- PRODUCT LABEL --- */
+        .prod-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: #7a7a8e;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        .prod-label + .carousel-stage {
+            margin-top: 0;
+        }
+
+        .carousel-dots:not(:last-child) {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(68, 136, 255, 0.1);
+        }
+
+        .accordion-header .cat-count {
+            font-size: 15px;
+            color: #7a7a8e;
+        }
+
+        .accordion-header .arrow {
+            font-size: 14px;
+            color: #4488ff;
+            transition: transform 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .accordion-item.open .arrow {
+            transform: rotate(90deg);
+        }
+
+        /* --- CAROUSEL PANEL --- */
+        .carousel-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .accordion-item.open .carousel-panel {
+            max-height: 1200px;
+        }
+
+        .carousel-inner {
+            padding: 0 16px 18px;
+        }
+
+        /* --- IMAGE STAGE --- */
+        .carousel-stage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #111;
+            margin-bottom: 10px;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* --- NAV ARROWS --- */
+        .carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .carousel-btn {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(68, 136, 255, 0.15);
+            color: #4488ff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(68, 136, 255, 0.35);
+            transform: scale(1.1);
+        }
+
+        /* --- DOTS --- */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .carousel-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #333;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .carousel-dot:hover {
+            transform: scale(1.4);
+        }
+
+        .carousel-dot.active {
+            background: #4488ff;
+            transform: scale(1.3);
+        }
+
+        /* --- SWIPE HINT --- */
+        .swipe-hint {
+            text-align: center;
+            font-size: 13px;
+            color: #444;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PROJECTS</h1>
+        <p class="subtitle">Mechanical prototypes, 3D designs &amp; physical concepts</p>
+
+        <div id="projects-accordion"></div>
+
+        <p class="swipe-hint">&#8592; swipe or tap arrows &#8594;</p>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const projects = [
+            {
+                cat: 'GLASSES',
+                products: [
+                    { name: 'DUCKPARADA: THUNDERBOLT', images: [
+                        { src: 'projects_glasses_duckparada_thunderbolt1vedran.webp', title: 'Thunderbolt 1' },
+                        { src: 'projects_glasses_duckparada_thunderbolt2package.webp', title: 'Thunderbolt 2' },
+                        { src: 'projects_glasses_duckparada_thunderbolt3comic.webp', title: 'Thunderbolt 3' },
+                        { src: 'projects_glasses_duckparada_thunderbolt4squat.webp', title: 'Thunderbolt 4' },
+                    ]}
+                ]
+            },
+            {
+                cat: 'HELMET',
+                products: [
+                    { name: 'DUCKPARADA: DUCKLIGHT', images: [
+                        { src: 'projects_helmet_duckparada_mark11.webp', title: 'Mark 1' },
+                        { src: 'projects_helmet_duckparada_mark123comic.webp', title: 'Mark 2' },
+                        { src: 'projects_helmet_duckparada_mark12goldmine.webp', title: 'Mark 3' },
+                    ]}
+                ]
+            },
+            {
+                cat: 'RINGS',
+                products: [
+                    { name: 'TURN ME ON RING', images: [
+                        { src: 'projects_rings_turnmeonring_1package.webp', title: 'Turn Me On Ring 1' },
+                        { src: 'projects_rings_turnmeonring_2comic.webp', title: 'Turn Me On Ring 2' },
+                        { src: 'projects_rings_turnmeonring_3ad.webp', title: 'Turn Me On Ring 3' },
+                    ]}
+                ]
+            },
+            {
+                cat: 'FIGURINE',
+                products: [
+                    { name: 'BERTA', images: [
+                        { src: 'projects_figurine_berta1package.webp', title: 'Berta 1' },
+                        { src: 'projects_figurine_berta2figurine.webp', title: 'Berta 2' },
+                        { src: 'projects_figurine_berta3drawing.webp', title: 'Berta 3' },
+                        { src: 'projects_figurine_berta4newspaper.webp', title: 'Berta 4' },
+                    ]},
+                    { name: 'DUDDHA', images: [
+                        { src: 'projects_figurine_duddha1package.webp', title: 'Duddha 1' },
+                        { src: 'projects_figurine_duddha2figurine.webp', title: 'Duddha 2' },
+                    ]}
+                ]
+            },
+            {
+                cat: 'ACCESSOIRE',
+                products: [
+                    { name: 'NOT PLUG', images: [
+                        { src: 'projects_accessoire_notplug1package.webp', title: 'Not Plug 1' },
+                        { src: 'projects_accessoire_notplug2comic.webp', title: 'Not Plug 2' },
+                    ]}
+                ]
+            }
+        ];
+
+        const accordion = document.getElementById('projects-accordion');
+        let globalIdx = 0;
+
+        projects.forEach((group, catIdx) => {
+            const item = document.createElement('div');
+            item.className = 'accordion-item';
+
+            const totalImages = group.products.reduce((sum, p) => sum + p.images.length, 0);
+
+            /* HEADER */
+            const header = document.createElement('div');
+            header.className = 'accordion-header';
+            header.innerHTML = `
+                <span class="cat-label">${group.cat}</span>
+                <span style="display:flex;align-items:center;gap:6px;">
+                    <span class="cat-count">${totalImages}</span>
+                    <span class="arrow">&#9654;</span>
+                </span>
+            `;
+            header.addEventListener('click', () => toggleAccordion(item, catIdx));
+            item.appendChild(header);
+
+            /* CAROUSEL PANEL */
+            const panel = document.createElement('div');
+            panel.className = 'carousel-panel';
+
+            const inner = document.createElement('div');
+            inner.className = 'carousel-inner';
+
+            group.products.forEach((prod) => {
+                /* product label */
+                const prodLabel = document.createElement('div');
+                prodLabel.className = 'prod-label';
+                prodLabel.textContent = prod.name;
+                inner.appendChild(prodLabel);
+
+                /* stage */
+                const stage = document.createElement('div');
+                stage.className = 'carousel-stage';
+                stage.setAttribute('data-gidx', globalIdx);
+
+                prod.images.forEach((img, i) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+                    slide.innerHTML = `<img src="${img.src}" alt="${img.title}" loading="lazy">`;
+                    stage.appendChild(slide);
+                });
+
+                inner.appendChild(stage);
+
+                /* nav */
+                const nav = document.createElement('div');
+                nav.className = 'carousel-nav';
+
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'carousel-btn';
+                prevBtn.innerHTML = '&#9664;';
+                const gIdx = globalIdx;
+                prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(gIdx, -1); });
+
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'carousel-btn';
+                nextBtn.innerHTML = '&#9654;';
+                nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(gIdx, 1); });
+
+                nav.appendChild(prevBtn);
+                nav.appendChild(nextBtn);
+                inner.appendChild(nav);
+
+                /* dots */
+                const dots = document.createElement('div');
+                dots.className = 'carousel-dots';
+                dots.id = 'carousel-dots-' + globalIdx;
+
+                prod.images.forEach((_, i) => {
+                    const dot = document.createElement('span');
+                    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                    const di = globalIdx;
+                    dot.addEventListener('click', (e) => { e.stopPropagation(); goToSlide(di, i); });
+                    dots.appendChild(dot);
+                });
+
+                inner.appendChild(dots);
+                globalIdx++;
+            });
+
+            panel.appendChild(inner);
+            item.appendChild(panel);
+            accordion.appendChild(item);
+        });
+
+        /* --- STATE --- */
+        const state = {};
+        let stateIdx = 0;
+        projects.forEach((group) => {
+            group.products.forEach((prod) => {
+                state[stateIdx] = { idx: 0, total: prod.images.length };
+                stateIdx++;
+            });
+        });
+
+        /* open first item by default */
+        const firstItem = accordion.querySelector('.accordion-item');
+        if (firstItem) firstItem.classList.add('open');
+
+        /* --- ACCORDION TOGGLE --- */
+        function toggleAccordion(item, catIdx) {
+            const isOpen = item.classList.contains('open');
+
+            /* close all */
+            document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('open'));
+
+            if (!isOpen) {
+                item.classList.add('open');
+                state[catIdx].open = true;
+            } else {
+                state[catIdx].open = false;
+            }
+        }
+
+        /* --- CAROUSEL NAVIGATION --- */
+        function navigate(gIdx, dir) {
+            const s = state[gIdx];
+            if (!s) return;
+            s.idx = (s.idx + dir + s.total) % s.total;
+            renderSlide(gIdx);
+        }
+
+        function goToSlide(gIdx, i) {
+            if (!state[gIdx]) return;
+            state[gIdx].idx = i;
+            renderSlide(gIdx);
+        }
+
+        function renderSlide(gIdx) {
+            const s = state[gIdx];
+            if (!s) return;
+            const stage = document.querySelector(`.carousel-stage[data-gidx="${gIdx}"]`);
+            if (!stage) return;
+            const slides = stage.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll(`#carousel-dots-${gIdx} .carousel-dot`);
+
+            slides.forEach((sl, i) => sl.classList.toggle('active', i === s.idx));
+            dots.forEach((d, i) => d.classList.toggle('active', i === s.idx));
+        }
+
+        /* --- SWIPE SUPPORT --- */
+        let touchStartX = 0;
+        let touchStartGIdx = null;
+
+        document.querySelectorAll('.carousel-stage').forEach(stage => {
+            stage.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartGIdx = parseInt(stage.getAttribute('data-gidx'));
+            }, { passive: true });
+
+            stage.addEventListener('touchend', (e) => {
+                if (touchStartGIdx === null) return;
+                const diff = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(diff) > 40) {
+                    navigate(touchStartGIdx, diff < 0 ? 1 : -1);
+                }
+                touchStartGIdx = null;
+            }, { passive: true });
+        });
+
+        /* --- KEYBOARD --- */
+        document.addEventListener('keydown', (e) => {
+            const openStage = document.querySelector('.accordion-item.open .carousel-stage');
+            if (!openStage) return;
+            const gIdx = parseInt(openStage.getAttribute('data-gidx'));
+            if (e.key === 'ArrowLeft') navigate(gIdx, -1);
+            if (e.key === 'ArrowRight') navigate(gIdx, 1);
+        });
+
+    });
+    </script>
+</body>
+</html>
