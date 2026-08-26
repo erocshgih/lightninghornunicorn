@@ -1246,7 +1246,7 @@
             const doorPanel = document.querySelector('#door-overlay .door-panel');
 
             const sectionPic = {
-                'ABOUT': 'pixelart_aboutpic.png'
+                'ABOUT': 'pixelart/pixelart_aboutpic.png'
             };
 
             function tileFor(id) {
@@ -1285,6 +1285,16 @@
 
             /* --- KATEGORIE-STRIP (endlose Schleife) --- */
             const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
+                const CAT_ICONS = {
+                    'ABOUT': 'pixelart_aboutpic.png',
+                    'VHS MULTIVERSE': 'pixelart_vhsmultiversepic.png',
+                    'HUMANART': 'pixelart_humanartpic.png',
+                    'PROJECTS': 'pixelart_projectspic.png',
+                    'STORYTIME': 'pixelart_storytimepic.png',
+                    'MUSIC': 'pixelart_musicpic.png',
+                    'CONTACT': 'pixelart_contactpic.png',
+                    'DONATE': 'pixelart_donatepic.png'
+                };
             const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
             const strip = document.getElementById('catStrip');
             const track = document.getElementById('catTrack');
@@ -1296,7 +1306,14 @@
                     const el = document.createElement('div');
                     el.className = 'cat-item';
                     el.dataset.cat = cat;
-                    el.textContent = cat;
+                    const icon = document.createElement('img');
+                    icon.src = 'pixelart/' + CAT_ICONS[cat];
+                    icon.alt = '';
+                    icon.className = 'cat-icon';
+                    el.appendChild(icon);
+                    const label = document.createElement('span');
+                    label.textContent = cat;
+                    el.appendChild(label);
                     el.addEventListener('click', () => selectCat(cat, el));
                     track.appendChild(el);
                     allItems.push({ cat, el });
@@ -1336,13 +1353,13 @@
             function selectCat(cat, el) {
                 const CAT_LINKS = {
                     'ABOUT': null,
-                    'VHS MULTIVERSE': 'vhs/vhs.html',
+                    'VHS MULTIVERSE': 'vhsmultiverse.html',
                     'HUMANART': 'humanart/humanart.html',
-                    'PROJECTS': 'projects/projects.html',
+                    'PROJECTS': 'projects.html',
                     'STORYTIME': 'chapters/chapter00000001.html',
-                    'MUSIC': 'music/music.html',
-                    'CONTACT': 'contact/contact.html',
-                    'DONATE': 'donate/donate.html'
+                    'MUSIC': 'music.html',
+                    'CONTACT': 'contact.html',
+                    'DONATE': 'donate.html'
                 };
                 const target = CAT_LINKS[cat];
                 if (target) {
@@ -1416,7 +1433,7 @@
 
             /* Initial door state */
             if (doorPanel) {
-                doorPanel.style.backgroundImage = "url('pixelart_aboutpic.png')";
+                doorPanel.style.backgroundImage = "url('pixelart/pixelart_aboutpic.png')";
                 doorPanel.style.backgroundSize = 'calc(100vw / 4) auto';
             }
             document.getElementById('ABOUT').classList.add('active');

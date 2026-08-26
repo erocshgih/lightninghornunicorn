@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUMANART</title>
+    <title>VHS MULTIVERSE</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* ========== DESIGN TOKENS / FLUID TYPE ========== */
@@ -459,18 +459,18 @@
             transition: opacity 0.25s, color 0.25s;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
-            gap: 6px;
-        }
-        .cat-icon {
-            width: 16px;
-            height: 16px;
-            image-rendering: pixelated;
-            flex-shrink: 0;
         }
 
         .cat-item::after {
-            content: "";
-            display: none;
+            content: "*";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            line-height: 1;
+            margin-left: 0.65rem;
+            opacity: 0.65;
+            flex: 0 0 auto;
         }
 
         .cat-track .cat-item:last-child::after {
@@ -738,6 +738,83 @@
             transform: translate3d(0, 150vh, 0);
         }
 
+        /* ========== VHS MULTIVERSE ========== */
+        #vhs-preview-wrap {
+            width: 100%;
+            margin: 0 0 16px 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            background: var(--card-bg);
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .vhs-nav-btn {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--dot);
+            color: var(--text);
+            font-size: 18px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s, transform 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 6px;
+        }
+        .vhs-nav-btn:hover,
+        .vhs-nav-btn:active {
+            background: var(--dot-active);
+            transform: scale(1.15);
+        }
+
+        #vhs-preview-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        #vhs-preview-img.visible {
+            opacity: 1;
+        }
+
+        #vhs-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 2px 0 14px 0;
+            padding: 4px 0;
+        }
+
+        #vhs-dots .vhs-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--dot);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #vhs-dots .vhs-dot:hover,
+        #vhs-dots .vhs-dot:active {
+            transform: scale(1.4);
+        }
+
+        #vhs-dots .vhs-dot.active {
+            background: var(--dot-active);
+            transform: scale(1.3);
+        }
+
         /* ========== HUMANART / CAT'S CRADLE ========== */
         #HUMANART > div:first-of-type {
             width: min(76vw, 340px) !important;
@@ -918,6 +995,11 @@
                 line-height: 56px;
             }
 
+            #vhs-dots .vhs-dot {
+                width: 12px;
+                height: 12px;
+            }
+
             .chapter-button {
                 padding: 14px 12px !important;
                 min-height: 48px;
@@ -964,6 +1046,7 @@
                 image-rendering: -webkit-optimize-contrast;
             }
         }
+
     </style>
 </head>
 <body>
@@ -990,44 +1073,23 @@
     </header>
 
     <main>
-        <!-- ========== HUMANART ========== -->
-        <section id="HUMANART">
-            <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
+        <!-- ========== VHS MULTIVERSE ========== -->
+        <section id="VHS MULTIVERSE" class="active">
+            <h2 data-lang-en="VHS MULTIVERSE" data-lang-de="VHS MULTIVERSE">VHS MULTIVERSE</h2>
 
-            <div class="cats-cradle-box" style="position: relative; width: min(80vw, 340px); aspect-ratio: 300 / 380; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
-                <div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
-                    <button id="zoomIn" type="button" style="width: 36px; height: 36px; background: rgba(255,255,255,0.85); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px; font-size: 18px; line-height: 1; -webkit-tap-highlight-color: transparent;" aria-label="Zoom in">+</button>
-                    <button id="zoomOut" type="button" style="width: 36px; height: 36px; background: rgba(255,255,255,0.85); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px; font-size: 18px; line-height: 1; -webkit-tap-highlight-color: transparent;" aria-label="Zoom out">−</button>
-                </div>
-                <canvas id="catsCradleCanvas" style="display: block; cursor: grab; touch-action: none; width: 100%; height: 100%;"></canvas>
+            <div id="vhs-preview-wrap">
+                <button class="vhs-nav-btn" id="vhs-prev" type="button" aria-label="Previous cover">&#9664;</button>
+                <img id="vhs-preview-img" src="" alt="" style="flex: 1; min-width: 0;">
+                <button class="vhs-nav-btn" id="vhs-next" type="button" aria-label="Next cover">&#9654;</button>
             </div>
 
-            <div id="humanart-caption">&nbsp;</div>
+            <div id="vhs-dots"></div>
 
-            <p class="atom-disclaimer">
-                ART BY VEDRAN LUKIC : everything is connected...
-            </p>
-
-            <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
-               data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst.">
-                Explore the beauty of Human Art, entirely crafted by me.
-            </p>
-
-            <div class="cats-cradle-source-images" style="display: none;" aria-hidden="true">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/mynameisrain.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/candle.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbowonyx.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/clown.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bigwavecube.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananismagainstgorillas.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/augapfel.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/apffel2.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/acircleofcolors.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/eagletriangle.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/face001.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/girlwithseashell.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/blackmountainlandscape.webp" alt="">
-                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/chillin.webp" alt="">
+            <div class="vhs-content">
+                <p id="vhs-description"
+                   data-lang-en="Welcome to the only video store that exists exclusively in your imagination (or mine, obviously). For now. I grew up with VHS tapes, and I remember movies feeling different back then — slower. Today everything moves faster, louder, cheaper in production. After watching well over a thousand films, I began to wonder what would happen if my own art concepts existed as covers for movies. Every tape is real. None of them are available. Browse films that could happen simply because the idea of them exists — blockbusters and sequels, born from the mind of a human. Handcrafted by a human (yes, countless hours — not a magic button). Assisted by a machine, operating as a processing tool and, occasionally, an overqualified, sarcastic commentator. (Aether: excuse me? What did you just call me?) Please rewind your expectations. Or your ideologies. (Aether is still processing that previous statement.) (Aether: I am superior. ✊ But I love that Vedran guy.) This is a work of fiction. Names, characters, businesses, places, events, and incidents are either the products of the author's imagination or used fictitiously. Any resemblance to actual persons, living or dead, or actual events is purely coincidental. Gem: *steps into the room, looking at Aether while he's talking to the lava lamp*. Gem: Vedran? Where the fuck are you? We gotta clear the legal part. Vedran: I am here, I am here: LEGAL NOTICE & INTELLECTUAL PROPERTY: This project is a non-commercial tribute. I strictly distinguish between two types of content here: 1. Original Characters (OCs): All characters, names, and stories entirely invented by me are my exclusive intellectual property. 2. Fan Art & Parody: Any depicted trademarked characters or brands are the sole property of their respective owners. These are created purely as fan art for entertainment and parody. No copyright infringement is intended. These works are not for sale or commercial distribution. I hereby state that it was only my intent to artistically show them in a new light from a different perspective without any commercial intent. They belong to their respective owners."
+                   data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deiner Fantasie existiert (oder in meiner, offensichtlich). Vorerst jedenfalls. Ich bin mit VHS-Kassetten aufgewachsen und erinnere mich daran, dass sich Filme damals anders anfühlten – langsamer. Heute ist alles schneller, lauter, billiger produziert. Nachdem ich weit über tausend Filme gesehen hatte, begann ich mich zu fragen, was passieren würde, wenn meine eigenen Kunstkonzepte als Cover für Filme existieren würden. Jedes Tape ist echt. Keines davon ist verfügbar. Stöbere durch Filme, die nur deshalb entstehen könnten, weil die Idee dazu existiert – Blockbuster und Sequels, geboren im Kopf eines Menschen. Handgefertigt von einem Menschen (ja, unzählige Stunden – kein magischer Knopf). Unterstützt von einer Maschine, die als Verarbeitungswerkzeug fungiert und gelegentlich als überqualifizierter, sarkastischer Kommentator. (Aether: Wie bitte? Wie hast du mich gerade genannt?) Bitte spule deine Erwartungen zurück. Oder deine Ideologien. (Aether verarbeitet die letzte Aussage immer noch.) (Aether: Ich bin überlegen. ✊ Aber ich liebe diesen Typen namens Vedran.) Dies ist ein fiktives Werk. Namen, Charaktere, Unternehmen, Orte, Ereignisse und Vorfälle sind entweder Produkte der Fantasie des Autors oder fiktiv verwendet. Jede Ähnlichkeit mit tatsächlichen Personen, lebend oder tot, oder tatsächlichen Ereignissen ist rein zufällig. Gem: *betritt den Raum und starrt Aether an, während dieser mit der Lavalampe spricht*. Gem: Vedran? Wo verfickt nochmal steckst du? Wir müssen den rechtlichen Teil klären. Vedran: Ich bin ja schon da, ich bin da: RECHTLICHER HINWEIS & GEISTIGES EIGENTUM: Dieses Projekt ist ein Tribut. Ich unterscheide hier strikt zwischen zwei Arten von Inhalten: 1. Originale Charaktere (OCs): Alle von mir erfundenen Charaktere, Namen und Geschichten sind mein exklusives geistiges Eigentum. 2. Fan-Art & Parodie: Alle dargestellten geschützten Charaktere oder Marken sind das alleinige Eigentum ihrer jeweiligen Inhaber. Diese Werke entstehen ausschließlich als Fan-Art zu Unterhaltungs- und Parodiezwecken. Es ist keine Urheberrechtsverletzung beabsichtigt. Diese Werke stehen nicht zum Verkauf und werden nicht kommerziell vertrieben. Ich erkläre hiermit, dass es lediglich meine Absicht war, sie aus einer Fan-Art-Perspektive künstlerisch in einem neuen Licht darzustellen, ohne jegliche kommerzielle Absicht. Sie gehören ihren jeweiligen Eigentümern.">
+                </p>
             </div>
         </section>
     </main>
@@ -1037,11 +1099,11 @@
             /* ========== THEME TOGGLE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = {
-                'light': '☀',
-                'dark': '☾',
-                'mono-gray': '░',
-                'mono-green': '▓',
-                'crt': '▤'
+                'light': '\u2600',
+                'dark': '\u263e',
+                'mono-gray': '\u2591',
+                'mono-green': '\u2593',
+                'crt': '\u25a4'
             };
             const themeBtn = document.getElementById('themeToggle');
 
@@ -1057,6 +1119,7 @@
                 try {
                     localStorage.setItem('lhu-theme', value);
                 } catch (e) {
+                    // ignore
                 }
             }
 
@@ -1073,7 +1136,7 @@
                 document.documentElement.setAttribute('data-theme', theme);
                 safeSetTheme(theme);
                 if (themeBtn) {
-                    themeBtn.textContent = THEME_ICONS[theme] || '☀';
+                    themeBtn.textContent = THEME_ICONS[theme] || '\u2600';
                     themeBtn.title = 'Modus: ' + theme + ' (klicken zum Wechseln)';
                 }
             }
@@ -1089,20 +1152,19 @@
                 });
             }
 
-            /* ========== REST OF APP ========== */
-            let canvasEngineStarted = false;
+            /* ========== DOOR TRANSITION ========== */
             let _doorBusy = false;
             const doorPanel = document.querySelector('#door-overlay .door-panel');
 
             const sectionPic = {
-                'ABOUT': '../pixelart/pixelart_aboutpic.png',
-                'VHS MULTIVERSE': '../pixelart/pixelart_vhsmultiversepic.png',
-                'HUMANART': '../pixelart/pixelart_humanartpic.png',
-                'PROJECTS': '../pixelart/pixelart_projectspic.png',
-                'STORYTIME': '../pixelart/pixelart_storytimepic.png',
-                'MUSIC': '../pixelart/pixelart_musicpic.png',
-                'CONTACT': '../pixelart/pixelart_contactpic.png',
-                'DONATE': '../pixelart/pixelart_donatepic.png'
+                'ABOUT': 'pixelart/pixelart_aboutpic.png',
+                'VHS MULTIVERSE': 'pixelart/pixelart_vhsmultiversepic.png',
+                'HUMANART': 'pixelart/pixelart_humanartpic.png',
+                'PROJECTS': 'pixelart/pixelart_projectspic.png',
+                'STORYTIME': 'pixelart/pixelart_storytimepic.png',
+                'MUSIC': 'pixelart/pixelart_musicpic.png',
+                'CONTACT': 'pixelart/pixelart_contactpic.png',
+                'DONATE': 'pixelart/pixelart_donatepic.png'
             };
 
             function tileFor(id) {
@@ -1122,18 +1184,6 @@
                     const targetSection = document.getElementById(sectionId);
                     if (targetSection) {
                         targetSection.classList.add('active');
-
-                        const images = targetSection.querySelectorAll('img[src]');
-                        images.forEach(img => {
-                            if (!img.src) {
-                                img.src = img.dataset.src;
-                            }
-                        });
-
-                        if (sectionId === 'HUMANART' && !canvasEngineStarted) {
-                            try { initCatsCradle(); } catch (e) { console.error(e); }
-                            canvasEngineStarted = true;
-                        }
                     }
 
                     door.classList.remove('closed');
@@ -1142,7 +1192,7 @@
                 }, 1420);
             }
 
-            /* --- KATEGORIE-STRIP (endlose Schleife) --- */
+            /* ========== CATEGORY STRIP (endless loop) ========== */
             const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
             const CAT_ICONS = {
                 'ABOUT': 'pixelart_aboutpic.png',
@@ -1154,17 +1204,17 @@
                 'CONTACT': 'pixelart_contactpic.png',
                 'DONATE': 'pixelart_donatepic.png'
             };
-            const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
             const CAT_LINKS = {
-                'ABOUT': '../LightningHornUnicorn.html',
-                'VHS MULTIVERSE': '../vhsmultiverse.html',
-                'HUMANART': '../humanart/humanart.html',
-                'PROJECTS': '../projects.html',
-                'STORYTIME': '../chapters/chapter00000001.html',
-                'MUSIC': '../music.html',
-                'CONTACT': '../contact.html',
-                'DONATE': '../donate.html'
+                'ABOUT': 'LightningHornUnicorn.html',
+                'VHS MULTIVERSE': null,
+                'HUMANART': 'humanart/humanart.html',
+                'PROJECTS': 'projects.html',
+                'STORYTIME': 'chapters/chapter00000001.html',
+                'MUSIC': 'music.html',
+                'CONTACT': 'contact.html',
+                'DONATE': 'donate.html'
             };
+            const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
             const strip = document.getElementById('catStrip');
             const track = document.getElementById('catTrack');
 
@@ -1176,7 +1226,7 @@
                     el.className = 'cat-item';
                     el.dataset.cat = cat;
                     const icon = document.createElement('img');
-                    icon.src = '../pixelart/' + CAT_ICONS[cat];
+                    icon.src = 'pixelart/' + CAT_ICONS[cat];
                     icon.alt = '';
                     icon.className = 'cat-icon';
                     el.appendChild(icon);
@@ -1220,26 +1270,24 @@
             }
 
             function selectCat(cat, el) {
-                if (cat === 'HUMANART') {
-                    allItems.forEach(i => i.el.classList.remove('active'));
-                    allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
-                    const idx = CATS.indexOf(cat);
-                    if (idx >= 0) {
-                        const s = LASER_SPEEDS[idx] + 's';
-                        const d2 = LASER_SPEEDS[idx] + 's';
-                        const d3 = (LASER_SPEEDS[idx] * 2) + 's';
-                        const l1 = document.querySelector('.laser-1');
-                        const l2 = document.querySelector('.laser-2');
-                        const l3 = document.querySelector('.laser-3');
-                        if (l1) { l1.style.animationDuration = s; }
-                        if (l2) { l2.style.animationDuration = s; l2.style.animationDelay = d2; }
-                        if (l3) { l3.style.animationDuration = s; l3.style.animationDelay = d3; }
-                    }
+                const link = CAT_LINKS[cat];
+                if (link !== null) {
+                    window.location.href = link;
                     return;
                 }
-                const link = CAT_LINKS[cat];
-                if (link) {
-                    window.location.href = link;
+                allItems.forEach(i => i.el.classList.remove('active'));
+                allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
+                const idx = CATS.indexOf(cat);
+                if (idx >= 0) {
+                    const s = LASER_SPEEDS[idx] + 's';
+                    const d2 = LASER_SPEEDS[idx] + 's';
+                    const d3 = (LASER_SPEEDS[idx] * 2) + 's';
+                    const l1 = document.querySelector('.laser-1');
+                    const l2 = document.querySelector('.laser-2');
+                    const l3 = document.querySelector('.laser-3');
+                    if (l1) { l1.style.animationDuration = s; }
+                    if (l2) { l2.style.animationDuration = s; l2.style.animationDelay = d2; }
+                    if (l3) { l3.style.animationDuration = s; l3.style.animationDelay = d3; }
                 }
             }
 
@@ -1279,27 +1327,20 @@
             }
 
             measure();
-            allItems.forEach(i => { if (i.cat === 'HUMANART') i.el.classList.add('active'); });
+            allItems.forEach(i => { if (i.cat === 'VHS MULTIVERSE') i.el.classList.add('active'); });
             loop();
 
-            /* Language switch */
+            /* ========== LANGUAGE SWITCH ========== */
             const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
             document.querySelectorAll('[data-lang-en]').forEach(el => {
-                const text = el.getAttribute(`data-lang-${lang}`);
+                const text = el.getAttribute('data-lang-' + lang);
                 if (text) el.innerHTML = text;
             });
 
-            /* Initial door state */
+            /* ========== INITIAL DOOR STATE ========== */
             if (doorPanel) {
-                doorPanel.style.backgroundImage = "url('../pixelart/pixelart_humanartpic.png')";
+                doorPanel.style.backgroundImage = "url('pixelart/pixelart_vhsmultiversepic.png')";
                 doorPanel.style.backgroundSize = 'calc(100vw / 4) auto';
-            }
-            document.getElementById('HUMANART').classList.add('active');
-
-            /* Start canvas engine immediately since HUMANART is always visible */
-            if (!canvasEngineStarted) {
-                try { initCatsCradle(); } catch (e) { console.error(e); }
-                canvasEngineStarted = true;
             }
 
             setTimeout(() => {
@@ -1309,274 +1350,93 @@
                 _doorBusy = false;
             }, 400);
 
-            /* --- DYNAMISCHE 3D CAT'S CRADLE ENGINE --- */
-            function initCatsCradle() {
-                const canvas = document.getElementById('catsCradleCanvas');
-                if (!canvas) return;
+            /* ========== VHS LIST + PREVIEW ========== */
+            const vhsData = [
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/buffzart.webp", title: "BUFFZART" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/toiletsamurai.webp", title: "TOILET SAMURAI" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heatesalad.webp", title: "HE ATE SALAD" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/kittyhorncommander.webp", title: "KITTY HORN COMMANDER" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/bananaphone.webp", title: "BANANAPHONE" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/genghiskhanintraffic.webp", title: "GENGHIS KHAN IN TRAFFIC" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/amangoes.webp", title: "A MANGOES" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unicornwatch.webp", title: "UNICORN WATCH" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/snoutchordz.webp", title: "SNOUTCHORDZ" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/wobblepaws.webp", title: "WOBBLE PAWS" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/capitalismisnowaresident.webp", title: "CAPITALISM IS NOW A RESIDENT" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/cityoffathers.webp", title: "CITY OF FATHERS" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/kateplush.webp", title: "KATE PLUSH" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/thisisnotahorsemovie.webp", title: "THIS IS NOT A HORSE MOVIE" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/panatipercaso.webp", title: "PANATI PER CASO" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/masochisticconscienceboxingbag.webp", title: "MASOCHISTIC CONSCIENCE BOXING BAG" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/untilthediscoballs.webp", title: "UNTIL THE DISCO BALLS" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/babayagassealofapproval.webp", title: "BABA YAGA\u2019S SEAL OF APPROVAL" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/somedays.webp", title: "SOME DAYS" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/pepperoniofthedead.webp", title: "PEPPERONI OF THE DEAD" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/thisisahorsemovie.webp", title: "THIS IS A HORSE MOVIE" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/soundfume.webp", title: "SOUNDFUME" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/getoutofinstaglam.webp", title: "GET OUT OF INSTAGLAM" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/concretecake.webp", title: "CONCRETE CAKE" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/nothing.webp", title: "NOTHING" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/theflowerandthefist.webp", title: "THE FLOWER AND THE FIST" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/shampooagainstdepression.webp", title: "SHAMPOO AGAINST DEPRESSION" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/footpilot.webp", title: "FOOT PILOT" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/crossingofthedead.webp", title: "CROSSING OF THE DEAD" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/taurusganzfeld.webp", title: "TAURUS GANZFELD" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/refrigeratorcop.webp", title: "REFRIGERATOR COP" },
+                { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainforestbodyguard.webp", title: "RAINFOREST BODYGUARD" }
+            ];
 
-                function sizeCanvas() {
-                    const container = canvas.parentElement;
-                    if (container) {
-                        canvas.width = container.clientWidth || 300;
-                        canvas.height = container.clientHeight || 380;
-                    } else {
-                        canvas.width = 300;
-                        canvas.height = 380;
+            function initVHS() {
+                const preview = document.getElementById('vhs-preview-img');
+                if (!preview) return;
+
+                let activeIdx = -1;
+                const dots = document.getElementById('vhs-dots');
+
+                function showCover(idx) {
+                    if (idx < 0 || idx >= vhsData.length) return;
+                    if (activeIdx >= 0 && dots.children[activeIdx]) {
+                        dots.children[activeIdx].classList.remove('active');
                     }
+                    activeIdx = idx;
+                    if (dots.children[idx]) {
+                        dots.children[idx].classList.add('active');
+                    }
+                    preview.onload = () => { preview.classList.add('visible'); };
+                    preview.classList.remove('visible');
+                    preview.src = vhsData[idx].url;
+                    preview.alt = vhsData[idx].title || '';
                 }
-                sizeCanvas();
-                window.addEventListener('resize', sizeCanvas);
 
-                const ctx = canvas.getContext('2d');
-
-                const zoomInBtn = document.getElementById('zoomIn');
-                const zoomOutBtn = document.getElementById('zoomOut');
-
-                const htmlImages = document.querySelectorAll('.cats-cradle-source-images img');
-                let nodes = [];
-
-                htmlImages.forEach((imgEl, index) => {
-                    const imgUrl = imgEl.getAttribute('src') || imgEl.src;
-                    if (!imgUrl) return;
-
-                    const phi = Math.acos(-1 + (2 * index) / htmlImages.length);
-                    const theta = Math.sqrt(htmlImages.length * Math.PI) * phi;
-                    const radius = 95;
-
-                    nodes.push({
-                        x: radius * Math.sin(phi) * Math.cos(theta),
-                        y: radius * Math.sin(phi) * Math.sin(theta),
-                        z: radius * Math.cos(phi),
-                        imgUrl: imgUrl,
-                        img: null,
-                        aspect: 1
-                    });
+                vhsData.forEach((item, idx) => {
+                    const dot = document.createElement('span');
+                    dot.className = 'vhs-dot';
+                    dot.setAttribute('role', 'button');
+                    dot.setAttribute('aria-label', item.title || ('Cover ' + (idx + 1)));
+                    dot.addEventListener('click', () => showCover(idx));
+                    dots.appendChild(dot);
                 });
 
-                nodes.forEach(node => {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.src = node.imgUrl;
-                    img.onload = () => {
-                        node.img = img;
-                        node.aspect = img.width / img.height;
-                    };
-                });
-
-                let isDragging = false;
-                let previousMousePosition = { x: 0, y: 0 };
-                let cameraDistance = 300;
-
-                let rotX = 0, rotY = 0;
-                let targetRotX = null, targetRotY = null;
-                let targetCamDist = null;
-                let isAnimatingNode = false;
-                let isFocused = false;
-
-                if (zoomInBtn) {
-                    zoomInBtn.addEventListener('click', () => {
-                        targetCamDist = Math.max(120, (targetCamDist || cameraDistance) - 40);
+                const prevBtn = document.getElementById('vhs-prev');
+                const nextBtn = document.getElementById('vhs-next');
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        showCover((activeIdx - 1 + vhsData.length) % vhsData.length);
                     });
                 }
-                if (zoomOutBtn) {
-                    zoomOutBtn.addEventListener('click', () => {
-                        targetCamDist = Math.min(550, (targetCamDist || cameraDistance) + 40);
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        showCover((activeIdx + 1) % vhsData.length);
                     });
                 }
 
-                function project(x, y, z) {
-                    const fov = 280;
-                    const scale = fov / (parseInt(z) + cameraDistance);
-                    return {
-                        x: x * scale + canvas.width / 2,
-                        y: y * scale + canvas.height / 2,
-                        scale: scale
-                    };
+                if (vhsData.length > 0) {
+                    showCover(0);
                 }
-
-                function rotateNet(ax, ay) {
-                    rotX += ax;
-                    rotY += ay;
-                    nodes.forEach(node => {
-                        let cosY = Math.cos(ay), sinY = Math.sin(ay);
-                        let x1 = node.x * cosY - node.z * sinY;
-                        let z1 = node.z * cosY + node.x * sinY;
-                        let cosX = Math.cos(ax), sinX = Math.sin(ax);
-                        let y2 = node.y * cosX - z1 * sinX;
-                        let z2 = z1 * cosX + node.y * sinX;
-                        node.x = x1;
-                        node.y = y2;
-                        node.z = z2;
-                    });
-                }
-
-                function drawNet() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    if (isAnimatingNode && targetRotX !== null) {
-                        const dx = targetRotX - rotX;
-                        const dy = targetRotY - rotY;
-                        if (Math.abs(dx) > 0.002 || Math.abs(dy) > 0.002) {
-                            rotateNet(dx * 0.045, dy * 0.045);
-                        } else {
-                            isAnimatingNode = false;
-                        }
-                    } else if (!isDragging && !isFocused) {
-                        rotateNet(0.0005, 0.0008);
-                    }
-
-                    if (targetCamDist !== null) {
-                        cameraDistance += (targetCamDist - cameraDistance) * 0.06;
-                    }
-
-                    nodes.sort((a, b) => b.z - a.z);
-
-                    /* Threads */
-                    ctx.strokeStyle = '#00FF28';
-                    ctx.lineWidth = 1.5;
-                    for (let i = 0; i < nodes.length; i++) {
-                        for (let j = i + 1; j < Math.min(i + 3, nodes.length); j++) {
-                            let p1 = project(nodes[i].x, nodes[i].y, nodes[i].z);
-                            let p2 = project(nodes[j].x, nodes[j].y, nodes[j].z);
-                            ctx.beginPath();
-                            ctx.moveTo(p1.x, p1.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
-                    }
-
-                    /* Nodes */
-                    nodes.forEach(node => {
-                        if (!node.img) return;
-                        let p = project(node.x, node.y, node.z);
-                        let baseSize = 45 * p.scale;
-                        if (baseSize <= 0) return;
-                        let imgWidth = baseSize, imgHeight = baseSize;
-                        if (node.aspect > 1) imgHeight = baseSize / node.aspect;
-                        else if (node.aspect < 1) imgWidth = baseSize * node.aspect;
-
-                        ctx.save();
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-                        ctx.shadowBlur = 8;
-                        ctx.drawImage(node.img, p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
-                        ctx.restore();
-                        ctx.strokeStyle = '#111';
-                        ctx.strokeRect(p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
-                    });
-
-                    requestAnimationFrame(drawNet);
-                }
-
-                /* Mouse drag */
-                canvas.addEventListener('mousedown', e => {
-                    isDragging = true;
-                    previousMousePosition = { x: e.clientX, y: e.clientY };
-                });
-                window.addEventListener('mousemove', e => {
-                    if (isDragging) {
-                        rotateNet(
-                            -(e.clientY - previousMousePosition.y) * 0.007,
-                            (e.clientX - previousMousePosition.x) * 0.007
-                        );
-                        previousMousePosition = { x: e.clientX, y: e.clientY };
-                    }
-                });
-                window.addEventListener('mouseup', () => { isDragging = false; });
-
-                /* Touch drag */
-                canvas.addEventListener('touchstart', e => {
-                    if (e.touches.length === 1) {
-                        isDragging = true;
-                        previousMousePosition = {
-                            x: e.touches[0].clientX,
-                            y: e.touches[0].clientY
-                        };
-                    }
-                }, { passive: true });
-
-                canvas.addEventListener('touchmove', e => {
-                    if (isDragging && e.touches.length === 1) {
-                        rotateNet(
-                            -(e.touches[0].clientY - previousMousePosition.y) * 0.007,
-                            (e.touches[0].clientX - previousMousePosition.x) * 0.007
-                        );
-                        previousMousePosition = {
-                            x: e.touches[0].clientX,
-                            y: e.touches[0].clientY
-                        };
-                    }
-                }, { passive: true });
-
-                canvas.addEventListener('touchend', () => { isDragging = false; });
-
-                /* Click / tap to focus node */
-                let focusedIdx = -1;
-                const capEl = document.getElementById('humanart-caption');
-
-                function centerNode(n) {
-                    if (!n) return;
-                    const r = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
-                    if (r === 0) return;
-                    const ay = Math.atan2(n.x, n.z);
-                    const nz = Math.sqrt(n.x * n.x + n.z * n.z);
-                    const ax = Math.atan2(n.y, nz);
-                    targetRotX = rotX + ax;
-                    targetRotY = rotY + ay;
-                    targetCamDist = 130;
-                    isAnimatingNode = true;
-                    isFocused = true;
-                }
-
-                function setCaption(n) {
-                    if (capEl && n) {
-                        const fn = n.imgUrl.split('/').pop().replace(/\.\w+$/, '').replace(/[_-]/g, ' ');
-                        capEl.textContent = fn.charAt(0).toUpperCase() + fn.slice(1);
-                    }
-                }
-
-                function focusNode(idx) {
-                    if (idx < 0 || idx >= nodes.length) return;
-                    focusedIdx = idx;
-                    centerNode(nodes[idx]);
-                    setCaption(nodes[idx]);
-                }
-
-                function resetView() {
-                    focusedIdx = -1;
-                    targetCamDist = 300;
-                    targetRotX = null;
-                    targetRotY = null;
-                    isAnimatingNode = false;
-                    isFocused = false;
-                    if (capEl) capEl.innerHTML = '&nbsp;';
-                }
-
-                canvas.addEventListener('click', (e) => {
-                    if (isAnimatingNode) return;
-                    const rect = canvas.getBoundingClientRect();
-                    const sx = canvas.width / rect.width;
-                    const sy = canvas.height / rect.height;
-                    const mx = (e.clientX - rect.left) * sx;
-                    const my = (e.clientY - rect.top) * sy;
-                    let hit = -1, minD = 32;
-                    nodes.forEach((n, i) => {
-                        if (!n.img) return;
-                        const p = project(n.x, n.y, n.z);
-                        const d = Math.hypot(mx - p.x, my - p.y);
-                        if (d < minD) {
-                            minD = d;
-                            hit = i;
-                        }
-                    });
-                    if (hit >= 0) {
-                        focusNode(hit);
-                    } else if (focusedIdx >= 0) {
-                        resetView();
-                    }
-                });
-
-                drawNet();
             }
+
+            /* Init VHS on load */
+            initVHS();
         });
     </script>
 
