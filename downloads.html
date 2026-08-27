@@ -57,14 +57,17 @@
 
     /* ========== LAYOUT ========== */
     .app {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      grid-template-rows: 100px 1fr;
+      min-height: 100vh;
       height: 100vh;
     }
 
     /* ========== SIDEBAR ========== */
     .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 88px;
+      width: 280px;
       background: var(--bg-sidebar);
       padding: 24px 16px;
       display: flex;
@@ -184,9 +187,54 @@
 
     /* ========== MAIN CONTENT ========== */
     .main {
+      position: fixed;
+      top: 0;
+      left: 280px;
+      right: 0;
+      bottom: 88px;
+      height: auto;
       overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: auto;
+      scrollbar-color: #555 var(--bg-main);
       background: var(--bg-main);
-      position: relative;
+      padding-bottom: 40px;
+    }
+
+    .main::-webkit-scrollbar {
+      width: 14px;
+    }
+
+    .main::-webkit-scrollbar-track {
+      background: var(--bg-main);
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 8px;
+      border: 3px solid var(--bg-main);
+    }
+
+    .main::-webkit-scrollbar-thumb:hover {
+      background: var(--yellow);
+    }
+
+    .main::-webkit-scrollbar {
+      width: 14px;
+    }
+
+    .main::-webkit-scrollbar-track {
+      background: var(--bg-main);
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 8px;
+      border: 3px solid var(--bg-main);
+    }
+
+    .main::-webkit-scrollbar-thumb:hover {
+      background: var(--yellow);
     }
 
     .main::-webkit-scrollbar {
@@ -203,9 +251,13 @@
     /* ========== PLAYLIST HEADER ========== */
     .playlist-header {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
+      justify-content: center;
       gap: 24px;
       padding: 40px 32px 24px;
+      text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
       background: linear-gradient(180deg, #2a2200 0%, var(--bg-main) 100%);
     }
 
@@ -225,6 +277,7 @@
     .playlist-info {
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 12px;
     }
 
@@ -264,8 +317,11 @@
 
     /* ========== PLAYLIST ACTIONS ========== */
     .playlist-actions {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 24px;
       padding: 24px 32px;
     }
@@ -298,6 +354,9 @@
 
     /* ========== SONG LIST HEADER ========== */
     .song-list-header {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
       display: grid;
       grid-template-columns: 40px 1fr 100px 80px 50px;
       gap: 16px;
@@ -317,6 +376,9 @@
 
     /* ========== SONG ROW ========== */
     .song-row {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
       display: grid;
       grid-template-columns: 40px 1fr 100px 80px 50px;
       gap: 16px;
@@ -471,14 +533,19 @@
 
     /* ========== NOW PLAYING BAR ========== */
     .now-playing {
-      grid-column: 1 / -1;
-      background: #181818;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 88px;
+      background: rgba(24,24,24,0.98);
       border-top: 1px solid var(--border);
       display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
+      grid-template-columns: minmax(220px,1fr) minmax(320px,2fr) minmax(220px,1fr);
       align-items: center;
-      padding: 0 16px;
-      z-index: 100;
+      gap: 20px;
+      padding: 0 18px;
+      z-index: 1000;
     }
 
     .np-left {
@@ -491,7 +558,7 @@
     .np-cover {
       width: 56px;
       height: 56px;
-      border-radius: 4px;
+      border-radius: 8px;
       background: linear-gradient(135deg, var(--yellow), var(--orange));
       display: flex;
       align-items: center;
@@ -503,7 +570,7 @@
     .np-track-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       min-width: 0;
     }
 
@@ -518,23 +585,24 @@
     .np-track-artist {
       font-size: 7px;
       color: var(--text-muted);
-    }
-
-    .np-like {
-      display: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .np-center {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      min-width: 0;
     }
 
     .np-controls {
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: center;
+      gap: 18px;
     }
 
     .np-btn {
@@ -543,11 +611,12 @@
       color: var(--text-muted);
       font-size: 16px;
       cursor: pointer;
-      transition: color 0.2s;
+      transition: color 0.2s, transform 0.15s;
     }
 
     .np-btn:hover {
       color: var(--text-main);
+      transform: scale(1.05);
     }
 
     .np-btn.play {
@@ -560,11 +629,10 @@
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      transition: transform 0.1s;
     }
 
     .np-btn.play:hover {
-      transform: scale(1.06);
+      transform: scale(1.08);
     }
 
     .np-btn.play.active {
@@ -593,19 +661,16 @@
       border-radius: 2px;
       position: relative;
       cursor: pointer;
+      touch-action: none;
     }
 
     .np-bar:hover {
       height: 6px;
     }
 
-    .np-bar:hover .np-thumb,
-    .np-thumb.visible {
-      opacity: 1;
-    }
-
     .np-fill {
       height: 100%;
+      width: 0;
       background: var(--text-main);
       border-radius: 2px;
       transition: width 0.1s linear;
@@ -628,22 +693,60 @@
       transition: opacity 0.2s;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
       object-fit: contain;
+      pointer-events: none;
+    }
+
+    .np-bar:hover .np-thumb,
+    .np-thumb.visible {
+      opacity: 1;
+    }
+
+    .np-versions {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      margin-top: 4px;
+      height: 12px;
+    }
+
+    .np-version {
+      width: 9px;
+      height: 9px;
+      padding: 0;
+      border: 1px solid var(--text-muted);
+      border-radius: 50%;
+      background: transparent;
+      color: transparent;
+      font-size: 0;
+      line-height: 0;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
+      flex: 0 0 auto;
+    }
+
+    .np-version:hover {
+      transform: scale(1.35);
+      border-color: var(--text-main);
+      background: var(--text-main);
+    }
+
+    .np-version.active {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      box-shadow: 0 0 7px rgba(255,196,0,0.55);
     }
 
     .np-right {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 12px;
-    }
-
-    .np-right .np-btn {
-      font-size: 14px;
+      gap: 10px;
+      min-width: 0;
     }
 
     .np-dl-btn {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: var(--yellow);
       border: none;
@@ -653,11 +756,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .np-dl-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.08);
       box-shadow: 0 0 12px rgba(255,196,0,0.5);
     }
 
@@ -665,6 +768,7 @@
     #intro {
       position: fixed;
       inset: 0;
+      text-align: center;
       z-index: 9999;
       background: #000;
       display: flex;
@@ -681,16 +785,16 @@
     }
 
     @keyframes introGlitch {
-      0%, 100% { transform: translate(0); filter: none; }
-      10% { transform: translate(-4px, 2px); filter: hue-rotate(90deg); }
-      20% { transform: translate(4px, -2px); filter: hue-rotate(180deg); }
-      30% { transform: translate(-2px, 4px) skewX(2deg); }
-      40% { transform: translate(2px, -4px) skewX(-2deg); }
-      50% { transform: translate(-4px, 0); filter: hue-rotate(270deg); }
-      60% { transform: translate(4px, 2px); }
-      70% { transform: translate(-2px, -2px) skewX(4deg); filter: hue-rotate(45deg); }
-      80% { transform: translate(0, 4px) skewX(-4deg); }
-      90% { transform: translate(2px, -2px); filter: hue-rotate(135deg); }
+      0%, 100% { transform: translate3d(0,0,0) scaleX(1) scaleY(1); filter: none; }
+      10% { transform: translate3d(0,0,0) scaleX(0.96) scaleY(1.04); filter: brightness(1.5); }
+      20% { transform: translate3d(0,0,0) scaleX(1.05) scaleY(0.97); filter: brightness(0.8); }
+      30% { transform: translate3d(0,0,0) scaleX(0.92) scaleY(1.06); filter: none; }
+      40% { transform: translate3d(0,0,0) scaleX(1.08) scaleY(0.94); filter: brightness(1.35); }
+      50% { transform: translate3d(0,0,0) scaleX(0.98) scaleY(1.02); filter: brightness(0.9); }
+      60% { transform: translate3d(0,0,0) scaleX(1.04) scaleY(0.98); filter: none; }
+      70% { transform: translate3d(0,0,0) scaleX(0.94) scaleY(1.04); filter: brightness(1.25); }
+      80% { transform: translate3d(0,0,0) scaleX(1.06) scaleY(0.96); filter: brightness(0.9); }
+      90% { transform: translate3d(0,0,0) scaleX(0.99) scaleY(1.01); filter: none; }
     }
 
     @keyframes introFlash {
@@ -699,10 +803,10 @@
     }
 
     @keyframes introScale {
-      0% { transform: scale(0.1) rotate(-180deg); opacity: 0; }
-      50% { transform: scale(1.3) rotate(10deg); opacity: 1; }
-      70% { transform: scale(0.9) rotate(-5deg); }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      0% { transform: translate3d(0,0,0) scale(0.1); opacity: 0; }
+      50% { transform: translate3d(0,0,0) scale(1.3); opacity: 1; }
+      70% { transform: translate3d(0,0,0) scale(0.9); }
+      100% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
     }
 
     @keyframes introShake {
@@ -739,6 +843,9 @@
       font-size: clamp(40px, 10vw, 80px);
       color: var(--yellow);
       margin-top: 24px;
+      text-align: center;
+      width: 100%;
+      transform-origin: center center;
       animation: introGlitch 0.3s steps(2) 3,
                  introFlash 0.15s steps(1) 8,
                  introScale 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.4s forwards,
@@ -836,26 +943,20 @@
 
     /* ========== RESPONSIVE ========== */
     @media (max-width: 900px) {
-      .app {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        grid-template-areas:
-          "np"
-          "content";
-      }
-      .now-playing {
-        grid-area: np;
-        grid-column: 1;
-        grid-row: 1;
-        border-top: none;
-        border-bottom: 1px solid var(--border);
-      }
       .sidebar {
         display: none;
       }
+
       .main {
-        grid-area: content;
+        height: 100vh;
+        padding-bottom: 148px;
+        scrollbar-width: none;
       }
+
+      .main::-webkit-scrollbar {
+        display: none;
+      }
+
       .playlist-header {
         flex-direction: column;
         align-items: center;
@@ -863,97 +964,136 @@
         padding: 20px 16px;
         gap: 16px;
       }
+
       .playlist-cover {
         width: 140px;
         height: 140px;
         font-size: 56px;
       }
+
       .playlist-title {
         font-size: 20px;
       }
+
       .playlist-desc {
         font-size: 8px;
         padding: 0 16px;
       }
+
       .playlist-actions {
         padding: 16px;
         justify-content: center;
+        width: 100%;
       }
+
+      .song-list-header,
+      .song-row {
+        max-width: none;
+      }
+
       .play-btn-large {
         width: 48px;
         height: 48px;
         font-size: 18px;
       }
+
       .song-list-header {
         display: none;
       }
+
       .song-row {
         grid-template-columns: 28px 1fr auto;
         gap: 10px;
         padding: 10px 16px;
         min-height: 56px;
       }
+
       .song-row .song-version-dots {
         display: none;
       }
+
       .song-row .song-duration {
         display: none;
       }
+
       .song-row .dl-btn {
         opacity: 1;
         width: 32px;
         height: 32px;
         font-size: 14px;
       }
+
       .song-num {
         font-size: 8px;
       }
+
       .song-title {
         font-size: 9px;
       }
+
       .song-artist {
         font-size: 7px;
       }
+
       .now-playing {
-        grid-template-columns: 1fr;
+        height: 128px;
+        grid-template-columns: 1fr auto;
         grid-template-rows: auto auto;
-        padding: 8px 12px;
-        gap: 6px;
-        height: auto;
+        gap: 6px 10px;
+        padding: 10px 12px;
       }
+
       .np-left {
-        gap: 10px;
+        grid-column: 1;
+        grid-row: 1;
       }
+
       .np-cover {
         width: 44px;
         height: 44px;
         font-size: 20px;
       }
+
       .np-track-name {
         font-size: 8px;
       }
+
+      .np-track-artist {
+        font-size: 7px;
+      }
+
+      .np-versions {
+        gap: 7px;
+      }
+
+      .np-right {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
       .np-center {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        gap: 5px;
       }
+
       .np-controls {
-        justify-content: center;
-        gap: 20px;
+        gap: 22px;
       }
+
       .np-btn {
         font-size: 18px;
       }
+
       .np-btn.play {
         width: 40px;
         height: 40px;
         font-size: 16px;
       }
+
       .np-progress {
         width: 100%;
-      }
-      .np-right {
-        display: none;
+        max-width: none;
       }
     }
 
@@ -980,12 +1120,13 @@
 
 <div class="app">
   <!-- NOW PLAYING BAR -->
-  <div class="now-playing" style="grid-column: 1 / -1;">
+  <div class="now-playing">
     <div class="np-left">
       <div class="np-cover" id="np-cover">🦆</div>
       <div class="np-track-info">
         <div class="np-track-name" id="np-title">No track selected</div>
         <div class="np-track-artist" id="np-artist">Lightning Horn Unicorn</div>
+        <div class="np-versions" id="np-versions" aria-label="Track versions"></div>
       </div>
     </div>
     <div class="np-center">
@@ -1232,7 +1373,7 @@
       html += '  <div class="song-version-dots">';
       if (hasVersions) {
         song.versions.forEach(function(v, vi) {
-          html += '    <span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.name + '"></span>';
+          html += '    <span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.label + '"></span>';
         });
       }
       html += '  </div>';
@@ -1346,6 +1487,7 @@
   var npBar = document.getElementById('np-bar');
   var npFill = document.getElementById('np-fill');
   var npDl = document.getElementById('np-dl');
+  var npVersions = document.getElementById('np-versions');
 
   function fmtTime(s) {
     if (isNaN(s)) return '0:00';
@@ -1361,11 +1503,42 @@
       npFill.style.width = '0%';
       npCurrent.textContent = '0:00';
       npTotal.textContent = '0:00';
+      npVersions.innerHTML = '';
+      npVersions.style.display = 'none';
       updatePlayBtn(false);
       return;
     }
     npTitle.textContent = song.title;
     npArtist.textContent = song.genreName || 'Lightning Horn Unicorn';
+
+    npVersions.innerHTML = '';
+    if (song.versions && song.versions.length > 1) {
+      npVersions.style.display = 'flex';
+      song.versions.forEach(function(version, index) {
+        var button = document.createElement('button');
+        button.className = 'np-version' + (song.file === version.file ? ' active' : '');
+        button.type = 'button';
+        button.title = version.label;
+        button.setAttribute('aria-label', version.label);
+        button.addEventListener('click', function(e) {
+          e.stopPropagation();
+          song.file = version.file;
+          npVersions.querySelectorAll('.np-version').forEach(function(b) {
+            b.classList.remove('active');
+          });
+          button.classList.add('active');
+
+          if (currentAudio && currentSongIdx >= 0) {
+            var wasPlaying = !currentAudio.paused;
+            playSong(currentSongIdx);
+            if (!wasPlaying) currentAudio.pause();
+          }
+        });
+        npVersions.appendChild(button);
+      });
+    } else {
+      npVersions.style.display = 'none';
+    }
   }
 
   function updatePlayBtn(playing) {
@@ -1503,31 +1676,34 @@
     quack();
   });
 
-  npBar.addEventListener('mousedown', function(e) {
+  npBar.addEventListener('pointerdown', function(e) {
     e.preventDefault();
     npDragging = true;
+    npBar.setPointerCapture(e.pointerId);
     var thumb = document.getElementById('np-thumb');
     if (thumb) thumb.classList.add('visible');
+    seekTo(e);
     quack();
   });
 
-  document.addEventListener('mousemove', function(e) {
+  npBar.addEventListener('pointermove', function(e) {
     if (!npDragging) return;
+    seekTo(e);
     quack();
-    var rect = npBar.getBoundingClientRect();
-    var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    npFill.style.width = (pct * 100) + '%';
-    npCurrent.textContent = fmtTime(pct * (currentAudio ? currentAudio.duration : 0));
   });
 
-  document.addEventListener('mouseup', function(e) {
+  npBar.addEventListener('pointerup', function(e) {
     if (!npDragging) return;
     npDragging = false;
     var thumb = document.getElementById('np-thumb');
     if (thumb) thumb.classList.remove('visible');
-    var rect = npBar.getBoundingClientRect();
-    var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    if (currentAudio) currentAudio.currentTime = pct * currentAudio.duration;
+    seekTo(e);
+  });
+
+  npBar.addEventListener('pointercancel', function() {
+    npDragging = false;
+    var thumb = document.getElementById('np-thumb');
+    if (thumb) thumb.classList.remove('visible');
   });
 
   // Sidebar navigation
