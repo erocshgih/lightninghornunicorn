@@ -1829,7 +1829,7 @@ html += '<div class="song-list-header">';
       var yPos = -2 + Math.random() * 4;
       var dur = 12 + Math.random() * 8;
 
-      gltfLoader.load('rubberduck.glb', function(gltf) {
+      gltfLoader.load('glb/rubberduck.glb', function(gltf) {
         var model = gltf.scene;
         model.scale.set(size, size, size);
         model.rotation.y = Math.PI;
