@@ -838,6 +838,7 @@
     @media (max-width: 900px) {
       .app {
         grid-template-columns: 1fr;
+        grid-template-rows: 1fr 120px;
       }
       .sidebar {
         display: none;
@@ -846,25 +847,118 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 24px 16px;
+        padding: 20px 16px;
+        gap: 16px;
       }
       .playlist-cover {
-        width: 160px;
-        height: 160px;
+        width: 140px;
+        height: 140px;
+        font-size: 56px;
       }
-      .song-list-header,
+      .playlist-title {
+        font-size: 20px;
+      }
+      .playlist-desc {
+        font-size: 8px;
+        padding: 0 16px;
+      }
+      .playlist-actions {
+        padding: 16px;
+        justify-content: center;
+      }
+      .play-btn-large {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+      }
+      .song-list-header {
+        display: none;
+      }
       .song-row {
-        grid-template-columns: 30px 1fr 60px 40px;
+        grid-template-columns: 28px 1fr auto;
+        gap: 10px;
+        padding: 10px 16px;
+        min-height: 56px;
       }
-      .song-list-header span:nth-child(3),
       .song-row .song-version-dots {
         display: none;
       }
+      .song-row .song-duration {
+        display: none;
+      }
+      .song-row .dl-btn {
+        opacity: 1;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+      .song-num {
+        font-size: 8px;
+      }
+      .song-title {
+        font-size: 9px;
+      }
+      .song-artist {
+        font-size: 7px;
+      }
       .now-playing {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 8px 12px;
+        gap: 6px;
+        height: auto;
+      }
+      .np-left {
+        gap: 10px;
+      }
+      .np-cover {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+      }
+      .np-track-name {
+        font-size: 8px;
       }
       .np-center {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .np-controls {
+        justify-content: center;
+        gap: 20px;
+      }
+      .np-btn {
+        font-size: 18px;
+      }
+      .np-btn.play {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      .np-progress {
+        width: 100%;
+      }
+      .np-right {
         display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .playlist-cover {
+        width: 120px;
+        height: 120px;
+        font-size: 48px;
+      }
+      .playlist-title {
+        font-size: 16px;
+      }
+      .song-row {
+        padding: 8px 12px;
+        min-height: 50px;
+      }
+      .song-title {
+        font-size: 8px;
       }
     }
   </style>
