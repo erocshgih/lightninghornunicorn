@@ -491,6 +491,14 @@
             display: block;
         }
 
+        .carousel-slide model-viewer {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            --poster-color: transparent;
+            display: block;
+        }
+
         /* ========== NAV ARROWS ========== */
         .carousel-nav {
             display: flex;
@@ -707,7 +715,7 @@ After the battle, there is only one thing left to do:
 
 Eat your weapons, Berta.`, images: [
                         { src: 'projects/projects_figurine_berta1package.webp' },
-                        { src: 'projects/projects_figurine_berta2figurine.webp' },
+                        { model: 'Berta.glb' },
                         { src: 'projects/projects_figurine_berta3drawing.webp' },
                         { src: 'projects/projects_figurine_berta4newspaper.webp' },
                     ]},
@@ -789,7 +797,24 @@ Easy to attach. Explanations are discussable.`, images: [
                 prod.images.forEach((img, i) => {
                     const slide = document.createElement('div');
                     slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-                    slide.innerHTML = `<img src="${img.src}" loading="lazy">`;
+                    if (img.model) {
+                        const mv = document.createElement('model-viewer');
+                        mv.setAttribute('src', img.model);
+                        mv.setAttribute('camera-controls', '');
+                        mv.setAttribute('auto-rotate', '');
+                        mv.setAttribute('auto-rotate-delay', '0');
+                        mv.setAttribute('rotation-per-second', '30deg');
+                        mv.setAttribute('shadow-intensity', '1');
+                        mv.setAttribute('exposure', '1');
+                        mv.setAttribute('loading', 'eager');
+                        mv.setAttribute('reveal', 'auto');
+                        mv.setAttribute('ar', '');
+                        mv.style.width = '100%';
+                        mv.style.height = '100%';
+                        slide.appendChild(mv);
+                    } else {
+                        slide.innerHTML = `<img src="${img.src}" loading="lazy">`;
+                    }
                     stage.appendChild(slide);
                 });
                 inner.appendChild(stage);
@@ -851,16 +876,20 @@ Easy to attach. Explanations are discussable.`, images: [
             if (firstProd) firstProd.classList.add('open');
         }
 
+        syncViewers();
+
         function toggleCat(el) {
             const isOpen = el.classList.contains('open');
             document.querySelectorAll('.cat-group').forEach(c => c.classList.remove('open'));
             if (!isOpen) el.classList.add('open');
+            syncViewers();
         }
 
         function toggleProd(el) {
             const isOpen = el.classList.contains('open');
             el.parentElement.querySelectorAll('.prod-item').forEach(p => p.classList.remove('open'));
             if (!isOpen) el.classList.add('open');
+            syncViewers();
         }
 
         function navigate(gi, dir) {
@@ -883,6 +912,28 @@ Easy to attach. Explanations are discussable.`, images: [
             if (!stage) return;
             stage.querySelectorAll('.carousel-slide').forEach((sl, i) => sl.classList.toggle('active', i === s.idx));
             document.querySelectorAll(`#dots-${gi} .carousel-dot`).forEach((d, i) => d.classList.toggle('active', i === s.idx));
+            syncViewers();
+        }
+
+        /* Pause any <model-viewer> that is not on the active, open slide */
+        function syncViewers() {
+            document.querySelectorAll('.carousel-stage').forEach(stage => {
+                const gi = +stage.dataset.gidx;
+                const s = state[gi];
+                const open = stage.closest('.cat-group.open') && stage.closest('.prod-item.open');
+                stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
+                    const mv = sl.querySelector('model-viewer');
+                    if (!mv) return;
+                    const active = !!(open && s && s.idx === i);
+                    if (active) {
+                        mv.setAttribute('auto-rotate', '');
+                        try { if (mv.play) mv.play(); } catch (e) {}
+                    } else {
+                        mv.removeAttribute('auto-rotate');
+                        try { if (mv.pause) mv.pause(); } catch (e) {}
+                    }
+                });
+            });
         }
 
         let touchX = 0, touchGI = null;
@@ -929,5 +980,8 @@ Easy to attach. Explanations are discussable.`, images: [
         })();
     })();
     </script>
+
+    <!-- 3D model viewer for GLB showcase -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
 </body>
 </html>
