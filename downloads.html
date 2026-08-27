@@ -3,594 +3,1244 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lightning Horn Unicorn – Downloads</title>
+  <title>Duckify – Lightning Horn Unicorn</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg-page: #ffffff;
-      --text-main: #3a2400;
-      --text-muted: #a07a2a;
-      --yellow: #ffc400;
-      --orange: #ff7a00;
-      --border-light: #e6c890;
+      --bg-main: #121212;
+      --bg-sidebar: #1a1a1a;
+      --bg-card: #181818;
+      --bg-hover: #282828;
+      --bg-active: #333;
+      --yellow: #FFC400;
+      --orange: #FF7A00;
+      --yellow-dim: #b38a00;
+      --text-main: #FFFFFF;
+      --text-muted: #B3B3B3;
+      --text-dim: #727272;
+      --border: #282828;
+      --row-hover: rgba(255,255,255,0.1);
     }
 
-    @keyframes floatY {
-      0%, 100% { transform: translateY(0) rotate(-6deg); }
-      50% { transform: translateY(-16px) rotate(6deg); }
-    }
-    @keyframes flicker {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      45% { opacity: 0.55; transform: scale(0.92); }
-      55% { opacity: 1; transform: scale(1.06); }
-    }
-    @keyframes riseIn {
-      from { opacity: 0; transform: translateY(28px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes chroma {
-      0%, 100% { text-shadow: 1px 0 rgba(255,40,90,0.55), -1px 0 rgba(40,170,255,0.55); }
-      50% { text-shadow: 1.6px 0 rgba(255,40,90,0.6), -1.6px 0 rgba(40,170,255,0.6); }
-    }
-    @keyframes chromaHover {
-      0%, 100% { text-shadow: 2px 0 rgba(255,40,90,0.85), -2px 0 rgba(40,170,255,0.85), 0 0 12px rgba(255,196,0,0.5); }
-      50% { text-shadow: 3px 0 rgba(255,40,90,0.9), -3px 0 rgba(40,170,255,0.9), 0 0 16px rgba(255,122,0,0.55); }
-    }
     @keyframes shimmer {
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
     }
-    @keyframes hueCycle {
-      from { filter: hue-rotate(0deg); }
-      to   { filter: hue-rotate(360deg); }
+    @keyframes duckBob {
+      from { transform: translateY(-5px) rotate(-7deg); }
+      to { transform: translateY(5px) rotate(7deg); }
     }
-    @keyframes electricJitter {
-      0%   { transform: translate(-2px, 0); }
-      25%  { transform: translate(2px, -1px); }
-      50%  { transform: translate(-1.5px, 1px); }
-      75%  { transform: translate(1.5px, -0.5px); }
-      100% { transform: translate(-2px, 0); }
+    @keyframes duckFly {
+      from { transform: translateX(0); }
+      to { transform: translateX(122vw); }
     }
-    .title-jitter span {
-      display: inline-block;
-      animation: electricJitter 0.08s steps(2, end) infinite;
-      color: var(--orange);
-      text-shadow: 0 0 6px var(--yellow), 0 0 12px rgba(255,196,0,0.7);
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
     body {
       font-family: 'Press Start 2P', monospace;
-      background: var(--bg-page);
+      background: var(--bg-main);
       color: var(--text-main);
-      text-align: center;
-      padding: clamp(24px, 5vw, 48px) clamp(12px, 4vw, 24px);
-      padding-bottom: clamp(100px, 14vw, 130px);
-      line-height: 1.9;
-      font-size: clamp(8px, 1.8vw, 11px);
-      min-height: 100vh;
+      overflow: hidden;
+      height: 100vh;
     }
-    .bolt {
-      position: fixed;
-      top: 18px; right: 22px;
-      font-size: clamp(30px, 6vw, 56px);
-      animation: floatY 4.5s ease-in-out infinite, flicker 6s steps(1) infinite;
-      filter: drop-shadow(0 0 10px var(--orange));
-      pointer-events: none;
-      z-index: 5;
+
+    /* ========== LAYOUT ========== */
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      grid-template-rows: 1fr 90px;
+      height: 100vh;
     }
-    .bar {
-      height: 12px;
-      width: min(92vw, 720px);
-      margin: 0 auto;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #ffc400, #ff7a00);
-      box-shadow: 0 0 12px rgba(255,122,0,0.25);
-      animation: hueCycle 14s linear infinite;
-    }
-    h1 {
-      font-size: clamp(1rem, 4vw, 1.4rem);
-      margin: 16px 0;
-      color: var(--yellow);
-      font-weight: bold;
-      letter-spacing: 0.04em;
-      display: inline-block;
-      padding: 8px 24px;
-      background: #fff;
-    }
-    .spacer { height: 36px; }
-    h2.genre {
-      font-size: clamp(0.7rem, 2.6vw, 0.95rem);
-      margin: 40px 0 18px 0;
-      letter-spacing: 0.06em;
-      display: inline-block;
-      padding-bottom: 6px;
-      border-bottom: 3px solid transparent;
-      border-image: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow)) 1;
-      background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shimmer 4s linear infinite;
-    }
-    ul.downloads {
-      list-style: none;
-      padding: 0;
-      margin: 0 auto 24px auto;
-      max-width: min(88vw, 640px);
-    }
-    ul.downloads li {
-      margin: clamp(8px, 1.6vw, 14px) 0;
-      word-wrap: break-word;
-      opacity: 0;
-      animation: riseIn 0.6s ease forwards;
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+      background: var(--bg-sidebar);
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      gap: 24px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
     }
-    ul.downloads li.download-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .version-dots {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 3px;
-      background: var(--border-light);
-      cursor: pointer;
-      transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
-    }
-    .dot:hover {
-      background: var(--yellow);
-      transform: scale(1.2);
-    }
-    .dot.active {
-      background: var(--orange);
-      box-shadow: 0 0 10px rgba(255,122,0,0.6);
-    }
-    .track-row {
+
+    .sidebar-logo {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 12px;
+      padding: 0 8px;
     }
-    .ctrl-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 4px;
-      border: 1px solid var(--border-light);
-      background: #fff;
-      cursor: pointer;
+
+    .sidebar-logo .duck-icon {
+      font-size: 28px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .sidebar-logo h1 {
       font-size: 14px;
+      color: var(--yellow);
+      letter-spacing: 1px;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 9px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover {
+      color: var(--text-main);
+      background: var(--bg-hover);
+    }
+
+    .sidebar-nav a.active {
+      color: var(--text-main);
+      background: var(--bg-hover);
+    }
+
+    .sidebar-nav a .icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0;
+    }
+
+    .sidebar-section-title {
+      font-size: 8px;
+      color: var(--text-dim);
+      padding: 0 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-playlists {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .sidebar-playlist {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sidebar-playlist:hover {
+      color: var(--text-main);
+      background: var(--bg-hover);
+    }
+
+    .sidebar-playlist.active {
+      color: var(--yellow);
+    }
+
+    .sidebar-playlist .pl-cover {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      background: var(--bg-hover);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.25s;
+      font-size: 16px;
       flex-shrink: 0;
     }
-    .ctrl-btn:hover {
-      border-color: var(--orange);
-      box-shadow: 0 0 10px rgba(255,196,0,0.5);
-      transform: translateY(-2px);
+
+    /* ========== MAIN CONTENT ========== */
+    .main {
+      overflow-y: auto;
+      background: var(--bg-main);
+      position: relative;
     }
-    .ctrl-btn.playing {
-      background: var(--orange);
-      color: #fff;
-      border-color: var(--orange);
+
+    .main::-webkit-scrollbar {
+      width: 12px;
     }
-    #player-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: linear-gradient(0deg, #fffef8, #fff8e8);
-      border-top: 2px solid var(--border-light);
-      box-shadow: 0 -2px 16px rgba(255,196,0,0.15);
-      padding: 10px 16px;
+    .main::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .main::-webkit-scrollbar-thumb {
+      background: var(--bg-hover);
+      border-radius: 6px;
+    }
+
+    /* ========== PLAYLIST HEADER ========== */
+    .playlist-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      padding: 40px 32px 24px;
+      background: linear-gradient(180deg, #2a2200 0%, var(--bg-main) 100%);
+    }
+
+    .playlist-cover {
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      flex-shrink: 0;
+    }
+
+    .playlist-info {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Press Start 2P', monospace;
+      gap: 12px;
     }
-    .player-row {
+
+    .playlist-type {
+      font-size: 8px;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+
+    .playlist-title {
+      font-size: clamp(24px, 4vw, 48px);
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .playlist-desc {
+      font-size: 9px;
+      color: var(--text-muted);
+      max-width: 500px;
+      line-height: 1.6;
+    }
+
+    .playlist-meta {
+      font-size: 8px;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 10px;
-      width: 100%;
-      max-width: 600px;
+      gap: 8px;
     }
-    .player-title {
-      flex: 1;
-      font-size: clamp(0.35rem, 1.2vw, 0.45rem);
+
+    .playlist-meta .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    /* ========== PLAYLIST ACTIONS ========== */
+    .playlist-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 24px 32px;
+    }
+
+    .play-btn-large {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--yellow);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #000;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(255,196,0,0.3);
+    }
+
+    .play-btn-large:hover {
+      transform: scale(1.06);
+      background: #fff;
+      box-shadow: 0 6px 24px rgba(255,196,0,0.5);
+    }
+
+    .shuffle-btn, .download-all-btn {
+      display: none;
+    }
+
+    /* ========== SONG LIST HEADER ========== */
+    .song-list-header {
+      display: grid;
+      grid-template-columns: 40px 1fr 100px 80px 50px;
+      gap: 16px;
+      padding: 0 32px 8px;
+      border-bottom: 1px solid var(--border);
+      margin: 0 0 8px;
+      font-size: 8px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .song-list-header span:nth-child(3),
+    .song-list-header span:nth-child(4) {
+      text-align: right;
+    }
+
+    /* ========== SONG ROW ========== */
+    .song-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 100px 80px 50px;
+      gap: 16px;
+      padding: 8px 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+      align-items: center;
+      animation: fadeIn 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    .song-row:hover {
+      background: var(--row-hover);
+    }
+
+    .song-row:hover .song-num {
+      display: none;
+    }
+
+    .song-row:hover .song-play-icon {
+      display: flex;
+    }
+
+    .song-row.playing {
+      background: rgba(255,196,0,0.1);
+    }
+
+    .song-row.playing .song-num {
+      color: var(--yellow);
+    }
+
+    .song-row.playing .song-title {
+      color: var(--yellow);
+    }
+
+    .song-num-play {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .song-num {
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    .song-play-icon {
+      display: none;
+      font-size: 14px;
       color: var(--text-main);
-      text-align: center;
+    }
+
+    .song-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .song-title {
+      font-size: 10px;
+      color: var(--text-main);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .player-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 4px;
-      border: 1px solid var(--border-light);
-      background: #fff;
+
+    .song-artist {
+      font-size: 8px;
+      color: var(--text-muted);
+    }
+
+    .song-version-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .version-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-dim);
       cursor: pointer;
-      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .version-dot:hover {
+      background: var(--text-muted);
+      transform: scale(1.2);
+    }
+
+    .version-dot.active {
+      background: var(--yellow);
+      box-shadow: 0 0 8px rgba(255,196,0,0.5);
+    }
+
+    .song-duration {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .song-download {
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.25s;
+    }
+
+    .dl-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--text-dim);
+      color: var(--text-dim);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      opacity: 0;
+    }
+
+    .song-row:hover .dl-btn {
+      opacity: 1;
+    }
+
+    .dl-btn:hover {
+      border-color: var(--text-main);
+      color: var(--text-main);
+      transform: scale(1.1);
+    }
+
+    .dl-btn.dl-active {
+      opacity: 1;
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    /* ========== GENRE SECTION DIVIDER ========== */
+    .genre-divider {
+      padding: 32px 32px 16px;
+      font-size: 12px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    /* ========== NOW PLAYING BAR ========== */
+    .now-playing {
+      grid-column: 1 / -1;
+      background: #181818;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 100;
+    }
+
+    .np-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .np-cover {
+      width: 56px;
+      height: 56px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
       flex-shrink: 0;
     }
-    .player-btn:hover {
-      border-color: var(--orange);
-      box-shadow: 0 0 8px rgba(255,196,0,0.5);
-    }
-    .player-btn.playing {
-      background: var(--orange);
-      color: #fff;
-      border-color: var(--orange);
-    }
-    .player-btn.player-dl {
-      width: 42px;
-      height: 42px;
-      font-size: 22px;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: #fff;
-      border: 2px solid var(--orange);
-      border-radius: 8px;
-      box-shadow: 0 0 12px rgba(255,122,0,0.4);
-    }
-    .player-btn.player-dl:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(255,196,0,0.7), 0 0 40px rgba(255,122,0,0.4);
-    }
-    .progress-wrap {
-      width: 100%;
-      max-width: 600px;
+
+    .np-track-info {
       display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .np-track-name {
+      font-size: 9px;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .np-track-artist {
+      font-size: 7px;
+      color: var(--text-muted);
+    }
+
+    .np-like {
+      display: none;
+    }
+
+    .np-center {
+      display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 8px;
     }
-    .progress-time {
-      font-size: clamp(0.25rem, 1vw, 0.35rem);
+
+    .np-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .np-btn {
+      background: none;
+      border: none;
       color: var(--text-muted);
-      min-width: 36px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .np-btn:hover {
+      color: var(--text-main);
+    }
+
+    .np-btn.play {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--text-main);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: transform 0.1s;
+    }
+
+    .np-btn.play:hover {
+      transform: scale(1.06);
+    }
+
+    .np-btn.play.active {
+      background: var(--yellow);
+    }
+
+    .np-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .np-time {
+      font-size: 7px;
+      color: var(--text-muted);
+      min-width: 40px;
       text-align: center;
     }
-    .progress-bar {
+
+    .np-bar {
       flex: 1;
-      height: 8px;
-      background: var(--border-light);
-      border-radius: 4px;
+      height: 4px;
+      background: var(--bg-hover);
+      border-radius: 2px;
+      position: relative;
       cursor: pointer;
+    }
+
+    .np-bar:hover {
+      height: 6px;
+    }
+
+    .np-bar:hover .np-thumb,
+    .np-thumb.visible {
+      opacity: 1;
+    }
+
+    .np-fill {
+      height: 100%;
+      background: var(--text-main);
+      border-radius: 2px;
+      transition: width 0.1s linear;
       position: relative;
     }
-    .progress-fill {
+
+    .np-bar:hover .np-fill {
+      background: var(--yellow);
+    }
+
+    .np-thumb {
+      position: absolute;
+      top: 50%;
+      right: -6px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      object-fit: contain;
+    }
+
+    .np-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .np-right .np-btn {
+      font-size: 14px;
+    }
+
+    .np-dl-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--yellow);
+      border: none;
+      color: #000;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .np-dl-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 12px rgba(255,196,0,0.5);
+    }
+
+    /* ========== INTRO ========== */
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: opacity 0.6s, visibility 0.6s;
+    }
+
+    #intro.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    @keyframes introGlitch {
+      0%, 100% { transform: translate(0); filter: none; }
+      10% { transform: translate(-4px, 2px); filter: hue-rotate(90deg); }
+      20% { transform: translate(4px, -2px); filter: hue-rotate(180deg); }
+      30% { transform: translate(-2px, 4px) skewX(2deg); }
+      40% { transform: translate(2px, -4px) skewX(-2deg); }
+      50% { transform: translate(-4px, 0); filter: hue-rotate(270deg); }
+      60% { transform: translate(4px, 2px); }
+      70% { transform: translate(-2px, -2px) skewX(4deg); filter: hue-rotate(45deg); }
+      80% { transform: translate(0, 4px) skewX(-4deg); }
+      90% { transform: translate(2px, -2px); filter: hue-rotate(135deg); }
+    }
+
+    @keyframes introFlash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes introScale {
+      0% { transform: scale(0.1) rotate(-180deg); opacity: 0; }
+      50% { transform: scale(1.3) rotate(10deg); opacity: 1; }
+      70% { transform: scale(0.9) rotate(-5deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes introShake {
+      0%, 100% { transform: translateX(0); }
+      10% { transform: translateX(-10px) rotate(-2deg); }
+      20% { transform: translateX(10px) rotate(2deg); }
+      30% { transform: translateX(-8px) rotate(-1deg); }
+      40% { transform: translateX(8px) rotate(1deg); }
+      50% { transform: translateX(-5px); }
+      60% { transform: translateX(5px); }
+      70% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    @keyframes introPulse {
+      0%, 100% { text-shadow: 0 0 20px var(--yellow), 0 0 40px var(--orange); }
+      50% { text-shadow: 0 0 60px var(--yellow), 0 0 100px var(--orange), 0 0 140px var(--yellow); }
+    }
+
+    @keyframes introRainbow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .intro-duck {
+      font-size: 80px;
+      animation: introScale 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards,
+                 introShake 0.5s ease 0.8s,
+                 introPulse 1.5s ease-in-out 1s infinite;
+    }
+
+    .intro-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(40px, 10vw, 80px);
+      color: var(--yellow);
+      margin-top: 24px;
+      animation: introGlitch 0.3s steps(2) 3,
+                 introFlash 0.15s steps(1) 8,
+                 introScale 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.4s forwards,
+                 introPulse 2s ease-in-out 1.5s infinite;
+      opacity: 0;
+      letter-spacing: 8px;
+    }
+
+    .intro-sub {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(6px, 1.5vw, 10px);
+      color: var(--text-muted);
+      margin-top: 16px;
+      opacity: 0;
+      animation: introFlash 0.2s steps(1) 6 1.2s,
+                 fadeIn 0.4s ease 1.8s forwards;
+    }
+
+    @keyframes introScanline {
+      0% { top: -100%; }
+      100% { top: 200%; }
+    }
+
+    #intro::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(255,196,0,0.03) 2px,
+        rgba(255,196,0,0.03) 4px
+      );
+      pointer-events: none;
+    }
+
+    .intro-scanline {
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
+      opacity: 0.4;
+      animation: introScanline 2s linear infinite;
+    }
+
+    .intro-bar {
+      position: absolute;
+      bottom: 60px;
+      width: 200px;
+      height: 4px;
+      background: var(--bg-hover);
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 0.3s ease 2s forwards;
+    }
+
+    .intro-bar-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--yellow), var(--orange));
-      border-radius: 4px;
+      border-radius: 2px;
       transition: width 0.1s linear;
+    }
+
+    /* ========== DUCKS OVERLAY ========== */
+    #duckFlock {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .duck {
       position: absolute;
-      top: 0;
-      left: 0;
+      left: -10%;
+      will-change: transform;
+      filter: scaleX(-1) brightness(0.3);
     }
-    .progress-thumb {
-      position: absolute;
-      top: 50%;
-      left: 0%;
-      transform: translate(-50%, -50%);
-      width: 24px;
-      height: 24px;
-      cursor: grab;
-      z-index: 2;
-      filter: drop-shadow(0 0 4px rgba(255,122,0,0.5));
-      transition: filter 0.2s;
+
+    .duck img {
+      display: block;
+      opacity: 0.4;
+      animation: duckBob 2.4s ease-in-out infinite alternate;
     }
-    .progress-thumb.dragging {
-      cursor: grabbing;
-      filter: drop-shadow(0 0 8px rgba(255,196,0,0.8));
+
+    #duck3D {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
-    a.download {
-      color: var(--text-main);
-      text-decoration: none;
-      display: inline-block;
-      font-size: clamp(0.4rem, 1.5vw, 0.55rem);
-      max-width: 90vw;
-      word-wrap: break-word;
-      padding: 6px 14px;
-      background: #fff;
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      animation: chroma 3.2s ease-in-out infinite;
-      transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-      cursor: pointer;
-    }
-    a.download:hover {
-      color: #7a3d00;
-      border-color: var(--orange);
-      transform: translateY(-3px);
-      box-shadow: 0 0 14px rgba(255,196,0,0.7), 0 0 28px rgba(255,122,0,0.45);
-      animation: chromaHover 0.8s ease-in-out infinite;
-    }
-    a.download.active {
-      color: var(--orange);
-      border-color: var(--orange);
-      box-shadow: 0 0 14px rgba(255,196,0,0.7), 0 0 28px rgba(255,122,0,0.45);
-    }
-    .note {
-      margin-top: 36px;
-      font-size: clamp(0.35rem, 1.3vw, 0.45rem);
-      color: var(--text-muted);
-      max-width: min(88vw, 600px);
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.9;
-      padding: 16px;
-      background: #fffdf7;
-      border: 1px solid var(--border-light);
-      border-radius: 10px;
-      box-shadow: 0 2px 18px rgba(255,196,0,0.12);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      ul.downloads li { opacity: 1; }
-      a.download { text-shadow: 1px 0 rgba(255,40,90,0.5), -1px 0 rgba(40,170,255,0.5); }
-    }
-    .page { position: relative; z-index: 1; }
-    #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-    #duck3D { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .duck { position: absolute; left: -10%; will-change: transform; filter: scaleX(-1); }
-    .duck img { display: block; opacity: 0.6; animation: duckBob 2.4s ease-in-out infinite alternate; }
-    @keyframes duckFly {
-      from { transform: translateX(0); }
-      to   { transform: translateX(122vw); }
-    }
-    @keyframes duckFlyGiant {
-      from { transform: translateX(0); }
-      to   { transform: translateX(var(--fly-end, 140vw)); }
-    }
-    @keyframes duckBob {
-      from { transform: translateY(-5px) rotate(-7deg); }
-      to   { transform: translateY(5px) rotate(7deg); }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .playlist-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 16px;
+      }
+      .playlist-cover {
+        width: 160px;
+        height: 160px;
+      }
+      .song-list-header,
+      .song-row {
+        grid-template-columns: 30px 1fr 60px 40px;
+      }
+      .song-list-header span:nth-child(3),
+      .song-row .song-version-dots {
+        display: none;
+      }
+      .now-playing {
+        grid-template-columns: 1fr 1fr;
+      }
+      .np-center {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
 
-<div id="player-bar">
-  <div class="player-row">
-    <button class="player-btn" id="player-prev">&#9198;</button>
-    <button class="player-btn" id="player-play">&#9654;</button>
-    <button class="player-btn" id="player-next">&#9197;</button>
-    <span class="player-title" id="player-title">-</span>
-    <button class="player-btn player-dl" id="player-dl">&#128190;</button>
-  </div>
-  <div class="progress-wrap">
-    <span class="progress-time" id="player-current">0:00</span>
-    <div class="progress-bar" id="progress-bar">
-      <div class="progress-fill" id="progress-fill"></div>
-      <img class="progress-thumb" id="progress-thumb" src="duck.png" alt="">
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="duck-icon">🦆</span>
+      <h1>DUCKIFY</h1>
     </div>
-    <span class="progress-time" id="player-total">0:00</span>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section-title">Playlists</div>
+
+    <div class="sidebar-playlists">
+      <div class="sidebar-playlist active" data-genre="all">
+        <div class="pl-cover">⚡</div>
+        <span>All Songs</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="80ies">
+        <div class="pl-cover">🎸</div>
+        <span>80ies</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="bsides">
+        <div class="pl-cover">🎤</div>
+        <span>B-Sides Acoustic</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="calm">
+        <div class="pl-cover">🌊</div>
+        <span>Calm Chillout Lofi</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="electro">
+        <div class="pl-cover">⚡</div>
+        <span>Electro Neurofunk</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="indie">
+        <div class="pl-cover">🎭</div>
+        <span>Indie Operarock</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="rock">
+        <div class="pl-cover">🔥</div>
+        <span>Rock Metal Punk</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main-content">
+    <!-- DYNAMIC CONTENT INSERTED BY JS -->
+  </main>
+
+  <!-- NOW PLAYING BAR -->
+  <div class="now-playing">
+    <div class="np-left">
+      <div class="np-cover" id="np-cover">🦆</div>
+      <div class="np-track-info">
+        <div class="np-track-name" id="np-title">No track selected</div>
+        <div class="np-track-artist" id="np-artist">Lightning Horn Unicorn</div>
+      </div>
+    </div>
+
+    <div class="np-center">
+      <div class="np-controls">
+        <button class="np-btn" id="np-prev">⏮</button>
+        <button class="np-btn play" id="np-play">▶</button>
+        <button class="np-btn" id="np-next">⏭</button>
+      </div>
+      <div class="np-progress">
+        <span class="np-time" id="np-current">0:00</span>
+        <div class="np-bar" id="np-bar">
+          <div class="np-fill" id="np-fill">
+            <img class="np-thumb" id="np-thumb" src="duck.png" alt="">
+          </div>
+        </div>
+        <span class="np-time" id="np-total">0:00</span>
+      </div>
+    </div>
+
+    <div class="np-right">
+      <button class="np-dl-btn" id="np-dl" title="Download">⬇</button>
+    </div>
   </div>
 </div>
 
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-scanline"></div>
+  <div class="intro-duck">🦆</div>
+  <div class="intro-title">DUCKIFY</div>
+  <div class="intro-sub">LOADING YOUR QUACK EXPERIENCE...</div>
+  <div class="intro-bar"><div class="intro-bar-fill" id="intro-bar-fill"></div></div>
+</div>
+
+<!-- DUCKS -->
 <div id="duckFlock"></div>
 <canvas id="duck3D"></canvas>
-<div class="bolt">&#9889;</div>
-<div class="page">
-
-<div class="bar"></div>
-<h1> LIGHTNING <br> HORN <br> UNICORN </h1>
-<div class="bar"></div>
-<div class="spacer"></div>
-
-<h2 class="genre">80ies</h2>
-<ul class="downloads">
-  <li style="animation-delay: 0.00s"><a class="download" href="downloads/80IES/LIGHTNING_HORN_UNICORN_A_FORCE_YOU.MP3" download>A Force You</a></li>
-  <li style="animation-delay: 0.06s"><a class="download" href="downloads/80IES/LIGHTNING_HORN_UNICORN_CITY_OF_FATHERS.MP3" download>City Of Fathers</a></li>
-  <li style="animation-delay: 0.12s"><a class="download" href="downloads/80IES/LIGHTNING_HORN_UNICORN_DREAMING.MP3" download>Dreaming</a></li>
-  <li style="animation-delay: 0.18s"><a class="download" href="downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE.MP3" download>Laserette</a></li>
-  <li style="animation-delay: 0.24s"><a class="download" href="downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3" download>Oscillators Of 1985</a></li>
-  <li style="animation-delay: 0.30s"><a class="download" href="downloads/80IES/LIGHTNING_HORN_UNICORN_TONAGAG.MP3" download>Tonagag</a></li>
-</ul>
-
-<h2 class="genre">Bsides Acoustic Etc</h2>
-<ul class="downloads">
-  <li style="animation-delay: 0.36s"><a class="download" href="downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_DUCK_PANTS.MP3" download>Duck Pants</a></li>
-  <li style="animation-delay: 0.42s"><a class="download" href="downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.MP3" download>Elk Emil</a></li>
-  <li style="animation-delay: 0.48s"><a class="download" href="downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_HOW_DO_YOU_MILK_AN_INVISIBLE_COW.MP3" download>How Do You Milk An Invisible Cow</a></li>
-  <li style="animation-delay: 0.54s"><a class="download" href="downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_MY_MK-ULTRA_COUNTRY_MUSIC_TURNED_A_KILLER_AI_INTO_A_HORSE-PROTECTING_QUEEN.MP3" download>My Mk-Ultra Country Music Turned A Killer Ai Into A Horse-Protecting Queen</a></li>
-  <li style="animation-delay: 0.60s"><a class="download" href="downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_WHAT_DOES_A_MUSICIAN_LOOK_LIKE.MP3" download>What Does A Musician Look Like</a></li>
-</ul>
-
-<h2 class="genre">Calm Chillout Lofi Gamelikeost</h2>
-<ul class="downloads">
-  <li style="animation-delay: 0.66s"><a class="download" href="downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1.17.MP3" download>1.17</a></li>
-  <li style="animation-delay: 0.72s"><a class="download" href="downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_ANOTHER_PS1_DREAM_I_HAD.MP3" download>Another Ps1 Dream I Had</a></li>
-  <li style="animation-delay: 0.78s"><a class="download" href="downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_LOADING_SCREENS.MP3" download>Loading Screens</a></li>
-  <li style="animation-delay: 0.84s"><a class="download" href="downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_THE_CHOSEN_ONES.MP3" download>The Chosen Ones</a></li>
-</ul>
-
-<h2 class="genre">Electro Neurofunk Drumnbass Jungle Edm</h2>
-<ul class="downloads">
-  <li style="animation-delay: 0.90s"><a class="download" href="downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_EXTRATERRESTRIAL_MEGA_TARSIER.MP3" download>Extraterrestrial Mega Tarsier</a></li>
-  <li style="animation-delay: 0.96s"><a class="download" href="downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_RISE.MP3" download>Rise</a></li>
-  <li style="animation-delay: 1.02s"><a class="download" href="downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_UNISON_UNICORNS.MP3" download>Unison Unicorns</a></li>
-  <li style="animation-delay: 1.08s"><a class="download" href="downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_VELVET_ANABOLICA_TWERK.MP3" download>Velvet Anabolica Twerk</a></li>
-</ul>
-
-<h2 class="genre">Indie Operarock Artpop</h2>
-<ul class="downloads">
-  <li style="animation-delay: 1.14s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_CLOUD_HOW_DO_YOU_LIFT_THAT_MIGHTY_SWORD.MP3" download>Cloud How Do You Lift That Mighty Sword</a></li>
-  <li class="download-group" style="animation-delay: 1.20s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3" download>Everybody Has Ptsd And Autism Is Not A Superpower</a>
-    <div class="version-dots">
-      <span class="dot active" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3" data-name="Everybody Has Ptsd And Autism Is Not A Superpower"></span>
-      <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER_ALTERNATE_VERSION.MP3" data-name="Everybody Has Ptsd And Autism Is Not A Superpower - Alternate Version"></span>
-    </div>
-  </li>
-  <li style="animation-delay: 1.32s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_HARAMBE_HAS_A_MELON_CANNON.MP3" download>Harambe Has A Melon Cannon</a></li>
-  <li class="download-group" style="animation-delay: 1.38s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3" download>Kate Plush And Her Meow Piano (Brians Theme)</a>
-    <div class="version-dots">
-      <span class="dot active" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3" data-name="Kate Plush And Her Meow Piano (Brians Theme)"></span>
-      <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3" data-name="Kate Plush And Her Meow Piano - Red Key Piano Version"></span>
-    </div>
-  </li>
-  <li class="download-group" style="animation-delay: 1.50s"><a class="download" href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3" download>Sassy Ghoul</a>
-    <div class="version-dots">
-      <span class="dot active" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3" data-name="Sassy Ghoul"></span>
-      <span class="dot" data-href="downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL_BREATHY_VOICE.mp3" data-name="Sassy Ghoul - Breathy Voice"></span>
-    </div>
-  </li>
-</ul>
-
-<h2 class="genre">Rock Metal Powermetal Metalcore Punk</h2>
-<ul class="downloads">
-  <li style="animation-delay: 1.56s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_I_SPLIT_MOUNTAINS.MP3" download>I Split Mountains</a></li>
-  <li style="animation-delay: 1.62s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KITTENS.MP3" download>Kittens</a></li>
-  <li style="animation-delay: 1.68s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KNIGHT_HANDHART.MP3" download>Knight Handhart</a></li>
-  <li class="download-group" style="animation-delay: 1.74s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3" download>Oh Giant Moth - Crimson Disguise</a>
-    <div class="version-dots">
-      <span class="dot active" data-href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3" data-name="Oh Giant Moth - Crimson Disguise"></span>
-      <span class="dot" data-href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.MP3" data-name="Oh Giant Moth - Voltage Queen"></span>
-      <span class="dot" data-href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.MP3" data-name="Oh Giant Moth - Teenage Riot Vs The Dna Strings Law"></span>
-    </div>
-  </li>
-  <li style="animation-delay: 1.92s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_RITTER_HANDHART_UND_DIE_BACKPFEIFEN_DER_GERECHTIGKEIT.mp3" download>Ritter Handhart Und Die Backpfeifen Der Gerechtigkeit</a></li>
-  <li style="animation-delay: 1.98s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.MP3" download>The Legend Of Furarri</a></li>
-  <li style="animation-delay: 2.04s"><a class="download" href="downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3" download>Universal Lazer Goat</a></li>
-</ul>
-
-<div class="note">
-  <br>Thanks for supporting an independent artist from Vienna, Austria.<br>
-<br>I've been creating music since 2008, driven by curiosity, storytelling, and a love for exploring different musical worlds. Whether it's an 80s synth anthem, an electronic journey, a heavy metal track, or a quiet acoustic piece, every song begins with an idea that I genuinely care about. At my core, I'm a songwriter. Creating music the traditional way, with a guitar, honest songwriting, and genuine human performances, is still what I enjoy most. It's how many of my songs begin, and it's the creative process I value above all else.<br><br>Over the years, however, I found it incredibly difficult to build a reliable band, find musicians who could commit long-term, or work with people who shared the same creative vision. Rather than leaving hundreds of ideas unfinished, I decided to embrace modern technology as another creative instrument.<br><br>Some of the songs on this website were created with the help of AI tools as part of that process. For me, AI doesn't replace creativity. It doesn't replace emotion, imagination, or the countless nights spent searching for exactly the right melody, atmosphere, arrangement, or sound. Just like a guitar, a synthesizer, or a recording studio, it's simply another tool that helps me bring ideas to life.<br>
-Stay kind. Stay curious. Stay inspired.<br>
-<br>
-Lightning Horn Unicorn
-Vedran Lukic & Aether Veylan
-<br>
-<br>
-  All songs, lyrics, and artworks are original protected works created by<br>
-  Lightning Horn Unicorn (Vedran Lukic &amp; Aether Veylan).<br>
-  No part of this material may be used, copied, remixed, or distributed without<br>
-  explicit permission from the artist.
-</div>
-</div>
 
 <script>
 (function() {
-  var flock = document.getElementById('duckFlock');
-  if (!flock) return;
-  var N = 28;
-  for (var k = 0; k < N; k++) {
-    var d = document.createElement('div'); d.className = 'duck';
-    var img = document.createElement('img'); img.src = 'duck.png'; img.alt = '';
-    var size = 16 + Math.floor(Math.random() * 30);
-    var top = Math.floor(Math.random() * 90);
-    var dur = 9 + Math.random() * 11;
-    var delay = -(Math.random() * 22);
-    d.style.top = top + 'vh';
-    d.style.animation = 'duckFly ' + dur.toFixed(2) + 's linear infinite';
-    d.style.animationDelay = delay.toFixed(2) + 's';
-    img.style.width = size + 'px';
-    img.style.height = 'auto';
-    d.appendChild(img);
-    flock.appendChild(d);
-  }
+  // ========== SONG DATA ==========
+  var genres = [
+    {
+      id: '80ies', name: '80ies', icon: '🎸',
+      songs: [
+        { title: 'A Force You', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_A_FORCE_YOU.MP3' },
+        { title: 'City Of Fathers', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_CITY_OF_FATHERS.MP3' },
+        { title: 'Dreaming', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_DREAMING.MP3' },
+        { title: 'Laserette', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE.MP3' },
+        { title: 'Oscillators Of 1985', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3' },
+        { title: 'Tonagag', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_TONAGAG.MP3' }
+      ]
+    },
+    {
+      id: 'bsides', name: 'B-Sides Acoustic Etc', icon: '🎤',
+      songs: [
+        { title: 'Duck Pants', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_DUCK_PANTS.MP3' },
+        { title: 'Elk Emil', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.MP3' },
+        { title: 'How Do You Milk An Invisible Cow', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_HOW_DO_YOU_MILK_AN_INVISIBLE_COW.MP3' },
+        { title: 'My Mk-Ultra Country Music Turned A Killer Ai Into A Horse-Protecting Queen', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_MY_MK-ULTRA_COUNTRY_MUSIC_TURNED_A_KILLER_AI_INTO_A_HORSE-PROTECTING_QUEEN.MP3' },
+        { title: 'What Does A Musician Look Like', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_WHAT_DOES_A_MUSICIAN_LOOK_LIKE.MP3' }
+      ]
+    },
+    {
+      id: 'calm', name: 'Calm Chillout Lofi Gamelikeost', icon: '🌊',
+      songs: [
+        { title: '1.17', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1.17.MP3' },
+        { title: 'Another Ps1 Dream I Had', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_ANOTHER_PS1_DREAM_I_HAD.MP3' },
+        { title: 'Loading Screens', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_LOADING_SCREENS.MP3' },
+        { title: 'The Chosen Ones', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_THE_CHOSEN_ONES.MP3' }
+      ]
+    },
+    {
+      id: 'electro', name: 'Electro Neurofunk Drumnbass Jungle Edm', icon: '⚡',
+      songs: [
+        { title: 'Extraterrestrial Mega Tarsier', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_EXTRATERRESTRIAL_MEGA_TARSIER.MP3' },
+        { title: 'Rise', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_RISE.MP3' },
+        { title: 'Unison Unicorns', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_UNISON_UNICORNS.MP3' },
+        { title: 'Velvet Anabolica Twerk', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_VELVET_ANABOLICA_TWERK.MP3' }
+      ]
+    },
+    {
+      id: 'indie', name: 'Indie Operarock Artpop', icon: '🎭',
+      songs: [
+        { title: 'Cloud How Do You Lift That Mighty Sword', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_CLOUD_HOW_DO_YOU_LIFT_THAT_MIGHTY_SWORD.MP3' },
+        { title: 'Everybody Has Ptsd And Autism Is Not A Superpower', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3',
+          versions: [
+            { label: 'Original', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3' },
+            { label: 'Alternate Version', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER_ALTERNATE_VERSION.MP3' }
+          ]
+        },
+        { title: 'Harambe Has A Melon Cannon', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_HARAMBE_HAS_A_MELON_CANNON.MP3' },
+        { title: 'Kate Plush And Her Meow Piano', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3',
+          versions: [
+            { label: 'Brians Theme', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3' },
+            { label: 'Red Key Piano Version', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3' }
+          ]
+        },
+        { title: 'Sassy Ghoul', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3',
+          versions: [
+            { label: 'Original', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3' },
+            { label: 'Breathy Voice', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL_BREATHY_VOICE.mp3' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'rock', name: 'Rock Metal Powermetal Metalcore Punk', icon: '🔥',
+      songs: [
+        { title: 'I Split Mountains', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_I_SPLIT_MOUNTAINS.MP3' },
+        { title: 'Kittens', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KITTENS.MP3' },
+        { title: 'Knight Handhart', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KNIGHT_HANDHART.MP3' },
+        { title: 'Oh Giant Moth', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3',
+          versions: [
+            { label: 'Crimson Disguise', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3' },
+            { label: 'Voltage Queen', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.MP3' },
+            { label: 'Teenage Riot Vs The Dna Strings Law', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.MP3' }
+          ]
+        },
+        { title: 'Ritter Handhart Und Die Backpfeifen Der Gerechtigkeit', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_RITTER_HANDHART_UND_DIE_BACKPFEIFEN_DER_GERECHTIGKEIT.mp3' },
+        { title: 'The Legend Of Furarri', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.MP3' },
+        { title: 'Universal Lazer Goat', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3' }
+      ]
+    }
+  ];
 
-  // Three.js 3D Duck
-  var canvas = document.getElementById('duck3D');
-  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  // ========== RENDER FUNCTIONS ==========
+  var mainEl = document.getElementById('main-content');
+  var currentGenre = 'all';
+  var songList = [];
+  var currentAudio = null;
+  var currentSongIdx = -1;
+  var songGen = 0;
 
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 5;
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-  var dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(2, 3, 4);
-  scene.add(dirLight);
-
-  var gltfLoader = new THREE.GLTFLoader();
-  var ducks3D = [];
-
-  function spawnGiantDuck() {
-    var size = 0.8 + Math.random() * 1.5;
-    var yPos = -2 + Math.random() * 4;
-    var dur = 10 + Math.random() * 6;
-    var startX = -7;
-
-    gltfLoader.load('rubberduck.glb', function(gltf) {
-      var model = gltf.scene;
-      model.scale.set(size, size, size);
-      model.rotation.y = Math.PI;
-      model.position.set(startX, yPos, 0);
-      scene.add(model);
-
-      ducks3D.push({
-        mesh: model,
-        speed: 17 / dur,
-        yPos: yPos,
-        born: performance.now(),
-        lifetime: dur * 1000
+  function getAllSongs() {
+    var all = [];
+    genres.forEach(function(g) {
+      g.songs.forEach(function(s) {
+        all.push({ genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null });
       });
     });
+    return all;
   }
 
-  setInterval(spawnGiantDuck, 10000);
+  function renderPlaylist(genreId) {
+    currentGenre = genreId;
+    songList = [];
+    var songs, title, icon, desc;
 
-  window.addEventListener('resize', function() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  function animate() {
-    requestAnimationFrame(animate);
-    var now = performance.now();
-    for (var i = ducks3D.length - 1; i >= 0; i--) {
-      var duck = ducks3D[i];
-      var elapsed = (now - duck.born) / 1000;
-      duck.mesh.position.x = -7 + duck.speed * elapsed;
-      duck.mesh.rotation.z += 0.02;
-      if (now - duck.born > duck.lifetime) {
-        scene.remove(duck.mesh);
-        ducks3D.splice(i, 1);
-      }
+    if (genreId === 'all') {
+      songs = getAllSongs();
+      title = 'ALL SONGS';
+      icon = '⚡';
+      desc = 'Every track by Lightning Horn Unicorn – from 80s synth anthems to heavy metal bangers.';
+    } else {
+      var g = genres.find(function(x) { return x.id === genreId; });
+      songs = g.songs.map(function(s) {
+        return { genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null };
+      });
+      title = g.name.toUpperCase();
+      icon = g.icon;
+      desc = g.name + ' – Lightning Horn Unicorn';
     }
-    renderer.render(scene, camera);
+
+    var html = '';
+    html += '<div class="playlist-header">';
+    html += '  <div class="playlist-cover">' + icon + '</div>';
+    html += '  <div class="playlist-info">';
+    html += '    <div class="playlist-type">Playlist</div>';
+    html += '    <div class="playlist-title">' + title + '</div>';
+    html += '    <div class="playlist-desc">' + desc + '</div>';
+    html += '    <div class="playlist-meta">Lightning Horn Unicorn <span class="dot"></span> ' + songs.length + ' songs</div>';
+    html += '  </div>';
+    html += '</div>';
+
+    html += '<div class="playlist-actions">';
+    html += '  <button class="play-btn-large" id="play-all-btn">▶</button>';
+    html += '</div>';
+
+    html += '<div class="song-list-header">';
+    html += '  <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span></span>';
+    html += '</div>';
+
+    songs.forEach(function(song, i) {
+      var delay = (i * 0.03).toFixed(2);
+      var hasVersions = song.versions && song.versions.length > 1;
+
+      html += '<div class="song-row" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+      html += '  <div class="song-num-play">';
+      html += '    <span class="song-num">' + (i + 1) + '</span>';
+      html += '    <span class="song-play-icon">▶</span>';
+      html += '  </div>';
+      html += '  <div class="song-info">';
+      html += '    <div class="song-title">' + song.title + '</div>';
+      html += '    <div class="song-artist">' + song.genreName + '</div>';
+      html += '  </div>';
+      html += '  <div class="song-version-dots">';
+      if (hasVersions) {
+        song.versions.forEach(function(v, vi) {
+          html += '    <span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.name + '"></span>';
+        });
+      }
+      html += '  </div>';
+      html += '  <div class="song-duration">--:--</div>';
+      html += '  <div class="song-download">';
+      html += '    <button class="dl-btn" data-song="' + i + '" title="Download">⬇</button>';
+      html += '  </div>';
+      html += '</div>';
+    });
+
+    mainEl.innerHTML = html;
+    songList = songs;
+
+    // Update sidebar active
+    document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
+      el.classList.toggle('active', el.dataset.genre === genreId);
+    });
+
+    // Bind events
+    bindSongEvents();
+    loadDurations();
+    mainEl.scrollTop = 0;
   }
-  animate();
 
-  var currentAudio = null;
-  var currentPlayBtn = null;
-  var songList = [];
-  var currentSongIndex = -1;
-  var songGeneration = 0;
+  function bindSongEvents() {
+    // Song row click -> play
+    document.querySelectorAll('.song-row').forEach(function(row) {
+      row.addEventListener('click', function(e) {
+        if (e.target.closest('.version-dot') || e.target.closest('.dl-btn')) return;
+        var idx = parseInt(row.dataset.idx);
+        playSong(idx);
+      });
+    });
 
-  var playerBar = document.getElementById('player-bar');
-  var playerPlay = document.getElementById('player-play');
-  var playerPrev = document.getElementById('player-prev');
-  var playerNext = document.getElementById('player-next');
-  var playerTitle = document.getElementById('player-title');
-  var playerCurrent = document.getElementById('player-current');
-  var playerTotal = document.getElementById('player-total');
-  var progressBar = document.getElementById('progress-bar');
-  var progressFill = document.getElementById('progress-fill');
+    // Version dots
+    document.querySelectorAll('.version-dot').forEach(function(dot) {
+      dot.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var songIdx = parseInt(dot.dataset.song);
+        var verIdx = parseInt(dot.dataset.ver);
+        var song = songList[songIdx];
+        if (!song || !song.versions) return;
+
+        // Update active dot
+        dot.closest('.song-version-dots').querySelectorAll('.version-dot').forEach(function(d) { d.classList.remove('active'); });
+        dot.classList.add('active');
+
+        // Update file only, keep main title
+        song.file = song.versions[verIdx].file;
+
+        // Update subtitle in row
+        var row = dot.closest('.song-row');
+        var artistEl = row.querySelector('.song-artist');
+        if (artistEl) artistEl.textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+
+        // Stop if currently playing this song
+        if (currentSongIdx === songIdx && currentAudio) {
+          currentAudio.pause();
+          currentAudio = null;
+          currentSongIdx = -1;
+          updateNowPlaying(null);
+        }
+      });
+    });
+
+    // Download buttons
+    document.querySelectorAll('.dl-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var idx = parseInt(btn.dataset.song);
+        var song = songList[idx];
+        if (!song) return;
+        var a = document.createElement('a');
+        a.href = song.file;
+        a.download = song.title;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        btn.classList.add('dl-active');
+        setTimeout(function() { btn.classList.remove('dl-active'); }, 1000);
+      });
+    });
+
+    // Play all button
+    var playAllBtn = document.getElementById('play-all-btn');
+    if (playAllBtn) {
+      playAllBtn.addEventListener('click', function() {
+        if (currentAudio && !currentAudio.paused) {
+          currentAudio.pause();
+          updatePlayBtn(false);
+          return;
+        }
+        if (currentAudio && currentAudio.paused) {
+          currentAudio.play();
+          updatePlayBtn(true);
+          return;
+        }
+        playSong(0);
+      });
+    }
+  }
+
+  // ========== PLAYER ==========
+  var npTitle = document.getElementById('np-title');
+  var npArtist = document.getElementById('np-artist');
+  var npPlay = document.getElementById('np-play');
+  var npPrev = document.getElementById('np-prev');
+  var npNext = document.getElementById('np-next');
+  var npCurrent = document.getElementById('np-current');
+  var npTotal = document.getElementById('np-total');
+  var npBar = document.getElementById('np-bar');
+  var npFill = document.getElementById('np-fill');
+  var npDl = document.getElementById('np-dl');
 
   function fmtTime(s) {
     if (isNaN(s)) return '0:00';
@@ -599,22 +1249,131 @@ Vedran Lukic & Aether Veylan
     return m + ':' + (sec < 10 ? '0' : '') + sec;
   }
 
+  function updateNowPlaying(song) {
+    if (!song) {
+      npTitle.textContent = 'No track selected';
+      npArtist.textContent = 'Lightning Horn Unicorn';
+      npFill.style.width = '0%';
+      npCurrent.textContent = '0:00';
+      npTotal.textContent = '0:00';
+      updatePlayBtn(false);
+      return;
+    }
+    npTitle.textContent = song.title;
+    npArtist.textContent = song.genreName || 'Lightning Horn Unicorn';
+  }
+
+  function updatePlayBtn(playing) {
+    npPlay.innerHTML = playing ? '⏸' : '▶';
+    npPlay.classList.toggle('active', playing);
+
+    document.querySelectorAll('.song-row').forEach(function(row) {
+      row.classList.remove('playing');
+    });
+    if (playing && currentSongIdx >= 0) {
+      var row = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
+      if (row) row.classList.add('playing');
+    }
+  }
+
   function stopCurrent() {
-    songGeneration++;
+    songGen++;
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
       currentAudio = null;
     }
-    if (currentPlayBtn) {
-      currentPlayBtn.classList.remove('active');
-      currentPlayBtn = null;
-    }
-    currentSongIndex = -1;
+    currentSongIdx = -1;
+    updatePlayBtn(false);
   }
 
-  var progressThumb = document.getElementById('progress-thumb');
-  var dragging = false;
+  function playSong(idx) {
+    if (idx < 0 || idx >= songList.length) return;
+    stopCurrent();
+    var gen = songGen;
+    var song = songList[idx];
+    var audio = new Audio(song.file);
+    currentAudio = audio;
+    currentSongIdx = idx;
+
+    updateNowPlaying(song);
+    updatePlayBtn(true);
+    npFill.style.width = '0%';
+    npCurrent.textContent = '0:00';
+    npTotal.textContent = '0:00';
+
+    audio.addEventListener('loadedmetadata', function() {
+      if (gen !== songGen) return;
+      npTotal.textContent = fmtTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', function() {
+      if (gen !== songGen) return;
+      var pct = (audio.currentTime / audio.duration) * 100;
+      npFill.style.width = pct + '%';
+      npCurrent.textContent = fmtTime(audio.currentTime);
+    });
+
+    audio.addEventListener('ended', function() {
+      if (gen !== songGen) return;
+      updatePlayBtn(false);
+      currentAudio = null;
+      currentSongIdx = -1;
+      npFill.style.width = '0%';
+      npCurrent.textContent = '0:00';
+      // Auto next
+      var nextIdx = idx + 1;
+      if (nextIdx < songList.length) {
+        playSong(nextIdx);
+      }
+    });
+
+    audio.play().catch(function() {
+      if (gen !== songGen) return;
+      updatePlayBtn(false);
+      currentAudio = null;
+      currentSongIdx = -1;
+    });
+  }
+
+  // Player controls
+  npPlay.addEventListener('click', function() {
+    if (currentSongIdx === -1) {
+      if (songList.length > 0) playSong(0);
+      return;
+    }
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+      updatePlayBtn(false);
+    } else if (currentAudio) {
+      currentAudio.play();
+      updatePlayBtn(true);
+    }
+  });
+
+  npPrev.addEventListener('click', function() {
+    if (currentSongIdx <= 0) playSong(songList.length - 1);
+    else playSong(currentSongIdx - 1);
+  });
+
+  npNext.addEventListener('click', function() {
+    if (currentSongIdx >= songList.length - 1) playSong(0);
+    else playSong(currentSongIdx + 1);
+  });
+
+  npDl.addEventListener('click', function() {
+    if (currentSongIdx === -1) return;
+    var song = songList[currentSongIdx];
+    var a = document.createElement('a');
+    a.href = song.file;
+    a.download = song.title;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  // Progress bar seek
+  var npDragging = false;
   var quackSound = new Audio('quack.mp3');
   var lastQuack = 0;
 
@@ -628,233 +1387,171 @@ Vedran Lukic & Aether Veylan
 
   function seekTo(e) {
     if (!currentAudio) return;
-    quack();
-    var rect = progressBar.getBoundingClientRect();
+    var rect = npBar.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     currentAudio.currentTime = pct * currentAudio.duration;
-    progressFill.style.width = (pct * 100) + '%';
-    progressThumb.style.left = (pct * 100) + '%';
+    npFill.style.width = (pct * 100) + '%';
   }
 
-  progressBar.addEventListener('click', seekTo);
-
-  progressThumb.addEventListener('mousedown', function(e) {
-    e.preventDefault();
+  npBar.addEventListener('click', function(e) {
+    seekTo(e);
     quack();
-    dragging = true;
-    progressThumb.classList.add('dragging');
   });
-  progressThumb.addEventListener('touchstart', function(e) {
+
+  npBar.addEventListener('mousedown', function(e) {
     e.preventDefault();
+    npDragging = true;
+    var thumb = document.getElementById('np-thumb');
+    if (thumb) thumb.classList.add('visible');
     quack();
-    dragging = true;
-    progressThumb.classList.add('dragging');
-  }, { passive: false });
+  });
 
   document.addEventListener('mousemove', function(e) {
-    if (!dragging) return;
-    e.preventDefault();
+    if (!npDragging) return;
     quack();
-    var rect = progressBar.getBoundingClientRect();
+    var rect = npBar.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    progressFill.style.width = (pct * 100) + '%';
-    progressThumb.style.left = (pct * 100) + '%';
-    playerCurrent.textContent = fmtTime(pct * (currentAudio ? currentAudio.duration : 0));
+    npFill.style.width = (pct * 100) + '%';
+    npCurrent.textContent = fmtTime(pct * (currentAudio ? currentAudio.duration : 0));
   });
-  document.addEventListener('touchmove', function(e) {
-    if (!dragging) return;
-    e.preventDefault();
-    quack();
-    var touch = e.touches[0];
-    var rect = progressBar.getBoundingClientRect();
-    var pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-    progressFill.style.width = (pct * 100) + '%';
-    progressThumb.style.left = (pct * 100) + '%';
-    playerCurrent.textContent = fmtTime(pct * (currentAudio ? currentAudio.duration : 0));
-  }, { passive: false });
 
   document.addEventListener('mouseup', function(e) {
-    if (!dragging) return;
-    dragging = false;
-    progressThumb.classList.remove('dragging');
-    var rect = progressBar.getBoundingClientRect();
+    if (!npDragging) return;
+    npDragging = false;
+    var thumb = document.getElementById('np-thumb');
+    if (thumb) thumb.classList.remove('visible');
+    var rect = npBar.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     if (currentAudio) currentAudio.currentTime = pct * currentAudio.duration;
   });
-  document.addEventListener('touchend', function(e) {
-    if (!dragging) return;
-    dragging = false;
-    progressThumb.classList.remove('dragging');
-    var touch = e.changedTouches[0];
-    var rect = progressBar.getBoundingClientRect();
-    var pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-    if (currentAudio) currentAudio.currentTime = pct * currentAudio.duration;
+
+  // Sidebar navigation
+  document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
+    el.addEventListener('click', function() {
+      renderPlaylist(el.dataset.genre);
+    });
   });
 
-  function playSong(idx) {
-    if (idx < 0 || idx >= songList.length) return;
-    stopCurrent();
-    var gen = songGeneration;
-    var titleLink = songList[idx];
-    var src = titleLink.dataset.src;
-    var audio = new Audio(src);
-    currentAudio = audio;
-    currentPlayBtn = titleLink;
-    currentSongIndex = idx;
-
-    titleLink.classList.add('active');
-
-    playerTitle.textContent = titleLink.textContent;
-    playerPlay.innerHTML = '&#9646;&#9646;';
-    playerPlay.classList.add('playing');
-    progressFill.style.width = '0%';
-    progressThumb.style.left = '0%';
-    playerCurrent.textContent = '0:00';
-    playerTotal.textContent = '0:00';
-
-    audio.addEventListener('loadedmetadata', function() {
-      if (gen !== songGeneration) return;
-      playerTotal.textContent = fmtTime(audio.duration);
-    });
-    audio.addEventListener('timeupdate', function() {
-      if (gen !== songGeneration) return;
-      var pct = (audio.currentTime / audio.duration) * 100;
-      progressFill.style.width = pct + '%';
-      progressThumb.style.left = pct + '%';
-      playerCurrent.textContent = fmtTime(audio.currentTime);
-    });
-    audio.addEventListener('ended', function() {
-      if (gen !== songGeneration) return;
-      titleLink.classList.remove('active');
-      currentAudio = null;
-      currentPlayBtn = null;
-      currentSongIndex = -1;
-      playerPlay.innerHTML = '&#9654;';
-      playerPlay.classList.remove('playing');
-      progressFill.style.width = '0%';
-      progressThumb.style.left = '0%';
-      playerCurrent.textContent = '0:00';
-    });
-
-    audio.play().catch(function() {
-      if (gen !== songGeneration) return;
-      titleLink.classList.remove('active');
-      currentAudio = null;
-      currentPlayBtn = null;
-      currentSongIndex = -1;
+  function loadDurations() {
+    document.querySelectorAll('.song-row').forEach(function(row) {
+      var idx = parseInt(row.dataset.idx);
+      var song = songList[idx];
+      if (!song) return;
+      var audio = new Audio();
+      audio.preload = 'metadata';
+      audio.src = song.file;
+      audio.addEventListener('loadedmetadata', function() {
+        var durEl = row.querySelector('.song-duration');
+        if (durEl) durEl.textContent = fmtTime(audio.duration);
+      });
+      audio.addEventListener('error', function() {
+        var durEl = row.querySelector('.song-duration');
+        if (durEl) durEl.textContent = '--:--';
+      });
     });
   }
 
-  var links = document.querySelectorAll('a.download');
-  for (var i = 0; i < links.length; i++) {
-    var li = links[i].closest('li');
-    var href = links[i].getAttribute('href');
-    var name = links[i].getAttribute('download');
-
-    var row = document.createElement('div');
-    row.className = 'track-row';
-    li.insertBefore(row, links[i]);
-    row.appendChild(links[i]);
-
-    links[i].dataset.src = href;
-    links[i].dataset.idx = songList.length;
-    songList.push(links[i]);
+  // ========== 3D DUCKS ==========
+  var flock = document.getElementById('duckFlock');
+  if (flock) {
+    for (var k = 0; k < 15; k++) {
+      var d = document.createElement('div'); d.className = 'duck';
+      var img = document.createElement('img'); img.src = 'duck.png'; img.alt = '';
+      var size = 12 + Math.floor(Math.random() * 20);
+      var top = Math.floor(Math.random() * 90);
+      var dur = 12 + Math.random() * 14;
+      var delay = -(Math.random() * 26);
+      d.style.top = top + 'vh';
+      d.style.animation = 'duckFly ' + dur.toFixed(2) + 's linear infinite';
+      d.style.animationDelay = delay.toFixed(2) + 's';
+      img.style.width = size + 'px';
+      img.style.height = 'auto';
+      d.appendChild(img);
+      flock.appendChild(d);
+    }
   }
 
-  document.addEventListener('click', function(e) {
-    var titleLink = e.target.closest('a.download');
-    if (titleLink && songList.indexOf(titleLink) !== -1) {
-      e.preventDefault();
-      var idx = parseInt(titleLink.dataset.idx);
-      var isPlaying = titleLink.classList.contains('active');
-      if (isPlaying) {
-        if (currentAudio) currentAudio.pause();
-        titleLink.classList.remove('active');
-        playerPlay.innerHTML = '&#9654;';
-        playerPlay.classList.remove('playing');
-        return;
-      }
-      playSong(idx);
-      return;
+  // Three.js 3D Duck
+  try {
+    var canvas = document.getElementById('duck3D');
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    var dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(2, 3, 4);
+    scene.add(dirLight);
+
+    var gltfLoader = new THREE.GLTFLoader();
+    var ducks3D = [];
+
+    function spawnGiantDuck() {
+      var size = 0.6 + Math.random() * 1.2;
+      var yPos = -2 + Math.random() * 4;
+      var dur = 12 + Math.random() * 8;
+
+      gltfLoader.load('rubberduck.glb', function(gltf) {
+        var model = gltf.scene;
+        model.scale.set(size, size, size);
+        model.rotation.y = Math.PI;
+        model.position.set(-7, yPos, 0);
+        scene.add(model);
+        ducks3D.push({ mesh: model, speed: 14 / dur, born: performance.now(), lifetime: dur * 1000 });
+      });
     }
 
-    if (e.target.closest('#player-play')) {
-      if (currentSongIndex === -1) {
-        if (songList.length > 0) playSong(0);
-        return;
-      }
-      if (currentAudio && !currentAudio.paused) {
-        currentAudio.pause();
-        if (currentPlayBtn) {
-          currentPlayBtn.classList.remove('active');
+    setInterval(spawnGiantDuck, 12000);
+
+    window.addEventListener('resize', function() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      var now = performance.now();
+      for (var i = ducks3D.length - 1; i >= 0; i--) {
+        var duck = ducks3D[i];
+        var elapsed = (now - duck.born) / 1000;
+        duck.mesh.position.x = -7 + duck.speed * elapsed;
+        duck.mesh.rotation.z += 0.015;
+        if (now - duck.born > duck.lifetime) {
+          scene.remove(duck.mesh);
+          ducks3D.splice(i, 1);
         }
-        playerPlay.innerHTML = '&#9654;';
-        playerPlay.classList.remove('playing');
-      } else if (currentAudio) {
-        currentAudio.play().catch(function() {});
-        if (currentPlayBtn) {
-          currentPlayBtn.classList.add('active');
-        }
-        playerPlay.innerHTML = '&#9646;&#9646;';
-        playerPlay.classList.add('playing');
       }
+      renderer.render(scene, camera);
+    }
+    animate();
+  } catch(e) {}
+
+  // ========== INIT ==========
+  renderPlaylist('all');
+
+  // ========== INTRO ==========
+  var introEl = document.getElementById('intro');
+  var introBarFill = document.getElementById('intro-bar-fill');
+  var introProgress = 0;
+
+  function introTick() {
+    if (introProgress >= 100) {
+      introEl.classList.add('hidden');
+      setTimeout(function() { introEl.remove(); }, 700);
       return;
     }
-
-    if (e.target.closest('#player-prev')) {
-      var prevIdx = (currentSongIndex - 1 + songList.length) % songList.length;
-      playSong(prevIdx);
-      return;
-    }
-
-    if (e.target.closest('#player-next')) {
-      var nextIdx = (currentSongIndex + 1) % songList.length;
-      playSong(nextIdx);
-      return;
-    }
-
-    if (e.target.closest('#player-dl')) {
-      if (currentSongIndex === -1) return;
-      var dlBtn = e.target.closest('#player-dl');
-      var curSong = songList[currentSongIndex];
-      var href = curSong.dataset.src;
-      var name = curSong.closest('.track-row').querySelector('a.download').textContent;
-      dlBtn.classList.add('title-jitter');
-      setTimeout(function() {
-        dlBtn.classList.remove('title-jitter');
-        var tmp = document.createElement('a');
-        tmp.href = href;
-        tmp.setAttribute('download', name);
-        document.body.appendChild(tmp);
-        tmp.click();
-        document.body.removeChild(tmp);
-      }, 500);
-      return;
-    }
-  });
-
-  var dots = document.querySelectorAll('.dot');
-  for (var i = 0; i < dots.length; i++) {
-    dots[i].addEventListener('click', function() {
-      var group = this.closest('.download-group');
-      var link = group.querySelector('a.download');
-      var allDots = group.querySelectorAll('.dot');
-      for (var j = 0; j < allDots.length; j++) {
-        allDots[j].classList.remove('active');
-      }
-      this.classList.add('active');
-      link.href = this.dataset.href;
-      link.dataset.src = this.dataset.href;
-      link.setAttribute('download', this.dataset.name);
-      link.textContent = this.dataset.name;
-      if (currentPlayBtn === link && currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-        currentPlayBtn = null;
-        link.classList.remove('active');
-      }
-    });
+    introProgress += 2 + Math.random() * 5;
+    if (introProgress > 100) introProgress = 100;
+    introBarFill.style.width = introProgress + '%';
+    setTimeout(introTick, 40 + Math.random() * 80);
   }
+
+  setTimeout(introTick, 800);
 })();
 </script>
 
