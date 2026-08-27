@@ -936,15 +936,8 @@ Easy to attach. Explanations are discussable.`, images: [
             });
         }
 
+        /* Swipe deaktiviert – Navigation erfolgt über die Pfeil-Buttons / Dots */
         let touchX = 0, touchGI = null;
-        document.querySelectorAll('.carousel-stage').forEach(st => {
-            st.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchGI = +st.dataset.gidx; }, { passive: true });
-            st.addEventListener('touchend', e => {
-                if (touchGI === null) return;
-                if (Math.abs(e.changedTouches[0].clientX - touchX) > 40) navigate(touchGI, e.changedTouches[0].clientX < touchX ? 1 : -1);
-                touchGI = null;
-            }, { passive: true });
-        });
 
         document.addEventListener('keydown', e => {
             const st = document.querySelector('.cat-group.open .prod-item.open .carousel-stage');
