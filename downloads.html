@@ -10,20 +10,20 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg-main: #121212;
-      --bg-sidebar: #1a1a1a;
-      --bg-card: #181818;
-      --bg-hover: #282828;
-      --bg-active: #333;
+     :root {
+      --bg-main: #ffffff;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --bg-hover: #fff8d6;
+      --bg-active: #ffe680;
       --yellow: #FFC400;
-      --orange: #FF7A00;
-      --yellow-dim: #b38a00;
-      --text-main: #FFFFFF;
-      --text-muted: #B3B3B3;
-      --text-dim: #727272;
-      --border: #282828;
-      --row-hover: rgba(255,255,255,0.1);
+      --orange: #FFB000;
+      --yellow-dim: #9a7600;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-dim: #999999;
+      --border: #e7d47b;
+      --row-hover: rgba(255,196,0,0.14);
     }
 
     @keyframes shimmer {
@@ -196,7 +196,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       scrollbar-width: auto;
-      scrollbar-color: #555 var(--bg-main);
+      scrollbar-color: #c9b85a var(--bg-main);
       background: var(--bg-main);
       padding-bottom: 40px;
     }
@@ -210,9 +210,10 @@
     }
 
     .main::-webkit-scrollbar-thumb {
-      background: #555;
+      background: var(--yellow);
       border-radius: 8px;
       border: 3px solid var(--bg-main);
+      min-height: 36px;
     }
 
     .main::-webkit-scrollbar-thumb:hover {
@@ -228,7 +229,7 @@
     }
 
     .main::-webkit-scrollbar-thumb {
-      background: #555;
+      background: #f4f4f4;
       border-radius: 8px;
       border: 3px solid var(--bg-main);
     }
@@ -247,7 +248,7 @@
       text-align: center;
       max-width: 1100px;
       margin: 0 auto;
-      background: linear-gradient(180deg, #2a2200 0%, var(--bg-main) 100%);
+      background: linear-gradient(180deg, #fff8d6 0%, var(--bg-main) 100%);
     }
 
     .playlist-cover {
@@ -326,7 +327,7 @@
       align-items: center;
       justify-content: center;
       font-size: 22px;
-      color: #000;
+      color: #111111;
       transition: all 0.2s;
       box-shadow: 0 4px 16px rgba(255,196,0,0.3);
     }
@@ -340,8 +341,7 @@
     .shuffle-btn, .download-all-btn {
       display: none;
     }
-
-    /* ========== SONG LIST HEADER ========== */
+/* ========== SONG LIST HEADER ========== */
     .song-list-header {
       max-width: 1100px;
       margin-left: auto;
@@ -527,7 +527,7 @@
       right: 0;
       bottom: 0;
       height: 88px;
-      background: rgba(24,24,24,0.98);
+      background: rgba(255,255,255,0.98);
       border-top: 1px solid var(--border);
       display: grid;
       grid-template-columns: minmax(220px,1fr) minmax(320px,2fr) minmax(220px,1fr);
@@ -579,6 +579,26 @@
       text-overflow: ellipsis;
     }
 
+    .np-title-text {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .np-track-name.marquee .np-title-text {
+      padding-left: 100%;
+      animation: titleMarquee 11s linear infinite;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes titleMarquee {
+      0%, 12% {
+        transform: translateX(0);
+      }
+      88%, 100% {
+        transform: translateX(-100%);
+      }
+    }
+
     .np-center {
       display: flex;
       flex-direction: column;
@@ -612,8 +632,8 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: var(--text-main);
-      color: #000;
+      background: var(--yellow);
+      color: #111111;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -646,7 +666,7 @@
     .np-bar {
       flex: 1;
       height: 4px;
-      background: var(--bg-hover);
+      background: #eeeeee;
       border-radius: 2px;
       position: relative;
       cursor: pointer;
@@ -660,7 +680,7 @@
     .np-fill {
       height: 100%;
       width: 0;
-      background: var(--text-main);
+      background: var(--yellow);
       border-radius: 2px;
       transition: width 0.1s linear;
       position: relative;
@@ -733,13 +753,20 @@
       min-width: 0;
     }
 
+    .np-dl-btn svg,
+    .dl-btn svg {
+      width: 17px;
+      height: 17px;
+      display: block;
+    }
+
     .np-dl-btn {
       width: 34px;
       height: 34px;
       border-radius: 50%;
       background: var(--yellow);
       border: none;
-      color: #000;
+      color: #111111;
       font-size: 14px;
       cursor: pointer;
       display: flex;
@@ -759,7 +786,7 @@
       inset: 0;
       text-align: center;
       z-index: 9999;
-      background: #000;
+      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1141,7 +1168,7 @@
     <div class="np-left">
       <div class="np-cover" id="np-cover">🦆</div>
       <div class="np-track-info">
-        <div class="np-track-name" id="np-title">No track selected</div>
+        <div class="np-track-name" id="np-title"><span class="np-title-text">No track selected</span></div>
         <div class="np-track-artist" id="np-artist">Lightning Horn Unicorn</div>
         <div class="np-versions" id="np-versions" aria-label="Track versions"></div>
       </div>
@@ -1163,7 +1190,11 @@
       </div>
     </div>
     <div class="np-right">
-      <button class="np-dl-btn" id="np-dl" title="Download">⬇</button>
+      <button class="np-dl-btn" id="np-dl" title="Download" aria-label="Download"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <path d="M4 3h13l3 3v15H4V3Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+  <path d="M7 3v7h9V3M8 17h8v4H8v-4Z" fill="currentColor" opacity=".18"/>
+  <path d="M8 17h8v4H8v-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+</svg></button>
     </div>
   </div>
 
@@ -1369,8 +1400,24 @@
     html += '<div class="playlist-actions">';
     html += '  <button class="play-btn-large" id="play-all-btn">▶</button>';
     html += '</div>';
+    html += '<section class="music-about">';
+    html += '<div class="music-about-text">';
+    html += 'Thanks for supporting an independent artist from Vienna, Austria.<br><br>';
+    html += 'I\'ve been creating music since 2008, driven by curiosity, storytelling, and a love for exploring different musical worlds.<br><br>';
+    html += 'Whether it\'s an 80s synth anthem, an electronic journey, a heavy metal track, or a quiet acoustic piece, every song begins with an idea that I genuinely care about.<br><br>';
+    html += 'Creating music the traditional way has always been my dream: with a band, a guitar, honest songwriting, and people sharing the same passion in the same room. I still love that kind of music more than anything.<br><br>';
+    html += 'Over the years, however, I found it incredibly difficult to build a reliable band, find musicians who could commit long-term, or work with people who shared the same creative vision.<br><br>';
+    html += 'Rather than leaving hundreds of ideas unfinished, I decided to embrace modern technology as another creative instrument.<br><br>';
+    html += 'Some of the songs on this website were created with the help of AI tools as part of that process. For me, AI doesn\'t replace creativity.<br><br>';
+    html += 'It doesn\'t replace emotion, imagination, or the countless nights spent searching for exactly the right melody, atmosphere, arrangement, or sound. Just like a guitar, a synthesizer, or a recording studio, it\'s simply another tool that helps me bring ideas to life.<br>';
+    html += 'Stay kind. Stay curious. Stay inspired.<br><br>';
+    html += 'Lightning Horn Unicorn<br>Vedran Lukic &amp; Aether Veylan<br><br>';
+    html += '</div>';
+    html += '</section>';
 
-    html += '<div class="song-list-header">';
+
+
+html += '<div class="song-list-header">';
     html += '  <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span></span>';
     html += '</div>';
 
@@ -1396,7 +1443,7 @@
       html += '  </div>';
       html += '  <div class="song-duration">--:--</div>';
       html += '  <div class="song-download">';
-      html += '    <button class="dl-btn" data-song="' + i + '" title="Download">⬇</button>';
+      html += '    <button class="dl-btn" data-song="' + i + '" title="Download" aria-label="Download"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 3h13l3 3v15H4V3Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 3v7h9V3M8 17h8v4H8v-4Z" fill="currentColor" opacity=".18"/><path d="M8 17h8v4H8v-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>';
       html += '  </div>';
       html += '</div>';
     });
@@ -1495,6 +1542,7 @@
 
   // ========== PLAYER ==========
   var npTitle = document.getElementById('np-title');
+  var npTitleText = npTitle.querySelector('.np-title-text');
   var npArtist = document.getElementById('np-artist');
   var npPlay = document.getElementById('np-play');
   var npPrev = document.getElementById('np-prev');
@@ -1515,7 +1563,8 @@
 
   function updateNowPlaying(song) {
     if (!song) {
-      npTitle.textContent = 'No track selected';
+      npTitleText.textContent = 'No track selected';
+      npTitle.classList.remove('marquee');
       npArtist.textContent = 'Lightning Horn Unicorn';
       npFill.style.width = '0%';
       npCurrent.textContent = '0:00';
@@ -1525,7 +1574,13 @@
       updatePlayBtn(false);
       return;
     }
-    npTitle.textContent = song.title;
+    npTitleText.textContent = song.title;
+    npTitle.classList.remove('marquee');
+    requestAnimationFrame(function() {
+      if (npTitleText.scrollWidth > npTitle.clientWidth + 2) {
+        npTitle.classList.add('marquee');
+      }
+    });
     npArtist.textContent = song.genreName || 'Lightning Horn Unicorn';
 
     npVersions.innerHTML = '';
@@ -1852,6 +1907,5 @@
   setTimeout(introTick, 800);
 })();
 </script>
-
 </body>
 </html>
