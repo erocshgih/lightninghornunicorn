@@ -16,10 +16,6 @@
             --text-soft: #888888;
             --header-bg: #f5f3f0;
             --header-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-            --strip-text: #4a2c00;
-            --strip-active: #ff7a00;
-            --strip-fade: rgba(245, 243, 240, 1);
-            --strip-fade-end: rgba(245, 243, 240, 0);
             --border-soft: #e0ddd8;
             --card-bg: #ffffff;
             --accent-green: #00ff28;
@@ -43,12 +39,6 @@
 
         /* ========== THEME MODES (manual + system) ========== */
 
-        /* Dark (manual or system) */
-        html[data-theme="dark"],
-        html:not([data-theme]) {
-            /* fallback handled by media query below */
-        }
-
         @media (prefers-color-scheme: dark) {
             html:not([data-theme]),
             html[data-theme="dark"] {
@@ -59,10 +49,6 @@
                 --text-soft: #8a847c;
                 --header-bg: #1a1a1a;
                 --header-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-                --strip-text: #d4b48a;
-                --strip-active: #ff9a3c;
-                --strip-fade: rgba(26, 26, 26, 1);
-                --strip-fade-end: rgba(26, 26, 26, 0);
                 --border-soft: #333028;
                 --card-bg: #1c1c1c;
                 --accent-green: #39ff14;
@@ -81,10 +67,6 @@
             --text-soft: #8a847c;
             --header-bg: #1a1a1a;
             --header-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-            --strip-text: #d4b48a;
-            --strip-active: #ff9a3c;
-            --strip-fade: rgba(26, 26, 26, 1);
-            --strip-fade-end: rgba(26, 26, 26, 0);
             --border-soft: #333028;
             --card-bg: #1c1c1c;
             --accent-green: #39ff14;
@@ -126,24 +108,6 @@
             box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.9) !important;
         }
 
-        html[data-theme="dark"] .cat-item[data-cat="ABOUT"]           { color: #d4b060; }
-        html[data-theme="dark"] .cat-item[data-cat="VHS MULTIVERSE"]  { color: #60c8d8; }
-        html[data-theme="dark"] .cat-item[data-cat="HUMANART"]        { color: #d860b0; }
-        html[data-theme="dark"] .cat-item[data-cat="PROJECTS"]        { color: #f08040; }
-        html[data-theme="dark"] .cat-item[data-cat="STORYTIME"]       { color: #60d888; }
-        html[data-theme="dark"] .cat-item[data-cat="MUSIC"]           { color: #a080e0; }
-        html[data-theme="dark"] .cat-item[data-cat="CONTACT"]         { color: #6090e0; }
-        html[data-theme="dark"] .cat-item[data-cat="DONATE"]          { color: #e06060; }
-
-        html[data-theme="crt"] .cat-item[data-cat="ABOUT"]           { color: #a8c868; }
-        html[data-theme="crt"] .cat-item[data-cat="VHS MULTIVERSE"]  { color: #68c8a0; }
-        html[data-theme="crt"] .cat-item[data-cat="HUMANART"]        { color: #c868a8; }
-        html[data-theme="crt"] .cat-item[data-cat="PROJECTS"]        { color: #c8a048; }
-        html[data-theme="crt"] .cat-item[data-cat="STORYTIME"]       { color: #68c868; }
-        html[data-theme="crt"] .cat-item[data-cat="MUSIC"]           { color: #a878c8; }
-        html[data-theme="crt"] .cat-item[data-cat="CONTACT"]         { color: #6898c8; }
-        html[data-theme="crt"] .cat-item[data-cat="DONATE"]          { color: #c86868; }
-
         /* Mono Gray – everything grayscale */
         html[data-theme="mono-gray"] {
             --bg: #121212;
@@ -153,10 +117,6 @@
             --text-soft: #888888;
             --header-bg: #1c1c1c;
             --header-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
-            --strip-text: #bbbbbb;
-            --strip-active: #ffffff;
-            --strip-fade: rgba(28, 28, 28, 1);
-            --strip-fade-end: rgba(28, 28, 28, 0);
             --border-soft: #444444;
             --card-bg: #222222;
             --accent-green: #cccccc;
@@ -183,10 +143,6 @@
             --text-soft: #3d8b40;
             --header-bg: #031a03;
             --header-shadow: 0 1px 10px rgba(0, 40, 0, 0.6);
-            --strip-text: #5cdb5c;
-            --strip-active: #b6ffb6;
-            --strip-fade: rgba(3, 26, 3, 1);
-            --strip-fade-end: rgba(3, 26, 3, 0);
             --border-soft: #1a4d1a;
             --card-bg: #0a1f0a;
             --accent-green: #39ff14;
@@ -213,10 +169,6 @@
             --text-soft: #6a9a6a;
             --header-bg: #0c100c;
             --header-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
-            --strip-text: #9ccc9c;
-            --strip-active: #d4ffd4;
-            --strip-fade: rgba(12, 16, 12, 1);
-            --strip-fade-end: rgba(12, 16, 12, 0);
             --border-soft: #2a3a2a;
             --card-bg: #121812;
             --accent-green: #66ff66;
@@ -346,7 +298,7 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ========== HEADER / CAT STRIP ========== */
+        /* ========== HEADER ========== */
         .header {
             display: flex;
             flex-direction: column;
@@ -374,155 +326,6 @@
             font-weight: bold;
             color: var(--text);
             animation: logoGlow 4s infinite;
-        }
-
-        /* Category strip – endless loop + theme button inside */
-        .cat-strip {
-            position: relative;
-            display: flex;
-            align-items: stretch;
-            width: min(100%, 1600px);
-            max-width: 100%;
-            overflow: hidden;
-            margin: 0 auto;
-            border: 3px solid transparent;
-            border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa);
-            border-image-slice: 1;
-            height: clamp(56px, 9vw, 78px);
-            box-sizing: border-box;
-            background: var(--header-bg);
-        }
-
-        .theme-btn {
-            flex: 0 0 auto;
-            align-self: center;
-            width: clamp(36px, 8vw, 44px);
-            height: clamp(36px, 8vw, 44px);
-            border: 2px solid var(--border-soft);
-            border-radius: var(--radius);
-            background: var(--card-bg);
-            color: var(--text);
-            font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-            line-height: 1;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, color 0.2s, opacity 0.2s;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        .theme-btn:hover {
-            background: var(--strip-active);
-            color: #111;
-        }
-
-        .theme-btn:active {
-            opacity: 0.85;
-        }
-
-        .cat-track {
-            display: inline-flex;
-            align-items: center;
-            flex-wrap: nowrap;
-            white-space: nowrap;
-            width: max-content;
-            flex: 1 1 auto;
-            min-width: max-content;
-            height: 100%;
-            will-change: transform;
-            backface-visibility: hidden;
-            transform-style: preserve-3d;
-            contain: layout paint;
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-sm);
-            letter-spacing: 0.08em;
-            color: var(--strip-text);
-        }
-
-        .cat-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            padding: 0 clamp(14px, 2vw, 28px);
-            line-height: 64px;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.25s, color 0.25s;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            gap: 6px;
-        }
-        .cat-icon {
-            width: 16px;
-            height: 16px;
-            image-rendering: pixelated;
-            flex-shrink: 0;
-        }
-
-        .cat-item::after {
-            content: "";
-            display: none;
-        }
-
-        .cat-track .cat-item:last-child::after {
-            content: "";
-            width: 0;
-            margin-left: 0;
-        }
-
-        .cat-item.active {
-            opacity: 1;
-            color: var(--strip-active);
-            text-shadow: 0 0 6px rgba(255, 196, 0, 0.5);
-        }
-
-        .cat-item[data-cat="ABOUT"]           { color: #c8a050; }
-        .cat-item[data-cat="ABOUT"].active     { color: #ffd080; text-shadow: 0 0 8px rgba(255, 208, 128, 0.6); }
-
-        .cat-item[data-cat="VHS MULTIVERSE"]   { color: #50b8c8; }
-        .cat-item[data-cat="VHS MULTIVERSE"].active { color: #80eaf8; text-shadow: 0 0 8px rgba(128, 234, 248, 0.6); }
-
-        .cat-item[data-cat="HUMANART"]         { color: #c850a0; }
-        .cat-item[data-cat="HUMANART"].active   { color: #f080d0; text-shadow: 0 0 8px rgba(240, 128, 208, 0.6); }
-
-        .cat-item[data-cat="PROJECTS"]         { color: #e07030; }
-        .cat-item[data-cat="PROJECTS"].active   { color: #ff9a3c; text-shadow: 0 0 8px rgba(255, 154, 60, 0.6); }
-
-        .cat-item[data-cat="STORYTIME"]        { color: #50c878; }
-        .cat-item[data-cat="STORYTIME"].active  { color: #80f0a8; text-shadow: 0 0 8px rgba(128, 240, 168, 0.6); }
-
-        .cat-item[data-cat="MUSIC"]            { color: #9070d0; }
-        .cat-item[data-cat="MUSIC"].active      { color: #b898f0; text-shadow: 0 0 8px rgba(184, 152, 240, 0.6); }
-
-        .cat-item[data-cat="CONTACT"]          { color: #5080d0; }
-        .cat-item[data-cat="CONTACT"].active    { color: #80b0f8; text-shadow: 0 0 8px rgba(128, 176, 248, 0.6); }
-
-        .cat-item[data-cat="DONATE"]           { color: #d05050; }
-        .cat-item[data-cat="DONATE"].active     { color: #f08080; text-shadow: 0 0 8px rgba(240, 128, 128, 0.6); }
-
-        .cat-strip::before,
-        .cat-strip::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 10vw;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .cat-strip::before {
-            left: clamp(44px, 10vw, 56px); /* start after theme button */
-            background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end));
-        }
-
-        .cat-strip::after {
-            right: 0;
-            background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end));
         }
 
         /* ========== LASERS (fast cannon, one at a time, no bar) ========== */
@@ -703,8 +506,6 @@
             width: 100%;
         }
 
-        
-
         /* ========== HUMANART / CAT'S CRADLE ========== */
         #HUMANART > div:first-of-type {
             width: min(76vw, 340px) !important;
@@ -876,15 +677,6 @@
                 line-height: 2.5;
             }
 
-            .cat-strip {
-                height: clamp(56px, 12vw, 72px);
-            }
-
-            .cat-item {
-                padding: 0 clamp(10px, 2.5vw, 20px);
-                line-height: 56px;
-            }
-
             .chapter-button {
                 padding: 14px 12px !important;
                 min-height: 48px;
@@ -903,11 +695,6 @@
 
             section p {
                 margin: 14px auto;
-            }
-
-            .cat-item::after {
-                font-size: 0.95rem;
-                margin-left: 0.45rem;
             }
 
             #HUMANART > div:first-of-type {
@@ -931,7 +718,7 @@
                 image-rendering: -webkit-optimize-contrast;
             }
         }
-            .section-topbar {
+        .section-topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -962,9 +749,9 @@
         }
 
         .section-topbar .go-back:hover {
-            background: var(--strip-active);
+            background: #ff7a00;
             color: #111;
-            border-color: var(--strip-active);
+            border-color: #ff7a00;
         }
 
         .section-topbar .theme-btn {
@@ -987,7 +774,7 @@
         }
 
         .section-topbar .theme-btn:hover {
-            background: var(--strip-active);
+            background: #ff7a00;
             color: #111;
         }
 
@@ -997,7 +784,6 @@
 </style>
 </head>
 <body>
-
 
     <!-- VHS monochrome green overlay -->
     <div id="vhs-green-overlay" aria-hidden="true">
