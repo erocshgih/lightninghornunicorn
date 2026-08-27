@@ -126,24 +126,6 @@
             box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.9) !important;
         }
 
-        html[data-theme="dark"] .cat-item[data-cat="ABOUT"]           { color: #d4b060; }
-        html[data-theme="dark"] .cat-item[data-cat="VHS MULTIVERSE"]  { color: #60c8d8; }
-        html[data-theme="dark"] .cat-item[data-cat="HUMANART"]        { color: #d860b0; }
-        html[data-theme="dark"] .cat-item[data-cat="PROJECTS"]        { color: #f08040; }
-        html[data-theme="dark"] .cat-item[data-cat="STORYTIME"]       { color: #60d888; }
-        html[data-theme="dark"] .cat-item[data-cat="MUSIC"]           { color: #a080e0; }
-        html[data-theme="dark"] .cat-item[data-cat="CONTACT"]         { color: #6090e0; }
-        html[data-theme="dark"] .cat-item[data-cat="DONATE"]          { color: #e06060; }
-
-        html[data-theme="crt"] .cat-item[data-cat="ABOUT"]           { color: #a8c868; }
-        html[data-theme="crt"] .cat-item[data-cat="VHS MULTIVERSE"]  { color: #68c8a0; }
-        html[data-theme="crt"] .cat-item[data-cat="HUMANART"]        { color: #c868a8; }
-        html[data-theme="crt"] .cat-item[data-cat="PROJECTS"]        { color: #c8a048; }
-        html[data-theme="crt"] .cat-item[data-cat="STORYTIME"]       { color: #68c868; }
-        html[data-theme="crt"] .cat-item[data-cat="MUSIC"]           { color: #a878c8; }
-        html[data-theme="crt"] .cat-item[data-cat="CONTACT"]         { color: #6898c8; }
-        html[data-theme="crt"] .cat-item[data-cat="DONATE"]          { color: #c86868; }
-
         /* Mono Gray – everything grayscale */
         html[data-theme="mono-gray"] {
             --bg: #121212;
@@ -311,9 +293,7 @@
 
         /* Reduced motion */
         @media (prefers-reduced-motion: reduce) {
-            *:not(.laser),
-            *:not(.laser)::before,
-            *:not(.laser)::after {
+            * {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
@@ -346,68 +326,53 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ========== HEADER / CAT STRIP ========== */
-        .header {
+        /* ========== SECTION TOPBAR ========== */
+        .section-topbar {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 10px 12px;
+            justify-content: space-between;
+            padding: 10px 14px;
             background: var(--header-bg);
             box-shadow: var(--header-shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-
-        @keyframes logoGlow {
-            0%, 100% { text-shadow: 0 0 4px rgba(255, 200, 0, 0.3); }
-            50% {
-                text-shadow:
-                    0 0 2px #fff,
-                    0 0 10px #fc0,
-                    0 0 30px #fc0,
-                    0 0 60px #fa0;
-            }
-        }
-
-        .logo {
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-md);
-            font-weight: bold;
-            color: var(--text);
-            animation: logoGlow 4s infinite;
-        }
-
-        /* Category strip – endless loop + theme button inside */
-        .cat-strip {
-            position: relative;
-            display: flex;
-            align-items: stretch;
-            width: min(100%, 1600px);
-            max-width: 100%;
-            overflow: hidden;
-            margin: 0 auto;
-            border: 3px solid transparent;
-            border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa);
-            border-image-slice: 1;
-            height: clamp(56px, 9vw, 78px);
+            width: 100%;
             box-sizing: border-box;
-            background: var(--header-bg);
         }
 
-        .theme-btn {
+        .section-topbar .go-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: var(--fs-xs);
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .section-topbar .go-back:hover {
+            background: var(--strip-active);
+            color: #111;
+            border-color: var(--strip-active);
+        }
+
+        .section-topbar .theme-btn {
             flex: 0 0 auto;
-            width: clamp(44px, 10vw, 56px);
-            height: 100%;
-            border: none;
-            border-right: 2px solid var(--border-soft);
-            border-radius: 0;
+            width: clamp(36px, 8vw, 44px);
+            height: clamp(36px, 8vw, 44px);
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
             background: var(--card-bg);
             color: var(--text);
             font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
-            line-height: 1;
+            font-size: clamp(0.8rem, 2vw, 1rem);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -415,188 +380,10 @@
             transition: background 0.2s, color 0.2s, opacity 0.2s;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            z-index: 3;
-            position: relative;
         }
 
-        .theme-btn:hover {
-            background: var(--strip-active);
-            color: #111;
-        }
-
-        .theme-btn:active {
-            opacity: 0.85;
-        }
-
-        .cat-track {
-            display: inline-flex;
-            align-items: center;
-            flex-wrap: nowrap;
-            white-space: nowrap;
-            width: max-content;
-            flex: 1 1 auto;
-            min-width: max-content;
-            height: 100%;
-            will-change: transform;
-            backface-visibility: hidden;
-            transform-style: preserve-3d;
-            contain: layout paint;
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-sm);
-            letter-spacing: 0.08em;
-            color: var(--strip-text);
-        }
-
-        .cat-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            padding: 0 clamp(14px, 2vw, 28px);
-            line-height: 64px;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.25s, color 0.25s;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .cat-item::after {
-            content: "*";
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            line-height: 1;
-            margin-left: 0.65rem;
-            opacity: 0.65;
-            flex: 0 0 auto;
-        }
-
-        .cat-track .cat-item:last-child::after {
-            content: "";
-            width: 0;
-            margin-left: 0;
-        }
-
-        .cat-item.active {
-            opacity: 1;
-            color: var(--strip-active);
-            text-shadow: 0 0 6px rgba(255, 196, 0, 0.5);
-        }
-
-        .cat-item[data-cat="ABOUT"]           { color: #c8a050; }
-        .cat-item[data-cat="ABOUT"].active     { color: #ffd080; text-shadow: 0 0 8px rgba(255, 208, 128, 0.6); }
-
-        .cat-item[data-cat="VHS MULTIVERSE"]   { color: #50b8c8; }
-        .cat-item[data-cat="VHS MULTIVERSE"].active { color: #80eaf8; text-shadow: 0 0 8px rgba(128, 234, 248, 0.6); }
-
-        .cat-item[data-cat="HUMANART"]         { color: #c850a0; }
-        .cat-item[data-cat="HUMANART"].active   { color: #f080d0; text-shadow: 0 0 8px rgba(240, 128, 208, 0.6); }
-
-        .cat-item[data-cat="PROJECTS"]         { color: #e07030; }
-        .cat-item[data-cat="PROJECTS"].active   { color: #ff9a3c; text-shadow: 0 0 8px rgba(255, 154, 60, 0.6); }
-
-        .cat-item[data-cat="STORYTIME"]        { color: #50c878; }
-        .cat-item[data-cat="STORYTIME"].active  { color: #80f0a8; text-shadow: 0 0 8px rgba(128, 240, 168, 0.6); }
-
-        .cat-item[data-cat="MUSIC"]            { color: #9070d0; }
-        .cat-item[data-cat="MUSIC"].active      { color: #b898f0; text-shadow: 0 0 8px rgba(184, 152, 240, 0.6); }
-
-        .cat-item[data-cat="CONTACT"]          { color: #5080d0; }
-        .cat-item[data-cat="CONTACT"].active    { color: #80b0f8; text-shadow: 0 0 8px rgba(128, 176, 248, 0.6); }
-
-        .cat-item[data-cat="DONATE"]           { color: #d05050; }
-        .cat-item[data-cat="DONATE"].active     { color: #f08080; text-shadow: 0 0 8px rgba(240, 128, 128, 0.6); }
-
-        .cat-strip::before,
-        .cat-strip::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 10vw;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .cat-strip::before {
-            left: clamp(44px, 10vw, 56px); /* start after theme button */
-            background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end));
-        }
-
-        .cat-strip::after {
-            right: 0;
-            background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end));
-        }
-
-        /* ========== LASERS (fast cannon, one at a time, no bar) ========== */
-        .laser-rail {
-            position: relative;
-            display: block;
-            width: min(100%, 1600px);
-            height: 10px;
-            margin: 3px auto 0;
-            overflow: hidden;
-            pointer-events: none;
-            background: transparent;
-            border: none;
-        }
-
-        .laser {
-            position: absolute;
-            left: -50%;
-            height: 2px;
-            width: 40%;
-            opacity: 0;
-            will-change: transform, opacity;
-        }
-
-        .laser-1 {
-            top: 1px;
-            background: #ff0033;
-            animation: laserShot 0.5s infinite linear;
-            animation-delay: 0s;
-        }
-
-        .laser-2 {
-            top: 4px;
-            background: #00ff88;
-            animation: laserShot 0.5s infinite linear;
-            animation-delay: 0.5s;
-        }
-
-        .laser-3 {
-            top: 7px;
-            background: #3399ff;
-            animation: laserShot 0.5s infinite linear;
-            animation-delay: 1.0s;
-        }
-
-        /* 0.5s shot + staggered delays → only one laser at a time */
-        @keyframes laserShot {
-            0%   { transform: translateX(0);    opacity: 1; }
-            92%  { transform: translateX(400%); opacity: 1; }
-            100% { transform: translateX(420%); opacity: 0; }
-        }
-
-        html[data-theme="mono-gray"] .laser-1,
-        html[data-theme="mono-gray"] .laser-2,
-        html[data-theme="mono-gray"] .laser-3 {
-            background: #bbbbbb;
-        }
-
-        html[data-theme="mono-green"] .laser-1,
-        html[data-theme="mono-green"] .laser-2,
-        html[data-theme="mono-green"] .laser-3 {
-            background: #39ff14;
-        }
-
-        html[data-theme="crt"] .laser-1,
-        html[data-theme="crt"] .laser-2,
-        html[data-theme="crt"] .laser-3 {
-            background: #66ff66;
-        }
+        .section-topbar .theme-btn:hover { background: var(--strip-active); color: #111; }
+        .section-topbar .theme-btn:active { opacity: 0.85; }
 
         /* ========== MAIN & SECTIONS ========== */
         main {
@@ -945,10 +732,6 @@
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .header {
-                padding: 10px 8px;
-            }
-
             section {
                 padding: 18px 14px;
                 width: min(94vw, 540px);
@@ -956,15 +739,6 @@
 
             section p {
                 line-height: 2.5;
-            }
-
-            .cat-strip {
-                height: clamp(56px, 12vw, 72px);
-            }
-
-            .cat-item {
-                padding: 0 clamp(10px, 2.5vw, 20px);
-                line-height: 56px;
             }
 
             #vhs-dots .vhs-dot {
@@ -990,11 +764,6 @@
 
             section p {
                 margin: 14px auto;
-            }
-
-            .cat-item::after {
-                font-size: 0.95rem;
-                margin-left: 0.45rem;
             }
 
             #HUMANART > div:first-of-type {
@@ -1029,17 +798,10 @@
         <canvas id="vhs-noise-canvas"></canvas>
     </div>
 
-    <header class="header">
-        <div id="catStrip" class="cat-strip">
-            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
-            <div id="catTrack" class="cat-track"></div>
-        </div>
-        <div class="laser-rail" aria-hidden="true">
-            <div class="laser laser-1"></div>
-            <div class="laser laser-2"></div>
-            <div class="laser laser-3"></div>
-        </div>
-    </header>
+    <div class="section-topbar">
+        <a href="LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
+        <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
+    </div>
 
     <main>
         <!-- ========== VHS MULTIVERSE ========== -->
@@ -1120,144 +882,6 @@
                     applyTheme(currentTheme);
                 });
             }
-
-            /* ========== CATEGORY STRIP (endless loop) ========== */
-            const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
-            const CAT_ICONS = {
-                'ABOUT': 'pixelart_aboutpic.png',
-                'VHS MULTIVERSE': 'pixelart_vhsmultiversepic.png',
-                'HUMANART': 'pixelart_humanartpic.png',
-                'PROJECTS': 'pixelart_projectspic.png',
-                'STORYTIME': 'pixelart_storytimepic.png',
-                'MUSIC': 'pixelart_musicpic.png',
-                'CONTACT': 'pixelart_contactpic.png',
-                'DONATE': 'pixelart_donatepic.png'
-            };
-            const CAT_LINKS = {
-                'ABOUT': 'LightningHornUnicorn.html',
-                'VHS MULTIVERSE': null,
-                'HUMANART': 'humanart/humanart.html',
-                'PROJECTS': 'projects.html',
-                'STORYTIME': 'chapters/chapter00000001.html',
-                'MUSIC': 'music.html',
-                'CONTACT': 'contact.html',
-                'DONATE': 'donate.html'
-            };
-            const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
-            const strip = document.getElementById('catStrip');
-            const track = document.getElementById('catTrack');
-
-            const REPEAT = 6;
-            const allItems = [];
-            for (let r = 0; r < REPEAT; r++) {
-                CATS.forEach((cat) => {
-                    const el = document.createElement('div');
-                    el.className = 'cat-item';
-                    el.dataset.cat = cat;
-                    const icon = document.createElement('img');
-                    icon.src = 'pixelart/' + CAT_ICONS[cat];
-                    icon.alt = '';
-                    icon.className = 'cat-icon';
-                    el.appendChild(icon);
-                    const label = document.createElement('span');
-                    label.textContent = cat;
-                    el.appendChild(label);
-                    el.addEventListener('click', () => selectCat(cat, el));
-                    track.appendChild(el);
-                    allItems.push({ cat, el });
-                });
-            }
-
-            let setW = 0;
-            function measure() {
-                setW = track.scrollWidth / REPEAT;
-            }
-
-            let pos = 0;
-            const SPEED = 0.3;
-
-            function wrap() {
-                if (setW > 0) {
-                    while (pos <= -setW) pos += setW;
-                    while (pos > 0) pos -= setW;
-                }
-            }
-
-            function setX(px) {
-                track.style.transform = 'translateX(' + px + 'px)';
-            }
-
-            function loop() {
-                const r = strip.getBoundingClientRect();
-                const visible = r.bottom > 0 && r.top < window.innerHeight;
-                if (visible && !dragging) {
-                    pos -= SPEED;
-                    wrap();
-                    setX(pos);
-                }
-                requestAnimationFrame(loop);
-            }
-
-            function selectCat(cat, el) {
-                const link = CAT_LINKS[cat];
-                if (link !== null) {
-                    window.location.href = link;
-                    return;
-                }
-                allItems.forEach(i => i.el.classList.remove('active'));
-                allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
-                const idx = CATS.indexOf(cat);
-                if (idx >= 0) {
-                    const s = LASER_SPEEDS[idx] + 's';
-                    const d2 = LASER_SPEEDS[idx] + 's';
-                    const d3 = (LASER_SPEEDS[idx] * 2) + 's';
-                    const l1 = document.querySelector('.laser-1');
-                    const l2 = document.querySelector('.laser-2');
-                    const l3 = document.querySelector('.laser-3');
-                    if (l1) { l1.style.animationDuration = s; }
-                    if (l2) { l2.style.animationDuration = s; l2.style.animationDelay = d2; }
-                    if (l3) { l3.style.animationDuration = s; l3.style.animationDelay = d3; }
-                }
-            }
-
-            let dragging = false, startX = 0, startPos = 0;
-
-            function down(e) {
-                if (e.target && (e.target.id === 'themeToggle' || e.target.closest('#themeToggle'))) return;
-                dragging = true;
-                startX = (e.touches ? e.touches[0].clientX : e.clientX);
-                startPos = pos;
-            }
-
-            function move(e) {
-                if (!dragging) return;
-                const x = (e.touches ? e.touches[0].clientX : e.clientX);
-                const dx = x - startX;
-                pos = startPos + dx;
-                wrap();
-                setX(pos);
-                e.preventDefault();
-            }
-
-            function up() {
-                dragging = false;
-            }
-
-            strip.addEventListener('mousedown', down);
-            window.addEventListener('mousemove', move);
-            window.addEventListener('mouseup', up);
-            strip.addEventListener('touchstart', down, { passive: false });
-            strip.addEventListener('touchmove', move, { passive: false });
-            window.addEventListener('touchend', up);
-            window.addEventListener('resize', () => { measure(); wrap(); setX(pos); });
-            window.addEventListener('load', measure);
-            if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(() => { measure(); wrap(); setX(pos); });
-            }
-
-            measure();
-            allItems.forEach(i => { if (i.cat === 'VHS MULTIVERSE') i.el.classList.add('active'); });
-            loop();
 
             /* ========== LANGUAGE SWITCH ========== */
             const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';

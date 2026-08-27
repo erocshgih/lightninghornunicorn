@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lightning Horn Unicorn – MUSIC</title>
+    <title>HUMANART</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* ========== DESIGN TOKENS / FLUID TYPE ========== */
@@ -489,9 +489,104 @@
 
         
 
+        /* ========== HUMANART / CAT'S CRADLE ========== */
+        #HUMANART > div:first-of-type {
+            width: min(76vw, 340px) !important;
+            height: auto !important;
+            aspect-ratio: 300 / 380;
+        }
+
+        #catsCradleCanvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        #catsCradleCanvas:active {
+            cursor: grabbing;
+        }
+
+        #humanart-caption {
+            font-size: var(--fs-xs);
+            color: var(--text-soft);
+            margin-top: 14px;
+            text-align: center;
+            min-height: 1.4em;
+            letter-spacing: 0.05em;
+            font-family: 'Press Start 2P', cursive;
+            word-wrap: break-word;
+            width: 100%;
+        }
+
+        /* ========== STORYTIME BUTTONS ========== */
+        .chapter-button {
+            display: block;
+            font-family: 'Press Start 2P', cursive;
+            font-size: var(--fs-xs) !important;
+            line-height: 1.5;
+            text-decoration: none;
+            text-align: left;
+            padding: 12px 15px !important;
+            background: var(--card-bg) !important;
+            color: var(--text) !important;
+            border: 2px solid var(--text) !important;
+            border-radius: 6px !important;
+            box-sizing: border-box;
+            width: 100%;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 44px;
+        }
+
+        .chapter-button:hover:not([href=""]),
+        .chapter-button:focus:not([href=""]) {
+            background: #00FF28 !important;
+            color: #111 !important;
+            border-color: #333 !important;
+            box-shadow: 0 4px 0 #333 !important;
+            transform: translate3d(0, -2px, 0);
+        }
+
+        .chapter-button:active:not([href=""]) {
+            transform: translate3d(0, 0, 0);
+            box-shadow: none !important;
+        }
+
+        /* ========== PROJECTS ========== */
+        .project-item h3 {
+            font-size: var(--fs-sm) !important;
+            color: var(--text-muted) !important;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(0.98); }
+        }
+
         /* ========== MUSIC ========== */
         #MUSIC p {
             font-size: var(--fs-sm);
+        }
+
+        /* ========== DONATE ========== */
+        form button img {
+            max-width: 100% !important;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .invisible-paypal-submit-btn {
+            width: min(60vw, 220px) !important;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+            display: block;
+            margin: 0 auto;
         }
 
         /* ========== VHS MONO GREEN OVERLAY ========== */
@@ -526,6 +621,30 @@
             pointer-events: none;
         }
 
+        .atom-disclaimer {
+            font-size: 0.55rem;
+            margin-top: 25px;
+            color: #00ff28;
+            letter-spacing: 2px;
+        }
+
+        .disclaimer-box {
+            font-size: 0.55rem;
+            font-style: italic;
+            margin-bottom: 25px;
+            opacity: 0.8;
+            line-height: 1.6;
+            border-left: 3px solid #333;
+            padding-left: 8px;
+        }
+
+        .storytime-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             section {
@@ -535,6 +654,11 @@
 
             section p {
                 line-height: 2.5;
+            }
+
+            .chapter-button {
+                padding: 14px 12px !important;
+                min-height: 48px;
             }
         }
 
@@ -551,11 +675,19 @@
             section p {
                 margin: 14px auto;
             }
+
+            #HUMANART > div:first-of-type {
+                width: min(88vw, 340px) !important;
+            }
         }
 
         @media (max-width: 360px) {
             section {
                 padding: 14px 10px;
+            }
+
+            .chapter-button {
+                padding: 12px 10px !important;
             }
         }
 
@@ -576,261 +708,49 @@
     </div>
 
     <div class="section-topbar">
-        <a href="LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
+        <a href="../LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
         <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
     </div>
 
     <main>
-        <!-- ========== MUSIC ========== -->
-        <section id="MUSIC" class="active">
-            <h2>MUSIC</h2>
+        <!-- ========== HUMANART ========== -->
+        <section id="HUMANART">
+            <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
-            <p data-lang-en="If you'd like to support my music, click the mailbox under CONTACT to buy an album via PayPal. Only if you want to."
-               data-lang-de="Wenn du meine Musik unterstützen möchtest, klick auf den Briefkasten unter KONTAKT, um ein Album via PayPal zu kaufen. Nur wenn du möchtest."
-               style="font-size: var(--fs-xs); color: var(--text-soft); text-align: center; margin-bottom: 20px; line-height: 2.2;">
-                If you'd like to support my music, click the mailbox under CONTACT to buy an album via PayPal. Only if you want to.
-            </p>
-
-            <div class="music-manifesto">
-                <h3 data-lang-en="Dear Visitor," data-lang-de="Liebe Besucherin, lieber Besucher">
-                    Dear Visitor,
-                </h3>
-
-                <p data-lang-en="Before you continue, there is something I'd like to explain."
-                   data-lang-de="Bevor du weitermachst, möchte ich dir etwas erklären.">
-                    Before you continue, there is something I'd like to explain.
-                </p>
-
-                <p data-lang-en="If you have supported my work over the years, thank you. Every purchase, every kind word, and every act of support has helped me continue creating. This page is not directed at you."
-                   data-lang-de="Wenn du meine Arbeit über die Jahre unterstützt hast, danke ich dir. Jeder Kauf, jedes freundliche Wort und jede Form der Unterstützung haben mir geholfen, weiter Kunst zu erschaffen. Diese Seite richtet sich nicht an dich.">
-                    If you have supported my work over the years, thank you. Every purchase, every kind word, and every act of support has helped me continue creating. This page is not directed at you.
-                </p>
-
-                <p data-lang-en="If you have never supported my music because you believe music should be free, then please read this."
-                   data-lang-de="Falls du meine Musik nie unterstützt hast, weil du glaubst, Musik sollte kostenlos sein, dann lies bitte weiter.">
-                    If you have never supported my music because you believe music should be free, then please read this.
-                </p>
-
-                <p data-lang-en="I actually understand that idea."
-                   data-lang-de="Diesen Gedanken kann ich sogar nachvollziehen.">
-                    I actually understand that idea.
-                </p>
-
-                <p data-lang-en="In a perfect world, art would be free.<br>Food would be free.<br>Housing would be free.<br>Healthcare would be free.<br>Education would be free."
-                   data-lang-de="In einer perfekten Welt wäre Kunst kostenlos.<br>Essen wäre kostenlos.<br>Wohnen wäre kostenlos.<br>Gesundheitsversorgung wäre kostenlos.<br>Bildung wäre kostenlos.">
-                    In a perfect world, art would be free.<br>
-                    Food would be free.<br>
-                    Housing would be free.<br>
-                    Healthcare would be free.<br>
-                    Education would be free.
-                </p>
-
-                <p data-lang-en="But we do not live in that world."
-                   data-lang-de="Aber in einer solchen Welt leben wir nicht.">
-                    But we do not live in that world.
-                </p>
-
-                <p data-lang-en="For many years I gave my music away without asking for much in return. I simply wanted people to enjoy it."
-                   data-lang-de="Viele Jahre lang habe ich meine Musik kostenlos veröffentlicht, ohne viel dafür zu verlangen. Ich wollte einfach, dass Menschen Freude daran haben.">
-                    For many years I gave my music away without asking for much in return. I simply wanted people to enjoy it.
-                </p>
-
-                <p data-lang-en="Many did."
-                   data-lang-de="Viele haben das getan.">
-                    Many did.
-                </p>
-
-                <p data-lang-en="Some supported the person who created it."
-                   data-lang-de="Einige unterstützten auch den Menschen, der sie erschaffen hat.">
-                    Some supported the person who created it.
-                </p>
-
-                <p data-lang-en="That is why things have changed."
-                   data-lang-de="Deshalb hat sich heute etwas geändert.">
-                    That is why things have changed.
-                </p>
-
-                <hr>
-
-                <h3 data-lang-en="Where Did the Music Go?" data-lang-de="Wo ist die Musik geblieben?">
-                    Where Did the Music Go?
-                </h3>
-
-                <p data-lang-en="There is almost no music on this website anymore."
-                   data-lang-de="Auf dieser Website gibt es inzwischen kaum noch Musik.">
-                    There is almost no music on this website anymore.
-                </p>
-
-                <p data-lang-en="Not because I stopped creating."
-                   data-lang-de="Nicht, weil ich aufgehört hätte Musik zu erschaffen.">
-                    Not because I stopped creating.
-                </p>
-
-                <p data-lang-en="Quite the opposite."
-                   data-lang-de="Ganz im Gegenteil.">
-                    Quite the opposite.
-                </p>
-
-                <p data-lang-en="The music has simply moved behind a hidden link."
-                   data-lang-de="Die Musik befindet sich jetzt lediglich hinter einem versteckten Link.">
-                    The music has simply moved behind a hidden link.
-                </p>
-
-                <p data-lang-en="Because I no longer want my work to disappear inside an endless stream of content where everything is expected to be free."
-                   data-lang-de="Weil ich nicht mehr möchte, dass meine Arbeit in einem endlosen Strom von Inhalten verschwindet, in dem alles kostenlos erwartet wird.">
-                    Because I no longer want my work to disappear inside an endless stream of content where everything is expected to be free.
-                </p>
-
-                <p data-lang-en="My music is not on Spotify, and I see no reason to join that service."
-                   data-lang-de="Meine Musik befindet sich nicht auf Spotify, und ich sehe keinen Grund, sie dort anzubieten.">
-                    My music is not on Spotify, and I see no reason to join that service.
-                </p>
-
-                <p data-lang-en="My music is not on YouTube, and I see no reason to offer my videos there for free."
-                   data-lang-de="Meine Musik befindet sich nicht auf YouTube, und ich sehe keinen Grund, meine Videos dort kostenlos anzubieten.">
-                    My music is not on YouTube, and I see no reason to offer my videos there for free.
-                </p>
-
-                <p data-lang-en="Music is meant to be enjoyed."
-                   data-lang-de="Musik ist dafür da, genossen zu werden.">
-                    Music is meant to be enjoyed.
-                </p>
-
-                <p data-lang-en="It is meant to be played by humans. Yes, you can learn the chords."
-                   data-lang-de="Sie ist dafür gemacht, von Menschen gespielt zu werden. Ja, du kannst die Akkorde lernen.">
-                    It is meant to be played by humans. Yes, you can learn the chords.
-                </p>
-
-                <p data-lang-en="I compose it."
-                   data-lang-de="Ich komponiere sie.">
-                    I compose it.
-                </p>
-
-                <p data-lang-en="I spend countless hours shaping every sound until it becomes exactly what I imagined."
-                   data-lang-de="Ich verbringe unzählige Stunden damit, jeden einzelnen Klang so lange zu formen, bis er genau meiner Vorstellung entspricht.">
-                    I spend countless hours shaping every sound until it becomes exactly what I imagined.
-                </p>
-
-                <p data-lang-en="Sometimes I use a guitar.<br>Sometimes I use synthesizers.<br>Sometimes I use AI."
-                   data-lang-de="Manchmal benutze ich eine Gitarre.<br>Manchmal Synthesizer.<br>Manchmal KI.">
-                    Sometimes I use a guitar.<br>
-                    Sometimes I use synthesizers.<br>
-                    Sometimes I use AI.
-                </p>
-
-                <p data-lang-en="<strong>The tool changes.<br>The artist doesn't.</strong>"
-                   data-lang-de="<strong>Das Werkzeug verändert sich.<br>Der Künstler nicht.</strong>">
-                    <strong>The tool changes.<br>The artist doesn't.</strong>
-                </p>
-
-                <hr>
-
-                <h3 data-lang-en="About Artificial Intelligence" data-lang-de="Über Künstliche Intelligenz">
-                    About Artificial Intelligence
-                </h3>
-
-                <p data-lang-en="Many people believe AI creates music by pressing one button. That simply isn't true."
-                   data-lang-de="Viele Menschen glauben, KI erschaffe Musik mit einem einzigen Knopfdruck. Das stimmt einfach nicht.">
-                    Many people believe AI creates music by pressing one button. That simply isn't true.
-                </p>
-
-                <p data-lang-en="Creating meaningful music still requires taste, composition, structure, editing, experience and thousands of creative decisions."
-                   data-lang-de="Bedeutungsvolle Musik erfordert weiterhin Geschmack, Komposition, Struktur, Bearbeitung, Erfahrung und tausende kreative Entscheidungen.">
-                    Creating meaningful music still requires taste, composition, structure, editing, experience and thousands of creative decisions.
-                </p>
-
-                <p data-lang-en="AI is a tool."
-                   data-lang-de="KI ist ein Werkzeug.">
-                    AI is a tool.
-                </p>
-
-                <p data-lang-en="Just like a camera didn't replace photographers.<br>Just like digital painting didn't replace painters.<br>Just like synthesizers didn't replace musicians."
-                   data-lang-de="So wie Kameras Fotografen nicht ersetzt haben.<br>So wie digitales Malen Maler nicht ersetzt hat.<br>So wie Synthesizer Musiker nicht ersetzt haben.">
-                    Just like a camera didn't replace photographers.<br>
-                    Just like digital painting didn't replace painters.<br>
-                    Just like synthesizers didn't replace musicians.
-                </p>
-
-                <p data-lang-en="If you don't like AI, that is perfectly fine. But please understand what you are criticizing before dismissing the work of people who create something meaningful."
-                   data-lang-de="Wenn du KI nicht magst, ist das vollkommen in Ordnung. Ich bitte lediglich darum, zu verstehen, was du kritisierst, bevor du die Arbeit von Menschen abwertest.">
-                    If you don't like AI, that is perfectly fine. But please understand what you are criticizing before dismissing the work of people who dedicate their lives to creating something meaningful.
-                </p>
-
-                <hr>
-
-                <h3 data-lang-en="Twenty Years" data-lang-de="Zwanzig Jahre">
-                    Twenty Years
-                </h3>
-
-                <p data-lang-en="For over twenty years I searched for people who wanted to create extraordinary art and music together."
-                   data-lang-de="Über zwanzig Jahre lang habe ich nach Menschen gesucht, die gemeinsam außergewöhnliche Kunst und Musik erschaffen wollten.">
-                    For over twenty years I searched for people who wanted to create extraordinary art and music together.
-                </p>
-
-                <p data-lang-en="Despite every setback, I kept creating. Not because it was easy. Because I wanted to move forward."
-                   data-lang-de="Trotz aller Rückschläge habe ich weitergemacht. Nicht, weil es einfach war. Sondern weil ich vorankommen wollte.">
-                    Despite every setback, I kept creating. Not because it was easy. Because I wanted to move forward.
-                </p>
-
-                <p data-lang-en="Long before AI existed, I was already writing songs, recording music and experimenting with sound."
-                   data-lang-de="Lange bevor KI existierte, schrieb ich bereits Songs, nahm Musik auf und experimentierte mit Klängen.">
-                    Long before AI existed, I was already writing songs, recording music and experimenting with sound.
-                </p>
-
-                <p data-lang-en="AI didn't make me an artist. It simply became another instrument available to me."
-                   data-lang-de="KI hat mich nicht zu einem Künstler gemacht. Sie wurde lediglich ein weiteres Werkzeug, das mir zur Verfügung steht.">
-                    AI didn't make me an artist. It simply became another instrument available to me.
-                </p>
-
-                <hr>
-
-                <h3 data-lang-en="Why the Music Is No Longer Free" data-lang-de="Warum meine Musik nicht mehr kostenlos ist">
-                    Why the Music Is No Longer Free
-                </h3>
-
-                <p data-lang-en="Creating music costs time.<br>It costs energy.<br>It costs equipment.<br>It costs countless hours of listening."
-                   data-lang-de="Musik zu erschaffen kostet Zeit.<br>Es kostet Energie.<br>Es kostet Ausrüstung.<br>Es kostet unzählige Stunden des Zuhörens.">
-                    Creating music costs time.<br>
-                    It costs energy.<br>
-                    It costs equipment.<br>
-                    It costs countless hours of listening.
-                </p>
-
-                <p data-lang-en="If music has value, then the person creating it has value too."
-                   data-lang-de="Wenn Musik einen Wert besitzt, dann besitzt auch der Mensch einen Wert, der sie erschafft.">
-                    If music has value, then the person creating it has value too.
-                </p>
-
-                <p data-lang-en="Buying an album is supporting the next song.<br>The next experiment.<br>The next impossible idea."
-                   data-lang-de="Mit dem Kauf eines Albums unterstützt du den nächsten Song.<br>Das nächste Experiment.<br>Die nächste scheinbar unmögliche Idee.">
-                    Buying an album is supporting the next song.<br>
-                    The next experiment.<br>
-                    The next impossible idea.
-                </p>
-
-                <p data-lang-en="If my work speaks to you, thank you for listening. If you decide to support it, thank you even more. If not, that's okay as well."
-                   data-lang-de="Wenn dich meine Arbeit berührt, danke ich dir fürs Zuhören. Wenn du sie unterstützt, danke ich dir umso mehr. Und wenn nicht, ist auch das in Ordnung.">
-                    If my work speaks to you, thank you for listening. If you decide to support it, thank you even more. If not, that's okay as well.
-                </p>
-
-                <p data-lang-en="Either way... Just be aware of that."
-                   data-lang-de="Egal wie du dich entscheidest...">
-                    Either way... Just be aware of that.
-                </p>
-
-                <p><strong>Lightning Horn Unicorn</strong></p>
+            <div class="cats-cradle-box" style="position: relative; width: min(80vw, 340px); aspect-ratio: 300 / 380; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
+                <div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
+                    <button id="zoomIn" type="button" style="width: 36px; height: 36px; background: rgba(255,255,255,0.85); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px; font-size: 18px; line-height: 1; -webkit-tap-highlight-color: transparent;" aria-label="Zoom in">+</button>
+                    <button id="zoomOut" type="button" style="width: 36px; height: 36px; background: rgba(255,255,255,0.85); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px; font-size: 18px; line-height: 1; -webkit-tap-highlight-color: transparent;" aria-label="Zoom out">−</button>
+                </div>
+                <canvas id="catsCradleCanvas" style="display: block; cursor: grab; touch-action: none; width: 100%; height: 100%;"></canvas>
             </div>
 
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 60px;">
-                <a href="https://www.youtube.com/watch?v=6mEqVviTbno"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="music-tape-link">
-                    <div class="wobble-glitch-container">
-                        <img src="music_Laserette.webp" alt="Laserette">
-                        <div class="analog-glow"></div>
-                    </div>
-                </a>
+            <div id="humanart-caption">&nbsp;</div>
+
+            <p class="atom-disclaimer">
+                ART BY VEDRAN LUKIC : everything is connected...
+            </p>
+
+            <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
+               data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst.">
+                Explore the beauty of Human Art, entirely crafted by me.
+            </p>
+
+            <div class="cats-cradle-source-images" style="display: none;" aria-hidden="true">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/mynameisrain.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/candle.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/rainbowonyx.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/clown.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/bigwavecube.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/bananismagainstgorillas.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/augapfel.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/apffel2.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/acircleofcolors.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/eagletriangle.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/face001.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/girlwithseashell.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/blackmountainlandscape.webp" alt="">
+                <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/chillin.webp" alt="">
             </div>
         </section>
     </main>
@@ -852,7 +772,7 @@
                 try {
                     return localStorage.getItem('lhu-theme');
                 } catch (e) {
-                    return null; // sandboxed preview or private mode
+                    return null;
                 }
             }
 
@@ -860,14 +780,12 @@
                 try {
                     localStorage.setItem('lhu-theme', value);
                 } catch (e) {
-                    // ignore – blocked in sandbox
                 }
             }
 
             function getInitialTheme() {
                 const saved = safeGetTheme();
                 if (saved && THEMES.includes(saved)) return saved;
-                // fallback to system preference
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     return 'dark';
                 }
@@ -894,6 +812,9 @@
                 });
             }
 
+            /* ========== REST OF APP ========== */
+            let canvasEngineStarted = false;
+
             /* Language switch */
             const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
             document.querySelectorAll('[data-lang-en]').forEach(el => {
@@ -901,7 +822,282 @@
                 if (text) el.innerHTML = text;
             });
 
-            
+            document.getElementById('HUMANART').classList.add('active');
+
+            /* Start canvas engine immediately since HUMANART is always visible */
+            if (!canvasEngineStarted) {
+                try { initCatsCradle(); } catch (e) { console.error(e); }
+                canvasEngineStarted = true;
+            }
+
+            /* --- DYNAMISCHE 3D CAT'S CRADLE ENGINE --- */
+            function initCatsCradle() {
+                const canvas = document.getElementById('catsCradleCanvas');
+                if (!canvas) return;
+
+                function sizeCanvas() {
+                    const container = canvas.parentElement;
+                    if (container) {
+                        canvas.width = container.clientWidth || 300;
+                        canvas.height = container.clientHeight || 380;
+                    } else {
+                        canvas.width = 300;
+                        canvas.height = 380;
+                    }
+                }
+                sizeCanvas();
+                window.addEventListener('resize', sizeCanvas);
+
+                const ctx = canvas.getContext('2d');
+
+                const zoomInBtn = document.getElementById('zoomIn');
+                const zoomOutBtn = document.getElementById('zoomOut');
+
+                const htmlImages = document.querySelectorAll('.cats-cradle-source-images img');
+                let nodes = [];
+
+                htmlImages.forEach((imgEl, index) => {
+                    const imgUrl = imgEl.getAttribute('src') || imgEl.src;
+                    if (!imgUrl) return;
+
+                    const phi = Math.acos(-1 + (2 * index) / htmlImages.length);
+                    const theta = Math.sqrt(htmlImages.length * Math.PI) * phi;
+                    const radius = 95;
+
+                    nodes.push({
+                        x: radius * Math.sin(phi) * Math.cos(theta),
+                        y: radius * Math.sin(phi) * Math.sin(theta),
+                        z: radius * Math.cos(phi),
+                        imgUrl: imgUrl,
+                        img: null,
+                        aspect: 1
+                    });
+                });
+
+                nodes.forEach(node => {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = node.imgUrl;
+                    img.onload = () => {
+                        node.img = img;
+                        node.aspect = img.width / img.height;
+                    };
+                });
+
+                let isDragging = false;
+                let previousMousePosition = { x: 0, y: 0 };
+                let cameraDistance = 300;
+
+                let rotX = 0, rotY = 0;
+                let targetRotX = null, targetRotY = null;
+                let targetCamDist = null;
+                let isAnimatingNode = false;
+                let isFocused = false;
+
+                if (zoomInBtn) {
+                    zoomInBtn.addEventListener('click', () => {
+                        targetCamDist = Math.max(120, (targetCamDist || cameraDistance) - 40);
+                    });
+                }
+                if (zoomOutBtn) {
+                    zoomOutBtn.addEventListener('click', () => {
+                        targetCamDist = Math.min(550, (targetCamDist || cameraDistance) + 40);
+                    });
+                }
+
+                function project(x, y, z) {
+                    const fov = 280;
+                    const scale = fov / (parseInt(z) + cameraDistance);
+                    return {
+                        x: x * scale + canvas.width / 2,
+                        y: y * scale + canvas.height / 2,
+                        scale: scale
+                    };
+                }
+
+                function rotateNet(ax, ay) {
+                    rotX += ax;
+                    rotY += ay;
+                    nodes.forEach(node => {
+                        let cosY = Math.cos(ay), sinY = Math.sin(ay);
+                        let x1 = node.x * cosY - node.z * sinY;
+                        let z1 = node.z * cosY + node.x * sinY;
+                        let cosX = Math.cos(ax), sinX = Math.sin(ax);
+                        let y2 = node.y * cosX - z1 * sinX;
+                        let z2 = z1 * cosX + node.y * sinX;
+                        node.x = x1;
+                        node.y = y2;
+                        node.z = z2;
+                    });
+                }
+
+                function drawNet() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    if (isAnimatingNode && targetRotX !== null) {
+                        const dx = targetRotX - rotX;
+                        const dy = targetRotY - rotY;
+                        if (Math.abs(dx) > 0.002 || Math.abs(dy) > 0.002) {
+                            rotateNet(dx * 0.045, dy * 0.045);
+                        } else {
+                            isAnimatingNode = false;
+                        }
+                    } else if (!isDragging && !isFocused) {
+                        rotateNet(0.0005, 0.0008);
+                    }
+
+                    if (targetCamDist !== null) {
+                        cameraDistance += (targetCamDist - cameraDistance) * 0.06;
+                    }
+
+                    nodes.sort((a, b) => b.z - a.z);
+
+                    /* Threads */
+                    ctx.strokeStyle = '#00FF28';
+                    ctx.lineWidth = 1.5;
+                    for (let i = 0; i < nodes.length; i++) {
+                        for (let j = i + 1; j < Math.min(i + 3, nodes.length); j++) {
+                            let p1 = project(nodes[i].x, nodes[i].y, nodes[i].z);
+                            let p2 = project(nodes[j].x, nodes[j].y, nodes[j].z);
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+
+                    /* Nodes */
+                    nodes.forEach(node => {
+                        if (!node.img) return;
+                        let p = project(node.x, node.y, node.z);
+                        let baseSize = 45 * p.scale;
+                        if (baseSize <= 0) return;
+                        let imgWidth = baseSize, imgHeight = baseSize;
+                        if (node.aspect > 1) imgHeight = baseSize / node.aspect;
+                        else if (node.aspect < 1) imgWidth = baseSize * node.aspect;
+
+                        ctx.save();
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+                        ctx.shadowBlur = 8;
+                        ctx.drawImage(node.img, p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
+                        ctx.restore();
+                        ctx.strokeStyle = '#111';
+                        ctx.strokeRect(p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
+                    });
+
+                    requestAnimationFrame(drawNet);
+                }
+
+                /* Mouse drag */
+                canvas.addEventListener('mousedown', e => {
+                    isDragging = true;
+                    previousMousePosition = { x: e.clientX, y: e.clientY };
+                });
+                window.addEventListener('mousemove', e => {
+                    if (isDragging) {
+                        rotateNet(
+                            -(e.clientY - previousMousePosition.y) * 0.007,
+                            (e.clientX - previousMousePosition.x) * 0.007
+                        );
+                        previousMousePosition = { x: e.clientX, y: e.clientY };
+                    }
+                });
+                window.addEventListener('mouseup', () => { isDragging = false; });
+
+                /* Touch drag */
+                canvas.addEventListener('touchstart', e => {
+                    if (e.touches.length === 1) {
+                        isDragging = true;
+                        previousMousePosition = {
+                            x: e.touches[0].clientX,
+                            y: e.touches[0].clientY
+                        };
+                    }
+                }, { passive: true });
+
+                canvas.addEventListener('touchmove', e => {
+                    if (isDragging && e.touches.length === 1) {
+                        rotateNet(
+                            -(e.touches[0].clientY - previousMousePosition.y) * 0.007,
+                            (e.touches[0].clientX - previousMousePosition.x) * 0.007
+                        );
+                        previousMousePosition = {
+                            x: e.touches[0].clientX,
+                            y: e.touches[0].clientY
+                        };
+                    }
+                }, { passive: true });
+
+                canvas.addEventListener('touchend', () => { isDragging = false; });
+
+                /* Click / tap to focus node */
+                let focusedIdx = -1;
+                const capEl = document.getElementById('humanart-caption');
+
+                function centerNode(n) {
+                    if (!n) return;
+                    const r = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
+                    if (r === 0) return;
+                    const ay = Math.atan2(n.x, n.z);
+                    const nz = Math.sqrt(n.x * n.x + n.z * n.z);
+                    const ax = Math.atan2(n.y, nz);
+                    targetRotX = rotX + ax;
+                    targetRotY = rotY + ay;
+                    targetCamDist = 130;
+                    isAnimatingNode = true;
+                    isFocused = true;
+                }
+
+                function setCaption(n) {
+                    if (capEl && n) {
+                        const fn = n.imgUrl.split('/').pop().replace(/\.\w+$/, '').replace(/[_-]/g, ' ');
+                        capEl.textContent = fn.charAt(0).toUpperCase() + fn.slice(1);
+                    }
+                }
+
+                function focusNode(idx) {
+                    if (idx < 0 || idx >= nodes.length) return;
+                    focusedIdx = idx;
+                    centerNode(nodes[idx]);
+                    setCaption(nodes[idx]);
+                }
+
+                function resetView() {
+                    focusedIdx = -1;
+                    targetCamDist = 300;
+                    targetRotX = null;
+                    targetRotY = null;
+                    isAnimatingNode = false;
+                    isFocused = false;
+                    if (capEl) capEl.innerHTML = '&nbsp;';
+                }
+
+                canvas.addEventListener('click', (e) => {
+                    if (isAnimatingNode) return;
+                    const rect = canvas.getBoundingClientRect();
+                    const sx = canvas.width / rect.width;
+                    const sy = canvas.height / rect.height;
+                    const mx = (e.clientX - rect.left) * sx;
+                    const my = (e.clientY - rect.top) * sy;
+                    let hit = -1, minD = 32;
+                    nodes.forEach((n, i) => {
+                        if (!n.img) return;
+                        const p = project(n.x, n.y, n.z);
+                        const d = Math.hypot(mx - p.x, my - p.y);
+                        if (d < minD) {
+                            minD = d;
+                            hit = i;
+                        }
+                    });
+                    if (hit >= 0) {
+                        focusNode(hit);
+                    } else if (focusedIdx >= 0) {
+                        resetView();
+                    }
+                });
+
+                drawNet();
+            }
         });
     </script>
 
