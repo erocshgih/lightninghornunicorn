@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lightning Horn Unicorn – MUSIC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         /* ========== DESIGN TOKENS / FLUID TYPE ========== */
         :root {
@@ -335,30 +335,38 @@
             z-index: 1000;
         }
 
-        .go-back {
+        .section-topbar .go-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-family: 'Press Start 2P', cursive;
             font-size: var(--fs-xs);
-            color: var(--text);
+            color: var(--text-muted);
             text-decoration: none;
-            transition: color 0.2s;
-            white-space: nowrap;
+            padding: 8px 14px;
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .go-back:hover {
-            color: var(--accent-green);
+        .section-topbar .go-back:hover {
+            background: var(--strip-active);
+            color: #111;
+            border-color: var(--strip-active);
         }
 
-        .theme-btn {
+        .section-topbar .theme-btn {
             flex: 0 0 auto;
-            width: clamp(44px, 10vw, 56px);
-            height: clamp(44px, 10vw, 56px);
-            border: none;
-            border-radius: 0;
+            width: clamp(36px, 8vw, 44px);
+            height: clamp(36px, 8vw, 44px);
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
             background: var(--card-bg);
             color: var(--text);
             font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
-            line-height: 1;
+            font-size: clamp(0.8rem, 2vw, 1rem);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -368,12 +376,12 @@
             user-select: none;
         }
 
-        .theme-btn:hover {
+        .section-topbar .theme-btn:hover {
             background: var(--strip-active);
             color: #111;
         }
 
-        .theme-btn:active {
+        .section-topbar .theme-btn:active {
             opacity: 0.85;
         }
 

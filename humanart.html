@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUMANART</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         /* ========== DESIGN TOKENS / FLUID TYPE ========== */
         :root {
@@ -398,15 +398,15 @@
 
         .theme-btn {
             flex: 0 0 auto;
-            width: clamp(44px, 10vw, 56px);
-            height: 100%;
-            border: none;
-            border-right: 2px solid var(--border-soft);
-            border-radius: 0;
+            align-self: center;
+            width: clamp(36px, 8vw, 44px);
+            height: clamp(36px, 8vw, 44px);
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
             background: var(--card-bg);
             color: var(--text);
             font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+            font-size: clamp(0.8rem, 2vw, 1rem);
             line-height: 1;
             cursor: pointer;
             display: flex;
@@ -415,8 +415,6 @@
             transition: background 0.2s, color 0.2s, opacity 0.2s;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            z-index: 3;
-            position: relative;
         }
 
         .theme-btn:hover {
@@ -936,10 +934,33 @@
                 image-rendering: -webkit-optimize-contrast;
             }
         }
-    </style>
+            .cat-strip .go-back {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: var(--fs-xs);
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            align-self: center;
+        }
+
+        .cat-strip .go-back:hover {
+            background: var(--strip-active);
+            color: #111;
+            border-color: var(--strip-active);
+        }
+</style>
 </head>
 <body>
-    
+
 
     <!-- VHS monochrome green overlay -->
     <div id="vhs-green-overlay" aria-hidden="true">
@@ -948,8 +969,9 @@
 
     <header class="header">
         <div id="catStrip" class="cat-strip">
-            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
+            <a href="LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
             <div id="catTrack" class="cat-track"></div>
+            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
         </div>
         <div class="laser-rail" aria-hidden="true">
             <div class="laser laser-1"></div>
@@ -1508,6 +1530,16 @@
             noise();
             setTimeout(loop, 150);
         })();
+    })();
+    </script>
+    <script>
+    (function () {
+        const KEY = 'lhu-theme';
+        const btn = document.getElementById('themeToggle');
+        function apply(t) { document.documentElement.setAttribute('data-theme', t); try { localStorage.setItem(KEY, t); } catch (e) {} }
+        let t = 'light'; try { t = localStorage.getItem(KEY) || 'light'; } catch (e) {}
+        apply(t);
+        if (btn) btn.addEventListener('click', function () { t = (t === 'dark' ? 'light' : 'dark'); apply(t); });
     })();
     </script>
 </body>
