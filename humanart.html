@@ -355,9 +355,6 @@
             padding: 10px 12px;
             background: var(--header-bg);
             box-shadow: var(--header-shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
 
         @keyframes logoGlow {
@@ -934,8 +931,21 @@
                 image-rendering: -webkit-optimize-contrast;
             }
         }
-            .cat-strip .go-back {
-            flex: 0 0 auto;
+            .section-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--header-bg);
+            box-shadow: var(--header-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-topbar .go-back {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -949,13 +959,40 @@
             background: var(--card-bg);
             transition: all 0.2s;
             -webkit-tap-highlight-color: transparent;
-            align-self: center;
         }
 
-        .cat-strip .go-back:hover {
+        .section-topbar .go-back:hover {
             background: var(--strip-active);
             color: #111;
             border-color: var(--strip-active);
+        }
+
+        .section-topbar .theme-btn {
+            flex: 0 0 auto;
+            width: clamp(36px, 8vw, 44px);
+            height: clamp(36px, 8vw, 44px);
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            color: var(--text);
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s, opacity 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .section-topbar .theme-btn:hover {
+            background: var(--strip-active);
+            color: #111;
+        }
+
+        .section-topbar .theme-btn:active {
+            opacity: 0.85;
         }
 </style>
 </head>
@@ -967,11 +1004,14 @@
         <canvas id="vhs-noise-canvas"></canvas>
     </div>
 
+    <div class="section-topbar">
+        <a href="LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
+        <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">&#9728;</button>
+    </div>
+
     <header class="header">
         <div id="catStrip" class="cat-strip">
-            <a href="LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
             <div id="catTrack" class="cat-track"></div>
-            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
         </div>
         <div class="laser-rail" aria-hidden="true">
             <div class="laser laser-1"></div>
