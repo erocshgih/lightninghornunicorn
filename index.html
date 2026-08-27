@@ -341,6 +341,12 @@ function loadHead(url) {
 
       // 2. NEU: Animation sauber stoppen, wenn das Modell da ist
       stopLoading();
+    },
+    undefined,
+    (err) => {
+      console.error("GLB load failed:", err);
+      stopLoading();
+      loadingEl.textContent = "load error";
     }
   );
 }
@@ -373,7 +379,7 @@ document.getElementById("head-select").addEventListener("change", e => {
 
 /* START (EXPLICIT RAW URL) */
 loadHead(
-  "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unibrowserloadicorn.glb"
+  "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb"
 );
 
 /* LOOP */
