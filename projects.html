@@ -499,6 +499,34 @@
             display: block;
         }
 
+        .model-loading {
+            position: absolute;
+            inset: 0;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: var(--bg-solid);
+            pointer-events: none;
+        }
+        .model-loading .spinner {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.18);
+            border-top-color: var(--text, #fff);
+            animation: modelSpin 0.9s linear infinite;
+        }
+        .model-loading .label {
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft, #aaa);
+        }
+        @keyframes modelSpin { to { transform: rotate(360deg); } }
+
         /* ========== NAV ARROWS ========== */
         .carousel-nav {
             display: flex;
@@ -699,6 +727,7 @@ Part wearable object, part miniature character. Lickable? …rusty and risk-obvi
 A ring with no purpose.
 Except perhaps turning something on.`, images: [
                         { src: 'projects/projects_rings_turnmeonring_1package.webp' },
+                        { model: 'glb/turnmeonring.glb' },
                         { src: 'projects/projects_rings_turnmeonring_2comic.webp' },
                         { src: 'projects/projects_rings_turnmeonring_3ad.webp' },
                     ]}
@@ -812,6 +841,14 @@ Easy to attach. Explanations are discussable.`, images: [
                         mv.style.width = '100%';
                         mv.style.height = '100%';
                         slide.appendChild(mv);
+
+                        const loader = document.createElement('div');
+                        loader.className = 'model-loading';
+                        loader.innerHTML = '<div class="spinner"></div><div class="label">Loading 3D</div>';
+                        slide.appendChild(loader);
+                        const hideLoader = () => loader.remove();
+                        mv.addEventListener('load', hideLoader, { once: true });
+                        mv.addEventListener('error', hideLoader, { once: true });
                     } else {
                         slide.innerHTML = `<img src="${img.src}" loading="lazy">`;
                     }
