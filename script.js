@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const CAT_LINKS = {
     'ABOUT': 'LightningHornUnicorn.html',
     'VHS MULTIVERSE': 'vhsmultiverse.html',
-    'HUMANART': 'humanart/humanart.html',
+    'HUMANART': 'humanart.html',
     'PROJECTS': 'projects.html',
     'STORYTIME': 'chapters/chapter00000001.html',
     'MUSIC': 'music.html',
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'CONTACT': 'pixelart_contactpic.png',
     'DONATE': 'pixelart_donatepic.png'
   };
-  const pixelartBase = (location.pathname.includes('/chapters/') || location.pathname.includes('/vhsmultiverse/') || location.pathname.includes('/humanart/') || location.pathname.includes('/projects/')) ? '../pixelart/' : 'pixelart/';
+  const pixelartBase = (location.pathname.includes('/chapters/') || location.pathname.includes('/vhsmultiverse/') || location.pathname.includes('/projects/')) ? '../pixelart/' : 'pixelart/';
   const LASER_SPEEDS = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55];
   const strip = document.getElementById('catStrip');
   const track = document.getElementById('catTrack');
