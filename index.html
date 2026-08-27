@@ -377,10 +377,8 @@ document.getElementById("head-select").addEventListener("change", e => {
   loadHead(e.target.value);
 });
 
-/* START (EXPLICIT RAW URL) */
-loadHead(
-  "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb"
-);
+/* START: auto-load whatever is selected in the dropdown (first option by default) */
+loadHead(selectEl.value);
 
 /* LOOP */
 function animate() {
