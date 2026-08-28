@@ -3,7 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Lightning Horn Unicorn</title>
+<title>Lightning Horn Unicorn | Creative Studio by Vedran Lukic</title>
+
+<!-- Favicon: eigenes Einhorn-Bild von Vedran (liegt neben dieser Datei) -->
+<link rel="icon" href="lhu_favicon.png" type="image/png" />
+<link rel="apple-touch-icon" href="lhu_favicon.png" />
+
+<!-- ============================================================
+     SEO: exakte Titel/Beschreibung und Social-Cards.
+     Die vorgegebenen Texte nicht abändern.
+     ============================================================ -->
+<meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas." />
+<meta name="author" content="Vedran Lukic" />
+<meta name="theme-color" content="#04050a" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Lightning Horn Unicorn | Creative Studio by Vedran Lukic" />
+<meta property="og:description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas." />
+<meta property="og:image" content="lhu_favicon.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Lightning Horn Unicorn | Creative Studio by Vedran Lukic" />
+<meta name="twitter:description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas." />
 
 <!-- ============================================================
      MODERNISIERTE INDEX.HTML
@@ -27,6 +46,17 @@
   }
 
   * { box-sizing: border-box; }
+
+  /* Für Suchmaschinen lesbarer Text, optisch aber unsichtbar */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 
   html, body {
     margin: 0;
@@ -172,6 +202,15 @@
 <!-- Dezenter Titel -->
 <div id="title">Lightning Horn Unicorn</div>
 
+<!-- Für Suchmaschinen lesbarer Beschreibungstext (optisch versteckt) -->
+<p class="sr-only">
+  Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist
+  Vedran Lukic, with cocreator and creative partner Aether Veylan. It brings together music,
+  writing, conceptual art, 3D design and experimental ideas. This interactive viewer loads
+  reflective unicorn models in the browser via WebGL (Three.js); the models can be rotated and
+  zoomed and reflect an HDRI environment, complemented by a colorful matrix rain and background music.
+</p>
+
 <!-- Lade-Overlay -->
 <div id="loading">
   <div class="spinner"></div>
@@ -210,7 +249,8 @@
     // Canvas in CSS-Pixeln (kein DPR-Scaling nötig -> spart Leistung)
     mcanvas.width = innerWidth;
     mcanvas.height = innerHeight;
-    fontSize = Math.max(14, Math.round(innerWidth / 52));
+    // größere Glyphen für mehr Präsenz
+    fontSize = Math.max(24, Math.round(innerWidth / 32));
     cols = Math.ceil(innerWidth / fontSize);
     drops = new Array(cols);
     hues = new Array(cols);
@@ -218,24 +258,25 @@
     for (let i = 0; i < cols; i++) {
       drops[i] = Math.random() * -innerHeight / fontSize;
       hues[i] = Math.floor(Math.random() * 360);
-      speeds[i] = 0.35 + Math.random() * 0.7;
+      speeds[i] = 0.12 + Math.random() * 0.16; // ruhig langsameres Fallen
     }
     mctx.font = fontSize + "px monospace";
   }
   setupMatrix();
 
   function drawMatrix() {
-    // Trail-Fade: dunkle, leicht transparente Fläche statt komplett löschen
-    mctx.fillStyle = "rgba(4, 5, 10, 0.12)";
+    // längere Trails (niedrige Fade-Alpha) -> hypnotischer Nachzieh-Effekt
+    mctx.fillStyle = "rgba(4, 5, 10, 0.08)";
     mctx.fillRect(0, 0, mcanvas.width, mcanvas.height);
     mctx.font = fontSize + "px monospace";
 
     for (let i = 0; i < cols; i++) {
       const x = i * fontSize;
       const y = drops[i] * fontSize;
-      // helle Spitze für Tiefe, farbiger Schaft
-      mctx.fillStyle = "hsl(" + hues[i] + ", 100%, 70%)";
+      // helle Spitze + langsam fliessende Farbe pro Spalte
+      mctx.fillStyle = "hsl(" + hues[i] + ", 100%, 82%)";
       mctx.fillText("7", x, y);
+      hues[i] = (hues[i] + 0.12) % 360; // sanfte Farbwelle
 
       drops[i] += speeds[i];
       if (y > innerHeight && Math.random() > 0.975) {
