@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Lightning Horn Unicorn | Creative Studio by Vedran Lukic</title>
 
-<!-- Favicon: eigenes Einhorn-Bild von Vedran (liegt neben dieser Datei) -->
+<!-- Favicon: SVG zuerst (skaliert scharf), PNG als Fallback (v.a. Safari) -->
+<link rel="icon" href="lhu_favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="lhu_favicon.png" type="image/png" />
 <link rel="apple-touch-icon" href="lhu_favicon.png" />
 
@@ -249,8 +250,8 @@
     // Canvas in CSS-Pixeln (kein DPR-Scaling nötig -> spart Leistung)
     mcanvas.width = innerWidth;
     mcanvas.height = innerHeight;
-    // größere Glyphen für mehr Präsenz
-    fontSize = Math.max(24, Math.round(innerWidth / 32));
+    // noch größere Glyphen für mehr Präsenz
+    fontSize = Math.max(40, Math.round(innerWidth / 18));
     cols = Math.ceil(innerWidth / fontSize);
     drops = new Array(cols);
     hues = new Array(cols);
