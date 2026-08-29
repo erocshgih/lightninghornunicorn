@@ -218,6 +218,9 @@
   <span class="loading-text">loading</span>
 </div>
 
+<!-- Sichtbarer Fehler-Banner (hilft auf Mobile, wo sonst nur "nix" erscheint) -->
+<div id="err" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#300;color:#f99;font:12px monospace;padding:8px;white-space:pre-wrap"></div>
+
 <!-- Obere Buttons -->
 <div id="ui-wrapper">
   <button id="music-toggle" class="btn glass">Music Off</button>
@@ -316,6 +319,14 @@
 <!-- ============================================================
      3D + MODELL-LOGIK
      ============================================================ -->
+<script>
+  function showErr(msg) {
+    const d = document.getElementById("err");
+    if (d) { d.style.display = "block"; d.textContent = "Fehler: " + msg; }
+  }
+  window.addEventListener("error", (e) => showErr((e.message || "") + " @ " + (e.filename || "") + ":" + (e.lineno || "")));
+  window.addEventListener("unhandledrejection", (e) => showErr("Promise: " + (e.reason && e.reason.message ? e.reason.message : e.reason)));
+</script>
 <script type="module">
   import * as THREE from "https://esm.sh/three@0.160.0";
   import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
