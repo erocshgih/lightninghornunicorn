@@ -222,12 +222,17 @@
 <div id="ui-wrapper">
   <button id="music-toggle" class="btn glass">Music Off</button>
   <button id="navigate-to-main" class="btn glass">Main Page</button>
+  <button id="heart-btn" class="btn glass" style="color:#ff3d6e;font-size:1.35em;line-height:1" title="rizz">&#9829;</button>
 </div>
 
 <!-- Hintergrundmusik -->
-<audio id="background-music" preload="auto" crossorigin="anonymous" loop>
-  <source src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unison_unicorns.mp3" type="audio/mpeg">
-</audio>
+  <audio id="background-music" preload="auto" crossorigin="anonymous" loop>
+    <source src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/unison_unicorns.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Herz-Gag Sounds -->
+  <audio id="snd-wolf" preload="auto" src="wolfwhistttle.mp3"></audio>
+  <audio id="snd-rizz" preload="auto" src="rizz-sound-effect.mp3"></audio>
 
 <!-- Dropdown zur Modell-Auswahl -->
 <div id="head-menu">
@@ -450,6 +455,70 @@
     location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html";
   };
 
+  /* ---------- HERZ-GAG ----------
+     Herz-Button -> erst Wolf-Whistle, danach Rizz.
+     Zur selben Zeit: verführerische Modell-Bewegung + Kamera-Closeup
+     auf den Augenbereich (oben-vorne der Bounding-Box). */
+  const heartBtn = document.getElementById("heart-btn");
+  const sndWolf = document.getElementById("snd-wolf");
+  const sndRizz = document.getElementById("snd-rizz");
+  let gagActive = false, gagStart = 0, gagBase = null;
+  const gagSize = new THREE.Vector3();
+  let camTween = null;
+
+  function tweenCamera(toPos, toTarget, dur, onDone) {
+    camTween = {
+      fromPos: camera.position.clone(), toPos: toPos.clone(),
+      fromTarget: controls.target.clone(), toTarget: toTarget.clone(),
+      start: performance.now(), dur, onDone
+    };
+    controls.enabled = false;
+    controls.autoRotate = false;
+  }
+
+  function eyePoint() {
+    const box = new THREE.Box3().setFromObject(object);
+    const size = new THREE.Vector3(); box.getSize(size);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const eye = new THREE.Vector3(center.x, box.max.y - size.y * 0.12, box.max.z + size.z * 0.1);
+    return { eye, size };
+  }
+
+  function startGag() {
+    if (!object) return;
+    sndWolf.currentTime = 0;
+    sndWolf.play().catch(() => {});
+    sndWolf.onended = () => {
+      sndRizz.currentTime = 0;
+      sndRizz.play().catch(() => {});
+      sndRizz.onended = endGag;
+    };
+    gagActive = true;
+    gagStart = performance.now();
+    gagBase = object.position.clone();
+    const { eye, size } = eyePoint();
+    gagSize.copy(size);
+    const closePos = eye.clone().add(
+      new THREE.Vector3(size.x * 0.25, size.y * 0.02, size.z * 0.55 + size.length() * 0.35)
+    );
+    tweenCamera(closePos, eye, 650);
+  }
+
+  function endGag() {
+    if (gagBase) object.position.copy(gagBase);
+    object.rotation.z = 0;
+    object.rotation.y = 0;
+    gagActive = false;
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => {
+      controls.autoRotate = true;
+    });
+  }
+
+  heartBtn.addEventListener("click", () => {
+    if (gagActive) return;
+    startGag();
+  });
+
   /* ---------- DROPDOWN + AUTOLOAD ---------- */
   const selectEl = document.getElementById("head-select");
   MODELS.forEach((m) => {
@@ -466,10 +535,32 @@
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta);
-    controls.update();
+
+    if (camTween) {
+      const k = Math.min(1, (performance.now() - camTween.start) / camTween.dur);
+      const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; // easeInOut
+      camera.position.lerpVectors(camTween.fromPos, camTween.toPos, e);
+      controls.target.lerpVectors(camTween.fromTarget, camTween.toTarget, e);
+      camera.lookAt(controls.target);
+      if (k >= 1) {
+        const d = camTween.onDone; camTween = null; controls.enabled = true;
+        if (d) d();
+      }
+    } else {
+      controls.update();
+    }
+
     if (object) {
-      // autoRotate übernimmt die Drehung; bei Musik zusätzlich Nicken
-      if (musicOn) {
+      if (gagActive) {
+        // verführerisches Wiegen + sanfter Stoß nach vorn (naja "erotisch")
+        const tt = (performance.now() - gagStart) / 1000;
+        const amp = gagSize.length() * 0.04;
+        object.position.x = gagBase.x + Math.sin(tt * 5) * amp;
+        object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6;
+        object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
+        object.rotation.z = Math.sin(tt * 5) * 0.08;
+        object.rotation.y = Math.sin(tt * 3) * 0.12;
+      } else if (musicOn) {
         const t = Date.now() * 0.001;
         object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.08;
       } else {
