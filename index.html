@@ -272,14 +272,7 @@
   }
   setupMatrix();
 
-  let matrixRunning = true;
-
   function drawMatrix() {
-    if (!matrixRunning) {
-      requestAnimationFrame(drawMatrix);
-      return;
-    }
-
     // KEINE Trails: jeden Frame komplett leeren -> keine Streifen
     mctx.clearRect(0, 0, mcanvas.width, mcanvas.height);
 
@@ -364,16 +357,10 @@
      pixelRatio auf max. 2 (bzw. 1.5 auf Mobile) gedeckelt -> flüssig auf
      Mittelklasse 2023, trotz voller Auflösung + Antialias. */
   const isMobile = matchMedia("(max-width: 820px)").matches;
-  const renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    antialias: !isMobile
-  });
-
-  // Mobile: keep the normal viewer light, and temporarily reduce render load
-  // during the rizz close-up instead of rendering at high DPR.
-  const normalPixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 2);
-  const gagPixelRatio = isMobile ? 0.75 : normalPixelRatio;
-  renderer.setPixelRatio(normalPixelRatio);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  // Keep the proven renderer settings. The performance reduction happens
+  // only while the Rizz effect is actually running.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -480,6 +467,7 @@
   let gagActive = false, gagStart = 0, gagBase = null;
   const gagSize = new THREE.Vector3();
   let camTween = null;
+  let lastGagRender = 0;
 
   function tweenCamera(toPos, toTarget, dur, onDone) {
     camTween = {
@@ -504,15 +492,9 @@
     gagActive = true;
     gagStart = performance.now();
     gagBase = object.position.clone();
+    lastGagRender = 0;
     const { eye, size } = eyePoint();
     gagSize.copy(size);
-
-    // Mobile safety: the close-up is the expensive part. Reduce GPU
-    // resolution and stop the independent Matrix canvas while it runs.
-    if (isMobile) {
-      renderer.setPixelRatio(gagPixelRatio);
-      matrixRunning = false;
-    }
     const closePos = eye.clone().add(
       new THREE.Vector3(size.x * 0.25, size.y * 0.02, size.z * 0.55 + size.length() * 0.35)
     );
@@ -545,12 +527,6 @@
     object.rotation.z = 0;
     object.rotation.y = 0;
     gagActive = false;
-
-    if (isMobile) {
-      renderer.setPixelRatio(normalPixelRatio);
-      matrixRunning = true;
-    }
-
     tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => {
       controls.autoRotate = true;
     });
@@ -575,6 +551,15 @@
   /* ---------- ANIMATIONS-SCHLEIFE ---------- */
   function animate() {
     requestAnimationFrame(animate);
+
+    // Mobile performance guard: while Rizz is active, render at max ~30 FPS.
+    // The normal viewer remains completely unchanged.
+    if (isMobile && gagActive) {
+      const now = performance.now();
+      if (now - lastGagRender < 33) return;
+      lastGagRender = now;
+    }
+
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta);
 
@@ -596,14 +581,12 @@
       if (gagActive) {
         // verführerisches Wiegen + sanfter Stoß nach vorn (naja "erotisch")
         const tt = (performance.now() - gagStart) / 1000;
-        // Keep the movement, but halve its complexity on small devices.
-        const motionScale = isMobile ? 0.65 : 1;
-        const amp = gagSize.length() * 0.04 * motionScale;
+        const amp = gagSize.length() * 0.04;
         object.position.x = gagBase.x + Math.sin(tt * 5) * amp;
         object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6;
         object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
-        object.rotation.z = Math.sin(tt * 5) * 0.08 * motionScale;
-        object.rotation.y = Math.sin(tt * 3) * 0.12 * motionScale;
+        object.rotation.z = Math.sin(tt * 5) * 0.08;
+        object.rotation.y = Math.sin(tt * 3) * 0.12;
       } else if (musicOn) {
         const t = Date.now() * 0.001;
         object.rotation.x = Math.sin(t * (Math.PI / nodSpeed)) * 0.08;
@@ -619,7 +602,6 @@
   window.addEventListener("resize", () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(gagActive && isMobile ? gagPixelRatio : normalPixelRatio);
     renderer.setSize(innerWidth, innerHeight);
   });
 </script>
