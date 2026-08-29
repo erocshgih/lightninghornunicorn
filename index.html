@@ -486,13 +486,6 @@
 
   function startGag() {
     if (!object) return;
-    sndWolf.currentTime = 0;
-    sndWolf.play().catch(() => {});
-    sndWolf.onended = () => {
-      sndRizz.currentTime = 0;
-      sndRizz.play().catch(() => {});
-      sndRizz.onended = endGag;
-    };
     gagActive = true;
     gagStart = performance.now();
     gagBase = object.position.clone();
@@ -502,7 +495,28 @@
       new THREE.Vector3(size.x * 0.25, size.y * 0.02, size.z * 0.55 + size.length() * 0.35)
     );
     tweenCamera(closePos, eye, 650);
+
+    // Mobilsichere Wiedergabe: wolf -> rizz, mit Garantie dass endGag läuft,
+    // falls der Browser den 2. Sound (kein User-Gesture) blockt.
+    let finished = false;
+    const finish = () => { if (finished) return; finished = true; endGag(); };
+    sndWolf.currentTime = 0;
+    sndWolf.play().catch(() => {});
+    sndWolf.onended = () => {
+      sndRizz.currentTime = 0;
+      sndRizz.play().catch(finish);
+      sndRizz.onended = finish;
+    };
+    // Fallback: falls Mobile die Audiowiedergabe komplett blockt
+    setTimeout(finish, 9000);
   }
+
+  // iOS/Android: Audio bei erstem Tap "freischalten", damit play() später klappt
+  function unlockAudio() {
+    try { sndWolf.load(); sndRizz.load(); } catch (e) {}
+  }
+  window.addEventListener("pointerdown", unlockAudio, { once: true });
+  window.addEventListener("touchstart", unlockAudio, { once: true });
 
   function endGag() {
     if (gagBase) object.position.copy(gagBase);
