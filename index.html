@@ -352,7 +352,7 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 99999;
     display: none;
   }
 
@@ -398,7 +398,7 @@
     transform: translateY(-50%);
     border-radius: 999px;
     background: inherit;
-    filter: none; /* removed blur */ /*7px);
+    filter: none;
     opacity: .45;
   }
 
@@ -904,7 +904,9 @@
     });
 
     sndRainbow.currentTime = 0;
-    sndRainbow.play().catch(() => {});
+    sndRainbow.play().catch((err) => {
+      console.warn("rainbow.mp3 konnte nicht abgespielt werden:", err);
+    });
 
     controls.enabled = false;
     controls.autoRotate = false;
