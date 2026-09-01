@@ -230,7 +230,7 @@
   #loading {
     position: fixed;
     inset: 0;
-    z-index: 30;
+    z-index: 100001;
     display: none;
     flex-direction: column;
     align-items: center;
@@ -646,6 +646,23 @@
     { label: "askflamongostache",     url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" }
   ];
 
+  /* ---------- INTRO AUDIO PRELOAD ---------- */
+  const introAudioEl = document.getElementById("lhu-intro-audio");
+  let introAudioReady = !introAudioEl;
+  if (introAudioEl) {
+    introAudioEl.preload = "auto";
+    introAudioEl.addEventListener("canplaythrough", () => {
+      introAudioReady = true;
+    }, { once: true });
+    introAudioEl.addEventListener("error", () => {
+      // Do not deadlock the page if the soundtrack cannot be fetched.
+      introAudioReady = true;
+      console.warn("LHU-Intro-Sound konnte nicht geladen werden.");
+    }, { once: true });
+    introAudioEl.load();
+    if (introAudioEl.readyState >= 3) introAudioReady = true;
+  }
+
   /* ---------- LADEN-ANZEIGE ---------- */
   const loadingEl = document.getElementById("loading");
   const loadingText = loadingEl.querySelector(".loading-text");
@@ -661,6 +678,7 @@
   }
   function stopLoading() {
     clearInterval(loadingTimer);
+    if (!introAudioReady) return;
     loadingEl.classList.remove("show");
   }
 
@@ -1012,20 +1030,10 @@
   /* ---------- CINEMATIC LHU INTRO ---------- */
   (() => {
     const intro = document.getElementById("lhu-intro");
-    // Intro soundtrack. Keep it local and lightweight.
-    const lhuIntroAudio = document.getElementById("lhu-intro-audio");
+    // Intro-Sound zuerst vollständig anladen. Erst danach startet die Bildanimation.
+    const lhuIntroAudio = introAudioEl;
     if (lhuIntroAudio) {
       lhuIntroAudio.volume = 1.0;
-      const playIntroAudio = () => {
-        lhuIntroAudio.play().catch(() => {});
-      };
-
-      // Erst startet der visuelle Text. Eine halbe Sekunde später kommt der Sound.
-      setTimeout(playIntroAudio, 500);
-
-      // Falls der Browser Autoplay blockiert, startet der erste echte User-Input den Sound.
-      window.addEventListener("pointerdown", playIntroAudio, { once: true });
-      window.addEventListener("keydown", playIntroAudio, { once: true });
     }
 
     const canvas = document.getElementById("lhu-intro-canvas");
@@ -1309,7 +1317,42 @@
       seed();
     });
 
-    requestAnimationFrame(animateIntro);
+    let introStarted = false;
+
+    const startIntroWhenReady = () => {
+      if (introStarted) return;
+      introStarted = true;
+
+      // Jetzt ist die MP3 geladen: Loading ausblenden, Sound starten, dann Animation.
+      stopLoading();
+
+      if (lhuIntroAudio) {
+        lhuIntroAudio.currentTime = 0;
+        lhuIntroAudio.play().catch(() => {
+          // Autoplay-Fallback: erster echter User-Input.
+          const unlock = () => {
+            lhuIntroAudio.play().catch(() => {});
+            window.removeEventListener("pointerdown", unlock);
+            window.removeEventListener("keydown", unlock);
+          };
+          window.addEventListener("pointerdown", unlock, { once: true });
+          window.addEventListener("keydown", unlock, { once: true });
+        });
+      }
+
+      // Sound startet sofort nach der Bereitschaft, die Animation folgt einen Tick später.
+      requestAnimationFrame(animateIntro);
+    };
+
+    if (introAudioReady) {
+      startIntroWhenReady();
+    } else {
+      const waitForIntroAudio = () => {
+        if (introAudioReady) startIntroWhenReady();
+        else setTimeout(waitForIntroAudio, 50);
+      };
+      waitForIntroAudio();
+    }
   })();
 
   /* ---------- ANIMATIONS-SCHLEIFE ---------- */
