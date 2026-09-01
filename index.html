@@ -475,7 +475,7 @@
 
 
 <body>
-  <audio id="lhu-intro-audio" src="lhu.mp3" preload="auto"></audio>
+  <audio id="lhu-intro-audio" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lhu.mp3" preload="auto"></audio>
 
   <div id="lhu-intro" aria-hidden="true">
     <canvas id="lhu-intro-canvas"></canvas>
@@ -544,9 +544,9 @@
   </audio>
 
   <!-- Herz-Gag Sounds -->
-  <audio id="snd-wolf" preload="auto" src="wolfwhistttle.mp3"></audio>
-  <audio id="snd-rizz" preload="auto" src="rizz-sound-effect.mp3"></audio>
-  <audio id="snd-rainbow" preload="auto" src="rainbow.mp3"></audio>
+  <audio id="snd-wolf" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/wolfwhistttle.mp3"></audio>
+  <audio id="snd-rizz" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rizz-sound-effect.mp3"></audio>
+  <audio id="snd-rainbow" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Rainbow.mp3"></audio>
 
 <!-- Dropdown zur Modell-Auswahl -->
 <div id="head-menu">
@@ -1290,10 +1290,7 @@
         intro.style.opacity = "0";
         setTimeout(() => {
           intro.remove();
-          if (lhuIntroAudio) {
-            lhuIntroAudio.pause();
-            lhuIntroAudio.currentTime = 0;
-          }
+          // LHU intro soundtrack continues playing after the visual intro ends.
         }, 260);
         return;
       }
