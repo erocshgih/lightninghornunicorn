@@ -166,97 +166,37 @@
     opacity: 0;
   }
 
-/* Symmetrischer holographischer Glitch für die Intro-Schrift */
-#lhu-intro-word {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  isolation: isolate;
+/* Three intro pills */
+#lhu-enter-panel { display:flex; flex-direction:column; align-items:center; gap:18px; }
+#lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap:22px; width:min(88vw,420px); }
+.lhu-pill {
+  width:94px; height:94px; border-radius:50%;
+  border:3px solid rgba(210,210,210,.65); cursor:pointer;
+  box-shadow:inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.18), 0 0 18px rgba(255,255,255,.12);
+  transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
 }
-
-#lhu-intro-word span {
-  position: relative;
-  display: block;
-  overflow: visible;
-  text-shadow:
-    0 0 4px rgba(255,255,255,.95),
-    0 0 12px rgba(255,220,90,.55),
-    0 0 24px rgba(120,220,255,.28);
-  animation:
-    lhu-holo-flicker 2.7s steps(1,end) infinite;
+.lhu-pill:hover { transform:translateY(-3px) scale(1.04); filter:brightness(1.25); }
+.lhu-pill:active { transform:translateY(2px) scale(.96); }
+.lhu-pill-red { background:radial-gradient(circle at 34% 27%,#ff9b9b 0 7%,#e33131 28%,#8d0909 72%,#390000 100%); }
+.lhu-pill-yellow { background:radial-gradient(circle at 34% 27%,#fff4a0 0 7%,#f0c51f 28%,#9c7800 72%,#3e3000 100%); }
+.lhu-pill-blue { background:radial-gradient(circle at 34% 27%,#9edcff 0 7%,#2587db 28%,#0c397c 72%,#00162f 100%); }
+#lhu-pill-hint {
+  font-family:"Courier New",monospace; font-weight:700; letter-spacing:.18em;
+  font-size:clamp(11px,2.4vw,15px); color:rgba(210,255,210,.78);
+  text-shadow:0 0 8px rgba(0,255,80,.45);
 }
-
-#lhu-intro-word span::before,
-#lhu-intro-word span::after {
-  content: attr(data-glitch);
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: screen;
+#lhu-intro.lhu-intro-red #lhu-intro-vignette {
+  background:radial-gradient(circle at center,rgba(255,20,20,.14),rgba(90,0,0,.56) 68%,rgba(0,0,0,.94));
 }
-
-#lhu-intro-word span::before {
-  color: rgba(90,225,255,.9);
-  transform: translateX(-5px);
-  clip-path: inset(18% 0 62% 0);
+#lhu-intro.lhu-intro-yellow #lhu-intro-vignette {
+  background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94));
 }
-
-#lhu-intro-word span::after {
-  color: rgba(255,80,210,.85);
-  transform: translateX(5px);
-  clip-path: inset(62% 0 18% 0);
+#lhu-intro.lhu-intro-blue #lhu-intro-vignette {
+  background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94));
 }
-
-#lhu-intro-word span.holo-glitch::before,
-#lhu-intro-word span.holo-glitch::after {
-  opacity: .9;
-  animation: lhu-holo-slice .34s steps(2,end);
-}
-
-@keyframes lhu-holo-slice {
-  0%   { opacity: 0; transform: translateX(0) scaleX(1); }
-  18%  { opacity: .95; transform: translateX(-6px) scaleX(1.012); }
-  36%  { opacity: .7; transform: translateX(0) scaleX(1); }
-  54%  { opacity: .9; transform: translateX(6px) scaleX(1.012); }
-  72%  { opacity: .35; transform: translateX(0) scaleX(1); }
-  100% { opacity: 0; transform: translateX(0) scaleX(1); }
-}
-
-@keyframes lhu-holo-flicker {
-  0%, 76%, 100% { opacity: 1; filter: none; }
-  77% { opacity: .82; filter: brightness(1.35); }
-  78% { opacity: 1; }
-  79% { opacity: .72; filter: contrast(1.25); }
-  80% { opacity: 1; }
-}
-
-
-/* Zusätzlicher symmetrischer Hologramm-Schnitt */
-#lhu-intro-word > span.holo-glitch {
-  animation:
-    lhu-holo-flicker .28s steps(1,end),
-    lhu-holo-jitter .28s steps(2,end);
-}
-
-#lhu-intro-word > span.holo-glitch::before {
-  transform: translateX(-7px) skewX(-1deg);
-  clip-path: inset(20% 0 58% 0);
-}
-
-#lhu-intro-word > span.holo-glitch::after {
-  transform: translateX(7px) skewX(1deg);
-  clip-path: inset(58% 0 20% 0);
-}
-
-@keyframes lhu-holo-jitter {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  50% { transform: translateX(0); }
-  75% { transform: translateX(2px); }
-}
+#lhu-intro.lhu-intro-red #lhu-intro-word span { text-shadow:0 0 8px rgba(255,80,80,.95),0 0 20px rgba(255,0,0,.45); }
+#lhu-intro.lhu-intro-yellow #lhu-intro-word span { text-shadow:0 0 8px rgba(255,240,80,.95),0 0 20px rgba(255,210,0,.45); }
+#lhu-intro.lhu-intro-blue #lhu-intro-word span { text-shadow:0 0 8px rgba(100,190,255,.95),0 0 20px rgba(20,100,255,.45); }
 
 </style>
 <style>
@@ -634,14 +574,19 @@
 
 
 <body>
-  <audio id="lhu-intro-audio" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/lhu.mp3" preload="auto"></audio>
+  <audio id="lhu-intro-audio" src="lhuyellow.mp3" preload="auto"></audio>
 
   <div id="lhu-intro" aria-hidden="true">
     <canvas id="lhu-intro-canvas"></canvas>
     <div id="lhu-intro-vignette"></div>
     <div id="lhu-enter-panel">
       <div id="lhu-image-slot" aria-label="Image placeholder"></div>
-      <button id="lhu-enter" type="button">ENTER</button>
+      <div id="lhu-pill-buttons" aria-label="Choose intro">
+        <button class="lhu-pill lhu-pill-red" data-intro="red" type="button" aria-label="Red intro"></button>
+        <button class="lhu-pill lhu-pill-yellow" data-intro="yellow" type="button" aria-label="Yellow intro"></button>
+        <button class="lhu-pill lhu-pill-blue" data-intro="blue" type="button" aria-label="Blue intro"></button>
+      </div>
+      <div id="lhu-pill-hint">ENTER</div>
     </div>
     <div id="lhu-intro-word">
       <span>LIGHTNING</span>
@@ -1306,16 +1251,17 @@
     }
 
     function animateIntro(now) {
-      const t = ((now - introStart) / 1000) / 2; // Intro bewusst auf die doppelte Laufzeit gedehnt
+      // Intro bewusst auf ca. die doppelte Laufzeit gestreckt.
+      const t = (now - introStart) / 1000 / 2;
       const dt = Math.min(.05, (now - last) / 1000);
       last = now;
 
       ctx.clearRect(0, 0, W, H);
 
-      // 0.0-1.5: darkness + fractal lightning ignition
+      // 0.0-3.0: darkness + fractal lightning ignition
       const lightning = Math.min(1, t / 1.5);
 
-      // 0.9-4.8: typography forms a slower 3D spiral.
+      // 1.5-9.6 nominal typography window, stretched by the intro time scale.
       const textT = Math.max(0, Math.min(1, (t - .75) / 2.8));
       const textEase = textT * textT * (3 - 2 * textT);
       const spiral = textEase * Math.PI * 3.0;
@@ -1436,6 +1382,18 @@
         stack.style.opacity = String(fadeIn * (1 - fadeOut));
         word.appendChild(stack);
 
+        // Symmetrischer Hologramm-Glitch:
+        // Beide Seiten bekommen denselben kurzen RGB-Split, aber gespiegelt.
+        // Die Pulse sind selten genug, damit die Wörter weiterhin klar lesbar bleiben.
+        const glitchPhase = Math.sin(t * 17.0);
+        const glitchPulse = Math.max(0, glitchPhase - 0.82) / 0.18;
+        if (glitchPulse > 0 && local > .08 && local < .76) {
+          const g = glitchPulse * 2.2;
+          stack.style.textShadow =
+            `0 0 ${glowPulse}px rgba(255,212,0,.75), ${g}px 0 0 rgba(0,255,255,.48), -${g}px 0 0 rgba(255,0,180,.42)`;
+          stack.style.letterSpacing = `${Math.sin(t * 31) * g * .16}px`;
+        }
+
         // Compact lightning flash at the transition into each word.
         const strikeOpacity = local < .20 ? String(1 - local / .20) : "0";
         const pulse = Math.max(0, 1 - local / .20);
@@ -1471,9 +1429,10 @@
     });
 
     let introStarted = false;
-    const enterButton = document.getElementById("lhu-enter");
+    const pillButtons = Array.from(document.querySelectorAll(".lhu-pill"));
+    const introOverlay = document.getElementById("lhu-intro");
 
-    const startIntro = () => {
+    const startIntro = (variant) => {
       if (introStarted) return;
       introStarted = true;
 
@@ -1483,23 +1442,35 @@
         enterPanel.style.display = "none";
       }
 
-      // ENTER is a real user gesture: start lhu.mp3 exactly once.
+      if (introOverlay) {
+        introOverlay.classList.remove("lhu-intro-red", "lhu-intro-yellow", "lhu-intro-blue");
+        introOverlay.classList.add("lhu-intro-" + variant);
+      }
+
+      const audioSources = {
+        red: "lhured.mp3",
+        yellow: "lhuyellow.mp3",
+        blue: "lhublue.mp3"
+      };
+
       if (lhuIntroAudio) {
+        lhuIntroAudio.pause();
         lhuIntroAudio.currentTime = 0;
+        lhuIntroAudio.src = audioSources[variant] || audioSources.yellow;
+        lhuIntroAudio.load();
         lhuIntroAudio.play().catch((err) => {
           console.warn("LHU-Intro-Sound konnte nicht abgespielt werden:", err);
         });
       }
 
-      // Start the visual intro exactly once.
       introStart = performance.now();
       last = introStart;
       requestAnimationFrame(animateIntro);
     };
 
-    if (enterButton) {
-      enterButton.addEventListener("click", startIntro, { once: true });
-    }
+    pillButtons.forEach((button) => {
+      button.addEventListener("click", () => startIntro(button.dataset.intro), { once: true });
+    });
   })();
 
   /* ---------- ANIMATIONS-SCHLEIFE ---------- */
@@ -1683,36 +1654,5 @@
     renderer.setSize(innerWidth, innerHeight);
   });
 </script>
-
-<script>
-(() => {
-  const word = document.getElementById("lhu-intro-word");
-  if (!word) return;
-  let glitchTimer = null;
-  const triggerHoloGlitch = () => {
-    const active = [...word.children].find(el => el.tagName === "SPAN");
-    if (!active) return;
-
-    active.setAttribute("data-glitch", active.textContent);
-    active.classList.remove("holo-glitch");
-    void active.offsetWidth;
-    active.classList.add("holo-glitch");
-
-    clearTimeout(glitchTimer);
-    glitchTimer = setTimeout(() => {
-      active.classList.remove("holo-glitch");
-    }, 340);
-  };
-
-  // Kurze holographische Impulse. Vorher-/Nachher-Slice sind spiegelbildlich,
-  // damit der Font nicht seitlich "wegkippt".
-  setInterval(() => {
-    const intro = document.getElementById("lhu-intro");
-    if (!intro || intro.style.opacity === "0") return;
-    if (Math.random() < 0.78) triggerHoloGlitch();
-  }, 1050);
-})();
-</script>
-
 </body>
 </html>
