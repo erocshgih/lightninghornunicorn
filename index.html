@@ -1019,7 +1019,11 @@
       const playIntroAudio = () => {
         lhuIntroAudio.play().catch(() => {});
       };
-      playIntroAudio();
+
+      // Erst startet der visuelle Text. Eine halbe Sekunde später kommt der Sound.
+      setTimeout(playIntroAudio, 500);
+
+      // Falls der Browser Autoplay blockiert, startet der erste echte User-Input den Sound.
       window.addEventListener("pointerdown", playIntroAudio, { once: true });
       window.addEventListener("keydown", playIntroAudio, { once: true });
     }
