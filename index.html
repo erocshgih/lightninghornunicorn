@@ -47,7 +47,7 @@
     background: #000;
     opacity: 1;
     transition: opacity .22s ease;
-    pointer-events: none;
+    pointer-events: auto;
   }
 
   #lhu-intro-canvas {
@@ -66,6 +66,67 @@
         rgba(0,0,0,.28) 55%,
         rgba(0,0,0,.96) 100%);
     mix-blend-mode: multiply;
+  }
+
+  #lhu-enter-panel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: min(82vw, 420px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  #lhu-image-slot {
+    width: min(68vw, 300px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(255,255,255,.55);
+    background: rgba(0,0,0,.38);
+    box-shadow:
+      0 0 24px rgba(255,255,255,.12),
+      inset 0 0 30px rgba(255,255,255,.04);
+  }
+
+  #lhu-enter {
+    width: 100%;
+    min-height: 92px;
+    padding: 20px 34px;
+    border: 2px solid rgba(255,255,255,.82);
+    border-radius: 3px;
+    background: rgba(0,0,0,.52);
+    color: #fff;
+    font: 900 38px/1 Impact, Haettenschweiler, "Arial Black", sans-serif;
+    letter-spacing: .25em;
+    cursor: pointer;
+    text-align: center;
+    text-indent: .25em;
+    text-shadow: 0 0 14px rgba(255,255,255,.85);
+    box-shadow:
+      0 0 24px rgba(255,255,255,.2),
+      inset 0 0 24px rgba(255,255,255,.06);
+    transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  }
+
+  #lhu-enter:hover {
+    background: rgba(255,255,255,.09);
+    box-shadow:
+      0 0 36px rgba(255,255,255,.34),
+      inset 0 0 24px rgba(255,255,255,.09);
+    transform: scale(1.025);
+  }
+
+  #lhu-enter:active {
+    transform: scale(.98);
+  }
+
+  #lhu-enter.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease;
   }
 
   #lhu-intro-word {
@@ -104,6 +165,99 @@
   #lhu-intro.flash #lhu-intro-word {
     opacity: 0;
   }
+
+/* Symmetrischer holographischer Glitch für die Intro-Schrift */
+#lhu-intro-word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  isolation: isolate;
+}
+
+#lhu-intro-word span {
+  position: relative;
+  display: block;
+  overflow: visible;
+  text-shadow:
+    0 0 4px rgba(255,255,255,.95),
+    0 0 12px rgba(255,220,90,.55),
+    0 0 24px rgba(120,220,255,.28);
+  animation:
+    lhu-holo-flicker 2.7s steps(1,end) infinite;
+}
+
+#lhu-intro-word span::before,
+#lhu-intro-word span::after {
+  content: attr(data-glitch);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+#lhu-intro-word span::before {
+  color: rgba(90,225,255,.9);
+  transform: translateX(-5px);
+  clip-path: inset(18% 0 62% 0);
+}
+
+#lhu-intro-word span::after {
+  color: rgba(255,80,210,.85);
+  transform: translateX(5px);
+  clip-path: inset(62% 0 18% 0);
+}
+
+#lhu-intro-word span.holo-glitch::before,
+#lhu-intro-word span.holo-glitch::after {
+  opacity: .9;
+  animation: lhu-holo-slice .34s steps(2,end);
+}
+
+@keyframes lhu-holo-slice {
+  0%   { opacity: 0; transform: translateX(0) scaleX(1); }
+  18%  { opacity: .95; transform: translateX(-6px) scaleX(1.012); }
+  36%  { opacity: .7; transform: translateX(0) scaleX(1); }
+  54%  { opacity: .9; transform: translateX(6px) scaleX(1.012); }
+  72%  { opacity: .35; transform: translateX(0) scaleX(1); }
+  100% { opacity: 0; transform: translateX(0) scaleX(1); }
+}
+
+@keyframes lhu-holo-flicker {
+  0%, 76%, 100% { opacity: 1; filter: none; }
+  77% { opacity: .82; filter: brightness(1.35); }
+  78% { opacity: 1; }
+  79% { opacity: .72; filter: contrast(1.25); }
+  80% { opacity: 1; }
+}
+
+
+/* Zusätzlicher symmetrischer Hologramm-Schnitt */
+#lhu-intro-word > span.holo-glitch {
+  animation:
+    lhu-holo-flicker .28s steps(1,end),
+    lhu-holo-jitter .28s steps(2,end);
+}
+
+#lhu-intro-word > span.holo-glitch::before {
+  transform: translateX(-7px) skewX(-1deg);
+  clip-path: inset(20% 0 58% 0);
+}
+
+#lhu-intro-word > span.holo-glitch::after {
+  transform: translateX(7px) skewX(1deg);
+  clip-path: inset(58% 0 20% 0);
+}
+
+@keyframes lhu-holo-jitter {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(2px); }
+}
+
 </style>
 <style>
   :root {
@@ -225,6 +379,11 @@
     -webkit-appearance: none;
   }
   #head-select option { color: #111; }
+
+  /* Loading screen disabled: ENTER starts the experience. */
+  #loading, #loading.show {
+    display: none !important;
+  }
 
   /* Lade-Overlay */
   #loading {
@@ -480,6 +639,10 @@
   <div id="lhu-intro" aria-hidden="true">
     <canvas id="lhu-intro-canvas"></canvas>
     <div id="lhu-intro-vignette"></div>
+    <div id="lhu-enter-panel">
+      <div id="lhu-image-slot" aria-label="Image placeholder"></div>
+      <button id="lhu-enter" type="button">ENTER</button>
+    </div>
     <div id="lhu-intro-word">
       <span>LIGHTNING</span>
       <span>HORN</span>
@@ -648,19 +811,9 @@
 
   /* ---------- INTRO AUDIO PRELOAD ---------- */
   const introAudioEl = document.getElementById("lhu-intro-audio");
-  let introAudioReady = !introAudioEl;
   if (introAudioEl) {
     introAudioEl.preload = "auto";
-    introAudioEl.addEventListener("canplaythrough", () => {
-      introAudioReady = true;
-    }, { once: true });
-    introAudioEl.addEventListener("error", () => {
-      // Do not deadlock the page if the soundtrack cannot be fetched.
-      introAudioReady = true;
-      console.warn("LHU-Intro-Sound konnte nicht geladen werden.");
-    }, { once: true });
     introAudioEl.load();
-    if (introAudioEl.readyState >= 3) introAudioReady = true;
   }
 
   /* ---------- LADEN-ANZEIGE ---------- */
@@ -1153,7 +1306,7 @@
     }
 
     function animateIntro(now) {
-      const t = (now - introStart) / 1000;
+      const t = ((now - introStart) / 1000) / 2; // Intro bewusst auf die doppelte Laufzeit gedehnt
       const dt = Math.min(.05, (now - last) / 1000);
       last = now;
 
@@ -1318,56 +1471,34 @@
     });
 
     let introStarted = false;
+    const enterButton = document.getElementById("lhu-enter");
 
-    const startIntroWhenReady = () => {
+    const startIntro = () => {
       if (introStarted) return;
       introStarted = true;
 
-      // Jetzt ist die MP3 geladen: Loading ausblenden, Sound starten, dann Animation.
-      stopLoading();
+      const enterPanel = document.getElementById("lhu-enter-panel");
+      if (enterPanel) {
+        enterPanel.classList.add("hidden");
+        enterPanel.style.display = "none";
+      }
 
-      const beginIntroPlayback = () => {
-        if (lhuIntroAudio) {
-          lhuIntroAudio.currentTime = 0;
-          const p = lhuIntroAudio.play();
+      // ENTER is a real user gesture: start lhu.mp3 exactly once.
+      if (lhuIntroAudio) {
+        lhuIntroAudio.currentTime = 0;
+        lhuIntroAudio.play().catch((err) => {
+          console.warn("LHU-Intro-Sound konnte nicht abgespielt werden:", err);
+        });
+      }
 
-          if (p && typeof p.catch === "function") {
-            p.catch(() => {
-              // Browser blockiert Autoplay: Loading-Overlay bleibt als Startfläche.
-              loadingText.textContent = "click to enter";
-              loadingEl.style.pointerEvents = "auto";
-
-              const unlock = () => {
-                lhuIntroAudio.play().then(() => {
-                  loadingEl.style.pointerEvents = "none";
-                  requestAnimationFrame(animateIntro);
-                }).catch(() => {});
-              };
-
-              loadingEl.addEventListener("click", unlock, { once: true });
-              window.addEventListener("keydown", unlock, { once: true });
-            });
-            // Nur wenn play() tatsächlich erlaubt wurde, sofort die Animation starten.
-            p.then(() => requestAnimationFrame(animateIntro)).catch(() => {});
-          } else {
-            requestAnimationFrame(animateIntro);
-          }
-        } else {
-          requestAnimationFrame(animateIntro);
-        }
-      };
-
-      beginIntroPlayback();
+      // Start the visual intro exactly once.
+      introStart = performance.now();
+      last = introStart;
+      requestAnimationFrame(animateIntro);
     };
 
-    if (introAudioReady) {
-      startIntroWhenReady();
-    } else {
-      const waitForIntroAudio = () => {
-        if (introAudioReady) startIntroWhenReady();
-        else setTimeout(waitForIntroAudio, 50);
-      };
-      waitForIntroAudio();
+    if (enterButton) {
+      enterButton.addEventListener("click", startIntro, { once: true });
     }
   })();
 
@@ -1552,5 +1683,36 @@
     renderer.setSize(innerWidth, innerHeight);
   });
 </script>
+
+<script>
+(() => {
+  const word = document.getElementById("lhu-intro-word");
+  if (!word) return;
+  let glitchTimer = null;
+  const triggerHoloGlitch = () => {
+    const active = [...word.children].find(el => el.tagName === "SPAN");
+    if (!active) return;
+
+    active.setAttribute("data-glitch", active.textContent);
+    active.classList.remove("holo-glitch");
+    void active.offsetWidth;
+    active.classList.add("holo-glitch");
+
+    clearTimeout(glitchTimer);
+    glitchTimer = setTimeout(() => {
+      active.classList.remove("holo-glitch");
+    }, 340);
+  };
+
+  // Kurze holographische Impulse. Vorher-/Nachher-Slice sind spiegelbildlich,
+  // damit der Font nicht seitlich "wegkippt".
+  setInterval(() => {
+    const intro = document.getElementById("lhu-intro");
+    if (!intro || intro.style.opacity === "0") return;
+    if (Math.random() < 0.78) triggerHoloGlitch();
+  }, 1050);
+})();
+</script>
+
 </body>
 </html>
