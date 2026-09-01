@@ -1326,22 +1326,38 @@
       // Jetzt ist die MP3 geladen: Loading ausblenden, Sound starten, dann Animation.
       stopLoading();
 
-      if (lhuIntroAudio) {
-        lhuIntroAudio.currentTime = 0;
-        lhuIntroAudio.play().catch(() => {
-          // Autoplay-Fallback: erster echter User-Input.
-          const unlock = () => {
-            lhuIntroAudio.play().catch(() => {});
-            window.removeEventListener("pointerdown", unlock);
-            window.removeEventListener("keydown", unlock);
-          };
-          window.addEventListener("pointerdown", unlock, { once: true });
-          window.addEventListener("keydown", unlock, { once: true });
-        });
-      }
+      const beginIntroPlayback = () => {
+        if (lhuIntroAudio) {
+          lhuIntroAudio.currentTime = 0;
+          const p = lhuIntroAudio.play();
 
-      // Sound startet sofort nach der Bereitschaft, die Animation folgt einen Tick später.
-      requestAnimationFrame(animateIntro);
+          if (p && typeof p.catch === "function") {
+            p.catch(() => {
+              // Browser blockiert Autoplay: Loading-Overlay bleibt als Startfläche.
+              loadingText.textContent = "click to enter";
+              loadingEl.style.pointerEvents = "auto";
+
+              const unlock = () => {
+                lhuIntroAudio.play().then(() => {
+                  loadingEl.style.pointerEvents = "none";
+                  requestAnimationFrame(animateIntro);
+                }).catch(() => {});
+              };
+
+              loadingEl.addEventListener("click", unlock, { once: true });
+              window.addEventListener("keydown", unlock, { once: true });
+            });
+            // Nur wenn play() tatsächlich erlaubt wurde, sofort die Animation starten.
+            p.then(() => requestAnimationFrame(animateIntro)).catch(() => {});
+          } else {
+            requestAnimationFrame(animateIntro);
+          }
+        } else {
+          requestAnimationFrame(animateIntro);
+        }
+      };
+
+      beginIntroPlayback();
     };
 
     if (introAudioReady) {
