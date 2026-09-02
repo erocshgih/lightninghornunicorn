@@ -84,11 +84,18 @@
   #lhu-image-slot {
     width: min(68vw, 300px);
     aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
     border: 1px solid rgba(255,255,255,.55);
     background: rgba(0,0,0,.38);
     box-shadow:
       0 0 24px rgba(255,255,255,.12),
       inset 0 0 30px rgba(255,255,255,.04);
+  }
+  #lhu-image-slot canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   #lhu-enter {
@@ -810,6 +817,106 @@
   dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
+
+  /* ---------- MINI-GLB-VIEWER FÜR DIE ENTER-TASTE ----------
+     Eigener kleiner Renderer im oberen Intro-Feld.
+     Erwartete Datei: hitenter.glb
+     Der Viewer ist bewusst leichtgewichtig: kein Antialiasing,
+     Pixelratio 1 und keine zusätzlichen Libraries.
+  */
+  const hitEnterSlot = document.getElementById("lhu-image-slot");
+  const hitEnterScene = new THREE.Scene();
+  const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+  const hitEnterRenderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: false,
+    powerPreference: "low-power"
+  });
+  hitEnterRenderer.setPixelRatio(1);
+  hitEnterRenderer.setClearColor(0x000000, 0);
+  hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
+  hitEnterSlot.innerHTML = "";
+  hitEnterSlot.appendChild(hitEnterRenderer.domElement);
+
+  hitEnterScene.add(new THREE.AmbientLight(0xffffff, 1.15));
+
+  const hitEnterKeyLight = new THREE.DirectionalLight(0xffffff, 1.35);
+  hitEnterKeyLight.position.set(3, 4, 5);
+  hitEnterScene.add(hitEnterKeyLight);
+
+  const hitEnterFillLight = new THREE.DirectionalLight(0x88aaff, 0.65);
+  hitEnterFillLight.position.set(-4, 1, 3);
+  hitEnterScene.add(hitEnterFillLight);
+
+  let hitEnterObject = null;
+  let hitEnterMixer = null;
+  let hitEnterSpin = 0;
+  let hitEnterBaseY = 0;
+  let hitEnterRadius = 1;
+
+  function fitHitEnterModel(model) {
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxSize = Math.max(size.x, size.y, size.z, 0.001);
+
+    model.position.sub(center);
+    model.position.y += size.y * 0.02;
+
+    hitEnterRadius = maxSize;
+    hitEnterBaseY = model.position.y;
+
+    const fovRad = THREE.MathUtils.degToRad(hitEnterCamera.fov);
+    const distance = (maxSize * 0.62) / Math.tan(fovRad / 2);
+
+    hitEnterCamera.position.set(0, maxSize * 0.08, Math.max(distance, 0.35));
+    hitEnterCamera.lookAt(0, size.y * 0.02, 0);
+    hitEnterCamera.near = Math.max(0.01, maxSize / 100);
+    hitEnterCamera.far = Math.max(10, maxSize * 20);
+    hitEnterCamera.updateProjectionMatrix();
+  }
+
+  function loadHitEnterGLB() {
+    loader.load(
+      "hitenter.glb",
+      (g) => {
+        if (hitEnterObject) {
+          hitEnterScene.remove(hitEnterObject);
+          disposeObject(hitEnterObject);
+        }
+
+        hitEnterObject = g.scene;
+        hitEnterScene.add(hitEnterObject);
+        fitHitEnterModel(hitEnterObject);
+
+        if (g.animations && g.animations.length) {
+          hitEnterMixer = new THREE.AnimationMixer(hitEnterObject);
+          g.animations.forEach((clip) => {
+            hitEnterMixer.clipAction(clip).play();
+          });
+        }
+      },
+      undefined,
+      (err) => {
+        console.warn("hitenter.glb konnte noch nicht geladen werden:", err);
+        // Kein Fehler-Overlay: Bis die GLB existiert, bleibt das Feld einfach leer.
+      }
+    );
+  }
+
+  function resizeHitEnterViewer() {
+    const rect = hitEnterSlot.getBoundingClientRect();
+    const w = Math.max(1, Math.floor(rect.width));
+    const h = Math.max(1, Math.floor(rect.height));
+    hitEnterRenderer.setSize(w, h, false);
+    hitEnterCamera.aspect = w / h;
+    hitEnterCamera.updateProjectionMatrix();
+  }
+
+  const hitEnterResizeObserver = new ResizeObserver(resizeHitEnterViewer);
+  hitEnterResizeObserver.observe(hitEnterSlot);
+  resizeHitEnterViewer();
+  loadHitEnterGLB();
 
   let object = null, mixer = null;
   const clock = new THREE.Clock();
@@ -1647,6 +1754,17 @@
       }
     }
     renderer.render(scene, camera);
+
+    /* Mini-Enter-Key-Viewport */
+    if (hitEnterMixer) hitEnterMixer.update(delta);
+
+    if (hitEnterObject) {
+      // Die Enter-Taste dreht sich um ihre eigene, zentrierte Y-Achse.
+      hitEnterSpin += delta * 0.75;
+      hitEnterObject.rotation.y = hitEnterSpin;
+    }
+
+    hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
   }
   animate();
 
@@ -1655,6 +1773,7 @@
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
+    resizeHitEnterViewer();
   });
 </script>
 </body>
