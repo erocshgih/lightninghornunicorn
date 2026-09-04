@@ -176,7 +176,7 @@
 
         /* ========== METALLTÜR ========== */
         #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
-        #door-overlay .door-panel { position: absolute; inset: -10%; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); background-repeat: repeat; }
+                #door-overlay .door-panel { position: absolute; inset: -10%; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); background-image: url('pixelart/pixelart_vedran.png'); background-repeat: repeat; background-size: auto; }
         #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); pointer-events: all; }
         #door-overlay.open .door-panel   { transform: translate3d(0, 120%, 0); pointer-events: none; }
     </style>
