@@ -2,347 +2,124 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECTS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Lightning Horn Unicorn - Projects</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="lhu_favicon.png" type="image/png">
+    
+    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
+    <meta name="theme-color" content="#04050a">
+
     <style>
-        /* ========== DESIGN TOKENS / FLUID TYPE ========== */
+        /* ========== DESIGN TOKENS ========== */
         :root {
-            --bg: transparent;
-            --bg-solid: #f5f3f0;
-            --text: #111111;
-            --text-muted: #555555;
-            --text-soft: #888888;
-            --header-bg: #f5f3f0;
-            --header-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-            --strip-text: #4a2c00;
-            --strip-active: #ff7a00;
-            --strip-fade: rgba(245, 243, 240, 1);
+            --bg:             transparent;
+            --bg-solid:       #f5f3f0;
+            --text:           #111111;
+            --text-muted:     #555555;
+            --text-soft:      #888888;
+            --header-bg:      #f5f3f0;
+            --header-shadow:  0 1px 6px rgba(0, 0, 0, 0.04);
+            --strip-text:     #4a2c00;
+            --strip-active:   #ff7a00;
+            --strip-fade:     rgba(245, 243, 240, 1);
             --strip-fade-end: rgba(245, 243, 240, 0);
-            --border-soft: #e0ddd8;
-            --card-bg: #ffffff;
-            --accent-green: #00ff28;
-            --accent-red: #ff2800;
-            --dot: #d5d0ca;
-            --dot-active: #b33;
-            --door-bg: #f5f3f0;
-            --fs-xs:   clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
-            --fs-sm:   clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
-            --fs-base: clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
-            --fs-md:   clamp(0.62rem, 2.0vw + 0.28rem, 0.85rem);
-            --fs-lg:   clamp(0.72rem, 2.6vw + 0.3rem, 1.1rem);
-            --fs-xl:   clamp(0.8rem,  3.0vw + 0.35rem, 1.25rem);
-            --space-section: clamp(16px, 4.5vw, 40px);
-            --radius: 10px;
+            --border-soft:    #e0ddd8;
+            --card-bg:        #ffffff;
+            --door-bg:        #f5f3f0;
+            --dot:            #d5d0ca;
+            --dot-active:     #b33;
+
+            --fs-xs:          clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
+            --fs-sm:          clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
+            --fs-base:        clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
+            --fs-md:          clamp(0.62rem, 2.0vw + 0.28rem, 0.85rem);
+            --fs-lg:          clamp(0.72rem, 2.6vw + 0.3rem, 1.1rem);
+            --fs-xl:          clamp(0.8rem,  3.0vw + 0.35rem, 1.5rem);
+            
+            --space-section:  clamp(16px, 4.5vw, 40px);
+            --radius:         10px;
         }
 
         /* ========== THEME MODES ========== */
-        @media (prefers-color-scheme: dark) {
-            html:not([data-theme]),
-            html[data-theme="dark"] {
-                --bg: #0e0e0e;
-                --bg-solid: #141414;
-                --text: #eae6e1;
-                --text-muted: #b0aaa3;
-                --text-soft: #8a847c;
-                --header-bg: #1a1a1a;
-                --header-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-                --strip-text: #d4b48a;
-                --strip-active: #ff9a3c;
-                --strip-fade: rgba(26, 26, 26, 1);
-                --strip-fade-end: rgba(26, 26, 26, 0);
-                --border-soft: #333028;
-                --card-bg: #1c1c1c;
-                --accent-green: #39ff14;
-                --accent-red: #ff4d4d;
-                --dot: #4a4540;
-                --dot-active: #e05555;
-                --door-bg: #141414;
-            }
-        }
+        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --text-muted: #b0aaa3; --text-soft: #8a847c; --dot: #4a4540; --dot-active: #e05555; --bg-solid: #141414; } }
+        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --text-muted: #b0aaa3; --text-soft: #8a847c; --dot: #4a4540; --dot-active: #e05555; --bg-solid: #141414; }
+        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; --text-muted: #aaaaaa; --text-soft: #888888; --dot: #555555; --dot-active: #dddddd; --bg-solid: #1a1a1a; --border-soft: #444444; }
+        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; --text-muted: #4caf50; --text-soft: #3d8b40; --dot: #1b5e20; --dot-active: #69f0ae; --bg-solid: #041504; --border-soft: #1a4d1a; }
+        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; --text-muted: #8fbc8f; --text-soft: #6a9a6a; --dot: #2a4a2a; --dot-active: #99ff99; --bg-solid: #0e120e; --border-soft: #2a3a2a; }
 
-        html[data-theme="dark"] {
-            --bg: #0e0e0e;
-            --bg-solid: #141414;
-            --text: #eae6e1;
-            --text-muted: #b0aaa3;
-            --text-soft: #8a847c;
-            --header-bg: #1a1a1a;
-            --header-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-            --strip-text: #d4b48a;
-            --strip-active: #ff9a3c;
-            --strip-fade: rgba(26, 26, 26, 1);
-            --strip-fade-end: rgba(26, 26, 26, 0);
-            --border-soft: #333028;
-            --card-bg: #1c1c1c;
-            --accent-green: #39ff14;
-            --accent-red: #ff4d4d;
-            --dot: #4a4540;
-            --dot-active: #e05555;
-            --door-bg: #141414;
-        }
-
-        html[data-theme="dark"] body { background: var(--bg); }
-
-        html[data-theme="mono-gray"] {
-            --bg: #121212;
-            --bg-solid: #1a1a1a;
-            --text: #e0e0e0;
-            --text-muted: #aaaaaa;
-            --text-soft: #888888;
-            --header-bg: #1c1c1c;
-            --header-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
-            --strip-text: #bbbbbb;
-            --strip-active: #ffffff;
-            --strip-fade: rgba(28, 28, 28, 1);
-            --strip-fade-end: rgba(28, 28, 28, 0);
-            --border-soft: #444444;
-            --card-bg: #222222;
-            --accent-green: #cccccc;
-            --accent-red: #999999;
-            --dot: #555555;
-            --dot-active: #dddddd;
-            --door-bg: #1a1a1a;
-        }
-
-        html[data-theme="mono-gray"] body { background: var(--bg); }
+        html[data-theme="dark"] section img { box-shadow: 0 3px 18px rgba(0, 0, 0, 0.35); }
         html[data-theme="mono-gray"] main { filter: grayscale(1); }
-
-        html[data-theme="mono-green"] {
-            --bg: #020f02;
-            --bg-solid: #041504;
-            --text: #7cff7c;
-            --text-muted: #4caf50;
-            --text-soft: #3d8b40;
-            --header-bg: #031a03;
-            --header-shadow: 0 1px 10px rgba(0, 40, 0, 0.6);
-            --strip-text: #5cdb5c;
-            --strip-active: #b6ffb6;
-            --strip-fade: rgba(3, 26, 3, 1);
-            --strip-fade-end: rgba(3, 26, 3, 0);
-            --border-soft: #1a4d1a;
-            --card-bg: #0a1f0a;
-            --accent-green: #39ff14;
-            --accent-red: #66bb6a;
-            --dot: #1b5e20;
-            --dot-active: #69f0ae;
-            --door-bg: #041504;
-        }
-
-        html[data-theme="mono-green"] body { background: var(--bg); }
         html[data-theme="mono-green"] main { filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9); }
-
-        html[data-theme="crt"] {
-            --bg: #0a0c0a;
-            --bg-solid: #0e120e;
-            --text: #c8e6c8;
-            --text-muted: #8fbc8f;
-            --text-soft: #6a9a6a;
-            --header-bg: #0c100c;
-            --header-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
-            --strip-text: #9ccc9c;
-            --strip-active: #d4ffd4;
-            --strip-fade: rgba(12, 16, 12, 1);
-            --strip-fade-end: rgba(12, 16, 12, 0);
-            --border-soft: #2a3a2a;
-            --card-bg: #121812;
-            --accent-green: #66ff66;
-            --accent-red: #88aa88;
-            --dot: #2a4a2a;
-            --dot-active: #99ff99;
-            --door-bg: #0e120e;
-        }
-
-        html[data-theme="crt"] body { background: var(--bg); }
-
-        html[data-theme="crt"] main {
-            filter: none;
-            animation: crtGlitch 5s infinite steps(1, end), crtJitter 3s ease-in-out infinite;
-        }
-
-        html[data-theme="crt"] .header { animation: crtGlitch 5s infinite steps(1, end); }
-
-        @keyframes crtGlitch {
-            0%, 94%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; }
-            95% { transform: translate(2px, -1px) skewX(0.4deg); filter: hue-rotate(8deg); }
-            96% { transform: translate(-2px, 1px) skewX(-0.3deg); filter: hue-rotate(-6deg); }
-            97% { transform: translate(1px, 0) skewX(0.2deg); filter: none; }
-            98% { transform: translate(-1px, -1px); }
-            99% { transform: translate(0, 1px); }
-        }
-
-        html[data-theme="crt"]::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: 9000;
-            pointer-events: none;
-            opacity: 0.55;
-            background-image:
-                repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0px, rgba(0,0,0,0.3) 2px, transparent 2px, transparent 4px),
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 100% 4px, 180px 180px;
-            mix-blend-mode: overlay;
-        }
-
-        html[data-theme="light"] body,
-        html[data-theme="dark"] body,
-        html[data-theme="crt"] body { background: var(--bg); }
-
-        @keyframes crtJitter {
-            0%, 100% { transform: translate(0, 0); }
-            20% { transform: translate(0.3px, 0.2px); }
-            40% { transform: translate(-0.2px, -0.1px); }
-            60% { transform: translate(0.1px, 0.3px); }
-            80% { transform: translate(-0.3px, 0.1px); }
-        }
-
-        html[data-theme="light"] main,
-        html[data-theme="dark"] main { filter: none; }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
-
-        /* ========== BASE ========== */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-
-        body {
-            margin: 0;
-            background: var(--bg);
-            font-family: 'Press Start 2P', cursive;
-            color: var(--text);
-            text-align: center;
-            line-height: 2.4;
-            font-size: var(--fs-base);
-            overflow-x: hidden;
-            -webkit-font-smoothing: none;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* ========== SECTION TOPBAR ========== */
-        .section-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: var(--header-bg);
-            box-shadow: var(--header-shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .section-topbar .go-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-xs);
-            color: var(--text-muted);
-            text-decoration: none;
-            padding: 8px 14px;
-            border: 2px solid var(--border-soft);
-            border-radius: var(--radius);
-            background: var(--card-bg);
-            transition: all 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .section-topbar .go-back:hover {
-            background: var(--strip-active);
-            color: #111;
-            border-color: var(--strip-active);
-        }
-
-        .section-topbar .theme-btn {
-            flex: 0 0 auto;
-            width: clamp(36px, 8vw, 44px);
-            height: clamp(36px, 8vw, 44px);
-            border: 2px solid var(--border-soft);
-            border-radius: var(--radius);
-            background: var(--card-bg);
-            color: var(--text);
-            font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, color 0.2s, opacity 0.2s;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        .section-topbar .theme-btn:hover { background: var(--strip-active); color: #111; }
-        .section-topbar .theme-btn:active { opacity: 0.85; }
-
-        /* ========== MAIN ========== */
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 24px auto;
-            padding: 0;
-            width: min(90vw, 540px);
-            background: transparent;
-            position: relative;
-            z-index: 1;
-        }
-
         
-
-        /* ========== VHS MONO GREEN OVERLAY ========== */
-        #vhs-green-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 8999;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        #vhs-green-overlay canvas {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            image-rendering: auto;
-            mix-blend-mode: multiply;
-            filter: sepia(1) hue-rotate(80deg) saturate(2) brightness(0.7);
-            opacity: 0.12;
-        }
-        html[data-theme="crt"] #vhs-green-overlay { opacity: 1; }
-
-        /* ========== H1 / PAGE TITLE ========== */
-        h1 {
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-lg);
-            color: var(--text);
-            text-align: center;
-            margin: 0 auto 1.2em;
-            letter-spacing: 0.05em;
-            text-shadow:
-                1px 0 rgba(255, 0, 0, 0.45),
-                -1px 0 rgba(0, 255, 255, 0.45),
-                0 0 2px rgba(255, 255, 255, 0.35);
-            filter: contrast(1.06);
+        html[data-theme="crt"] main { animation: crtGlitch 5s infinite steps(1, end), crtJitter 3s ease-in-out infinite; }
+        html[data-theme="crt"]::after {
+            content: ""; position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.55;
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 4px), url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat; mix-blend-mode: overlay; background-size: 100% 4px, 180px 180px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: var(--text-soft);
-            font-size: var(--fs-sm);
-            margin-bottom: 30px;
-            line-height: 2.4;
-        }
+        @keyframes crtGlitch { 0%, 94%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; } 95% { transform: translate(2px, -1px) skewX(0.4deg); filter: hue-rotate(8deg); } 96% { transform: translate(-2px, 1px) skewX(-0.3deg); filter: hue-rotate(-6deg); } 97% { transform: translate(1px, 0) skewX(0.2deg); filter: none; } }
+        @keyframes crtJitter { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(0.3px, 0.2px); } 60% { transform: translate(0.1px, 0.3px); } }
+
+        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+        /* ========== BASE STYLES ========== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+        body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
+
+        /* ========== HEADER, MENÜ & PFEILE ========== */
+        .header { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); position: sticky; top: 0; z-index: 1000; }
+        .strip-wrapper { display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto; border: 3px solid transparent; border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa) 1; height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; }
+
+        .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
+        .theme-btn:hover { background: var(--strip-active); color: #111; }
+        
+        .nav-btn { flex: 0 0 auto; width: clamp(32px, 6vw, 44px); border: none; background: var(--card-bg); color: var(--text); font-family: inherit; font-size: 1.1rem; cursor: pointer; z-index: 3; transition: background 0.1s, transform 0.1s; display: flex; align-items: center; justify-content: center; }
+        .nav-btn:hover { background: var(--strip-active); color: #111; }
+        .nav-btn:active { transform: scale(0.85); }
+        .nav-btn.left { border-right: 2px solid var(--border-soft); }
+        .nav-btn.right { border-left: 2px solid var(--border-soft); }
+
+        .cat-strip { flex: 1 1 auto; overflow: hidden; position: relative; contain: paint; }
+        .cat-strip::before, .cat-strip::after { content: ""; position: absolute; top: 0; bottom: 0; width: 30px; z-index: 2; pointer-events: none; }
+        .cat-strip::before { left: 0; background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end)); }
+        .cat-strip::after { right: 0; background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end)); }
+        
+        .cat-track { display: inline-flex; align-items: center; white-space: nowrap; height: 100%; will-change: transform; backface-visibility: hidden; font-size: var(--fs-sm); letter-spacing: 0.08em; }
+        .cat-item { display: flex; align-items: center; justify-content: center; padding: 0 clamp(8px, 1.5vw, 16px); cursor: pointer; user-select: none; }
+        .cat-item span { display: inline-block; padding: 8px 16px; background: var(--card-bg); color: var(--text); border: 2px solid var(--border-soft); border-radius: 6px; box-shadow: 0 4px 0 var(--border-soft); transition: all 0.1s ease-in-out; line-height: 1.2; }
+        .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
+        .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
+
+        .cat-item[data-cat="ABOUT"].active span { background: #ffd080; }
+        .cat-item[data-cat="VHS MULTIVERSE"].active span { background: #80eaf8; }
+        .cat-item[data-cat="HUMANART"].active span { background: #f080d0; }
+        .cat-item[data-cat="PROJECTS"].active span { background: #ff9a3c; }
+        .cat-item[data-cat="STORYTIME"].active span { background: #80f0a8; }
+        .cat-item[data-cat="MUSIC"].active span { background: #b898f0; }
+        .cat-item[data-cat="CONTACT"].active span { background: #80b0f8; }
+        .cat-item[data-cat="DONATE"].active span { background: #f08080; }
+
+        /* ========== LASER ========== */
+        .laser-rail { position: relative; width: 100%; height: 10px; margin-top: 3px; overflow: hidden; pointer-events: none; }
+        .laser { position: absolute; left: -50%; height: 2px; width: 40%; opacity: 0; will-change: transform; }
+        
+        .laser-1 { top: 1px; background: #ff0033; animation: laserShot 0.65s infinite linear; animation-delay: 0s; }
+        .laser-2 { top: 4px; background: #00ff88; animation: laserShot 0.65s infinite linear; animation-delay: 0.65s; }
+        .laser-3 { top: 7px; background: #3399ff; animation: laserShot 0.65s infinite linear; animation-delay: 1.3s; }
+        
+        @keyframes laserShot { 0% { transform: translateX(0); opacity: 1; } 92% { transform: translateX(400%); opacity: 1; } 100% { transform: translateX(420%); opacity: 0; } }
+
+        /* ========== INHALT & SEKTIONEN ========== */
+        main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; }
+        section { padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
+        
+        section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
+        .subtitle { text-align: center; color: var(--text-soft); font-size: var(--fs-sm); margin-bottom: 30px; line-height: 2.4; }
 
         /* ========== CATEGORY ACCORDION ========== */
         .cat-group {
@@ -361,90 +138,42 @@
         }
 
         .cat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            transition: background 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px; cursor: pointer; user-select: none;
+            -webkit-tap-highlight-color: transparent; transition: background 0.2s;
         }
 
         .cat-header:hover { background: rgba(255, 154, 60, 0.04); }
-
-        .cat-header .cat-label {
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-xs);
-            color: var(--strip-active);
-            letter-spacing: 0.1em;
-        }
-
-        .cat-header .arrow {
-            font-size: 14px;
-            color: var(--strip-active);
-            transition: transform 0.3s ease;
-            margin-left: 10px;
-        }
-
+        .cat-header .cat-label { font-family: 'Press Start 2P', cursive; font-size: var(--fs-xs); color: var(--strip-active); letter-spacing: 0.1em; }
+        .cat-header .arrow { font-size: 14px; color: var(--strip-active); transition: transform 0.3s ease; margin-left: 10px; }
         .cat-group.open > .cat-header .arrow { transform: rotate(90deg); }
 
-        .cat-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-        }
-
+        .cat-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
         .cat-group.open > .cat-body { max-height: 2000px; }
 
         /* ========== PRODUCT ACCORDION ========== */
         .prod-item { border-top: 1px solid var(--border-soft); }
-
         .prod-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            transition: background 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; cursor: pointer; user-select: none;
+            -webkit-tap-highlight-color: transparent; transition: background 0.2s;
         }
 
         .prod-header:hover { background: rgba(255, 154, 60, 0.03); }
-
-        .prod-header .prod-name {
-            font-family: 'Press Start 2P', cursive;
-            font-size: var(--fs-xs);
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        .prod-header .prod-arrow {
-            font-size: 12px;
-            color: var(--strip-active);
-            transition: transform 0.3s ease;
-            margin-left: 10px;
-        }
-
+        .prod-header .prod-name { font-family: 'Press Start 2P', cursive; font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.05em; }
+        .prod-header .prod-arrow { font-size: 12px; color: var(--strip-active); transition: transform 0.3s ease; margin-left: 10px; }
         .prod-item.open > .prod-header .prod-arrow { transform: rotate(90deg); }
 
-        .prod-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-        }
-
+        .prod-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
         .prod-item.open > .prod-body { max-height: 1600px; }
-
         .prod-body-inner { padding: 0 16px 18px; }
 
         /* ========== PRODUCT DESCRIPTION ========== */
         .prod-desc {
             font-family: 'VT323', monospace;
-            font-size: 16px;
+            font-size: 18px;
             color: var(--text-muted);
-            line-height: 2;
+            line-height: 1.8;
             margin-bottom: 16px;
             text-align: left;
             white-space: pre-line;
@@ -461,554 +190,498 @@
 
         /* ========== IMAGE STAGE ========== */
         .carousel-stage {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: var(--radius);
-            overflow: hidden;
-            background: var(--bg-solid);
-            margin-bottom: 10px;
+            position: relative; width: 100%; aspect-ratio: 1; border-radius: var(--radius);
+            overflow: hidden; background: var(--bg-solid); margin-bottom: 10px;
             box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
         }
 
         .carousel-slide {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            pointer-events: none;
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
         }
-
         .carousel-slide.active { opacity: 1; pointer-events: auto; }
-
-        .carousel-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
         .carousel-slide model-viewer {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            --poster-color: transparent;
-            display: block;
+            width: 100%; height: 100%; background: transparent; --poster-color: transparent; display: block;
         }
 
         .model-loading {
-            position: absolute;
-            inset: 0;
-            z-index: 6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            background: var(--bg-solid);
-            pointer-events: none;
+            position: absolute; inset: 0; z-index: 6; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 14px; background: var(--bg-solid); pointer-events: none;
         }
         .model-loading .spinner {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            border: 4px solid rgba(255, 255, 255, 0.18);
-            border-top-color: var(--text, #fff);
-            animation: modelSpin 0.9s linear infinite;
+            width: 46px; height: 46px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.18);
+            border-top-color: var(--text, #fff); animation: modelSpin 0.9s linear infinite;
         }
-        .model-loading .label {
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-soft, #aaa);
-        }
+        .model-loading .label { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft, #aaa); }
         @keyframes modelSpin { to { transform: rotate(360deg); } }
 
-        /* ========== NAV ARROWS ========== */
-        .carousel-nav {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 8px;
-        }
-
+        /* ========== NAV ARROWS & DOTS ========== */
+        .carousel-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 8px; }
         .carousel-btn {
-            width: 36px;
-            height: 36px;
-            border: 2px solid var(--border-soft);
-            border-radius: 50%;
-            background: var(--card-bg);
-            color: var(--text-soft);
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            width: 36px; height: 36px; border: 2px solid var(--border-soft); border-radius: 50%;
+            background: var(--card-bg); color: var(--text-soft); font-size: 16px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
-
-        .carousel-btn:hover {
-            background: var(--strip-active);
-            border-color: var(--strip-active);
-            color: #111;
-            transform: scale(1.1);
-        }
-
-        /* ========== DOTS ========== */
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-
-        .carousel-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--dot);
-            cursor: pointer;
-            transition: background 0.25s, transform 0.25s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        .carousel-btn:hover { background: var(--strip-active); border-color: var(--strip-active); color: #111; transform: scale(1.1); }
+        .carousel-dots { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; margin-bottom: 10px; }
+        .carousel-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot); cursor: pointer; transition: background 0.25s, transform 0.25s; -webkit-tap-highlight-color: transparent; }
         .carousel-dot:hover { transform: scale(1.4); }
+        .carousel-dot.active { background: var(--dot-active); transform: scale(1.3); }
 
-        .carousel-dot.active {
-            background: var(--dot-active);
-            transform: scale(1.3);
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 768px) {
-            main { padding: 0 14px; }
+        /* ========== PC OPTIMIERUNG ========== */
+        @media (min-width: 769px) {
+            section { width: min(85vw, 1000px); padding: 60px; }
+            section h2 { font-size: var(--fs-xl); }
+            /* Verhindert, dass das Bild riesig wird, zentriert es schön im Akkordeon */
+            .carousel-stage { max-width: 600px; margin: 0 auto 15px auto; }
+            .prod-desc { max-width: 600px; margin: 0 auto 20px auto; text-align: left; font-size: 20px;}
+            .subtitle { font-size: var(--fs-base); }
         }
 
         @media (max-width: 480px) {
-            main { padding: 0 12px; }
-            h1 { letter-spacing: 0.03em; }
+            .header { padding: 10px 4px; }
+            .nav-btn { width: 28px; font-size: 0.9rem; }
+            .theme-btn { width: 36px; }
         }
 
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            main img { image-rendering: -webkit-optimize-contrast; }
-        }
+        /* ========== METALLTÜR ========== */
+        #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
+        #door-overlay .door-panel { position: absolute; inset: -10%; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); background-repeat: repeat; }
+        #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); pointer-events: all; }
+        #door-overlay.open .door-panel   { transform: translate3d(0, 120%, 0); pointer-events: none; }
     </style>
 </head>
 <body>
     
-
-    <!-- VHS monochrome green overlay -->
-    <div id="vhs-green-overlay" aria-hidden="true">
-        <canvas id="vhs-noise-canvas"></canvas>
+    <div id="door-overlay" class="closed">
+        <div class="door-panel"></div>
     </div>
 
-    <div class="section-topbar">
-        <a href="LightningHornUnicorn.html" class="go-back">&#9664; GO BACK</a>
-        <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus wechseln" aria-label="Farbmodus wechseln">☀</button>
-    </div>
+    <!-- HIER STARTET DER MENU-BLOCK -->
+    <header class="header">
+        <div class="strip-wrapper">
+            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus">☀</button>
+            <button id="navLeft" class="nav-btn left" type="button" title="Links scrollen">◀</button>
+            
+            <div id="catStrip" class="cat-strip">
+                <div id="catTrack" class="cat-track"></div>
+            </div>
+            
+            <button id="navRight" class="nav-btn right" type="button" title="Rechts scrollen">▶</button>
+        </div>
+        
+        <div class="laser-rail">
+            <div class="laser laser-1"></div><div class="laser laser-2"></div><div class="laser laser-3"></div>
+        </div>
+        <div class="drag-strip" style="width: 100%; height: 20px; cursor: grab;" title="Drag zum Scrollen"></div>
+    </header>
+    <!-- ENDE MENU-BLOCK -->
 
     <main>
-        <h1>PROJECTS</h1>
-        <p class="subtitle">Mechanical prototypes, 3D designs &amp; physical concepts</p>
+        <section id="PROJECTS" class="active">
+            <h2 data-lang-en="PROJECTS" data-lang-de="PROJECTS">PROJECTS</h2>
+            <p class="subtitle" data-lang-en="Mechanical prototypes, 3D designs & physical concepts" data-lang-de="Mechanische Prototypen, 3D Designs & physische Konzepte">Mechanical prototypes, 3D designs &amp; physical concepts</p>
 
-        <div id="projects-accordion"></div>
+            <div id="projects-accordion"></div>
+        </section>
     </main>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const CURRENT_PAGE = 'PROJECTS'; 
 
-        /* ========== THEME TOGGLE ========== */
-        const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
-        const THEME_ICONS = {
-            'light': '\u2600',
-            'dark': '\u263e',
-            'mono-gray': '\u2591',
-            'mono-green': '\u2593',
-            'crt': '\u25a4'
-        };
-        const themeBtn = document.getElementById('themeToggle');
+            /* ========== THEME ENGINE ========== */
+            const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
+            const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
+            const themeBtn = document.getElementById('themeToggle');
 
-        function safeGetTheme() {
-            try { return localStorage.getItem('lhu-theme'); } catch (e) { return null; }
-        }
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                try { localStorage.setItem('lhu-theme', theme); } catch(e) {}
+                if (themeBtn) themeBtn.textContent = THEME_ICONS[theme] || '☀';
+            }
 
-        function safeSetTheme(value) {
-            try { localStorage.setItem('lhu-theme', value); } catch (e) {}
-        }
+            let currentTheme = 'light';
+            try { currentTheme = localStorage.getItem('lhu-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch(e){}
+            if (!THEMES.includes(currentTheme)) currentTheme = 'light';
+            applyTheme(currentTheme);
 
-        function getInitialTheme() {
-            const saved = safeGetTheme();
-            if (saved && THEMES.includes(saved)) return saved;
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-            return 'light';
-        }
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            safeSetTheme(theme);
             if (themeBtn) {
-                themeBtn.textContent = THEME_ICONS[theme] || '\u2600';
-                themeBtn.title = 'Modus: ' + theme + ' (klicken zum Wechseln)';
-            }
-        }
-
-        let currentTheme = getInitialTheme();
-        applyTheme(currentTheme);
-
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                const idx = THEMES.indexOf(currentTheme);
-                currentTheme = THEMES[(idx + 1) % THEMES.length];
-                applyTheme(currentTheme);
-            });
-        }
-
-        /* ========== LANGUAGE SWITCH ========== */
-        const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
-        document.querySelectorAll('[data-lang-en]').forEach(el => {
-            const text = el.getAttribute('data-lang-' + lang);
-            if (text) el.innerHTML = text;
-        });
-
-        /* ========== PROJECTS DATA ========== */
-        const projects = [
-            {
-                cat: 'GLASSES',
-                products: [
-                    { name: 'DUCKPARADA: THUNDERBOLT', desc: `Inspired by Bauhaus, aircraft carriers, ducks, and Japanese superheroes, Thunderbolt 1 was born after over two years of development and more than 30 self-made drafts in Blender 3D.
-
-A modular glasses structure with optical lenses and genuine everyday utility.
-
-The idea was simple: Grab the lightning from the sky and wear it as eyewear.
-
-Zeus: Who the fuck stole my glasses?
-Narrator: For risks and side effects, bargain with feta cheese.`, images: [
-                        { src: 'projects/projects_glasses_duckparada_thunderbolt1vedran.webp' },
-                        { src: 'projects/projects_glasses_duckparada_thunderbolt2package.webp' },
-                        { src: 'projects/projects_glasses_duckparada_thunderbolt3comic.webp' },
-                        { src: 'projects/projects_glasses_duckparada_thunderbolt4squat.webp' },
-                    ]}
-                ]
-            },
-            {
-                cat: 'HELMET',
-                products: [
-                    { name: 'DUCKPARADA: DUCKLIGHT', desc: `Began as a decorative duck from a flea market. After removing the plastic bottom, it was defined as headgear.
-
-This resulted in the first unlicensed Duckparada helmet.
-
-Ultralight, striking, and completely uncontrollable. A prototype and proof that good ideas sometimes show up when your mind is open for illegal usage of all day objects.`, images: [
-                        { src: 'projects/projects_helmet_duckparada_ducklight_package1.webp' },
-                        { src: 'projects/projects_helmet_duckparada_mark123comic.webp' },
-                        { src: 'projects/projects_helmet_duckparada_mark12goldmine.webp' },
-                    ]}
-                ]
-            },
-            {
-                cat: 'RINGS',
-                products: [
-                    { name: 'TURN ME ON RING', desc: `One ring to give them all… emotional confusion.
-
-Built around a grotesque sculptural form with a tongue, staring eyes, tail, and a small mechanical-looking button marked "ON".
-
-At the top sits a simple message:
-
-LOVE ME.
-LOVE. ME.
-YES WE CAN.
-
-Part wearable object, part miniature character. Lickable? …rusty and risk-obvious.
-
-A ring with no purpose.
-Except perhaps turning something on.`, images: [
-                        { src: 'projects/projects_rings_turnmeonring_1package.webp' },
-                        { model: 'glb/turnmeonring.glb' },
-                        { src: 'projects/projects_rings_turnmeonring_2comic.webp' },
-                        { src: 'projects/projects_rings_turnmeonring_3ad.webp' },
-                    ]}
-                ]
-            },
-            {
-                cat: 'FIGURINE',
-                products: [
-                    { name: 'BERTA', desc: `Berta was developed for a future in which vegetables became necessary weapons.
-
-A pink goat equipped with two of the juiciest hi-tek cucumbers… in Dolby surround ASMR. Maybe.
-
-After the battle, there is only one thing left to do:
-
-Eat your weapons, Berta.`, images: [
-                        { src: 'projects/projects_figurine_berta1package.webp' },
-                        { model: 'glb/Berta.glb' },
-                        { src: 'projects/projects_figurine_berta3drawing.webp' },
-                        { src: 'projects/projects_figurine_berta4newspaper.webp' },
-                    ]},
-                    { name: 'DUDDHA', desc: `Duddha was created. Yes.
-
-A sculptural duck combining Buddhist bullshitery, retro science fiction, and the unmistakable attitude of… flipping the bird.
-
-He's obese. He may eat your last pretzel from your lunchbox.
-
-Enlightenment is just Tron throwing up in a meditation room.
-
-This whole package is the most disrespectful, glorious, motherfuckin' spiritual awakening you've ever seen. You don't meditate with this thing — you put it on your desk, stare at it, and suddenly every corporate meeting, every traffic jam, every "live laugh love" sign in the world just feels a little more… fuckable.
-
-Forget the red pill. Forget the blue pill. He ate both of 'em and now we're stuck here while he waves his hands, politely asking for the next sandwich.`, images: [
-                        { src: 'projects/projects_figurine_duddha1package.webp' },
-                        { src: 'projects/projects_figurine_duddha2figurine.webp' },
-                    ]}
-                ]
-            },
-            {
-                cat: 'ACCESSOIRE',
-                products: [
-                    { name: 'NOT PLUG', desc: `Designed as a playful attachment for headphones, the glossy black cat ears transform an ordinary pair into something less ordinary. *slurp*
-
-Inspired by the strange intersection of consumer electronics, fashion, cosplay, and the approval of your local OnlyFans artist.
-
-Easy to attach. Explanations are discussable.`, images: [
-                        { src: 'projects/projects_accessoire_notplug1package.webp' },
-                        { src: 'projects/projects_accessoire_notplug2comic.webp' },
-                    ]}
-                ]
-            }
-        ];
-
-        const accordion = document.getElementById('projects-accordion');
-        let gIdx = 0;
-        const state = {};
-
-        projects.forEach((group) => {
-            const catEl = document.createElement('div');
-            catEl.className = 'cat-group';
-
-            const catHeader = document.createElement('div');
-            catHeader.className = 'cat-header';
-            catHeader.innerHTML = `
-                <span class="cat-label">${group.cat}</span>
-                <span class="arrow">&#9654;</span>
-            `;
-            catHeader.addEventListener('click', () => toggleCat(catEl));
-            catEl.appendChild(catHeader);
-
-            const catBody = document.createElement('div');
-            catBody.className = 'cat-body';
-
-            group.products.forEach((prod) => {
-                const prodEl = document.createElement('div');
-                prodEl.className = 'prod-item';
-
-                const prodHeader = document.createElement('div');
-                prodHeader.className = 'prod-header';
-                prodHeader.innerHTML = `
-                    <span class="prod-name">${prod.name}</span>
-                    <span class="prod-arrow">&#9654;</span>
-                `;
-                const thisGIdx = gIdx;
-                prodHeader.addEventListener('click', () => toggleProd(prodEl));
-                prodEl.appendChild(prodHeader);
-
-                const prodBody = document.createElement('div');
-                prodBody.className = 'prod-body';
-
-                const inner = document.createElement('div');
-                inner.className = 'prod-body-inner';
-
-                const stage = document.createElement('div');
-                stage.className = 'carousel-stage';
-                stage.setAttribute('data-gidx', gIdx);
-
-                prod.images.forEach((img, i) => {
-                    const slide = document.createElement('div');
-                    slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-                    if (img.model) {
-                        const mv = document.createElement('model-viewer');
-                        mv.setAttribute('src', img.model);
-                        mv.setAttribute('camera-controls', '');
-                        mv.setAttribute('auto-rotate', '');
-                        mv.setAttribute('auto-rotate-delay', '0');
-                        mv.setAttribute('rotation-per-second', '30deg');
-                        mv.setAttribute('shadow-intensity', '1');
-                        mv.setAttribute('exposure', '1');
-                        mv.setAttribute('loading', 'eager');
-                        mv.setAttribute('reveal', 'auto');
-                        mv.setAttribute('ar', '');
-                        mv.style.width = '100%';
-                        mv.style.height = '100%';
-                        slide.appendChild(mv);
-
-                        const loader = document.createElement('div');
-                        loader.className = 'model-loading';
-                        loader.innerHTML = '<div class="spinner"></div><div class="label">Loading 3D</div>';
-                        slide.appendChild(loader);
-                        const hideLoader = () => loader.remove();
-                        mv.addEventListener('load', hideLoader, { once: true });
-                        mv.addEventListener('error', hideLoader, { once: true });
-                    } else {
-                        slide.innerHTML = `<img src="${img.src}" loading="lazy">`;
-                    }
-                    stage.appendChild(slide);
+                themeBtn.addEventListener('click', () => {
+                    const idx = THEMES.indexOf(currentTheme);
+                    currentTheme = THEMES[(idx + 1) % THEMES.length];
+                    applyTheme(currentTheme);
                 });
-                inner.appendChild(stage);
+            }
 
-                const nav = document.createElement('div');
-                nav.className = 'carousel-nav';
+            /* ========== NAVIGATION & TÜR ENGINE ========== */
+            const FILE_MAP = {
+                'ABOUT': 'about.html',
+                'VHS MULTIVERSE': 'vhsmultiverse.html',
+                'HUMANART': 'humanart.html',
+                'PROJECTS': 'projects.html',
+                'STORYTIME': 'storytime.html',
+                'MUSIC': 'music.html',
+                'CONTACT': 'contact.html',
+                'DONATE': 'donate.html'
+            };
 
-                const prevBtn = document.createElement('button');
-                prevBtn.className = 'carousel-btn';
-                prevBtn.innerHTML = '&#9664;';
-                prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, -1); });
+            function navigateTo(cat) {
+                if (cat === CURRENT_PAGE) return;
+                const url = FILE_MAP[cat];
+                if (!url) return;
 
-                const nextBtn = document.createElement('button');
-                nextBtn.className = 'carousel-btn';
-                nextBtn.innerHTML = '&#9654;';
-                nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, 1); });
+                const door = document.getElementById('door-overlay');
+                door.classList.remove('open');
+                door.classList.add('closed');
 
-                nav.appendChild(prevBtn);
-                nav.appendChild(nextBtn);
-                inner.appendChild(nav);
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 1200);
+            }
 
-                const dots = document.createElement('div');
-                dots.className = 'carousel-dots';
-                dots.id = 'dots-' + gIdx;
+            /* ========== MENÜ ERSTELLEN ========== */
+            const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
+            const strip = document.getElementById('catStrip');
+            const track = document.getElementById('catTrack');
+            
+            for (let r = 0; r < 6; r++) {
+                CATS.forEach((cat) => {
+                    const el = document.createElement('div');
+                    el.className = 'cat-item';
+                    
+                    if (cat === CURRENT_PAGE) el.classList.add('active');
 
-                prod.images.forEach((_, i) => {
-                    const dot = document.createElement('span');
-                    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-                    const di = gIdx;
-                    dot.addEventListener('click', (e) => { e.stopPropagation(); goToSlide(di, i); });
-                    dots.appendChild(dot);
+                    el.innerHTML = `<span>${cat}</span>`;
+                    
+                    el.addEventListener('click', () => {
+                        navigateTo(cat);
+                    });
+                    
+                    track.appendChild(el);
                 });
-                inner.appendChild(dots);
+            }
 
-                if (prod.desc) {
-                    const desc = document.createElement('div');
-                    desc.className = 'prod-desc';
-                    desc.textContent = prod.desc;
-                    inner.appendChild(desc);
+            let setW = 0, pos = 0;
+            function measure() { setW = track.scrollWidth / 6; }
+            function wrap() {
+                if (setW > 0) {
+                    while (pos <= -setW) pos += setW;
+                    while (pos > 0) pos -= setW;
                 }
-
-                prodBody.appendChild(inner);
-                prodEl.appendChild(prodBody);
-                catBody.appendChild(prodEl);
-
-                state[gIdx] = { idx: 0, total: prod.images.length };
-                gIdx++;
-            });
-
-            catEl.appendChild(catBody);
-            accordion.appendChild(catEl);
-        });
-
-        /* open first category + first product */
-        const firstCat = accordion.querySelector('.cat-group');
-        if (firstCat) {
-            firstCat.classList.add('open');
-            const firstProd = firstCat.querySelector('.prod-item');
-            if (firstProd) firstProd.classList.add('open');
-        }
-
-        syncViewers();
-
-        function toggleCat(el) {
-            const isOpen = el.classList.contains('open');
-            document.querySelectorAll('.cat-group').forEach(c => c.classList.remove('open'));
-            if (!isOpen) el.classList.add('open');
-            syncViewers();
-        }
-
-        function toggleProd(el) {
-            const isOpen = el.classList.contains('open');
-            el.parentElement.querySelectorAll('.prod-item').forEach(p => p.classList.remove('open'));
-            if (!isOpen) el.classList.add('open');
-            syncViewers();
-        }
-
-        function navigate(gi, dir) {
-            const s = state[gi];
-            if (!s) return;
-            s.idx = (s.idx + dir + s.total) % s.total;
-            renderSlide(gi);
-        }
-
-        function goToSlide(gi, i) {
-            if (!state[gi]) return;
-            state[gi].idx = i;
-            renderSlide(gi);
-        }
-
-        function renderSlide(gi) {
-            const s = state[gi];
-            if (!s) return;
-            const stage = document.querySelector(`.carousel-stage[data-gidx="${gi}"]`);
-            if (!stage) return;
-            stage.querySelectorAll('.carousel-slide').forEach((sl, i) => sl.classList.toggle('active', i === s.idx));
-            document.querySelectorAll(`#dots-${gi} .carousel-dot`).forEach((d, i) => d.classList.toggle('active', i === s.idx));
-            syncViewers();
-        }
-
-        /* Pause any <model-viewer> that is not on the active, open slide */
-        function syncViewers() {
-            document.querySelectorAll('.carousel-stage').forEach(stage => {
-                const gi = +stage.dataset.gidx;
-                const s = state[gi];
-                const open = stage.closest('.cat-group.open') && stage.closest('.prod-item.open');
-                stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
-                    const mv = sl.querySelector('model-viewer');
-                    if (!mv) return;
-                    const active = !!(open && s && s.idx === i);
-                    if (active) {
-                        mv.setAttribute('auto-rotate', '');
-                        try { if (mv.play) mv.play(); } catch (e) {}
-                    } else {
-                        mv.removeAttribute('auto-rotate');
-                        try { if (mv.pause) mv.pause(); } catch (e) {}
-                    }
-                });
-            });
-        }
-
-        /* Swipe deaktiviert – Navigation erfolgt über die Pfeil-Buttons / Dots */
-        let touchX = 0, touchGI = null;
-
-        document.addEventListener('keydown', e => {
-            const st = document.querySelector('.cat-group.open .prod-item.open .carousel-stage');
-            if (!st) return;
-            const gi = +st.dataset.gidx;
-            if (e.key === 'ArrowLeft') navigate(gi, -1);
-            if (e.key === 'ArrowRight') navigate(gi, 1);
-        });
-
-    });
-    </script>
-
-    <!-- VHS noise generator -->
-    <script>
-    (function() {
-        const c = document.getElementById('vhs-noise-canvas');
-        if (!c) return;
-        const ctx = c.getContext('2d');
-        const W = 640, H = 400;
-        c.width = W; c.height = H;
-        const img = ctx.createImageData(W, H);
-        const d = img.data;
-        function noise() {
-            for (let i = 0; i < d.length; i += 4) {
-                const v = Math.random() * 255;
-                d[i] = v; d[i+1] = v; d[i+2] = v; d[i+3] = 255;
             }
-            ctx.putImageData(img, 0, 0);
-        }
-        (function loop() {
-            noise();
-            setTimeout(loop, 150);
-        })();
-    })();
+
+            let lastTime = performance.now();
+            function loop(time) {
+                const dt = time - lastTime;
+                lastTime = time;
+                const r = strip.getBoundingClientRect();
+                const visible = r.bottom > 0 && r.top < window.innerHeight;
+                
+                if (visible && !dragging) {
+                    pos -= 0.018 * dt;
+                    wrap();
+                    track.style.transform = `translateX(${pos}px)`;
+                }
+                requestAnimationFrame(loop);
+            }
+
+            const btnLeft = document.getElementById('navLeft');
+            const btnRight = document.getElementById('navRight');
+            if (btnLeft) { btnLeft.addEventListener('click', () => { pos += 350; wrap(); }); }
+            if (btnRight) { btnRight.addEventListener('click', () => { pos -= 350; wrap(); }); }
+
+            let dragging = false, startX = 0, startPos = 0;
+            function down(e) { if(e.target.closest('#themeToggle') || e.target.closest('.nav-btn')) return; dragging = true; startX = e.touches ? e.touches[0].clientX : e.clientX; startPos = pos; }
+            function move(e) { if (!dragging) return; pos = startPos + ((e.touches ? e.touches[0].clientX : e.clientX) - startX); wrap(); track.style.transform = `translateX(${pos}px)`; e.preventDefault(); }
+            function up() { dragging = false; }
+
+            strip.addEventListener('mousedown', down); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+            strip.addEventListener('touchstart', down, { passive: false }); strip.addEventListener('touchmove', move, { passive: false }); window.addEventListener('touchend', up);
+            const dragStrip = document.querySelector('.drag-strip');
+            if (dragStrip) { dragStrip.addEventListener('mousedown', down); dragStrip.addEventListener('touchstart', down, { passive: false }); }
+
+
+            window.addEventListener('resize', measure);
+            if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
+            requestAnimationFrame(loop);
+
+            const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
+            document.querySelectorAll('[data-lang-en]').forEach(el => {
+                const text = el.getAttribute(`data-lang-${lang}`);
+                if (text) el.innerHTML = text;
+            });
+
+            /* ========== PROJECTS DATA & LOGIC ========== */
+            const projects = [
+                {
+                    cat: 'GLASSES',
+                    products: [
+                        { name: 'DUCKPARADA: THUNDERBOLT', desc: `Inspired by Bauhaus, aircraft carriers, ducks, and Japanese superheroes, Thunderbolt 1 was born after over two years of development and more than 30 self-made drafts in Blender 3D.\n\nA modular glasses structure with optical lenses and genuine everyday utility.\n\nThe idea was simple: Grab the lightning from the sky and wear it as eyewear.\n\nZeus: Who the fuck stole my glasses?\nNarrator: For risks and side effects, bargain with feta cheese.`, images: [
+                            { src: 'projects/projects_glasses_duckparada_thunderbolt1vedran.webp' },
+                            { src: 'projects/projects_glasses_duckparada_thunderbolt2package.webp' },
+                            { src: 'projects/projects_glasses_duckparada_thunderbolt3comic.webp' },
+                            { src: 'projects/projects_glasses_duckparada_thunderbolt4squat.webp' },
+                        ]}
+                    ]
+                },
+                {
+                    cat: 'HELMET',
+                    products: [
+                        { name: 'DUCKPARADA: DUCKLIGHT', desc: `Began as a decorative duck from a flea market. After removing the plastic bottom, it was defined as headgear.\n\nThis resulted in the first unlicensed Duckparada helmet.\n\nUltralight, striking, and completely uncontrollable. A prototype and proof that good ideas sometimes show up when your mind is open for illegal usage of all day objects.`, images: [
+                            { src: 'projects/projects_helmet_duckparada_ducklight_package1.webp' },
+                            { src: 'projects/projects_helmet_duckparada_mark123comic.webp' },
+                            { src: 'projects/projects_helmet_duckparada_mark12goldmine.webp' },
+                        ]}
+                    ]
+                },
+                {
+                    cat: 'RINGS',
+                    products: [
+                        { name: 'TURN ME ON RING', desc: `One ring to give them all… emotional confusion.\n\nBuilt around a grotesque sculptural form with a tongue, staring eyes, tail, and a small mechanical-looking button marked "ON".\n\nAt the top sits a simple message:\n\nLOVE ME.\nLOVE. ME.\nYES WE CAN.\n\nPart wearable object, part miniature character. Lickable? …rusty and risk-obvious.\n\nA ring with no purpose.\nExcept perhaps turning something on.`, images: [
+                            { src: 'projects/projects_rings_turnmeonring_1package.webp' },
+                            { model: 'glb/turnmeonring.glb' },
+                            { src: 'projects/projects_rings_turnmeonring_2comic.webp' },
+                            { src: 'projects/projects_rings_turnmeonring_3ad.webp' },
+                        ]}
+                    ]
+                },
+                {
+                    cat: 'FIGURINE',
+                    products: [
+                        { name: 'BERTA', desc: `Berta was developed for a future in which vegetables became necessary weapons.\n\nA pink goat equipped with two of the juiciest hi-tek cucumbers… in Dolby surround ASMR. Maybe.\n\nAfter the battle, there is only one thing left to do:\n\nEat your weapons, Berta.`, images: [
+                            { src: 'projects/projects_figurine_berta1package.webp' },
+                            { model: 'glb/Berta.glb' },
+                            { src: 'projects/projects_figurine_berta3drawing.webp' },
+                            { src: 'projects/projects_figurine_berta4newspaper.webp' },
+                        ]},
+                        { name: 'DUDDHA', desc: `Duddha was created. Yes.\n\nA sculptural duck combining Buddhist bullshitery, retro science fiction, and the unmistakable attitude of… flipping the bird.\n\nHe's obese. He may eat your last pretzel from your lunchbox.\n\nEnlightenment is just Tron throwing up in a meditation room.\n\nThis whole package is the most disrespectful, glorious, motherfuckin' spiritual awakening you've ever seen. You don't meditate with this thing — you put it on your desk, stare at it, and suddenly every corporate meeting, every traffic jam, every "live laugh love" sign in the world just feels a little more… fuckable.\n\nForget the red pill. Forget the blue pill. He ate both of 'em and now we're stuck here while he waves his hands, politely asking for the next sandwich.`, images: [
+                            { src: 'projects/projects_figurine_duddha1package.webp' },
+                            { src: 'projects/projects_figurine_duddha2figurine.webp' },
+                        ]}
+                    ]
+                },
+                {
+                    cat: 'ACCESSOIRE',
+                    products: [
+                        { name: 'NOT PLUG', desc: `Designed as a playful attachment for headphones, the glossy black cat ears transform an ordinary pair into something less ordinary. *slurp*\n\nInspired by the strange intersection of consumer electronics, fashion, cosplay, and the approval of your local OnlyFans artist.\n\nEasy to attach. Explanations are discussable.`, images: [
+                            { src: 'projects/projects_accessoire_notplug1package.webp' },
+                            { src: 'projects/projects_accessoire_notplug2comic.webp' },
+                        ]}
+                    ]
+                }
+            ];
+
+            const accordion = document.getElementById('projects-accordion');
+            let gIdx = 0;
+            const state = {};
+
+            projects.forEach((group) => {
+                const catEl = document.createElement('div');
+                catEl.className = 'cat-group';
+
+                const catHeader = document.createElement('div');
+                catHeader.className = 'cat-header';
+                catHeader.innerHTML = `
+                    <span class="cat-label">${group.cat}</span>
+                    <span class="arrow">&#9654;</span>
+                `;
+                catHeader.addEventListener('click', () => toggleCat(catEl));
+                catEl.appendChild(catHeader);
+
+                const catBody = document.createElement('div');
+                catBody.className = 'cat-body';
+
+                group.products.forEach((prod) => {
+                    const prodEl = document.createElement('div');
+                    prodEl.className = 'prod-item';
+
+                    const prodHeader = document.createElement('div');
+                    prodHeader.className = 'prod-header';
+                    prodHeader.innerHTML = `
+                        <span class="prod-name">${prod.name}</span>
+                        <span class="prod-arrow">&#9654;</span>
+                    `;
+                    const thisGIdx = gIdx;
+                    prodHeader.addEventListener('click', () => toggleProd(prodEl));
+                    prodEl.appendChild(prodHeader);
+
+                    const prodBody = document.createElement('div');
+                    prodBody.className = 'prod-body';
+
+                    const inner = document.createElement('div');
+                    inner.className = 'prod-body-inner';
+
+                    const stage = document.createElement('div');
+                    stage.className = 'carousel-stage';
+                    stage.setAttribute('data-gidx', gIdx);
+
+                    prod.images.forEach((img, i) => {
+                        const slide = document.createElement('div');
+                        slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+                        if (img.model) {
+                            const mv = document.createElement('model-viewer');
+                            mv.setAttribute('src', img.model);
+                            mv.setAttribute('camera-controls', '');
+                            mv.setAttribute('auto-rotate', '');
+                            mv.setAttribute('auto-rotate-delay', '0');
+                            mv.setAttribute('rotation-per-second', '30deg');
+                            mv.setAttribute('shadow-intensity', '1');
+                            mv.setAttribute('exposure', '1');
+                            mv.setAttribute('loading', 'eager');
+                            mv.setAttribute('reveal', 'auto');
+                            mv.setAttribute('ar', '');
+                            mv.style.width = '100%';
+                            mv.style.height = '100%';
+                            slide.appendChild(mv);
+
+                            const loader = document.createElement('div');
+                            loader.className = 'model-loading';
+                            loader.innerHTML = '<div class="spinner"></div><div class="label">Loading 3D</div>';
+                            slide.appendChild(loader);
+                            const hideLoader = () => loader.remove();
+                            mv.addEventListener('load', hideLoader, { once: true });
+                            mv.addEventListener('error', hideLoader, { once: true });
+                        } else {
+                            slide.innerHTML = `<img src="${img.src}" loading="lazy">`;
+                        }
+                        stage.appendChild(slide);
+                    });
+                    inner.appendChild(stage);
+
+                    const nav = document.createElement('div');
+                    nav.className = 'carousel-nav';
+
+                    const prevBtn = document.createElement('button');
+                    prevBtn.className = 'carousel-btn';
+                    prevBtn.innerHTML = '&#9664;';
+                    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, -1); });
+
+                    const nextBtn = document.createElement('button');
+                    nextBtn.className = 'carousel-btn';
+                    nextBtn.innerHTML = '&#9654;';
+                    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, 1); });
+
+                    nav.appendChild(prevBtn);
+                    nav.appendChild(nextBtn);
+                    inner.appendChild(nav);
+
+                    const dots = document.createElement('div');
+                    dots.className = 'carousel-dots';
+                    dots.id = 'dots-' + gIdx;
+
+                    prod.images.forEach((_, i) => {
+                        const dot = document.createElement('span');
+                        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                        const di = gIdx;
+                        dot.addEventListener('click', (e) => { e.stopPropagation(); goToSlide(di, i); });
+                        dots.appendChild(dot);
+                    });
+                    inner.appendChild(dots);
+
+                    if (prod.desc) {
+                        const desc = document.createElement('div');
+                        desc.className = 'prod-desc';
+                        desc.textContent = prod.desc;
+                        inner.appendChild(desc);
+                    }
+
+                    prodBody.appendChild(inner);
+                    prodEl.appendChild(prodBody);
+                    catBody.appendChild(prodEl);
+
+                    state[gIdx] = { idx: 0, total: prod.images.length };
+                    gIdx++;
+                });
+
+                catEl.appendChild(catBody);
+                accordion.appendChild(catEl);
+            });
+
+            /* Erstes Element öffnen */
+            const firstCat = accordion.querySelector('.cat-group');
+            if (firstCat) {
+                firstCat.classList.add('open');
+                const firstProd = firstCat.querySelector('.prod-item');
+                if (firstProd) firstProd.classList.add('open');
+            }
+
+            syncViewers();
+
+            function toggleCat(el) {
+                const isOpen = el.classList.contains('open');
+                document.querySelectorAll('.cat-group').forEach(c => c.classList.remove('open'));
+                if (!isOpen) el.classList.add('open');
+                syncViewers();
+            }
+
+            function toggleProd(el) {
+                const isOpen = el.classList.contains('open');
+                el.parentElement.querySelectorAll('.prod-item').forEach(p => p.classList.remove('open'));
+                if (!isOpen) el.classList.add('open');
+                syncViewers();
+            }
+
+            function navigate(gi, dir) {
+                const s = state[gi];
+                if (!s) return;
+                s.idx = (s.idx + dir + s.total) % s.total;
+                renderSlide(gi);
+            }
+
+            function goToSlide(gi, i) {
+                if (!state[gi]) return;
+                state[gi].idx = i;
+                renderSlide(gi);
+            }
+
+            function renderSlide(gi) {
+                const s = state[gi];
+                if (!s) return;
+                const stage = document.querySelector(`.carousel-stage[data-gidx="${gi}"]`);
+                if (!stage) return;
+                stage.querySelectorAll('.carousel-slide').forEach((sl, i) => sl.classList.toggle('active', i === s.idx));
+                document.querySelectorAll(`#dots-${gi} .carousel-dot`).forEach((d, i) => d.classList.toggle('active', i === s.idx));
+                syncViewers();
+            }
+
+            /* Pausiert 3D Modelle, die gerade nicht im Fokus sind */
+            function syncViewers() {
+                document.querySelectorAll('.carousel-stage').forEach(stage => {
+                    const gi = +stage.dataset.gidx;
+                    const s = state[gi];
+                    const open = stage.closest('.cat-group.open') && stage.closest('.prod-item.open');
+                    stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
+                        const mv = sl.querySelector('model-viewer');
+                        if (!mv) return;
+                        const active = !!(open && s && s.idx === i);
+                        if (active) {
+                            mv.setAttribute('auto-rotate', '');
+                            try { if (mv.play) mv.play(); } catch (e) {}
+                        } else {
+                            mv.removeAttribute('auto-rotate');
+                            try { if (mv.pause) mv.pause(); } catch (e) {}
+                        }
+                    });
+                });
+            }
+
+            /* Tastatursteuerung */
+            document.addEventListener('keydown', e => {
+                const st = document.querySelector('.cat-group.open .prod-item.open .carousel-stage');
+                if (!st) return;
+                const gi = +st.dataset.gidx;
+                if (e.key === 'ArrowLeft') navigate(gi, -1);
+                if (e.key === 'ArrowRight') navigate(gi, 1);
+            });
+
+            /* Tür hochziehen */
+            setTimeout(() => { document.getElementById('door-overlay').classList.replace('closed', 'open'); }, 400);
+        });
     </script>
 
     <!-- 3D model viewer for GLB showcase -->
