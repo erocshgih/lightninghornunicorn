@@ -148,8 +148,7 @@
   #lhu-intro.lhu-intro-yellow #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94)); }
   #lhu-intro.lhu-intro-blue #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94)); }
 
-  /* --- Z-INDEX THEATER (STRICT LAYERING) --- */
-  /* FIX: Matrix hat jetzt eine Transition-Regel für weiches Aus- und Einblenden */
+  /* --- Z-INDEX THEATER --- */
   #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; transition: opacity 0.4s ease; opacity: 1; }
   #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
   #shmup-container { position: fixed; inset: 0; pointer-events: none; z-index: 3; display: none; }
@@ -162,88 +161,37 @@
   #container3D canvas { display: block; }
 
   /* --- UI STYLING --- */
-  .glass {
-    background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text); border-radius: 4px;
-  }
-  .btn {
-    padding: 10px 18px; font-size: clamp(13px, 3.6vw, 16px); font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease;
-  }
+  .glass { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text); border-radius: 4px; }
+  .btn { padding: 10px 18px; font-size: clamp(13px, 3.6vw, 16px); font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; }
   .btn:hover { background: rgba(255, 255, 255, 0.15); }
-  
-  #head-select {
-    width: 100%; padding: 15px 20px; font-size: clamp(14px, 3.8vw, 17px); text-align: center; text-align-last: center; cursor: pointer; appearance: none;
-  }
+  #head-select { width: 100%; padding: 15px 20px; font-size: clamp(14px, 3.8vw, 17px); text-align: center; text-align-last: center; cursor: pointer; appearance: none; }
   #head-select option { color: #111; }
   .effect-btn { min-width: 58px; height: 48px; font-size: 24px; line-height: 1; }
 
-  #loading {
-    position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-  }
+  #loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; }
   #loading.show { display: flex; }
-  .spinner {
-    width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent));
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite;
-  }
+  .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* --- EFFECTS --- */
-  #rainbow-aura {
-    left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px);
-    transform: translate(-50%, -50%); border-radius: 50%;
-    background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030);
-    opacity: 0.15;
-  }
+  #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
   #rainbow-aura.active { display: block; animation: rainbowAura 0.55s linear infinite; }
-  @keyframes rainbowAura {
-    from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; }
-    50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; }
-    to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; }
-  }
+  @keyframes rainbowAura { from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; } 50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; } to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; } }
 
   /* SHMUP MULTI-LASER SYSTEM */
   .shmup-center { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
-  .shmup-beam {
-    position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0;
-  }
-  
-  .shmup-beam.right {
-    left: 0; transform-origin: left center;
-    background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent);
-    animation: fireRight var(--speed) linear infinite;
-    animation-delay: var(--delay);
-  }
-  .shmup-beam.left {
-    right: 0; transform-origin: right center;
-    background: linear-gradient(-90deg, #fff, #ff3030, #ff9d21, transparent);
-    animation: fireLeft var(--speed) linear infinite;
-    animation-delay: var(--delay);
-  }
-
-  @keyframes fireRight {
-    0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); }
-    100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); }
-  }
-  @keyframes fireLeft {
-    0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); }
-    100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); }
-  }
+  .shmup-beam { position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0; }
+  .shmup-beam.right { left: 0; transform-origin: left center; background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireRight var(--speed) linear infinite; animation-delay: var(--delay); }
+  .shmup-beam.left { right: 0; transform-origin: right center; background: linear-gradient(-90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireLeft var(--speed) linear infinite; animation-delay: var(--delay); }
+  @keyframes fireRight { 0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
+  @keyframes fireLeft { 0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
 
   /* EMOJI SYSTEM */
   #heart-emojis.active, #rainbow-emojis.active { display: block; }
-  .fast-rise-emoji {
-    position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); 
-    opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity;
-  }
-  @keyframes riseFast {
-    0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
-    15% { opacity: 1; }
-    85% { opacity: 1; }
-    100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; }
-  }
+  .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
+  @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
 
-  @media (max-width: 600px) {
-    #effect-buttons { bottom: max(76px, calc(env(safe-area-inset-bottom) + 64px)); }
-  }
+  @media (max-width: 600px) { #effect-buttons { bottom: max(76px, calc(env(safe-area-inset-bottom) + 64px)); } }
 </style>
 </head>
 
@@ -278,11 +226,8 @@
 
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
-  
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
-  
-  <!-- SHMUP LASER CONTAINER -->
   <div id="shmup-container">
     <div class="shmup-center">
       <div class="shmup-beam right" style="--angle: 0deg; --speed: 0.25s; --delay: 0s;"></div>
@@ -293,49 +238,35 @@
       <div class="shmup-beam left" style="--angle: 18deg; --speed: 0.25s; --delay: 0.08s;"></div>
     </div>
   </div>
-
   <div id="rainbow-aura"></div>
-  
   <div id="container3D"></div>
 
-  <p class="sr-only">
-    Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist
-    Vedran Lukic, with cocreator and creative partner Aether Veylan.
-  </p>
+  <p class="sr-only">Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.</p>
 
   <div id="loading"><div class="spinner"></div><span class="loading-text">loading</span></div>
-
   <div id="ui-wrapper">
     <button id="music-toggle" class="btn glass">Play Music</button>
     <button id="navigate-to-main" class="btn glass">Main Page</button>
   </div>
-
   <div id="effect-buttons">
     <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
   </div>
-
   <div id="head-menu">
     <select id="head-select" class="glass"></select>
   </div>
 
-<!-- SCRIPTS -->
-
 <script>
-  /* 1. MATRIX RAIN SCRIPT (Mit performantem Hologlitch) */
+  /* 1. MATRIX RAIN SCRIPT */
   const mcanvas = document.getElementById("matrix-bg");
   const mctx = mcanvas.getContext("2d");
   let cols, drops, hues, speeds, sizes, fontSize;
 
   function setupMatrix() {
-    mcanvas.width = innerWidth;
-    mcanvas.height = innerHeight;
+    mcanvas.width = innerWidth; mcanvas.height = innerHeight;
     fontSize = Math.max(40, Math.round(innerWidth / 18));
     cols = Math.ceil(innerWidth / fontSize);
-    drops = new Array(cols);
-    hues = new Array(cols);
-    speeds = new Array(cols);
-    sizes = new Array(cols);
+    drops = new Array(cols); hues = new Array(cols); speeds = new Array(cols); sizes = new Array(cols);
     for (let i = 0; i < cols; i++) {
       drops[i] = Math.random() * (innerHeight / fontSize);
       hues[i] = Math.floor(Math.random() * 360);
@@ -352,31 +283,18 @@
       const y = mcanvas.height - drops[i] * fontSize;
       let size = fontSize * sizes[i];
       mctx.font = size + "px monospace";
-      
       const x = i * fontSize;
-      
       let glitchOffset = 0;
       if (Math.random() > 0.85) glitchOffset = (Math.random() - 0.5) * 6;
-
-      mctx.fillStyle = "rgba(0, 255, 255, 0.35)";
-      mctx.fillText("7", x - 3 + glitchOffset, y);
-      
-      mctx.fillStyle = "rgba(255, 0, 255, 0.35)";
-      mctx.fillText("7", x + 3 - glitchOffset, y);
-
-      mctx.fillStyle = "hsl(" + hues[i] + ", 100%, 82%)";
-      mctx.fillText("7", x, y);
-
+      mctx.fillStyle = "rgba(0, 255, 255, 0.35)"; mctx.fillText("7", x - 3 + glitchOffset, y);
+      mctx.fillStyle = "rgba(255, 0, 255, 0.35)"; mctx.fillText("7", x + 3 - glitchOffset, y);
+      mctx.fillStyle = "hsl(" + hues[i] + ", 100%, 82%)"; mctx.fillText("7", x, y);
       hues[i] = (hues[i] + 0.12) % 360;
-      if (y < -size && Math.random() > 0.97) {
-        drops[i] = 0;
-        hues[i] = Math.floor(Math.random() * 360);
-      }
+      if (y < -size && Math.random() > 0.97) { drops[i] = 0; hues[i] = Math.floor(Math.random() * 360); }
     }
     requestAnimationFrame(drawMatrix);
   }
-  drawMatrix();
-  window.addEventListener("resize", setupMatrix);
+  drawMatrix(); window.addEventListener("resize", setupMatrix);
 </script>
 
 <script type="module">
@@ -399,12 +317,8 @@
   function stopLoading() { loadingEl.classList.remove("show"); }
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
-  camera.position.set(2.6, 0, 2.6);
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-  renderer.setPixelRatio(1);
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); renderer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight); renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.getElementById("container3D").appendChild(renderer.domElement);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.9));
@@ -412,23 +326,17 @@
   const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 5); scene.add(fill);
   const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(-3, 5, -5); scene.add(rim);
 
-  const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(dracoLoader);
+  const dracoLoader = new DRACOLoader(); dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+  const loader = new GLTFLoader(); loader.setDRACOLoader(dracoLoader);
 
-  // Mini Scene (Enter Button)
   const hitEnterSlot = document.getElementById("lhu-image-slot");
   const hitEnterScene = new THREE.Scene();
   const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
   const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
-  hitEnterRenderer.setPixelRatio(1);
-  hitEnterRenderer.setClearColor(0x000000, 0);
-  hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
+  hitEnterRenderer.setPixelRatio(1); hitEnterRenderer.setClearColor(0x000000, 0); hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
   hitEnterSlot.appendChild(hitEnterRenderer.domElement);
   
-  hitEnterScene.add(new THREE.AmbientLight(0xffffff, 2.0));
-  hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.8));
+  hitEnterScene.add(new THREE.AmbientLight(0xffffff, 2.0)); hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.8));
   const hitKey = new THREE.DirectionalLight(0xffffff, 3.0); hitKey.position.set(3, 5, 6); hitEnterScene.add(hitKey);
   const hitFill = new THREE.DirectionalLight(0xaac8ff, 1.8); hitFill.position.set(-5, 2, 4); hitEnterScene.add(hitFill);
   const hitRim = new THREE.DirectionalLight(0xffffff, 2.2); hitRim.position.set(0, 3, -5); hitEnterScene.add(hitRim);
@@ -436,19 +344,10 @@
   let hitEnterObject = null, hitEnterMixer = null;
 
   function fitHitEnterModel(model) {
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3());
-    const maxSize = Math.max(size.x, size.y, size.z, 0.001);
-    model.position.sub(center);
-    model.position.y += size.y * 0.02;
-    const fovRad = THREE.MathUtils.degToRad(hitEnterCamera.fov);
-    const distance = (maxSize * 0.62) / Math.tan(fovRad / 2);
-    hitEnterCamera.position.set(0, maxSize * 0.08, Math.max(distance, 0.35));
-    hitEnterCamera.lookAt(0, size.y * 0.02, 0);
-    hitEnterCamera.near = Math.max(0.01, maxSize / 100);
-    hitEnterCamera.far = Math.max(10, maxSize * 20);
-    hitEnterCamera.updateProjectionMatrix();
+    const box = new THREE.Box3().setFromObject(model); const center = box.getCenter(new THREE.Vector3()); const size = box.getSize(new THREE.Vector3()); const maxSize = Math.max(size.x, size.y, size.z, 0.001);
+    model.position.sub(center); model.position.y += size.y * 0.02;
+    const fovRad = THREE.MathUtils.degToRad(hitEnterCamera.fov); const distance = (maxSize * 0.62) / Math.tan(fovRad / 2);
+    hitEnterCamera.position.set(0, maxSize * 0.08, Math.max(distance, 0.35)); hitEnterCamera.lookAt(0, size.y * 0.02, 0); hitEnterCamera.near = Math.max(0.01, maxSize / 100); hitEnterCamera.far = Math.max(10, maxSize * 20); hitEnterCamera.updateProjectionMatrix();
   }
 
   loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hitenter.glb", (g) => {
@@ -456,184 +355,82 @@
     hitEnterObject.traverse((child) => {
       if (!child.isMesh || !child.material) return;
       const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((mat) => {
-        if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5;
-        if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58;
-        if ("emissive" in mat) { mat.emissive.setRGB(0.055, 0.055, 0.055); mat.emissiveIntensity = 0.35; }
-      });
+      materials.forEach((mat) => { if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5; if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58; if ("emissive" in mat) { mat.emissive.setRGB(0.055, 0.055, 0.055); mat.emissiveIntensity = 0.35; } });
     });
-    hitEnterScene.add(hitEnterObject);
-    fitHitEnterModel(hitEnterObject);
-    if (g.animations.length) {
-      hitEnterMixer = new THREE.AnimationMixer(hitEnterObject);
-      g.animations.forEach(clip => hitEnterMixer.clipAction(clip).play());
-    }
+    hitEnterScene.add(hitEnterObject); fitHitEnterModel(hitEnterObject);
+    if (g.animations.length) { hitEnterMixer = new THREE.AnimationMixer(hitEnterObject); g.animations.forEach(clip => hitEnterMixer.clipAction(clip).play()); }
   });
 
   const hitEnterResizeObserver = new ResizeObserver(() => {
-    const rect = hitEnterSlot.getBoundingClientRect();
-    const w = Math.max(1, Math.floor(rect.width));
-    const h = Math.max(1, Math.floor(rect.height));
-    hitEnterRenderer.setSize(w, h, false);
-    hitEnterCamera.aspect = w / h;
-    hitEnterCamera.updateProjectionMatrix();
+    const rect = hitEnterSlot.getBoundingClientRect(); const w = Math.max(1, Math.floor(rect.width)); const h = Math.max(1, Math.floor(rect.height));
+    hitEnterRenderer.setSize(w, h, false); hitEnterCamera.aspect = w / h; hitEnterCamera.updateProjectionMatrix();
   });
   hitEnterResizeObserver.observe(hitEnterSlot);
 
-  // Main Scene Logic
-  let object = null, mixer = null;
-  const clock = new THREE.Clock();
+  let object = null, mixer = null; const clock = new THREE.Clock();
 
   function loadHead(url) {
-    startLoading();
-    if (object) scene.remove(object);
-    if (mixer) mixer.stopAllAction();
-    loader.load(url, (g) => {
-      object = g.scene;
-      scene.add(object);
-      if (g.animations.length) {
-        mixer = new THREE.AnimationMixer(object);
-        g.animations.forEach(clip => mixer.clipAction(clip).play());
-      }
-      stopLoading();
-    });
+    startLoading(); if (object) scene.remove(object); if (mixer) mixer.stopAllAction();
+    loader.load(url, (g) => { object = g.scene; scene.add(object); if (g.animations.length) { mixer = new THREE.AnimationMixer(object); g.animations.forEach(clip => mixer.clipAction(clip).play()); } stopLoading(); });
   }
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 1.2;
+  const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
 
-  let musicOn = false;
-  const music = document.getElementById("background-music");
-  document.getElementById("music-toggle").onclick = () => {
-    musicOn = !musicOn;
-    musicOn ? music.play().catch(()=>{}) : music.pause();
-    document.getElementById("music-toggle").textContent = musicOn ? "Stop Music" : "Play Music";
-  };
-  document.getElementById("navigate-to-main").onclick = () => {
-    location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html";
-  };
+  let musicOn = false; const music = document.getElementById("background-music");
+  document.getElementById("music-toggle").onclick = () => { musicOn = !musicOn; musicOn ? music.play().catch(()=>{}) : music.pause(); document.getElementById("music-toggle").textContent = musicOn ? "Stop Music" : "Play Music"; };
+  document.getElementById("navigate-to-main").onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html"; };
 
-  // Interactions
   let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
-  let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null;
-  let rainbowMatStates = [];
+  let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null; let rainbowMatStates = [];
 
   function tweenCamera(toPos, toTarget, dur, onDone) {
-    camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone };
-    controls.enabled = false; controls.autoRotate = false;
+    camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone }; controls.enabled = false; controls.autoRotate = false;
   }
 
   document.getElementById("heart-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive) return;
-    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    if (!object || gagActive || rainbowActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
     gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
-    
-    // Matrix-Hintergrund ausblenden
     document.getElementById("matrix-bg").style.opacity = "0";
-    
-    const box = new THREE.Box3().setFromObject(object);
-    box.getSize(gagSize);
-    const center = new THREE.Vector3(); box.getCenter(center);
-    
+    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
     const eye = new THREE.Vector3(center.x, box.max.y - gagSize.y * 0.12, center.z + gagSize.z * 0.1);
     const closePos = eye.clone().add(new THREE.Vector3(gagSize.x * 0.25, gagSize.y * 0.02, gagSize.z * 0.55 + gagSize.length() * 0.35));
     tweenCamera(closePos, eye, 650);
-    
     document.getElementById("heart-emojis").classList.add("active");
-    
-    const sndWolf = document.getElementById("snd-wolf");
-    const sndRizz = document.getElementById("snd-rizz");
-    sndWolf.currentTime = 0; sndWolf.play().catch(()=>{});
-    sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; };
-    setTimeout(endGag, 9000);
+    const sndWolf = document.getElementById("snd-wolf"); const sndRizz = document.getElementById("snd-rizz"); sndWolf.currentTime = 0; sndWolf.play().catch(()=>{}); sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; }; setTimeout(endGag, 9000);
   };
 
   function endGag() {
-    if (gagBase) object.position.copy(gagBase);
-    object.rotation.set(0,0,0);
-    gagActive = false;
-    document.getElementById("heart-emojis").classList.remove("active");
-    // Matrix-Hintergrund wieder einblenden
-    document.getElementById("matrix-bg").style.opacity = "1";
-    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    if (gagBase) object.position.copy(gagBase); object.rotation.set(0,0,0); gagActive = false; document.getElementById("heart-emojis").classList.remove("active"); document.getElementById("matrix-bg").style.opacity = "1"; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
   document.getElementById("rainbow-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive) return;
-    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
-    rainbowActive = true; rainbowStart = performance.now(); 
-    rainbowBaseRot = object.rotation.clone();
-    rainbowBasePos = object.position.clone();
-    
-    // Matrix-Hintergrund ausblenden
+    if (!object || gagActive || rainbowActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    rainbowActive = true; rainbowStart = performance.now(); rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
-    
-    rainbowMatStates = [];
-    object.traverse(c => {
-      if (c.isMesh && c.material) {
-        const mats = Array.isArray(c.material) ? c.material : [c.material];
-        mats.forEach(m => { if (m.emissive) rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }); });
-      }
-    });
-
-    document.getElementById("rainbow-aura").classList.add("active");
-    document.getElementById("rainbow-emojis").classList.add("active");
-    
-    const box = new THREE.Box3().setFromObject(object);
-    box.getSize(gagSize);
-    const center = new THREE.Vector3(); box.getCenter(center);
-    const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z);
-    tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
-
-    const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{});
-    controls.enabled = false; controls.autoRotate = false;
+    rainbowMatStates = []; object.traverse(c => { if (c.isMesh && c.material) { const mats = Array.isArray(c.material) ? c.material : [c.material]; mats.forEach(m => { if (m.emissive) rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }); }); } });
+    document.getElementById("rainbow-aura").classList.add("active"); document.getElementById("rainbow-emojis").classList.add("active");
+    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
+    const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{}); controls.enabled = false; controls.autoRotate = false;
   };
 
   function endRainbow() {
-    rainbowActive = false;
-    if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot);
-    if (rainbowBasePos) object.position.copy(rainbowBasePos);
-    rainbowBasePos = null;
-    rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); s.mat.emissiveIntensity = s.int; });
-    document.getElementById("rainbow-aura").classList.remove("active");
-    document.getElementById("rainbow-emojis").classList.remove("active");
-    document.getElementById("shmup-container").style.display = "none";
-    // Matrix-Hintergrund wieder einblenden
-    document.getElementById("matrix-bg").style.opacity = "1";
-    controls.enabled = true; controls.autoRotate = true;
-    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    rainbowActive = false; if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); if (rainbowBasePos) object.position.copy(rainbowBasePos); rainbowBasePos = null; rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); s.mat.emissiveIntensity = s.int; }); document.getElementById("rainbow-aura").classList.remove("active"); document.getElementById("rainbow-emojis").classList.remove("active"); document.getElementById("shmup-container").style.display = "none"; document.getElementById("matrix-bg").style.opacity = "1"; controls.enabled = true; controls.autoRotate = true; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
-  // Generierung der schnellen Emojis
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
     const container = document.getElementById(containerId);
     for (let i = 0; i < count; i++) {
-      const e = document.createElement("span");
-      e.className = "fast-rise-emoji";
-      e.textContent = char;
-      e.style.setProperty("--left", `${Math.random() * 100}%`);
-      e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`);
-      e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`);
-      e.style.setProperty("--delay", `${-Math.random() * 2}s`);
-      e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`);
-      container.appendChild(e);
+      const e = document.createElement("span"); e.className = "fast-rise-emoji"; e.textContent = char; e.style.setProperty("--left", `${Math.random() * 100}%`); e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`); e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`); e.style.setProperty("--delay", `${-Math.random() * 2}s`); e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`); container.appendChild(e);
     }
   }
   
-  spawnEmojis("heart-emojis", "❤️", 30, 60, 40); 
-  spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
+  spawnEmojis("heart-emojis", "❤️", 30, 60, 40); spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
 
   const selectEl = document.getElementById("head-select");
-  MODELS.forEach(m => {
-    const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; selectEl.appendChild(opt);
-  });
-  selectEl.addEventListener("change", (e) => loadHead(e.target.value));
-  loadHead(MODELS[0].url);
+  MODELS.forEach(m => { const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; selectEl.appendChild(opt); });
+  selectEl.addEventListener("change", (e) => loadHead(e.target.value)); loadHead(MODELS[0].url);
 
-  /* 3. CINEMATIC INTRO LOGIC */
+  /* 3. DYNAMISCHE INTRO LOGIK (Charakter-basiert) */
   (() => {
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
@@ -651,10 +448,7 @@
       blue: { color: "#33bbff", bg: "linear-gradient(180deg, #99ddff 0%, #33bbff 24%, #0077cc 48%, #66ccff 68%, #33bbff 100%)", shadow: "rgba(50,180,255,.75)" }
     };
     
-    function resizeIntro() {
-      W = innerWidth; H = innerHeight;
-      canvas.width = W; canvas.height = H;
-    }
+    function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; }
     
     function animateIntro(now) {
       const t = (now - introStart) / 1000 / 2;
@@ -662,8 +456,8 @@
       
       const textT = Math.max(0, Math.min(1, (t - .75) / 2.8));
       const textEase = textT * textT * (3 - 2 * textT);
-      const spiral = textEase * Math.PI * 3.0;
 
+      // Phase 1: Die Wörter formieren sich aus dem Chaos
       if (textT > 0) {
         word.style.opacity = String(Math.min(1, textT * 2.5));
         lines.forEach((el, i) => {
@@ -671,28 +465,68 @@
           const collapse = Math.max(0, Math.min(1, (textT - .55) / .45));
           const easeIn = collapse * collapse * (3 - 2 * collapse);
 
-          const phase = spiral + i * 2.1;
-          const x0 = Math.cos(phase) * 210 * reveal;
-          const y0 = Math.sin(phase * .72) * 75 * reveal;
-          const z0 = Math.sin(phase) * 280 * reveal;
+          let x = 0, y = 0, z = 0, rotY = 0, rotZ = 0, scale = 1, opac = 1;
 
-          const letterSpiral = spiral * 1.5 + i * 1.7;
-          const radius = 180 * (1 - easeIn);
-          const x1 = Math.cos(letterSpiral) * radius;
-          const y1 = Math.sin(letterSpiral) * radius;
-          const z1 = 120 - easeIn * 500;
+          if (introVariant === "red") {
+            // Dominant, brutal: Harter Aufprall von oben mit massivem Screen-Shake
+            const slam = Math.pow(easeIn, 7); 
+            const shakeX = (1 - slam) * (Math.random() - 0.5) * 120;
+            const shakeY = (1 - slam) * (Math.random() - 0.5) * 120;
+            
+            x = (Math.random() - 0.5) * 600 * (1 - slam) + shakeX;
+            y = -800 * (1 - slam) + shakeY; 
+            z = 400 * (1 - slam);
+            
+            rotY = (Math.random() - 0.5) * 180 * (1 - slam);
+            rotZ = (Math.random() - 0.5) * 90 * (1 - slam);
+            scale = 1 + (1 - slam) * 5; 
+            opac = slam;
+          } 
+          else if (introVariant === "blue") {
+            // Mystisch, okkult: Beschwörungskreis mit Flackern
+            const ritualPhase = t * 4.0 + i * ((Math.PI * 2) / 3);
+            const radius = 350 * (1 - easeIn);
+            
+            x = Math.cos(ritualPhase) * radius;
+            z = Math.sin(ritualPhase) * radius;
+            y = Math.sin(t * 3.0 + i) * 120 * (1 - easeIn);
+            
+            rotY = (t * 250) + (easeIn * 360); 
+            rotZ = Math.sin(t * 2) * 20 * (1 - easeIn);
+            
+            scale = 0.5 + easeIn * 0.5;
+            // Flacker-Effekt (Transparenz moduliert)
+            opac = easeIn * (Math.sin(t * 30 + i) * 0.5 + 0.5);
+            if (easeIn > 0.95) opac = 1; // Stabilisiert sich am Ende
+          } 
+          else {
+            // Gelb (Default): Luftig, meditativ, bouncy
+            const spiral = textEase * Math.PI * 3.0;
+            const phase = spiral + i * 2.1;
+            const x0 = Math.cos(phase) * 210 * reveal;
+            const y0 = Math.sin(phase * .72) * 75 * reveal;
+            const z0 = Math.sin(phase) * 280 * reveal;
 
-          const x = x0 * (1 - easeIn) + x1 * easeIn;
-          const y = y0 * (1 - easeIn) + y1 * easeIn;
-          const z = z0 * (1 - easeIn) + z1 * easeIn;
-          const rot = Math.sin(phase) * 20 + easeIn * 540;
-          const scale = .72 + (1 - easeIn) * .45;
+            const letterSpiral = spiral * 1.5 + i * 1.7;
+            const radius = 180 * (1 - easeIn);
+            
+            x = x0 * (1 - easeIn) + Math.cos(letterSpiral) * radius;
+            // Hover-Effekt auf Y
+            y = y0 * (1 - easeIn) + Math.sin(letterSpiral) * radius + Math.sin(t * 4 + i) * 30 * (1 - easeIn);
+            z = z0 * (1 - easeIn) + 120 - easeIn * 500;
+            
+            rotY = Math.sin(phase) * 20 + easeIn * 540;
+            rotZ = easeIn * 360;
+            scale = .72 + (1 - easeIn) * .45;
+            opac = .6 + scale * .35;
+          }
 
-          el.style.transform = `translate3d(${x}px,${y}px,${z}px) rotateY(${rot}deg) rotateZ(${easeIn * 360}deg) scale(${scale})`;
-          el.style.opacity = String(.6 + scale * .35);
+          el.style.transform = `translate3d(${x}px,${y}px,${z}px) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`;
+          el.style.opacity = String(opac);
         });
       }
       
+      // Phase 2: Wörter zentriert anzeigen (mit Glitches)
       const seqT = t - 0.625;
       if (seqT >= 0 && seqT < 1.905) {
         const index = Math.min(2, Math.floor(seqT / 0.635));
@@ -712,34 +546,51 @@
         for (const ch of ["LIGHTNING", "HORN", "UNICORN"][index]) {
           const letter = document.createElement("span");
           letter.textContent = ch; 
-          
-          letter.style.display = "block"; 
-          letter.style.lineHeight = "0.88";
-          letter.style.fontSize = "1em";
-          letter.style.color = vColor.color;
-          letter.style.fontFamily = "inherit";
-          letter.style.fontWeight = "900";
-          letter.style.backgroundImage = vColor.bg;
-          letter.style.webkitBackgroundClip = "text";
-          letter.style.backgroundClip = "text";
-          letter.style.webkitTextFillColor = "transparent";
-          
+          letter.style.display = "block"; letter.style.lineHeight = "0.88"; letter.style.fontSize = "1em";
+          letter.style.color = vColor.color; letter.style.fontFamily = "inherit"; letter.style.fontWeight = "900";
+          letter.style.backgroundImage = vColor.bg; letter.style.webkitBackgroundClip = "text";
+          letter.style.backgroundClip = "text"; letter.style.webkitTextFillColor = "transparent";
           stack.appendChild(letter);
         }
         
-        let glitchPulse = 0;
-        if (local > 0.15 && local < 0.22) {
-          const progress = (local - 0.15) / 0.07; 
-          glitchPulse = Math.sin(progress * Math.PI); 
-        }
-
-        if (glitchPulse > 0) {
-          const g = glitchPulse * 2.2;
-          const jitterX = (Math.random() - 0.5) * g * 8;
+        // Individuelle Glitch-/Erscheinungseffekte für Phase 2
+        if (introVariant === "red") {
+          // Permanenter, nervöser Chromatic Glitch + Shake
+          const g = Math.random() * 4;
+          const jitterX = (Math.random() - 0.5) * 10;
           stack.style.transform = `translateX(${jitterX}px)`;
-          stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.8), -${g*2}px 0 0 rgba(255,0,180,.8)`;
-        } else {
-          stack.style.transform = `translateX(0)`;
+          stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.9), -${g*2}px 0 0 rgba(255,0,180,.9)`;
+        } 
+        else if (introVariant === "blue") {
+          // Okkultes Atmen und Flackern
+          const breath = Math.sin(local * Math.PI * 4); 
+          const glow = 5 + (breath * 15);
+          stack.style.textShadow = `0 0 ${glow}px ${vColor.shadow}, 0 0 ${glow * 2}px rgba(255,255,255,0.4)`;
+          if (local < 0.1 || (local > 0.3 && local < 0.35)) {
+            stack.style.opacity = Math.random(); // Geisterhaftes Einphasen
+          }
+        } 
+        else {
+          // Gelb: Bouncy Overshoot
+          let bScale = 1;
+          if (local < 0.2) {
+             const progress = local / 0.2;
+             // Leichtes Über-Skalieren und zurückfedern
+             bScale = 1 + Math.sin(progress * Math.PI) * 0.15; 
+          }
+          stack.style.transform = `scale(${bScale})`;
+          
+          // Einmaliger, kontrollierter Glitch in der Mitte
+          let glitchPulse = 0;
+          if (local > 0.15 && local < 0.22) {
+            glitchPulse = Math.sin(((local - 0.15) / 0.07) * Math.PI); 
+          }
+          if (glitchPulse > 0) {
+            const g = glitchPulse * 2.2;
+            const jitterX = (Math.random() - 0.5) * g * 8;
+            stack.style.transform = `scale(${bScale}) translateX(${jitterX}px)`;
+            stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.8), -${g*2}px 0 0 rgba(255,0,180,.8)`;
+          }
         }
         
         word.appendChild(stack);
@@ -780,70 +631,30 @@
     
     if (object) {
       if (gagActive) {
-        const tt = (performance.now() - gagStart) / 1000;
-        const amp = gagSize.length() * 0.04;
-        object.position.x = gagBase.x + Math.sin(tt * 5) * amp;
-        object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6;
-        object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
-        object.rotation.z = Math.sin(tt * 5) * 0.08;
-        object.rotation.y = Math.sin(tt * 3) * 0.12;
+        const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
+        object.position.x = gagBase.x + Math.sin(tt * 5) * amp; object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6; object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
+        object.rotation.z = Math.sin(tt * 5) * 0.08; object.rotation.y = Math.sin(tt * 3) * 0.12;
       } else if (rainbowActive) {
         const tt = (performance.now() - rainbowStart) / 1000;
         if (rainbowBasePos) object.position.copy(rainbowBasePos);
-
-        const toViewer = camera.position.clone().sub(object.position);
-        toViewer.y = 0;
-        let targetYaw = rainbowBaseRot.y;
-        if (toViewer.lengthSq() > 0.000001) {
-          toViewer.normalize();
-          targetYaw = Math.atan2(toViewer.x, toViewer.z);
-        }
-
+        const toViewer = camera.position.clone().sub(object.position); toViewer.y = 0; let targetYaw = rainbowBaseRot.y;
+        if (toViewer.lengthSq() > 0.000001) { toViewer.normalize(); targetYaw = Math.atan2(toViewer.x, toViewer.z); }
         const viewerTarget = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, targetYaw, 0, "XYZ"));
-
-        if (tt < 0.45) {
-          const u = Math.min(1, tt / 0.45);
-          const ease = 1 - Math.pow(1 - u, 5);
-          const startQ = new THREE.Quaternion().setFromEuler(rainbowBaseRot);
-          object.quaternion.copy(startQ).slerp(viewerTarget, ease);
-        } else if (tt < 1.15) {
-          const u = Math.min(1, (tt - 0.45) / 0.70);
-          const ease = 1 - Math.pow(1 - u, 3);
-          const localFlip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -ease * Math.PI * 2);
-          object.quaternion.copy(viewerTarget).multiply(localFlip);
-        } else {
-          object.quaternion.copy(viewerTarget);
-        }
-
-        const pulse = 0.7 + 0.3 * Math.sin(tt * 28);
-        const hue = (tt * 260) % 360;
+        if (tt < 0.45) { const u = Math.min(1, tt / 0.45); const ease = 1 - Math.pow(1 - u, 5); const startQ = new THREE.Quaternion().setFromEuler(rainbowBaseRot); object.quaternion.copy(startQ).slerp(viewerTarget, ease); }
+        else if (tt < 1.15) { const u = Math.min(1, (tt - 0.45) / 0.70); const ease = 1 - Math.pow(1 - u, 3); const localFlip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -ease * Math.PI * 2); object.quaternion.copy(viewerTarget).multiply(localFlip); }
+        else { object.quaternion.copy(viewerTarget); }
+        const pulse = 0.7 + 0.3 * Math.sin(tt * 28); const hue = (tt * 260) % 360;
         rainbowMatStates.forEach(st => { st.mat.emissive.setHSL(hue / 360, 1, 0.52); st.mat.emissiveIntensity = 0.35 + pulse * 3.0; });
-        
         const crossfire = document.getElementById("shmup-container");
-        if (tt >= 1.15 && tt < 2.05) {
-          crossfire.style.display = "block";
-        } else {
-          crossfire.style.display = "none";
-        }
+        if (tt >= 1.15 && tt < 2.05) { crossfire.style.display = "block"; } else { crossfire.style.display = "none"; }
         if (tt >= 2.45) endRainbow();
-      } else if (musicOn) {
-        object.rotation.x = Math.sin(Date.now()*0.001 * (Math.PI / (60/144*0.5))) * 0.08;
-      } else {
-        object.rotation.x *= 0.9;
-      }
+      } else if (musicOn) { object.rotation.x = Math.sin(Date.now()*0.001 * (Math.PI / (60/144*0.5))) * 0.08; } else { object.rotation.x *= 0.9; }
     }
     renderer.render(scene, camera);
-    
-    if (hitEnterMixer) hitEnterMixer.update(delta);
-    if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75;
-    hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
+    if (hitEnterMixer) hitEnterMixer.update(delta); if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75; hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
   }
   animate();
-  
-  window.addEventListener("resize", () => {
-    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-  });
+  window.addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 </script>
 </body>
 </html>
