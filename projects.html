@@ -690,6 +690,17 @@
     </script>
 
     <!-- 3D model viewer for GLB showcase -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js">/* ========== BACK-BUTTON FIX (BFCache) ========== */
+            window.addEventListener('pageshow', (event) => {
+                // Wenn die Seite aus dem Browser-Verlauf geladen wird, zwingen wir die Tür auf
+                if (event.persisted) {
+                    const door = document.getElementById('door-overlay');
+                    if (door) {
+                        door.classList.remove('closed');
+                        door.classList.add('open');
+                    }
+                }
+            });
+</script>
 </body>
 </html>
