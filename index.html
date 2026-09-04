@@ -99,13 +99,16 @@
     pointer-events: none;
     transition: opacity .15s ease;
   }
+  
   #lhu-intro-word {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 100%;
-    transform: translate(-50%,-50%) perspective(900px);
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    perspective: 900px;
     font-family: Impact, sans-serif;
     font-weight: 900;
     letter-spacing: .12em;
@@ -145,178 +148,99 @@
   #lhu-intro.lhu-intro-yellow #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94)); }
   #lhu-intro.lhu-intro-blue #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94)); }
 
-  /* --- MAIN STAGE --- */
-  #matrix-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    display: block;
-  }
-  #container3D {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    z-index: 1;
-    touch-action: none;
-  }
-  #container3D canvas { display: block; }
-  #title {
-    position: fixed;
-    top: max(14px, env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 8;
-    font-size: clamp(11px, 2.6vw, 14px);
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    color: var(--muted);
-    pointer-events: none;
-  }
+  /* --- Z-INDEX THEATER (STRICT LAYERING) --- */
+  /* FIX: Matrix hat jetzt eine Transition-Regel für weiches Aus- und Einblenden */
+  #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; transition: opacity 0.4s ease; opacity: 1; }
+  #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
+  #shmup-container { position: fixed; inset: 0; pointer-events: none; z-index: 3; display: none; }
+  #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
+  #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
+  #ui-wrapper { position: fixed; top: max(54px, calc(env(safe-area-inset-top) + 44px)); left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 10px; }
+  #head-menu { position: fixed; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 10; width: min(92vw, 460px); }
+  #effect-buttons { position: fixed; bottom: max(82px, calc(env(safe-area-inset-bottom) + 70px)); left: 50%; transform: translateX(-50%); z-index: 11; display: flex; gap: 10px; }
 
-  /* --- UI SIMPLIFICATION --- */
+  #container3D canvas { display: block; }
+
+  /* --- UI STYLING --- */
   .glass {
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--text);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text); border-radius: 4px;
   }
   .btn {
-    padding: 10px 18px;
-    font-size: clamp(13px, 3.6vw, 16px);
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.15s ease;
+    padding: 10px 18px; font-size: clamp(13px, 3.6vw, 16px); font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease;
   }
   .btn:hover { background: rgba(255, 255, 255, 0.15); }
-
-  #ui-wrapper {
-    position: fixed;
-    top: max(54px, calc(env(safe-area-inset-top) + 44px));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    gap: 10px;
-  }
-
-  #head-menu {
-    position: fixed;
-    bottom: max(16px, env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 20;
-    width: min(92vw, 460px);
-  }
+  
   #head-select {
-    width: 100%;
-    padding: 15px 20px;
-    font-size: clamp(14px, 3.8vw, 17px);
-    text-align: center;
-    text-align-last: center;
-    cursor: pointer;
-    appearance: none;
+    width: 100%; padding: 15px 20px; font-size: clamp(14px, 3.8vw, 17px); text-align: center; text-align-last: center; cursor: pointer; appearance: none;
   }
   #head-select option { color: #111; }
-
-  #effect-buttons {
-    position: fixed;
-    bottom: max(82px, calc(env(safe-area-inset-bottom) + 70px));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 21;
-    display: flex;
-    gap: 10px;
-  }
-  .effect-btn {
-    min-width: 58px;
-    height: 48px;
-    font-size: 24px;
-    line-height: 1;
-  }
+  .effect-btn { min-width: 58px; height: 48px; font-size: 24px; line-height: 1; }
 
   #loading {
-    position: fixed;
-    inset: 0;
-    z-index: 100001;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    pointer-events: none;
-    color: var(--text);
-    font-size: 13px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
   }
   #loading.show { display: flex; }
   .spinner {
-    width: 54px;
-    height: 54px;
-    background: conic-gradient(from 0deg, transparent, var(--accent));
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
-    mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
-    animation: spin 0.9s linear infinite;
+    width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* --- GAG EFFECTS --- */
-  #rainbow-aura, #rainbow-emojis {
-    position: fixed;
-    pointer-events: none;
-    z-index: 7;
-    display: none;
-  }
+  /* --- EFFECTS --- */
   #rainbow-aura {
-    left: 50%; top: 50%;
-    width: min(48vw, 360px); height: min(48vw, 360px);
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
+    left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px);
+    transform: translate(-50%, -50%); border-radius: 50%;
     background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030);
-    opacity: 0.18;
-    mix-blend-mode: screen;
+    opacity: 0.15;
   }
   #rainbow-aura.active { display: block; animation: rainbowAura 0.55s linear infinite; }
   @keyframes rainbowAura {
-    from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.10; }
-    50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.25; }
-    to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.10; }
+    from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; }
+    50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; }
+    to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; }
   }
 
-  #rainbow-crossfire { position: fixed; inset: 0; pointer-events: none; z-index: 99999; display: none; }
-  .cross-laser {
-    position: absolute; left: 50%; top: 50%; pointer-events: none; opacity: 0;
-    box-shadow: 0 0 5px rgba(255,255,255,.95), 0 0 14px rgba(80,220,255,.95);
+  /* SHMUP MULTI-LASER SYSTEM */
+  .shmup-center { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+  .shmup-beam {
+    position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0;
   }
-  .cross-laser::before {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, #ff3030 0%, #ff9d21 16%, #ffe52b 33%, #48ff5a 50%, #27d8ff 66%, #6370ff 83%, #b34cff 100%);
+  
+  .shmup-beam.right {
+    left: 0; transform-origin: left center;
+    background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent);
+    animation: fireRight var(--speed) linear infinite;
+    animation-delay: var(--delay);
   }
-  .cross-laser::after {
-    content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 18px;
-    transform: translateY(-50%); border-radius: 999px; background: inherit; opacity: .45;
+  .shmup-beam.left {
+    right: 0; transform-origin: right center;
+    background: linear-gradient(-90deg, #fff, #ff3030, #ff9d21, transparent);
+    animation: fireLeft var(--speed) linear infinite;
+    animation-delay: var(--delay);
   }
-  .cross-right, .cross-left { width: 50vw; height: 10px; }
-  .cross-right { transform: translateY(-50%) scaleX(0); transform-origin: left center; }
-  .cross-left { transform: translate(-100%,-50%) scaleX(0); transform-origin: right center; }
-  .cross-up, .cross-down { width: 10px; height: 50vh; }
-  .cross-up { transform: translate(-50%,-100%) scaleY(0); transform-origin: center bottom; }
-  .cross-down { transform: translate(-50%,0) scaleY(0); transform-origin: center top; }
 
-  #rainbow-emojis { inset: 0; overflow: hidden; }
-  #rainbow-emojis.active { display: block; }
-  .rainbow-emoji {
-    position: absolute; bottom: -70px; font-size: var(--size); left: var(--left);
-    opacity: 0; animation: rainbowRise var(--dur-fast) linear var(--delay) infinite;
+  @keyframes fireRight {
+    0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); }
+    100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); }
   }
-  @keyframes rainbowRise {
-    0% { transform: translate3d(0,0,0) rotate(-8deg) scale(.7); opacity: 0; }
-    10% { opacity: .95; }
-    85% { opacity: .95; }
-    100% { transform: translate3d(var(--drift), calc(-100vh - 100px),0) rotate(18deg) scale(1); opacity: 0; }
+  @keyframes fireLeft {
+    0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); }
+    100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); }
   }
+
+  /* EMOJI SYSTEM */
+  #heart-emojis.active, #rainbow-emojis.active { display: block; }
+  .fast-rise-emoji {
+    position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); 
+    opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity;
+  }
+  @keyframes riseFast {
+    0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; }
+  }
+
   @media (max-width: 600px) {
     #effect-buttons { bottom: max(76px, calc(env(safe-area-inset-bottom) + 64px)); }
   }
@@ -354,8 +278,25 @@
 
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
+  
+  <div id="heart-emojis"></div>
+  <div id="rainbow-emojis"></div>
+  
+  <!-- SHMUP LASER CONTAINER -->
+  <div id="shmup-container">
+    <div class="shmup-center">
+      <div class="shmup-beam right" style="--angle: 0deg; --speed: 0.25s; --delay: 0s;"></div>
+      <div class="shmup-beam right" style="--angle: 18deg; --speed: 0.25s; --delay: 0.08s;"></div>
+      <div class="shmup-beam right" style="--angle: -18deg; --speed: 0.25s; --delay: 0.08s;"></div>
+      <div class="shmup-beam left" style="--angle: 0deg; --speed: 0.25s; --delay: 0s;"></div>
+      <div class="shmup-beam left" style="--angle: -18deg; --speed: 0.25s; --delay: 0.08s;"></div>
+      <div class="shmup-beam left" style="--angle: 18deg; --speed: 0.25s; --delay: 0.08s;"></div>
+    </div>
+  </div>
+
+  <div id="rainbow-aura"></div>
+  
   <div id="container3D"></div>
-  <div id="title">Lightning Horn Unicorn</div>
 
   <p class="sr-only">
     Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist
@@ -374,15 +315,6 @@
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
   </div>
 
-  <div id="rainbow-aura"></div>
-  <div id="rainbow-crossfire" aria-hidden="true">
-    <div class="cross-laser cross-right"></div>
-    <div class="cross-laser cross-left"></div>
-    <div class="cross-laser cross-up"></div>
-    <div class="cross-laser cross-down"></div>
-  </div>
-  <div id="rainbow-emojis"></div>
-
   <div id="head-menu">
     <select id="head-select" class="glass"></select>
   </div>
@@ -390,7 +322,7 @@
 <!-- SCRIPTS -->
 
 <script>
-  /* 1. MATRIX RAIN SCRIPT */
+  /* 1. MATRIX RAIN SCRIPT (Mit performantem Hologlitch) */
   const mcanvas = document.getElementById("matrix-bg");
   const mctx = mcanvas.getContext("2d");
   let cols, drops, hues, speeds, sizes, fontSize;
@@ -420,8 +352,20 @@
       const y = mcanvas.height - drops[i] * fontSize;
       let size = fontSize * sizes[i];
       mctx.font = size + "px monospace";
+      
+      const x = i * fontSize;
+      
+      let glitchOffset = 0;
+      if (Math.random() > 0.85) glitchOffset = (Math.random() - 0.5) * 6;
+
+      mctx.fillStyle = "rgba(0, 255, 255, 0.35)";
+      mctx.fillText("7", x - 3 + glitchOffset, y);
+      
+      mctx.fillStyle = "rgba(255, 0, 255, 0.35)";
+      mctx.fillText("7", x + 3 - glitchOffset, y);
+
       mctx.fillStyle = "hsl(" + hues[i] + ", 100%, 82%)";
-      mctx.fillText("7", i * fontSize, y);
+      mctx.fillText("7", x, y);
 
       hues[i] = (hues[i] + 0.12) % 360;
       if (y < -size && Math.random() > 0.97) {
@@ -454,7 +398,6 @@
   function startLoading() { loadingEl.classList.add("show"); }
   function stopLoading() { loadingEl.classList.remove("show"); }
 
-  // Scene Setup
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
   camera.position.set(2.6, 0, 2.6);
@@ -464,13 +407,11 @@
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.getElementById("container3D").appendChild(renderer.domElement);
 
-  // Lights
   scene.add(new THREE.AmbientLight(0xffffff, 0.9));
   const key = new THREE.DirectionalLight(0xffffff, 0.8); key.position.set(5, 5, 5); scene.add(key);
   const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 5); scene.add(fill);
   const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(-3, 5, -5); scene.add(rim);
 
-  // Loaders
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
   const loader = new GLTFLoader();
@@ -510,7 +451,6 @@
     hitEnterCamera.updateProjectionMatrix();
   }
 
-  // FIX: Pfad exakt so wie bei den anderen GLB Dateien angepasst
   loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hitenter.glb", (g) => {
     hitEnterObject = g.scene;
     hitEnterObject.traverse((child) => {
@@ -565,7 +505,6 @@
   controls.autoRotate = true;
   controls.autoRotateSpeed = 1.2;
 
-  // Audio Logic
   let musicOn = false;
   const music = document.getElementById("background-music");
   document.getElementById("music-toggle").onclick = () => {
@@ -580,7 +519,7 @@
   // Interactions
   let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
   let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null;
-  let rainbowBeam3D = null, rainbowMatStates = [];
+  let rainbowMatStates = [];
 
   function tweenCamera(toPos, toTarget, dur, onDone) {
     camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone };
@@ -592,13 +531,18 @@
     music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
     gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
     
+    // Matrix-Hintergrund ausblenden
+    document.getElementById("matrix-bg").style.opacity = "0";
+    
     const box = new THREE.Box3().setFromObject(object);
     box.getSize(gagSize);
     const center = new THREE.Vector3(); box.getCenter(center);
-    const eye = new THREE.Vector3(center.x, box.max.y - gagSize.y * 0.12, box.max.z + gagSize.z * 0.1);
     
+    const eye = new THREE.Vector3(center.x, box.max.y - gagSize.y * 0.12, center.z + gagSize.z * 0.1);
     const closePos = eye.clone().add(new THREE.Vector3(gagSize.x * 0.25, gagSize.y * 0.02, gagSize.z * 0.55 + gagSize.length() * 0.35));
     tweenCamera(closePos, eye, 650);
+    
+    document.getElementById("heart-emojis").classList.add("active");
     
     const sndWolf = document.getElementById("snd-wolf");
     const sndRizz = document.getElementById("snd-rizz");
@@ -611,6 +555,9 @@
     if (gagBase) object.position.copy(gagBase);
     object.rotation.set(0,0,0);
     gagActive = false;
+    document.getElementById("heart-emojis").classList.remove("active");
+    // Matrix-Hintergrund wieder einblenden
+    document.getElementById("matrix-bg").style.opacity = "1";
     tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
@@ -620,6 +567,9 @@
     rainbowActive = true; rainbowStart = performance.now(); 
     rainbowBaseRot = object.rotation.clone();
     rainbowBasePos = object.position.clone();
+    
+    // Matrix-Hintergrund ausblenden
+    document.getElementById("matrix-bg").style.opacity = "0";
     
     rainbowMatStates = [];
     object.traverse(c => {
@@ -631,19 +581,15 @@
 
     document.getElementById("rainbow-aura").classList.add("active");
     document.getElementById("rainbow-emojis").classList.add("active");
-    const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{});
     
+    const box = new THREE.Box3().setFromObject(object);
+    box.getSize(gagSize);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z);
+    tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
+
+    const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{});
     controls.enabled = false; controls.autoRotate = false;
-    if (!rainbowBeam3D) {
-      const c = document.createElement("canvas"); c.width = 8; c.height = 56;
-      const ctx = c.getContext("2d");
-      ["#ff3030","#ff9d21","#ffe52b","#48ff5a","#27d8ff","#6370ff","#b34cff"].forEach((col, i) => { ctx.fillStyle = col; ctx.fillRect(0, i*8, 8, 9); });
-      const tex = new THREE.CanvasTexture(c); tex.minFilter = tex.magFilter = THREE.LinearFilter;
-      rainbowBeam3D = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({map: tex, transparent: true, opacity: 0, depthWrite: false}));
-      rainbowBeam3D.renderOrder = 999;
-      scene.add(rainbowBeam3D);
-    }
-    rainbowBeam3D.visible = true;
   };
 
   function endRainbow() {
@@ -654,24 +600,32 @@
     rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); s.mat.emissiveIntensity = s.int; });
     document.getElementById("rainbow-aura").classList.remove("active");
     document.getElementById("rainbow-emojis").classList.remove("active");
-    document.getElementById("rainbow-crossfire").style.display = "none";
-    if (rainbowBeam3D) rainbowBeam3D.visible = false;
+    document.getElementById("shmup-container").style.display = "none";
+    // Matrix-Hintergrund wieder einblenden
+    document.getElementById("matrix-bg").style.opacity = "1";
     controls.enabled = true; controls.autoRotate = true;
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
-  // Emojis
-  const rainbowEmojis = document.getElementById("rainbow-emojis");
-  for (let i = 0; i < 12; i++) {
-    const e = document.createElement("span"); e.className = "rainbow-emoji"; e.textContent = "🌈";
-    e.style.setProperty("--left", `${Math.random() * 100}%`);
-    e.style.setProperty("--size", `${18 + Math.random() * 26}px`);
-    e.style.setProperty("--dur-fast", `${0.32 + Math.random() * 0.28}s`);
-    e.style.setProperty("--delay", `${-Math.random() * 4}s`);
-    e.style.setProperty("--drift", `${(Math.random() - 0.5) * 120}px`);
-    rainbowEmojis.appendChild(e);
+  // Generierung der schnellen Emojis
+  function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
+    const container = document.getElementById(containerId);
+    for (let i = 0; i < count; i++) {
+      const e = document.createElement("span");
+      e.className = "fast-rise-emoji";
+      e.textContent = char;
+      e.style.setProperty("--left", `${Math.random() * 100}%`);
+      e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`);
+      e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`);
+      e.style.setProperty("--delay", `${-Math.random() * 2}s`);
+      e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`);
+      container.appendChild(e);
+    }
   }
+  
+  spawnEmojis("heart-emojis", "❤️", 30, 60, 40); 
+  spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
 
-  // Dropdown Init
   const selectEl = document.getElementById("head-select");
   MODELS.forEach(m => {
     const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; selectEl.appendChild(opt);
@@ -689,8 +643,6 @@
     const lines = [...word.querySelectorAll("span")];
     
     let W = 0, H = 0, introStart = 0;
-    
-    // Globale Variable für die Farbsteuerung der Sequenz
     let introVariant = "yellow"; 
     
     const variantColors = {
@@ -748,7 +700,6 @@
         
         word.innerHTML = "";
         word.style.opacity = "1";
-        word.style.transform = "translate(-50%,-50%)";
         
         const stack = document.createElement("span");
         stack.style.display = "flex"; stack.style.flexDirection = "column"; stack.style.alignItems = "center";
@@ -776,7 +727,6 @@
           stack.appendChild(letter);
         }
         
-        // HOLOGLITCH ENHANCEMENT
         let glitchPulse = 0;
         if (local > 0.15 && local < 0.22) {
           const progress = (local - 0.15) / 0.07; 
@@ -814,7 +764,6 @@
     });
   })();
 
-  // Render Loop
   function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
@@ -870,16 +819,9 @@
         const hue = (tt * 260) % 360;
         rainbowMatStates.forEach(st => { st.mat.emissive.setHSL(hue / 360, 1, 0.52); st.mat.emissiveIntensity = 0.35 + pulse * 3.0; });
         
-        const crossfire = document.getElementById("rainbow-crossfire");
+        const crossfire = document.getElementById("shmup-container");
         if (tt >= 1.15 && tt < 2.05) {
           crossfire.style.display = "block";
-          const f = Math.min(1, Math.max(0, (tt - 1.15) / 0.14));
-          const lasers = document.querySelectorAll(".cross-laser");
-          lasers.forEach(l => { l.style.opacity = String(0.96 + pulse * 0.04); l.style.display = "block"; });
-          lasers[0].style.transform = `translateY(-50%) scaleX(${1 - Math.pow(1 - f, 5)})`;
-          lasers[1].style.transform = `translate(-100%,-50%) scaleX(${1 - Math.pow(1 - f, 5)})`;
-          lasers[2].style.transform = `translate(-50%,-100%) scaleY(${1 - Math.pow(1 - f, 5)})`;
-          lasers[3].style.transform = `translate(-50%,0) scaleY(${1 - Math.pow(1 - f, 5)})`;
         } else {
           crossfire.style.display = "none";
         }
