@@ -478,11 +478,16 @@
                 }
             }
 
-            function renderText() {
-                // Zeigt je nach Klick den richtigen Teil an
-                contentDiv.textContent = currentLang === 'en' ? chapterData.en : chapterData.de;
+function renderText() {
+                // Welchen Text wollen wir laden?
+                let mainText = currentLang === 'en' ? chapterData.en : chapterData.de;
+                
+                // Den "To be continued" Text je nach Sprache generieren
+                let continuedText = currentLang === 'en' ? "\n\n\n... TO BE CONTINUED ..." : "\n\n\n... FORTSETZUNG FOLGT ...";
+                
+                // Alles zusammen in den Text-Container werfen
+                contentDiv.textContent = mainText + continuedText;
             }
-
             setTimeout(scanChapters, 800);
         });
 
