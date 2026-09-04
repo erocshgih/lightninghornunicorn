@@ -349,7 +349,7 @@
                 let count = 1;
                 // Ping-Loop: Wir fragen solange nach 01.txt, 02.txt etc., bis wir einen 404 Fehler kassieren.
                 while (true) {
-                    let numStr = count.toString().padStart(2, '0');
+                    let numStr = count.toString().padStart(6, '0');
                     try {
                         let response = await fetch(`chapters/${numStr}.txt`, { method: 'HEAD' });
                         if (response.ok) {
@@ -375,7 +375,7 @@
             function buildNavigation() {
                 navDiv.innerHTML = '';
                 for (let i = 1; i <= totalChapters; i++) {
-                    let numStr = i.toString().padStart(2, '0');
+                    let numStr = i.toString().padStart(6, '0');
                     let a = document.createElement('a');
                     a.href = '#';
                     a.textContent = numStr;
@@ -402,7 +402,7 @@
 
                 contentDiv.innerHTML = '<span class="loading-text">LOADING FILE...</span>';
                 
-                let numStr = num.toString().padStart(2, '0');
+                let numStr = num.toString().padStart(6, '0');
                 try {
                     let response = await fetch(`chapters/${numStr}.txt`);
                     if (response.ok) {
