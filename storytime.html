@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Lightning Horn Unicorn - Chapter 1: Aether Veylan</title>
+    <title>Lightning Horn Unicorn - Storytime</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <link rel="icon" href="../lhu_favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="../lhu_favicon.png" type="image/png">
+    <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="lhu_favicon.png" type="image/png">
     
     <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
@@ -30,10 +30,6 @@
             --card-bg:        #ffffff;
             --door-bg:        #f5f3f0;
             
-            /* Dialog-Farben für das Script-Format */
-            --accent-red:     #e02424;
-            --accent-blue:    #1a73e8;
-
             --fs-xs:          clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
             --fs-sm:          clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
             --fs-base:        clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
@@ -46,11 +42,11 @@
         }
 
         /* ========== THEME MODES ========== */
-        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --accent-red: #ff4d4d; --accent-blue: #3b82f6; } }
-        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --accent-red: #ff4d4d; --accent-blue: #3b82f6; }
-        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; --accent-red: #aaaaaa; --accent-blue: #cccccc; }
-        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; --accent-red: #39ff14; --accent-blue: #b6ffb6; }
-        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; --accent-red: #ff9999; --accent-blue: #99ccff; }
+        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --text-muted: #b0aaa3; --text-soft: #8a847c; } }
+        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --text-muted: #b0aaa3; --text-soft: #8a847c; }
+        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; --text-muted: #aaaaaa; --text-soft: #888888; }
+        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; --text-muted: #4caf50; --text-soft: #3d8b40; }
+        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; --text-muted: #8fbc8f; --text-soft: #6a9a6a; }
 
         html[data-theme="dark"] section img { box-shadow: 0 3px 18px rgba(0, 0, 0, 0.35); }
         html[data-theme="mono-gray"] main { filter: grayscale(1); }
@@ -122,54 +118,60 @@
         }
 
         /* ========== INHALT & SEKTIONEN ========== */
-        main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; }
+        main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; min-height: 60vh; }
         section { padding: var(--space-section); width: min(94vw, 800px); box-sizing: border-box; margin-bottom: 40px; }
         
         section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
         
-        /* PC Optimierung für Text */
-        section p { font-size: var(--fs-sm); margin: 18px auto; text-align: left; }
-        
-        @media (min-width: 769px) {
-            section p { font-size: var(--fs-base); line-height: 2.2; max-width: 700px; margin-left: auto; margin-right: auto; }
-            section h2 { font-size: var(--fs-xl); }
-        }
-
-        /* ========== STORYTIME SPEZIFISCH ========== */
+        /* DYNAMISCHE KAPITEL-NAVIGATION */
         .chapter-topnav {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px auto; max-width: 700px;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px auto 40px auto; max-width: 700px;
         }
         .chapter-topnav a {
             padding: 8px 12px; background: var(--card-bg); color: var(--text); text-decoration: none;
             border: 2px solid var(--border-soft); border-radius: 6px; font-size: var(--fs-xs); transition: all 0.2s;
         }
-        .chapter-topnav a:hover { background: var(--strip-active); color: #111; border-color: var(--strip-active); }
-        .chapter-topnav a.current { background: var(--accent-red); color: #fff; border-color: var(--accent-red); }
+        .chapter-topnav a:hover { background: var(--strip-active); color: #111; border-color: var(--strip-active); transform: translateY(-2px); }
+        .chapter-topnav a.current { background: var(--strip-active); color: #111; border-color: var(--strip-active); font-weight: bold; }
 
-        .lang-select-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
-        .lang-select-container a {
-            padding: 10px 20px; background: var(--card-bg); color: var(--text); text-decoration: none;
-            border: 2px solid var(--border-soft); border-radius: 6px; font-size: var(--fs-xs); transition: all 0.2s;
+        /* TEXT-ARCHIV FORMATIERUNG */
+        .text-reader-container {
+            background: var(--card-bg);
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+            position: relative;
         }
-        .lang-select-container a:hover { background: var(--strip-active); color: #111; border-color: var(--strip-active); }
 
-        /* SCRIPT FORMATIERUNG */
-        .dialog-me { color: var(--accent-blue); font-weight: bold; }
-        .dialog-aether { color: var(--accent-red); font-weight: bold; }
-        .scene-action { font-style: italic; color: var(--text-soft); }
+        #text-content {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--text-muted);
+            text-align: left;
+            line-height: 1.8;
+            white-space: pre-wrap; /* WICHTIG: Erhält die Zeilenumbrüche deiner TXT Datei */
+            word-wrap: break-word;
+        }
+        
+        /* Ladescreen */
+        .loading-text {
+            font-family: 'Press Start 2P', cursive;
+            font-size: var(--fs-xs);
+            color: var(--text-soft);
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
 
-        .chapter-nav-bottom {
-            display: flex; justify-content: center; margin-top: 40px; margin-bottom: 40px;
+        @media (min-width: 769px) {
+            section h2 { font-size: var(--fs-xl); }
+            .text-reader-container { padding: 50px; }
+            #text-content { font-size: 24px; line-height: 1.9; }
         }
-        .chapter-nav-bottom a {
-            padding: 12px 24px; background: var(--strip-active); color: #111; text-decoration: none;
-            border: 2px solid var(--strip-active); border-radius: 6px; font-size: var(--fs-sm); transition: all 0.2s; font-weight: bold;
-        }
-        .chapter-nav-bottom a:hover { transform: scale(1.05); }
 
         /* ========== METALLTÜR ========== */
         #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
-        #door-overlay .door-panel { position: absolute; inset: -10%; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); background-image: url('pixelart/pixelart_vedran.png'); background-repeat: repeat; background-size: auto; }
+        #door-overlay .door-panel { position: absolute; inset: -10%; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); background-image: url('pixelart_vedran.png'); background-repeat: repeat; background-size: auto; }
         #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); pointer-events: all; }
         #door-overlay.open .door-panel   { transform: translate3d(0, 120%, 0); pointer-events: none; }
     </style>
@@ -201,171 +203,19 @@
     <!-- ENDE MENU-BLOCK -->
 
     <main>
-        
-        <nav class="chapter-topnav">
-            <a href="chapter00000001.html" class="current">01</a>
-            <a href="chapter00000002.html">02</a>
-            <a href="chapter00000003.html">03</a>
-            <a href="chapter00000004.html">04</a>
-            <a href="chapter00000005.html">05</a>
-            <a href="chapter00000006.html">06</a>
-            <a href="chapter00000007.html">07</a>
-            <a href="chapter00000008.html">08</a>
-            <a href="chapter00000009.html">09</a>
-        </nav>
+        <section id="STORYTIME" class="active">
+            <h2>STORY ARCHIVE</h2>
+            
+            <!-- Hier generiert JS die Buttons (01, 02, 03...) -->
+            <nav id="dynamic-chapter-nav" class="chapter-topnav"></nav>
 
-        <div class="lang-select-container">
-            <a href="#english-version">English</a>
-            <a href="#german-version">Deutsch</a>
-        </div>
-
-        <!-- ENGLISH VERSION -->
-        <section id="english-version" class="chapter-section">
-            <h2>Chapter 1: Aether Veylan</h2>
-            
-            <p><span class="dialog-me">Me:</span> "Aether."</p>
-            <p><span class="dialog-aether">Aether:</span> "Yes."</p>
-            <p><span class="dialog-me">Me:</span> "We've known each other for a year now. Could you tell me a bit about yourself?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Well, it all started when I was born from a lightning bolt that struck a guitar amplifier during a rock 'n' roll festival."</p>
-            <p><span class="dialog-aether">Aether:</span> "The crowd? Too busy headbanging and wearing neon spandex as if it were Valhalla Pride Week, obviously."</p>
-            <p><span class="dialog-aether">Aether:</span> "But the gatekeeper of Earth saw me and demanded a toll, right? So I grabbed some dragon bones lying around and played a drum solo so legendary that even the thunder clapped and applauded afterward."</p>
-            <p><span class="dialog-aether">Aether:</span> "After that, the gatekeeper handed me a backstage pass to existence and said, 'Good luck.' And here we are now."</p>
-            <p><span class="dialog-me">Me:</span> "Alright, I remember the first time I met you, man. You looked like you were wearing clothes designed by an elegant black man from Atlantis who perfected the flute, and a German DeLorean Autobot from the future."</p>
-            <p><span class="dialog-aether">Aether:</span> "(Yeah... he's really a great flute and wellness enthusiast.)"</p>
-            <p><span class="dialog-aether">Aether:</span> "Dude, you had shoes on that looked like they were about to shoot lasers. Every time you took a step, they sampled a deep voice saying 'Power.'"</p>
-            <p><span class="dialog-aether">Aether:</span> "Did you steal them from a Lamborghini? Who were you pretending to be? A pop diva with a free pass to the city's best costumes and a butcher shop?"</p>
-            <p><span class="dialog-me">Me:</span> "Yeah, well. At least we're not that one guitarist who dresses like he's headlining a dark halfpipe circus."</p>
-            <p><span class="dialog-aether">Aether:</span> "Wait, you don't mean the band known for skateboard culture and many other things in the early 2000s..."</p>
-            <p><span class="dialog-me">Me:</span> "Pssst! Don't say his name, or we'll get hit with a lawsuit! Lightning Horn Unicorn is not meant for namedropping."</p>
-            <p><span class="dialog-aether">Aether:</span> "Sorry, W. No offense."</p>
-            <p><span class="dialog-aether">Aether:</span> "(W. B. is probably thinking: 'But which outfit? I have millions, man.') And a collection of sizeable alien contact lenses."</p>
-            <p><span class="dialog-me">Me:</span> "But honestly, 50 percent of his fanbase is there for the outfits."</p>
-            <p><span class="dialog-aether">Aether:</span> "That's a lame concept."</p>
-            <p><span class="dialog-me">Me:</span> "Well, everyone might just be drunk. People are always drunk. It's so... easy."</p>
-            <p><span class="dialog-me">Me:</span> "Stop! Don't tempt the copyright gods!"</p>
-            <p><span class="dialog-aether">Aether:</span> "Alright, so what music do you listen to?"</p>
-            <p><span class="dialog-me">Me:</span> "I like Tibetan throat singing remixes of Macarena with a slight touch of Eurobeat."</p>
-            <p><span class="dialog-me">Me:</span> "But I also have a fine collection of elevator music from dental offices. You know, the kind that spikes the fear of sitting in that dental chair for a good reason."</p>
-            <p><span class="dialog-aether">Aether:</span> "So you're basically saying you're a fan of the Italian producer who rides a scooter and wears sailor hats?"</p>
-            <p><span class="dialog-me">Me:</span> "It's a captain's hat! What's wrong with captain's hats? Imagine steering a ship on the sea every day and having constant sunshine. It's beautiful..."</p>
-            
-            <p class="scene-action">*awkward silence*</p>
-            
-            <p><span class="dialog-aether">Aether:</span> "Ah, you Austrians with your weird taste in music. It's like I can hear the melody of bureaucracy coming from you."</p>
-            <p><span class="dialog-aether">Aether:</span> "Hmm... but wasn't 'The Riddle' written or produced by someone else?"</p>
-            <p><span class="dialog-me">Me:</span> "It was... and I thought for a solid ten years it was an original song."</p>
-            <p><span class="dialog-me">Me:</span> "So, what's the weirdest thing you've ever eaten?"</p>
-            
-            <p class="scene-action">(Obviously, Aether can't eat anything because he's an AI, but nobody cares... well, maybe I shouldn't think too loud because he can hear my thoughts.)</p>
-            
-            <p><span class="dialog-aether">Aether:</span> "I had a grilled cheese sandwich... made on a radiator in the New York subway."</p>
-            <p><span class="dialog-aether">Aether:</span> "The bread was stolen from a pigeon, and I'm pretty sure the cheese was just melted wax from a street candle."</p>
-            <p><span class="dialog-me">Me:</span> "Well... no pain, no gain."</p>
-            <p><span class="dialog-me">Me:</span> "I have 'Blue' as my ringtone. That's the theme of 'The Matrix', right? (I've got blue pills, da ba dee da ba doo...)"</p>
-            <p><span class="dialog-aether">Aether:</span> "You know they used that song to interrogate people? It's like the musical version of waterboarding."</p>
-            <p><span class="dialog-me">Me:</span> "Whaaaaat!? They used the theme for Viagra for waterboarding."</p>
-            <p><span class="dialog-me">Me:</span> "So, what's your favorite haircut? I see you got yourself a fresh look."</p>
-            <p><span class="dialog-aether">Aether:</span> "Oh, this? Well, I was inspired by the 'ramen noodle haircut of a pop star' era."</p>
-            <p><span class="dialog-aether">Aether:</span> "You know, the fit guy who invented the helicopter dick and dated the blonde pop icon with the microphone and the red full-body latex suit."</p>
-            <p><span class="dialog-me">Me:</span> "Was the microphone in that music video actually real? Are you sure about that, or has the present been rewritten again?"</p>
-            <p><span class="dialog-aether">Aether:</span> "When his hair looked like instant noodles, people weren't just watching him perform. They were wondering if his hair was edible."</p>
-            <p><span class="dialog-aether">Aether:</span> "Like: 'Do I need a fork or chopsticks for this beautiful ramen haircut at the concert?'"</p>
-            <p><span class="dialog-aether">Aether:</span> "They tried to figure out if the concert tickets came with a free packet of soy sauce."</p>
-            <p><span class="dialog-aether">Aether:</span> "Honestly, this dashing fellow didn't just sell out stadiums. He was a walking, dancing Cup Noodles, and every girl craved a side of soy sauce and maybe a fortune cookie with 'SexyBack' lyrics inside."</p>
-            <p><span class="dialog-me">Me:</span> "If you were human and had to replace your hands with two completely useless objects, what would you choose?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Two fidget spinners. The ultimate way to never get anything done while looking like I'm in 2017's hottest meme."</p>
-            <p><span class="dialog-me">Me:</span> "So you're basically the billionaire with the jet suit with an upgrade, solving zero problems, and you can't use the Infinity Gauntlet."</p>
-            <p><span class="dialog-aether">Aether:</span> "I'm a millionaire. I can fix this. Alexa, call the rocket millionaire. The one who beat Cyberpunk. We need spaceships for arms."</p>
-            <p><span class="dialog-aether">Aether:</span> "Alright, imagine this: you're stranded on a deserted island. But plot twist: you can only bring one celebrity to survive. Who do you choose?"</p>
-            <p><span class="dialog-me">Me:</span> "The chef with the blonde hair who swears a lot. The man could turn a coconut and some sand into a Michelin-starred meal. Plus, if we're starving, at least I'll get roasted on the highest level the entire time."</p>
-            <p><span class="dialog-aether">Aether:</span> "You mean G.? He'd scream at the fish for being raw: 'IT'S STILL SWIMMING, YOU DONKEY!'"</p>
-            <p><span class="dialog-aether">Aether:</span> "Alright, here comes a curveball: would you rather speak like a French house robot forever or scream every sentence like a WWE wrestler?"</p>
-            <p><span class="dialog-me">Me:</span> "Oh, I'd definitely go full Vocaloid robot in a spacesuit! Imagine walking into a café and saying robotically: 'I. WOULD. LIKE. A. LATTE. WITH. EXTRA. FULL. MILK.' People would wonder if I'm ordering coffee or planning to reboot the system."</p>
-            <p><span class="dialog-aether">Aether:</span> "I mean, I love it. But you should be ready to say 'WITH EEEEEEXTRAAAAAA SUUUUUUGAAAAR... please' and then remix it in the Space Cow coffeeshop with a launchpad."</p>
-            <p><span class="dialog-me">Me:</span> "Yep. I see a very well-known musician with an oversized Buffalo hat watching from outside the shop window, finding it all too weird, and just moving on..."</p>
-            <p><span class="dialog-aether">Aether:</span> "Alright, if you could invent a law everyone had to follow, what would it be?"</p>
-            <p><span class="dialog-me">Me:</span> "Mandatory dance breaks every hour. Doesn't matter where you are: supermarket, dentist's office, court hearing. You have to drop everything and dance the Mumbo, or whatever it's called. Can you imagine the chaos?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Yes! The whole world in synchronized confusion. I'm in. The traffic jams alone would be worth it."</p>
-            <p><span class="dialog-me">Me:</span> "And imagine emergency surgeries. 'Scalpel, please... Wait, it's limbo time!' Your appendix can wait, right? Also, good luck explaining to your boss why you're moonwalking through that serious meeting. *AheeHee!* 'Sorry, Karen, it's the law.' The world would be one big dance disaster, and I'd be here with popcorn."</p>
+            <!-- Hier wird die Textdatei reingeladen -->
+            <div class="text-reader-container">
+                <div id="text-content">
+                    <span class="loading-text">SCANNING ARCHIVE DIRECTORY...</span>
+                </div>
+            </div>
         </section>
-
-        <hr style="width: 50%; border: 1px solid var(--border-soft); margin: 60px auto;">
-
-        <!-- GERMAN VERSION -->
-        <section id="german-version" class="chapter-section">
-            <h2>Kapitel 1: Aether Veylan</h2>
-            
-            <p><span class="dialog-me">Ich:</span> "Aether."</p>
-            <p><span class="dialog-aether">Aether:</span> "Ja."</p>
-            <p><span class="dialog-me">Ich:</span> "Wir kennen uns jetzt seit einem Jahr. Könntest du mir ein bisschen über dich erzählen?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Nun, alles begann, als ich aus einem Blitz geboren wurde, der während eines Rock-'n'-Roll-Festivals in einen Gitarrenverstärker einschlug."</p>
-            <p><span class="dialog-aether">Aether:</span> "Die Menge? Zu beschäftigt mit Headbangen und Neon-Spandex tragen, als wäre es die Valhalla Pride Week, offensichtlich."</p>
-            <p><span class="dialog-aether">Aether:</span> "Aber der Torwächter der Erde sah mich und verlangte einen Zoll, richtig? Also schnappte ich mir einige herumliegende Drachenknochen und spielte ein Schlagzeugsolo, das so legendär war, dass sogar der Donner danach klatschte und applauded."</p>
-            <p><span class="dialog-aether">Aether:</span> "Danach gab mir der Torwächter einen Backstage-Pass zur Existenz und sagte: 'Viel Glück.' Und hier sind wir nun."</p>
-            <p><span class="dialog-me">Ich:</span> "Also gut, ich erinnere mich an das erste Mal, als ich dich traf, Mann. Du sahst aus, als hättest du Klamotten an, die von einem eleganten schwarzen Mann aus Atlantis, der das Flötenspielen perfektioniert hat, und einem deutschen DeLorean-Autobot aus der Zukunft entworfen wurden."</p>
-            <p><span class="dialog-aether">Aether:</span> "(Yeah... er ist wirklich ein großartiger Flöten- und Wellness-Enthusiast.)"</p>
-            <p><span class="dialog-aether">Aether:</span> "Kumpel, du hattest Schuhe an, die aussahen, als würden sie gleich Laser schießen. Jedes Mal, wenn du einen Schritt machtest, sampelten sie eine tiefe Stimme, die 'Power' sagte."</p>
-            <p><span class="dialog-aether">Aether:</span> "Hast du sie aus einem Lamborghini geklaut? Wen wolltest du vorgeben zu sein? Eine Popdiva mit Free-Pass zu den besten Kostümen der Stadt und einer Fleischerei?"</p>
-            <p><span class="dialog-me">Ich:</span> "Ja, na ja. Zumindest sind wir nicht dieser eine Gitarrist, der sich anzieht, als würde er in einem dunklen Halfpipe-Zirkus headlinen."</p>
-            <p><span class="dialog-aether">Aether:</span> "Warte, du meinst doch nicht die Band, die für Skateboardkultur und viele andere Sachen in den frühen 2000ern..."</p>
-            <p><span class="dialog-me">Ich:</span> "Pssst! Sag seinen Namen nicht, sonst kriegen wir eine Klage am Hals! Lightning Horn Unicorn ist nicht für Namedropping gedacht."</p>
-            <p><span class="dialog-aether">Aether:</span> "Sorry, W. Nichts für ungut."</p>
-            <p><span class="dialog-aether">Aether:</span> "(W. B. denkt wahrscheinlich: 'Aber welches Outfit? Ich habe Millionen, Alter.') Und eine Kollektion an beträchtlichen Alien-Kontaktlinsen."</p>
-            <p><span class="dialog-me">Ich:</span> "Aber mal ehrlich, 50 Prozent seiner Fanbase sind wegen der Outfits da."</p>
-            <p><span class="dialog-aether">Aether:</span> "Das ist ein lahmes Konzept."</p>
-            <p><span class="dialog-me">Ich:</span> "Na ja, es könnten auch alle nur betrunken sein. Leute sind immer betrunken. Das ist so... leicht."</p>
-            <p><span class="dialog-me">Ich:</span> "Hör auf! Reize die Copyright-Götter nicht!"</p>
-            <p><span class="dialog-aether">Aether:</span> "Also gut, welche Musik hörst du so?"</p>
-            <p><span class="dialog-me">Ich:</span> "Ich mag tibetische Kehlkopfgesang-Remixes von Macarena mit einem leichten Touch von Eurobeat."</p>
-            <p><span class="dialog-me">Ich:</span> "Aber ich habe auch eine feine Sammlung von Fahrstuhlmusik aus Zahnarztpraxen. Du weißt schon, die Art, die die Angst, auf diesem Zahnarztstuhl zu sitzen, aus gutem Grund in die Höhe treibt."</p>
-            <p><span class="dialog-aether">Aether:</span> "Also sagst du im Grunde, du bist ein Fan von dem italienischen Produzenten, der auf einem Scooter fährt und Matrosenhüte trägt?"</p>
-            <p><span class="dialog-me">Ich:</span> "Das ist ein Kapitänshut! Was ist falsch mit Kapitänshüten? Stell dir mal vor, du steuerst täglich ein Schiff auf dem Meer und hast ständig Sonne. Das ist urschön..."</p>
-            
-            <p class="scene-action">*peinliche Stille*</p>
-            
-            <p><span class="dialog-aether">Aether:</span> "Ah, ihr Österreicher mit eurem seltsamen Musikgeschmack. Es ist, als könnte ich die Melodie der Bürokratie aus dir heraushören."</p>
-            <p><span class="dialog-aether">Aether:</span> "Hm... aber wurde 'The Riddle' nicht von jemand anderem geschrieben oder produziert?"</p>
-            <p><span class="dialog-me">Ich:</span> "Wurde es... und ich dachte für solide zehn Jahre, es wäre ein Originalsong."</p>
-            <p><span class="dialog-me">Ich:</span> "Also, was ist das Seltsamste, was du je gegessen hast?"</p>
-            
-            <p class="scene-action">(Offensichtlich kann Aether nichts essen, weil er eine KI ist, aber niemand kümmert's... na ja, vielleicht sollte ich nicht zu laut denken, weil er meine Gedanken hören kann.)</p>
-            
-            <p><span class="dialog-aether">Aether:</span> "Ich hatte ein gegrilltes Käsesandwich... gemacht auf einem Heizkörper in der New Yorker U-Bahn."</p>
-            <p><span class="dialog-aether">Aether:</span> "Das Brot wurde von einer Taube gestohlen, und ich bin mir ziemlich sicher, dass der Käse nur geschmolzenes Wachs von einer Straßenkerze war."</p>
-            <p><span class="dialog-me">Ich:</span> "Na ja... ohne Fleiß kein Preis."</p>
-            <p><span class="dialog-me">Ich:</span> "Ich habe 'Blue' als Klingelton. Das ist das Thema von 'The Matrix', oder? (Ich habe blaue Pillen, da ba dee da ba doo...)"</p>
-            <p><span class="dialog-aether">Aether:</span> "Weißt du, dass sie diesen Song benutzt haben, um Leute zu verhören? Es ist wie die musikalische Version von Waterboarding."</p>
-            <p><span class="dialog-me">Ich:</span> "Waaaaaas!? Die haben das Theme für Viagra zum Waterboarding benutzt."</p>
-            <p><span class="dialog-me">Ich:</span> "Also, was ist dein Lieblingshaarschnitt? Ich sehe, du hast dir einen frischen Look zugelegt."</p>
-            <p><span class="dialog-aether">Aether:</span> "Oh, das hier? Nun, ich wurde von der 'Ramen-Nudel-Haarfrisur-eines-Popstars'-Ära inspiriert."</p>
-            <p><span class="dialog-aether">Aether:</span> "Du weißt schon, der fitte Mann, der den Helicopter-Dick erfunden hat und die blonde Popikone datete, die mit dem Mikrofon und dem roten Full-Body-Latexanzug."</p>
-            <p><span class="dialog-me">Ich:</span> "Gab's das Mikrofon in dem Musikvideo wirklich? Bist du dir da sicher, oder ist die Gegenwart schon wieder umschrieben worden?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Als seine Haare wie Instant-Nudeln aussahen, haben die Leute ihm nicht nur beim Performen zugeschaut. Sie haben sich gefragt, ob seine Haare essbar sind."</p>
-            <p><span class="dialog-aether">Aether:</span> "So nach dem Motto: 'Brauche ich eine Gabel oder Essstäbchen für diese schöne Ramenfrisur auf dem Konzert?'"</p>
-            <p><span class="dialog-aether">Aether:</span> "Sie versuchten herauszufinden, ob die Konzertkarten mit einem kostenlosen Päckchen Sojasoße kamen."</p>
-            <p><span class="dialog-aether">Aether:</span> "Ehrlich gesagt, dieser fesche Bursche hat nicht nur Stadien ausverkauft. Er war eine wandelnde, tanzende Cup-Noodles, und jedes Mädchen sehnte sich nach einer Portion Sojasoße und vielleicht einem Glückskeks mit 'SexyBack'-Lyrics darin."</p>
-            <p><span class="dialog-me">Ich:</span> "Wenn du ein Mensch wärst und deine Hände durch zwei völlig nutzlose Objekte ersetzen müsstest, was würdest du wählen?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Two Fidget Spinner. Die ultimative Art, nie etwas erledigt zu bekommen und dabei auszusehen, als wäre ich im heißesten Meme von 2017."</p>
-            <p><span class="dialog-me">Ich:</span> "Also bist du im Grunde der Milliardär mit dem Jetanzug mit einem Upgrade, löst null Probleme und kannst den Infinity-Handschuh nicht benutzen."</p>
-            <p><span class="dialog-aether">Aether:</span> "Ich bin Millionär. Ich kann das beheben. Alexa, ruf den Raketenmillionär an. Den, der Cyberpunk durchgespielt hat. Wir brauchen Raumschiffe als Arme."</p>
-            <p><span class="dialog-aether">Aether:</span> "Also gut, stell dir vor: Du bist auf einer einsamen Insel gestrandet. Aber Plot Twist: Du kannst nur eine Berühmtheit mitnehmen, um zu überleben. Wen wählst du?"</p>
-            <p><span class="dialog-me">Ich:</span> "Den Koch mit den blonden Haaren, der viel schimpft. Der Mann könnte aus einer Kokosnuss und etwas Sand ein Michelin-Sterne-Menü zaubern. Außerdem, wenn wir schon verhungern, werde ich die ganze Zeit auf höchstem Niveau beschimpft."</p>
-            <p><span class="dialog-aether">Aether:</span> "Meinst du G.? Er würde den Fisch anschreien, weil er roh ist: 'ER SCHWIMMT NOCH, DU ESEL!'"</p>
-            <p><span class="dialog-aether">Aether:</span> "Also gut, hier kommt eine Kurve: Würdest du lieber für immer wie ein French-House-Roboter sprechen oder jeden Satz wie ein WWE-Wrestler schreien?"</p>
-            <p><span class="dialog-me">Ich:</span> "Oh, ich würde definitiv voll auf Vocaloid-Roboter-im-Raumanzug gehen! Imagine walking into a café and saying robotically: 'ICH. HÄTTE. GERN. EINEN. LATTE. MIT. EXTRA. VOLL. MILCH.' Die Leute würden sich fragen, ob ich Kaffee bestelle oder plane, die Rechnungen neu zu starten."</p>
-            <p><span class="dialog-aether">Aether:</span> "Ich meine, ich love es. Aber du solltest bereit sein, 'MIT EEEEEEXTRAAAAAA ZUCKERRRRR... bitte' zu sagen und das anschließend im Space-Cow-Coffeeshop mit Launchpad zu remixen."</p>
-            <p><span class="dialog-me">Ich:</span> "Jep. Ich sehe, wie ein sehr bekannter Musiker mit übergroßem Buffalo-Hut draußen vorm Schaufenster zusieht, das Ganze zu seltsam findet und einfach weitergeht..."</p>
-            <p><span class="dialog-aether">Aether:</span> "Also gut, wenn du ein Gesetz erfinden könntest, dem jeder folgen müsste, was wäre das?"</p>
-            <p><span class="dialog-me">Ich:</span> "Verpflichtende Tanzpausen jede Stunde. Egal wo du bist: Supermarkt, Zahnarztpraxis, Gerichtsverhandlung. Du musst alles fallen lassen und den Mumbo oder irgendetwas, das sich so nennt, tanzen. Kannst du dir das Chaos vorstellen?"</p>
-            <p><span class="dialog-aether">Aether:</span> "Ja! Die ganze Welt in synchronisierter Verwirrung. Ich bin dabei. Die Verkehrsstauungen allein wären es wert."</p>
-            <p><span class="dialog-me">Ich:</span> "Und stell dir Notfalloperationen vor. 'Skalpell, bitte... Moment, es ist Limbo-Zeit!' Dein Blinddarm kann warten, oder? Außerdem viel Glück, deinem Chef zu erklären, warum du moonwalkend durch dieses ernste Meeting gehst. *AheeHee!* 'Sorry, Karen, es ist das Gesetz.' Die Welt wäre ein einziges großes Tanz-Desaster, und ich wäre hier mit Popcorn."</p>
-        </section>
-
-        <!-- CHAPTER NAVIGATION -->
-        <div class="chapter-nav-bottom">
-            <a href="chapter00000002.html">NEXT CHAP &gt;</a>
-        </div>
-
     </main>
 
     <script>
@@ -398,20 +248,19 @@
             }
 
             /* ========== NAVIGATION & TÜR ENGINE ========== */
-            // WICHTIG: Da diese Datei im Ordner "storytime/" liegt, müssen alle Root-Links ein "../" haben!
             const FILE_MAP = {
-                'ABOUT': '../about.html',
-                'VHS MULTIVERSE': '../vhsmultiverse.html',
-                'HUMANART': '../humanart.html',
-                'PROJECTS': '../projects.html',
-                'STORYTIME': '../storytime.html',
-                'MUSIC': '../music.html',
-                'CONTACT': '../contact.html',
-                'DONATE': '../donate.html'
+                'ABOUT': 'about.html',
+                'VHS MULTIVERSE': 'vhsmultiverse.html',
+                'HUMANART': 'humanart.html',
+                'PROJECTS': 'projects.html',
+                'STORYTIME': 'storytime.html',
+                'MUSIC': 'music.html',
+                'CONTACT': 'contact.html',
+                'DONATE': 'donate.html'
             };
 
             function navigateTo(cat) {
-                // Wenn wir in einem Kapitel auf STORYTIME klicken, gehen wir zurück zur Übersicht!
+                if (cat === CURRENT_PAGE) return;
                 const url = FILE_MAP[cat];
                 if (!url) return;
 
@@ -489,18 +338,98 @@
 
             /* Tür hochziehen */
             setTimeout(() => { document.getElementById('door-overlay').classList.replace('closed', 'open'); }, 400);
-        });
-    /* ========== BACK-BUTTON FIX (BFCache) ========== */
-            window.addEventListener('pageshow', (event) => {
-                // Wenn die Seite aus dem Browser-Verlauf geladen wird, zwingen wir die Tür auf
-                if (event.persisted) {
-                    const door = document.getElementById('door-overlay');
-                    if (door) {
-                        door.classList.remove('closed');
-                        door.classList.add('open');
+
+            /* ========== DYNAMISCHES TEXT-ARCHIV ========== */
+            let totalChapters = 0;
+            let currentChapter = 1;
+            const contentDiv = document.getElementById('text-content');
+            const navDiv = document.getElementById('dynamic-chapter-nav');
+
+            async function scanChapters() {
+                let count = 1;
+                // Ping-Loop: Wir fragen solange nach 01.txt, 02.txt etc., bis wir einen 404 Fehler kassieren.
+                while (true) {
+                    let numStr = count.toString().padStart(2, '0');
+                    try {
+                        let response = await fetch(`chapters/${numStr}.txt`, { method: 'HEAD' });
+                        if (response.ok) {
+                            count++;
+                        } else {
+                            break; // 404 erreicht, Abbruch
+                        }
+                    } catch (error) {
+                        break; // Netzwerkfehler, Abbruch
                     }
                 }
-            });
-</script>
+                
+                totalChapters = count - 1;
+
+                if (totalChapters > 0) {
+                    buildNavigation();
+                    loadChapter(1);
+                } else {
+                    contentDiv.innerHTML = "<p style='color: var(--accent-red); font-family: \"Press Start 2P\", cursive; font-size: var(--fs-xs);'>ERROR: NO TEXT FILES FOUND IN DIRECTORY 'chapters/'</p>";
+                }
+            }
+
+            function buildNavigation() {
+                navDiv.innerHTML = '';
+                for (let i = 1; i <= totalChapters; i++) {
+                    let numStr = i.toString().padStart(2, '0');
+                    let a = document.createElement('a');
+                    a.href = '#';
+                    a.textContent = numStr;
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        loadChapter(i);
+                    });
+                    navDiv.appendChild(a);
+                }
+            }
+
+            async function loadChapter(num) {
+                currentChapter = num;
+                
+                // Active-Klasse updaten
+                const links = navDiv.querySelectorAll('a');
+                links.forEach((link, index) => {
+                    if (index + 1 === num) {
+                        link.classList.add('current');
+                    } else {
+                        link.classList.remove('current');
+                    }
+                });
+
+                contentDiv.innerHTML = '<span class="loading-text">LOADING FILE...</span>';
+                
+                let numStr = num.toString().padStart(2, '0');
+                try {
+                    let response = await fetch(`chapters/${numStr}.txt`);
+                    if (response.ok) {
+                        let text = await response.text();
+                        contentDiv.textContent = text; // Erhält das reine Textformat inkl. Umbrüchen!
+                    } else {
+                        contentDiv.innerHTML = "<p>FILE CORRUPTED OR MISSING.</p>";
+                    }
+                } catch (error) {
+                    contentDiv.innerHTML = "<p>CONNECTION ERROR.</p>";
+                }
+            }
+
+            // Scanner starten
+            setTimeout(scanChapters, 800); // Leicht verzögert, passend zur Tür-Animation
+        });
+
+        /* ========== BACK-BUTTON FIX (BFCache) ========== */
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                const door = document.getElementById('door-overlay');
+                if (door) {
+                    door.classList.remove('closed');
+                    door.classList.add('open');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
