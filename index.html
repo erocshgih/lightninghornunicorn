@@ -228,6 +228,7 @@
   <canvas id="matrix-bg"></canvas>
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
+  
   <div id="shmup-container">
     <div class="shmup-center">
       <div class="shmup-beam right" style="--angle: 0deg; --speed: 0.25s; --delay: 0s;"></div>
@@ -238,6 +239,7 @@
       <div class="shmup-beam left" style="--angle: 18deg; --speed: 0.25s; --delay: 0.08s;"></div>
     </div>
   </div>
+  
   <div id="rainbow-aura"></div>
   <div id="container3D"></div>
 
@@ -381,7 +383,8 @@
   document.getElementById("navigate-to-main").onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/LightningHornUnicorn.html"; };
 
   let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
-  let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null; let rainbowMatStates = [];
+  let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null; 
+  let rainbowMatStates = [];
 
   function tweenCamera(toPos, toTarget, dur, onDone) {
     camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone }; controls.enabled = false; controls.autoRotate = false;
@@ -405,16 +408,39 @@
 
   document.getElementById("rainbow-btn").onclick = () => {
     if (!object || gagActive || rainbowActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
-    rainbowActive = true; rainbowStart = performance.now(); rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone();
+    rainbowActive = true; rainbowStart = performance.now(); 
+    rainbowBaseRot = object.rotation.clone(); 
+    rainbowBasePos = object.position.clone();
+    rainbowBaseScale = object.scale.clone();
+    
     document.getElementById("matrix-bg").style.opacity = "0";
     rainbowMatStates = []; object.traverse(c => { if (c.isMesh && c.material) { const mats = Array.isArray(c.material) ? c.material : [c.material]; mats.forEach(m => { if (m.emissive) rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }); }); } });
     document.getElementById("rainbow-aura").classList.add("active"); document.getElementById("rainbow-emojis").classList.add("active");
-    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
+    
+    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); 
+    tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
+    
     const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{}); controls.enabled = false; controls.autoRotate = false;
   };
 
   function endRainbow() {
-    rainbowActive = false; if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); if (rainbowBasePos) object.position.copy(rainbowBasePos); rainbowBasePos = null; rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); s.mat.emissiveIntensity = s.int; }); document.getElementById("rainbow-aura").classList.remove("active"); document.getElementById("rainbow-emojis").classList.remove("active"); document.getElementById("shmup-container").style.display = "none"; document.getElementById("matrix-bg").style.opacity = "1"; controls.enabled = true; controls.autoRotate = true; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    rainbowActive = false; 
+    if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); 
+    if (rainbowBasePos) object.position.copy(rainbowBasePos); 
+    if (rainbowBaseScale) object.scale.copy(rainbowBaseScale); 
+    rainbowBasePos = null; 
+    rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); s.mat.emissiveIntensity = s.int; }); 
+    
+    document.getElementById("rainbow-aura").classList.remove("active"); 
+    document.getElementById("rainbow-emojis").classList.remove("active"); 
+    document.getElementById("shmup-container").style.display = "none"; 
+    document.getElementById("matrix-bg").style.opacity = "1"; 
+    
+    const centerPoint = document.querySelector(".shmup-center");
+    if(centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
+    
+    controls.enabled = true; controls.autoRotate = true; 
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
@@ -430,7 +456,7 @@
   MODELS.forEach(m => { const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; selectEl.appendChild(opt); });
   selectEl.addEventListener("change", (e) => loadHead(e.target.value)); loadHead(MODELS[0].url);
 
-  /* 3. DYNAMISCHE INTRO LOGIK (Charakter-basiert) */
+  /* 3. DYNAMISCHE INTRO LOGIK */
   (() => {
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
@@ -457,7 +483,6 @@
       const textT = Math.max(0, Math.min(1, (t - .75) / 2.8));
       const textEase = textT * textT * (3 - 2 * textT);
 
-      // Phase 1: Die Wörter formieren sich aus dem Chaos
       if (textT > 0) {
         word.style.opacity = String(Math.min(1, textT * 2.5));
         lines.forEach((el, i) => {
@@ -468,39 +493,30 @@
           let x = 0, y = 0, z = 0, rotY = 0, rotZ = 0, scale = 1, opac = 1;
 
           if (introVariant === "red") {
-            // Dominant, brutal: Harter Aufprall von oben mit massivem Screen-Shake
             const slam = Math.pow(easeIn, 7); 
             const shakeX = (1 - slam) * (Math.random() - 0.5) * 120;
             const shakeY = (1 - slam) * (Math.random() - 0.5) * 120;
-            
             x = (Math.random() - 0.5) * 600 * (1 - slam) + shakeX;
             y = -800 * (1 - slam) + shakeY; 
             z = 400 * (1 - slam);
-            
             rotY = (Math.random() - 0.5) * 180 * (1 - slam);
             rotZ = (Math.random() - 0.5) * 90 * (1 - slam);
             scale = 1 + (1 - slam) * 5; 
             opac = slam;
           } 
           else if (introVariant === "blue") {
-            // Mystisch, okkult: Beschwörungskreis mit Flackern
             const ritualPhase = t * 4.0 + i * ((Math.PI * 2) / 3);
             const radius = 350 * (1 - easeIn);
-            
             x = Math.cos(ritualPhase) * radius;
             z = Math.sin(ritualPhase) * radius;
             y = Math.sin(t * 3.0 + i) * 120 * (1 - easeIn);
-            
             rotY = (t * 250) + (easeIn * 360); 
             rotZ = Math.sin(t * 2) * 20 * (1 - easeIn);
-            
             scale = 0.5 + easeIn * 0.5;
-            // Flacker-Effekt (Transparenz moduliert)
             opac = easeIn * (Math.sin(t * 30 + i) * 0.5 + 0.5);
-            if (easeIn > 0.95) opac = 1; // Stabilisiert sich am Ende
+            if (easeIn > 0.95) opac = 1; 
           } 
           else {
-            // Gelb (Default): Luftig, meditativ, bouncy
             const spiral = textEase * Math.PI * 3.0;
             const phase = spiral + i * 2.1;
             const x0 = Math.cos(phase) * 210 * reveal;
@@ -511,7 +527,6 @@
             const radius = 180 * (1 - easeIn);
             
             x = x0 * (1 - easeIn) + Math.cos(letterSpiral) * radius;
-            // Hover-Effekt auf Y
             y = y0 * (1 - easeIn) + Math.sin(letterSpiral) * radius + Math.sin(t * 4 + i) * 30 * (1 - easeIn);
             z = z0 * (1 - easeIn) + 120 - easeIn * 500;
             
@@ -526,7 +541,6 @@
         });
       }
       
-      // Phase 2: Wörter zentriert anzeigen (mit Glitches)
       const seqT = t - 0.625;
       if (seqT >= 0 && seqT < 1.905) {
         const index = Math.min(2, Math.floor(seqT / 0.635));
@@ -553,34 +567,28 @@
           stack.appendChild(letter);
         }
         
-        // Individuelle Glitch-/Erscheinungseffekte für Phase 2
         if (introVariant === "red") {
-          // Permanenter, nervöser Chromatic Glitch + Shake
           const g = Math.random() * 4;
           const jitterX = (Math.random() - 0.5) * 10;
           stack.style.transform = `translateX(${jitterX}px)`;
           stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.9), -${g*2}px 0 0 rgba(255,0,180,.9)`;
         } 
         else if (introVariant === "blue") {
-          // Okkultes Atmen und Flackern
           const breath = Math.sin(local * Math.PI * 4); 
           const glow = 5 + (breath * 15);
           stack.style.textShadow = `0 0 ${glow}px ${vColor.shadow}, 0 0 ${glow * 2}px rgba(255,255,255,0.4)`;
           if (local < 0.1 || (local > 0.3 && local < 0.35)) {
-            stack.style.opacity = Math.random(); // Geisterhaftes Einphasen
+            stack.style.opacity = Math.random(); 
           }
         } 
         else {
-          // Gelb: Bouncy Overshoot
           let bScale = 1;
           if (local < 0.2) {
              const progress = local / 0.2;
-             // Leichtes Über-Skalieren und zurückfedern
              bScale = 1 + Math.sin(progress * Math.PI) * 0.15; 
           }
           stack.style.transform = `scale(${bScale})`;
           
-          // Einmaliger, kontrollierter Glitch in der Mitte
           let glitchPulse = 0;
           if (local > 0.15 && local < 0.22) {
             glitchPulse = Math.sin(((local - 0.15) / 0.07) * Math.PI); 
@@ -634,21 +642,63 @@
         const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
         object.position.x = gagBase.x + Math.sin(tt * 5) * amp; object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6; object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
         object.rotation.z = Math.sin(tt * 5) * 0.08; object.rotation.y = Math.sin(tt * 3) * 0.12;
-      } else if (rainbowActive) {
+      } 
+      else if (rainbowActive) {
         const tt = (performance.now() - rainbowStart) / 1000;
-        if (rainbowBasePos) object.position.copy(rainbowBasePos);
-        const toViewer = camera.position.clone().sub(object.position); toViewer.y = 0; let targetYaw = rainbowBaseRot.y;
-        if (toViewer.lengthSq() > 0.000001) { toViewer.normalize(); targetYaw = Math.atan2(toViewer.x, toViewer.z); }
-        const viewerTarget = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, targetYaw, 0, "XYZ"));
-        if (tt < 0.45) { const u = Math.min(1, tt / 0.45); const ease = 1 - Math.pow(1 - u, 5); const startQ = new THREE.Quaternion().setFromEuler(rainbowBaseRot); object.quaternion.copy(startQ).slerp(viewerTarget, ease); }
-        else if (tt < 1.15) { const u = Math.min(1, (tt - 0.45) / 0.70); const ease = 1 - Math.pow(1 - u, 3); const localFlip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -ease * Math.PI * 2); object.quaternion.copy(viewerTarget).multiply(localFlip); }
-        else { object.quaternion.copy(viewerTarget); }
-        const pulse = 0.7 + 0.3 * Math.sin(tt * 28); const hue = (tt * 260) % 360;
-        rainbowMatStates.forEach(st => { st.mat.emissive.setHSL(hue / 360, 1, 0.52); st.mat.emissiveIntensity = 0.35 + pulse * 3.0; });
-        const crossfire = document.getElementById("shmup-container");
-        if (tt >= 1.15 && tt < 2.05) { crossfire.style.display = "block"; } else { crossfire.style.display = "none"; }
+        
+        if (tt < 0.35) {
+            const u = tt / 0.35;
+            object.position.y = rainbowBasePos.y + Math.pow(u, 3) * 20; 
+        } 
+        else if (tt < 0.45) {
+            // Parodius XL-Modus Skalierung
+            object.scale.setScalar(0.75); 
+            object.position.y = rainbowBasePos.y - 14; 
+            object.position.z = rainbowBasePos.z - 15; 
+        } 
+        else if (tt < 2.45) {
+            const u = (tt - 0.45) / 2.0;
+            
+            // Anpassung der Flugstrecke für die neue Größe
+            object.position.y = (rainbowBasePos.y - 14) + (u * 28); 
+            object.position.z = rainbowBasePos.z - 15;
+            
+            object.rotation.y = rainbowBaseRot.y + (u * Math.PI * 2 * 3);
+            object.rotation.x = rainbowBaseRot.x + 0.4; 
+            
+            const pulse = 0.7 + 0.3 * Math.sin(tt * 28); 
+            const hue = (tt * 260) % 360;
+            rainbowMatStates.forEach(st => { 
+                st.mat.emissive.setHSL(hue / 360, 1, 0.52); 
+                st.mat.emissiveIntensity = 0.35 + pulse * 3.0; 
+            });
+            
+            const screenPos = object.position.clone().project(camera);
+            const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth;
+            const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
+            
+            const crossfire = document.getElementById("shmup-container");
+            const centerPoint = crossfire.querySelector(".shmup-center");
+            if (centerPoint) {
+                centerPoint.style.left = screenX + "px";
+                centerPoint.style.top = screenY + "px";
+            }
+            
+            if (tt >= 0.7 && tt < 2.2) {
+                crossfire.style.display = "block";
+            } else {
+                crossfire.style.display = "none";
+            }
+        }
+        
         if (tt >= 2.45) endRainbow();
-      } else if (musicOn) { object.rotation.x = Math.sin(Date.now()*0.001 * (Math.PI / (60/144*0.5))) * 0.08; } else { object.rotation.x *= 0.9; }
+      } 
+      else if (musicOn) { 
+        object.rotation.x = Math.sin(Date.now()*0.001 * (Math.PI / (60/144*0.5))) * 0.08; 
+      } 
+      else { 
+        object.rotation.x *= 0.9; 
+      }
     }
     renderer.render(scene, camera);
     if (hitEnterMixer) hitEnterMixer.update(delta); if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75; hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
