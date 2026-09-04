@@ -460,6 +460,17 @@
 
             setTimeout(() => { document.getElementById('door-overlay').classList.replace('closed', 'open'); }, 400);
         });
-    </script>
+    /* ========== BACK-BUTTON FIX (BFCache) ========== */
+            window.addEventListener('pageshow', (event) => {
+                // Wenn die Seite aus dem Browser-Verlauf geladen wird, zwingen wir die Tür auf
+                if (event.persisted) {
+                    const door = document.getElementById('door-overlay');
+                    if (door) {
+                        door.classList.remove('closed');
+                        door.classList.add('open');
+                    }
+                }
+            });
+</script>
 </body>
 </html>
