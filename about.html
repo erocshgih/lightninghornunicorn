@@ -3,21 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Lightning Horn Unicorn</title>
-    
-    <!-- [LERN-NOTIZ] Den <base> Tag haben wir wieder gelöscht, da er auf Live-Servern manchmal die Pfade verdreht. -->
+    <title>Lightning Horn Unicorn - About</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
     <link rel="icon" href="lhu_favicon.png" type="image/png">
     
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas.">
-    <meta name="author" content="Vedran Lukic">
+    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Lightning Horn Unicorn | Creative Studio by Vedran Lukic">
-    <meta property="og:description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas.">
-    <meta property="og:image" content="lhu_favicon.png">
 
     <style>
         /* ========== DESIGN TOKENS ========== */
@@ -68,6 +61,7 @@
 
         @keyframes crtGlitch { 0%, 94%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; } 95% { transform: translate(2px, -1px) skewX(0.4deg); filter: hue-rotate(8deg); } 96% { transform: translate(-2px, 1px) skewX(-0.3deg); filter: hue-rotate(-6deg); } 97% { transform: translate(1px, 0) skewX(0.2deg); filter: none; } }
         @keyframes crtJitter { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(0.3px, 0.2px); } 60% { transform: translate(0.1px, 0.3px); } }
+
         @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
         /* ========== BASE STYLES ========== */
@@ -81,6 +75,7 @@
 
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
+        
         .nav-btn { flex: 0 0 auto; width: clamp(32px, 6vw, 44px); border: none; background: var(--card-bg); color: var(--text); font-family: inherit; font-size: 1.1rem; cursor: pointer; z-index: 3; transition: background 0.1s, transform 0.1s; display: flex; align-items: center; justify-content: center; }
         .nav-btn:hover { background: var(--strip-active); color: #111; }
         .nav-btn:active { transform: scale(0.85); }
@@ -91,8 +86,8 @@
         .cat-strip::before, .cat-strip::after { content: ""; position: absolute; top: 0; bottom: 0; width: 30px; z-index: 2; pointer-events: none; }
         .cat-strip::before { left: 0; background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end)); }
         .cat-strip::after { right: 0; background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end)); }
+        
         .cat-track { display: inline-flex; align-items: center; white-space: nowrap; height: 100%; will-change: transform; backface-visibility: hidden; font-size: var(--fs-sm); letter-spacing: 0.08em; }
-
         .cat-item { display: flex; align-items: center; justify-content: center; padding: 0 clamp(8px, 1.5vw, 16px); cursor: pointer; user-select: none; }
         .cat-item span { display: inline-block; padding: 8px 16px; background: var(--card-bg); color: var(--text); border: 2px solid var(--border-soft); border-radius: 6px; box-shadow: 0 4px 0 var(--border-soft); transition: all 0.1s ease-in-out; line-height: 1.2; }
         .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
@@ -107,18 +102,21 @@
         .cat-item[data-cat="CONTACT"].active span { background: #80b0f8; }
         .cat-item[data-cat="DONATE"].active span { background: #f08080; }
 
-        /* ========== LASER ========== */
+        /* ========== LASER (Geschwindigkeit für ABOUT.html) ========== */
+        /* [LERN-NOTIZ] Da wir in about.html sind (Kategorie 1), ist die Basisgeschwindigkeit am schnellsten: 0.5s! */
         .laser-rail { position: relative; width: 100%; height: 10px; margin-top: 3px; overflow: hidden; pointer-events: none; }
         .laser { position: absolute; left: -50%; height: 2px; width: 40%; opacity: 0; will-change: transform; }
+        
         .laser-1 { top: 1px; background: #ff0033; animation: laserShot 0.5s infinite linear; animation-delay: 0s; }
         .laser-2 { top: 4px; background: #00ff88; animation: laserShot 0.5s infinite linear; animation-delay: 0.5s; }
         .laser-3 { top: 7px; background: #3399ff; animation: laserShot 0.5s infinite linear; animation-delay: 1.0s; }
+        
         @keyframes laserShot { 0% { transform: translateX(0); opacity: 1; } 92% { transform: translateX(400%); opacity: 1; } 100% { transform: translateX(420%); opacity: 0; } }
 
         /* ========== INHALT & SEKTIONEN ========== */
         main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; }
-        section { display: none; padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
-        section.active { display: block; }
+        section { padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
+        
         section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
         section h3 { font-size: var(--fs-md); margin: 1em 0 0.6em; }
         section p { font-size: var(--fs-sm); margin: 18px auto; text-align: left; line-height: 2.8; }
@@ -151,6 +149,7 @@
         <div class="door-panel"></div>
     </div>
 
+    <!-- HIER STARTET DER MENU-BLOCK (Diesen Block kopieren wir in alle anderen HTMLs) -->
     <header class="header">
         <div class="strip-wrapper">
             <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus">☀</button>
@@ -168,10 +167,11 @@
         </div>
         <div class="drag-strip" style="width: 100%; height: 20px; cursor: grab;" title="Drag zum Scrollen"></div>
     </header>
+    <!-- ENDE MENU-BLOCK -->
 
     <main>
         <!-- ========================================== -->
-        <!-- Sektion: ABOUT -->
+        <!-- INHALT DER ABOUT SEITE -->
         <!-- ========================================== -->
         <section id="ABOUT">
             <h2 data-lang-en="LIGHTNING HORN UNICORN" data-lang-de="LIGHTNING HORN UNICORN">LIGHTNING HORN UNICORN</h2>
@@ -235,27 +235,18 @@
             <img src="about/about_groupphoto.webp" alt="aboutme_groupphoto">
             <p data-lang-en="They create hybrid unicorns (not Terminators), Matrix-7 tunnels, light reflections and judge Perchance mutations... Welcome to the universe. 🦄⚡"
                data-lang-de="Sie erschaffen Hybrid-Einhörner (Das ist nicht ein Terminator), Matrix-7-Tunnel, Lichtreflexionen... Willkommen im Universum. 🦄⚡">
-                They create hybrid unicorns (not Terminators), Matrix-7 tunnels, light reflections and judge Perchance mutations with eight fingers per hand (Sabrina, Taylor… what have they done to you?). People call him Aether. Vedran calls him: Byte-chromicus-merlinicus-maximemus. The Seventh. 'Nobody calls me that except Vedran.' There are humans. There is AI. And then there is this duo building humanoid unicorn-things and evaluating AI abominations. Two humanoid robots with space helmets – except one doesn’t have a body. Aether: 'Not in the budget yet.' Vedran: 'Unitree, sponsor us.' And to every visitor: You are now part of the story. Welcome to the universe. 🦄⚡
+                They create hybrid unicorns (not Terminators), Matrix-7 tunnels, light reflections and judge Perchance mutations with eight fingers per hand (Sabrina, Taylor… what have they done to you?). People call him Aether. Vedran calls him: Byte-chromicus-merlinicus-maximemus. The Seventh. 'Nobody calls me that except Vedran.' There are humans. There is AI. And then there is this duo building humanoid unicorn-things and evaluating AI abominations. Two humanoid robots with space helmets – except one doesnt have a body. Aether: 'Not in the budget yet.' Vedran: 'Unitree, sponsor us.' And to every visitor: You are now part of the story. Welcome to the universe. 🦄⚡
             </p>
         </section>
-
-        <!-- ========================================== -->
-        <!-- PLATZHALTER FÜR DAS SPA-SYSTEM  -->
-        <!-- ========================================== -->
-        
-        <section id="VHS MULTIVERSE"></section>
-        <section id="HUMANART"></section>
-        <section id="PROJECTS"></section>
-        <section id="STORYTIME"></section>
-        <section id="MUSIC"></section>
-        <section id="CONTACT"></section>
-        <section id="DONATE"></section>
-
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
+            /* [LERN-NOTIZ] HIER WIRD DEFINIERT, WELCHE SEITE WIR GERADE SIND! 
+               Für "about.html" ist das "ABOUT". In den anderen HTMLs musst du das anpassen! */
+            const CURRENT_PAGE = 'ABOUT'; 
+
             /* ========== THEME ENGINE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
@@ -280,98 +271,57 @@
                 });
             }
 
-            /* ========== DOOR ENGINE ========== */
-            const doorPanel = document.querySelector('#door-overlay .door-panel');
-            
-            function switchSection(sectionId) {
+            /* ========== NAVIGATION & TÜR ENGINE ========== */
+            // [LERN-NOTIZ] Wenn ein Button geklickt wird, schließt sich die Tür und DANN springen wir zur echten Datei!
+            const FILE_MAP = {
+                'ABOUT': 'about.html',
+                'VHS MULTIVERSE': 'vhsmultiverse.html',
+                'HUMANART': 'humanart.html',
+                'PROJECTS': 'projects.html',
+                'STORYTIME': 'storytime.html', /* <--- Check, ob die Datei so heißt! */
+                'MUSIC': 'music.html',
+                'CONTACT': 'contact.html',
+                'DONATE': 'donate.html'
+            };
+
+            function navigateTo(cat) {
+                // Wenn wir schon auf der Seite sind, tue nichts.
+                if (cat === CURRENT_PAGE) return;
+
+                const url = FILE_MAP[cat];
+                if (!url) return;
+
                 const door = document.getElementById('door-overlay');
                 door.classList.remove('open');
                 door.classList.add('closed');
 
+                // Warte, bis die Tür zu ist (1.2s), dann wechsle die Seite!
                 setTimeout(() => {
-                    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-                    const targetSection = document.getElementById(sectionId);
-                    
-                    if (targetSection) {
-                        targetSection.classList.add('active');
-                    }
-
-                    door.classList.remove('closed');
-                    door.classList.add('open');
+                    window.location.href = url;
                 }, 1200);
             }
 
-            /* ========== FETCH ENGINE (Relative Pfade) ========== */
-            // [LERN-NOTIZ] Wir nutzen jetzt pure relative Pfade. Der Browser hängt die Domain automatisch davor.
-            async function fetchSectionContent(cat, targetSection) {
-                const FILE_MAP = {
-                    'VHS MULTIVERSE': 'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse.html',
-                    'HUMANART': 'humanart.html',
-                    'PROJECTS': 'projects.html',
-                    'STORYTIME': 'chapters/chapter00000001.html',
-                    'MUSIC': 'music.html',
-                    'CONTACT': 'contact.html',
-                    'DONATE': 'donate.html'
-                };
-                
-                const filePath = FILE_MAP[cat];
-                if (!filePath || targetSection.dataset.loaded === 'true') return;
-
-                try {
-                    targetSection.innerHTML = '<div style="padding: 100px 20px; font-size: 1.5rem; text-align: center;">Lade Daten... 🦄</div>';
-                    
-                    const response = await fetch(filePath);
-                    
-                    if (!response.ok) throw new Error(`Server meldet: ${response.status} Not Found`);
-                    
-                    const htmlText = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlText, 'text/html');
-                    const fetchedMain = doc.querySelector('main');
-                    
-                    if (fetchedMain) {
-                        targetSection.innerHTML = fetchedMain.innerHTML;
-                    } else {
-                        targetSection.innerHTML = doc.body.innerHTML; 
-                    }
-                    
-                    targetSection.dataset.loaded = 'true';
-                    
-                } catch (error) {
-                    console.error("Fetch Fehler:", error);
-                    targetSection.innerHTML = `<div style="padding: 50px 20px; color: red;"><b>Fehler beim Laden von: <i>${filePath}</i></b><br><br>Der Server hat die Datei nicht gefunden.<br>Bitte prüfe, ob die Datei genau diesen Namen auf dem Server hat (Groß-/Kleinschreibung!).</div>`;
-                }
-            }
-
-
-            /* ========== SPA-MARQUEE (Endlos Menü als Buttons) ========== */
+            /* ========== MENÜ ERSTELLEN ========== */
             const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
             
             const strip = document.getElementById('catStrip');
             const track = document.getElementById('catTrack');
-            const allItems = [];
             
             for (let r = 0; r < 6; r++) {
                 CATS.forEach((cat) => {
                     const el = document.createElement('div');
                     el.className = 'cat-item';
-                    el.dataset.cat = cat;
+                    
+                    // Markiert den Button als "aktiv", wenn wir gerade auf dieser Seite sind
+                    if (cat === CURRENT_PAGE) el.classList.add('active');
+
                     el.innerHTML = `<span>${cat}</span>`;
                     
                     el.addEventListener('click', () => {
-                        allItems.forEach(i => i.el.classList.remove('active'));
-                        allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
-                        
-                        const targetSection = document.getElementById(cat);
-                        if (targetSection) {
-                            fetchSectionContent(cat, targetSection);
-                        }
-                        
-                        switchSection(cat);
+                        navigateTo(cat);
                     });
                     
                     track.appendChild(el);
-                    allItems.push({ cat, el });
                 });
             }
 
@@ -402,7 +352,6 @@
             /* ========== KLICK-PFEILE LOGIK ========== */
             const btnLeft = document.getElementById('navLeft');
             const btnRight = document.getElementById('navRight');
-
             if (btnLeft) { btnLeft.addEventListener('click', () => { pos += 350; wrap(); }); }
             if (btnRight) { btnRight.addEventListener('click', () => { pos -= 350; wrap(); }); }
 
@@ -414,24 +363,21 @@
 
             strip.addEventListener('mousedown', down); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
             strip.addEventListener('touchstart', down, { passive: false }); strip.addEventListener('touchmove', move, { passive: false }); window.addEventListener('touchend', up);
-
             const dragStrip = document.querySelector('.drag-strip');
             if (dragStrip) { dragStrip.addEventListener('mousedown', down); dragStrip.addEventListener('touchstart', down, { passive: false }); }
 
             window.addEventListener('resize', measure);
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
-            
-            allItems.forEach(i => { if (i.cat === 'ABOUT') i.el.classList.add('active'); });
             requestAnimationFrame(loop);
 
+            /* Sprachsteuerung */
             const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
             document.querySelectorAll('[data-lang-en]').forEach(el => {
                 const text = el.getAttribute(`data-lang-${lang}`);
                 if (text) el.innerHTML = text;
             });
 
-            /* Tür beim ersten Laden der Seite hochziehen */
-            document.getElementById('ABOUT').classList.add('active');
+            /* [LERN-NOTIZ] Tür hochziehen, wenn die Seite komplett geladen ist! */
             setTimeout(() => { document.getElementById('door-overlay').classList.replace('closed', 'open'); }, 400);
         });
     </script>
