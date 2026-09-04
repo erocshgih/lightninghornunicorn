@@ -127,9 +127,6 @@
   #lhu-intro-word > span:nth-child(2) { font-size: clamp(26px, 6vw, 82px); }
   #lhu-intro-word > span:nth-child(3) { font-size: clamp(34px, 9vw, 120px); }
   
-  #lhu-intro.flash { background: #fff; }
-  #lhu-intro.flash #lhu-intro-word { opacity: 0; }
-
   /* Pill Buttons */
   #lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap:22px; width:min(88vw,420px); }
   .lhu-pill {
@@ -151,9 +148,29 @@
   /* --- Z-INDEX THEATER --- */
   #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; transition: opacity 0.4s ease; opacity: 1; }
   #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
+  
+  /* NEU: HUD Text vor dem Kopf (z-index 6) und kleiner (clamp angepasst) */
+  #wisdom-display { 
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+    width: 90vw; max-width: 1000px;
+    font-family: "Impact", monospace; 
+    font-size: clamp(20px, 4vw, 55px); /* <--- Hier verkleinert */
+    line-height: 1.2; font-style: italic; text-align: center;
+    color: rgba(255, 255, 255, 0.5); 
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5), -2px 0 0 rgba(255, 0, 180, 0.5), 2px 0 0 rgba(0, 255, 255, 0.5); 
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+    pointer-events: none; 
+    z-index: 6; /* <--- Liegt jetzt vor container3D (z-index 5) */
+    display: none; 
+  }
+  .wisdom-active { display: block !important; }
+
   #shmup-container { position: fixed; inset: 0; pointer-events: none; z-index: 3; display: none; }
   #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
   #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
+  
   #ui-wrapper { position: fixed; top: max(54px, calc(env(safe-area-inset-top) + 44px)); left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 10px; }
   #head-menu { position: fixed; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 10; width: min(92vw, 460px); }
   #effect-buttons { position: fixed; bottom: max(82px, calc(env(safe-area-inset-bottom) + 70px)); left: 50%; transform: translateX(-50%); z-index: 11; display: flex; gap: 10px; }
@@ -172,26 +189,6 @@
   #loading.show { display: flex; }
   .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* --- EFFECTS --- */
-  #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
-  #rainbow-aura.active { display: block; animation: rainbowAura 0.55s linear infinite; }
-  @keyframes rainbowAura { from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; } 50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; } to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; } }
-
-  /* SHMUP MULTI-LASER SYSTEM */
-  .shmup-center { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
-  .shmup-beam { position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0; }
-  .shmup-beam.right { left: 0; transform-origin: left center; background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireRight var(--speed) linear infinite; animation-delay: var(--delay); }
-  .shmup-beam.left { right: 0; transform-origin: right center; background: linear-gradient(-90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireLeft var(--speed) linear infinite; animation-delay: var(--delay); }
-  @keyframes fireRight { 0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
-  @keyframes fireLeft { 0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
-
-  /* EMOJI SYSTEM */
-  #heart-emojis.active, #rainbow-emojis.active { display: block; }
-  .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
-  @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
-
-  @media (max-width: 600px) { #effect-buttons { bottom: max(76px, calc(env(safe-area-inset-bottom) + 64px)); } }
 </style>
 </head>
 
@@ -226,8 +223,12 @@
 
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
+  
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
+  
+  <!-- Der HUD Text -->
+  <div id="wisdom-display"></div>
   
   <div id="shmup-container">
     <div class="shmup-center">
@@ -250,10 +251,13 @@
     <button id="music-toggle" class="btn glass">Play Music</button>
     <button id="navigate-to-main" class="btn glass">Main Page</button>
   </div>
+  
   <div id="effect-buttons">
     <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
+    <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">📖</button>
   </div>
+  
   <div id="head-menu">
     <select id="head-select" class="glass"></select>
   </div>
@@ -305,6 +309,18 @@
   import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
   import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
   import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
+
+  // =========================================================================
+  // 🔮 DAILY WISDOM - HIER NEUE SÄTZE EINTRAGEN 
+  // =========================================================================
+  const dailyWisdom = [
+    "get more comfortable... become furniture",
+    "your bones called... they are calcium",
+    "dont move: now your shadow is unemployed",
+    "Give your meat a good old slap if you are not a robot",
+    "but who is gay... but who asked first"
+  ];
+  // =========================================================================
 
   const MODELS = [
     { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
@@ -386,16 +402,16 @@
   let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null; 
   let rainbowMatStates = [];
   
-  // Neue Variablen für die Music Loop State Machine
-  let musicPlayTime = 0; 
-  let musicPhase = 0;
+  let wisdomActive = false; 
+  let typewriterInterval = null;
+  let musicPlayTime = 0, musicPhase = 0;
 
   function tweenCamera(toPos, toTarget, dur, onDone) {
     camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone }; controls.enabled = false; controls.autoRotate = false;
   }
 
   document.getElementById("heart-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
     gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
     const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
@@ -411,41 +427,91 @@
   }
 
   document.getElementById("rainbow-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
     rainbowActive = true; rainbowStart = performance.now(); 
-    rainbowBaseRot = object.rotation.clone(); 
-    rainbowBasePos = object.position.clone();
-    rainbowBaseScale = object.scale.clone();
-    
+    rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone(); rainbowBaseScale = object.scale.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
     rainbowMatStates = []; object.traverse(c => { if (c.isMesh && c.material) { const mats = Array.isArray(c.material) ? c.material : [c.material]; mats.forEach(m => { if (m.emissive) rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }); }); } });
     document.getElementById("rainbow-aura").classList.add("active"); document.getElementById("rainbow-emojis").classList.add("active");
-    
-    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); 
-    tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
-    
+    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
     const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{}); controls.enabled = false; controls.autoRotate = false;
   };
 
   function endRainbow() {
-    rainbowActive = false; 
-    if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); 
-    if (rainbowBasePos) object.position.copy(rainbowBasePos); 
-    if (rainbowBaseScale) object.scale.copy(rainbowBaseScale); 
-    rainbowBasePos = null; 
+    rainbowActive = false; if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); if (rainbowBasePos) object.position.copy(rainbowBasePos); if (rainbowBaseScale) object.scale.copy(rainbowBaseScale); rainbowBasePos = null; 
     rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); s.mat.emissiveIntensity = s.int; }); 
-    
-    document.getElementById("rainbow-aura").classList.remove("active"); 
-    document.getElementById("rainbow-emojis").classList.remove("active"); 
-    document.getElementById("shmup-container").style.display = "none"; 
-    document.getElementById("matrix-bg").style.opacity = "1"; 
-    
-    const centerPoint = document.querySelector(".shmup-center");
-    if(centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
-    
-    controls.enabled = true; controls.autoRotate = true; 
-    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    document.getElementById("rainbow-aura").classList.remove("active"); document.getElementById("rainbow-emojis").classList.remove("active"); document.getElementById("shmup-container").style.display = "none"; document.getElementById("matrix-bg").style.opacity = "1"; 
+    const centerPoint = document.querySelector(".shmup-center"); if(centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
+    controls.enabled = true; controls.autoRotate = true; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
+
+  // ==========================================
+  // ZENTRIERTER TYPEWRITER WISDOM BUTTON
+  // ==========================================
+  document.getElementById("wisdom-btn").onclick = () => {
+    if (!object || gagActive || rainbowActive || wisdomActive) return;
+    
+    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    wisdomActive = true;
+    
+    document.getElementById("matrix-bg").style.opacity = "0.2";
+    
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 400, () => {
+        controls.autoRotate = false;
+        object.rotation.set(0,0,0);
+    });
+
+    const phrase = dailyWisdom[Math.floor(Math.random() * dailyWisdom.length)];
+    const textEl = document.getElementById("wisdom-display");
+    
+    textEl.textContent = ""; 
+    textEl.classList.add("wisdom-active");
+    
+    let charIndex = 0;
+    const typingSpeed = 65; 
+    
+    if(typewriterInterval) clearInterval(typewriterInterval);
+    
+    typewriterInterval = setInterval(() => {
+        textEl.textContent += phrase.charAt(charIndex);
+        charIndex++;
+        if(charIndex >= phrase.length) clearInterval(typewriterInterval);
+    }, typingSpeed);
+
+    const cleanupWisdom = () => {
+        wisdomActive = false;
+        textEl.classList.remove("wisdom-active");
+        textEl.textContent = "";
+        document.getElementById("matrix-bg").style.opacity = "1";
+        controls.autoRotate = true;
+    };
+
+    if ('speechSynthesis' in window) {
+      const synth = window.speechSynthesis;
+      synth.cancel(); 
+      
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.pitch = 0.1; 
+      utterance.rate = 0.85; 
+      
+      const voices = synth.getVoices();
+      const engVoice = voices.find(v => v.lang.startsWith("en-") || v.name.includes("English"));
+      if (engVoice) utterance.voice = engVoice;
+
+      utterance.onend = () => {
+        setTimeout(cleanupWisdom, 2000); 
+      };
+      
+      synth.speak(utterance);
+      
+      const estDuration = phrase.length * typingSpeed + 3500;
+      setTimeout(() => { if(wisdomActive) cleanupWisdom(); }, estDuration);
+      
+    } else {
+      const estDuration = phrase.length * typingSpeed + 3000;
+      setTimeout(cleanupWisdom, estDuration);
+    }
+  };
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
     const container = document.getElementById(containerId);
@@ -453,7 +519,6 @@
       const e = document.createElement("span"); e.className = "fast-rise-emoji"; e.textContent = char; e.style.setProperty("--left", `${Math.random() * 100}%`); e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`); e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`); e.style.setProperty("--delay", `${-Math.random() * 2}s`); e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`); container.appendChild(e);
     }
   }
-  
   spawnEmojis("heart-emojis", "❤️", 30, 60, 40); spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
 
   const selectEl = document.getElementById("head-select");
@@ -581,9 +646,7 @@
           const breath = Math.sin(local * Math.PI * 4); 
           const glow = 5 + (breath * 15);
           stack.style.textShadow = `0 0 ${glow}px ${vColor.shadow}, 0 0 ${glow * 2}px rgba(255,255,255,0.4)`;
-          if (local < 0.1 || (local > 0.3 && local < 0.35)) {
-            stack.style.opacity = Math.random(); 
-          }
+          if (local < 0.1 || (local > 0.3 && local < 0.35)) { stack.style.opacity = Math.random(); }
         } 
         else {
           let bScale = 1;
@@ -592,11 +655,8 @@
              bScale = 1 + Math.sin(progress * Math.PI) * 0.15; 
           }
           stack.style.transform = `scale(${bScale})`;
-          
           let glitchPulse = 0;
-          if (local > 0.15 && local < 0.22) {
-            glitchPulse = Math.sin(((local - 0.15) / 0.07) * Math.PI); 
-          }
+          if (local > 0.15 && local < 0.22) { glitchPulse = Math.sin(((local - 0.15) / 0.07) * Math.PI); }
           if (glitchPulse > 0) {
             const g = glitchPulse * 2.2;
             const jitterX = (Math.random() - 0.5) * g * 8;
@@ -604,12 +664,10 @@
             stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.8), -${g*2}px 0 0 rgba(255,0,180,.8)`;
           }
         }
-        
         word.appendChild(stack);
       } else {
         word.style.opacity = "0";
       }
-      
       if (t >= 2.625) { intro.remove(); return; }
       requestAnimationFrame(animateIntro);
     }
@@ -649,85 +707,50 @@
       } 
       else if (rainbowActive) {
         const tt = (performance.now() - rainbowStart) / 1000;
-        
         if (tt < 0.35) {
             const u = tt / 0.35;
             object.position.y = rainbowBasePos.y + Math.pow(u, 3) * 20; 
-        } 
-        else if (tt < 0.45) {
+        } else if (tt < 0.45) {
             object.scale.setScalar(0.75); 
-            object.position.y = rainbowBasePos.y - 14; 
-            object.position.z = rainbowBasePos.z - 15; 
-        } 
-        else if (tt < 2.45) {
+            object.position.y = rainbowBasePos.y - 14; object.position.z = rainbowBasePos.z - 15; 
+        } else if (tt < 2.45) {
             const u = (tt - 0.45) / 2.0;
-            object.position.y = (rainbowBasePos.y - 14) + (u * 28); 
-            object.position.z = rainbowBasePos.z - 15;
-            object.rotation.y = rainbowBaseRot.y + (u * Math.PI * 2 * 3);
-            object.rotation.x = rainbowBaseRot.x + 0.4; 
+            object.position.y = (rainbowBasePos.y - 14) + (u * 28); object.position.z = rainbowBasePos.z - 15;
+            object.rotation.y = rainbowBaseRot.y + (u * Math.PI * 2 * 3); object.rotation.x = rainbowBaseRot.x + 0.4; 
             
-            const pulse = 0.7 + 0.3 * Math.sin(tt * 28); 
-            const hue = (tt * 260) % 360;
-            rainbowMatStates.forEach(st => { 
-                st.mat.emissive.setHSL(hue / 360, 1, 0.52); 
-                st.mat.emissiveIntensity = 0.35 + pulse * 3.0; 
-            });
+            const pulse = 0.7 + 0.3 * Math.sin(tt * 28); const hue = (tt * 260) % 360;
+            rainbowMatStates.forEach(st => { st.mat.emissive.setHSL(hue / 360, 1, 0.52); st.mat.emissiveIntensity = 0.35 + pulse * 3.0; });
             
             const screenPos = object.position.clone().project(camera);
-            const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth;
-            const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
-            
-            const crossfire = document.getElementById("shmup-container");
-            const centerPoint = crossfire.querySelector(".shmup-center");
-            if (centerPoint) {
-                centerPoint.style.left = screenX + "px";
-                centerPoint.style.top = screenY + "px";
-            }
-            
-            if (tt >= 0.7 && tt < 2.2) {
-                crossfire.style.display = "block";
-            } else {
-                crossfire.style.display = "none";
-            }
+            const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth; const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
+            const crossfire = document.getElementById("shmup-container"); const centerPoint = crossfire.querySelector(".shmup-center");
+            if (centerPoint) { centerPoint.style.left = screenX + "px"; centerPoint.style.top = screenY + "px"; }
+            if (tt >= 0.7 && tt < 2.2) { crossfire.style.display = "block"; } else { crossfire.style.display = "none"; }
         }
-        
         if (tt >= 2.45) endRainbow();
       } 
+      else if (wisdomActive) {
+        object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
+        object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
+        object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
+      }
       else if (musicOn) { 
-        /* --- PROGRESSIVE MUSIC HEADBANG & ROMANTIC SWAY --- */
         musicPlayTime += delta;
-        const loopTime = musicPlayTime % 40; // 40 Sekunden Loop
-        const baseFreq = Math.PI / (60/144*0.5); // Standard-BPM
-        
+        const loopTime = musicPlayTime % 40; const baseFreq = Math.PI / (60/144*0.5); 
         let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
         
-        if (loopTime < 10) {
-            // Phase 1 (0-10s): Normales Kopfnicken
-            musicPhase += baseFreq * delta;
-            targetRotX = Math.sin(musicPhase) * 0.08;
-        } else if (loopTime < 30) {
-            // Phase 2 (10-30s): Eskalation - Doppelte Geschwindigkeit!
-            musicPhase += baseFreq * 2.0 * delta;
-            targetRotX = Math.sin(musicPhase) * 0.14; // Geht auch minimal tiefer
-        } else {
-            // Phase 3 (30-40s): Symmetrisch, hypnotisch, sexy dumm (Romantik-Schwenker)
-            musicPhase += baseFreq * 0.4 * delta; // Schön langsam und schleimig
-            
-            // X: Leicht verträumt nach oben gucken + minimales Wippen
+        if (loopTime < 10) { musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; }
+        else if (loopTime < 30) { musicPhase += baseFreq * 2.0 * delta; targetRotX = Math.sin(musicPhase) * 0.14; }
+        else {
+            musicPhase += baseFreq * 0.4 * delta; 
             targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04; 
-            // Y: Übertriebener Boyband-Blick von links nach rechts
             targetRotY = Math.sin(musicPhase) * 0.45;
-            // Z: Der sexy, dumme Kopf-Knick zur Seite
             targetRotZ = Math.cos(musicPhase) * 0.22;
         }
-        
-        // Sanftes Interpolieren (Lerp), damit der Kopf zwischen den Phasen nicht ruckelt!
         object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8);
         object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8);
         object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
-      } 
-      else { 
-        // Musik pausiert: Kopf gleitet butterweich zurück in die Nullposition
+      } else { 
         object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
         object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
         object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
