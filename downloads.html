@@ -12,19 +12,19 @@
 
      :root {
       /* Sommerliches, warmes Farbschema */
-      --bg-main: #fffdf7; /* Sanftes, warmes Creme-Weiß */
+      --bg-main: #fffdf7; 
       --bg-sidebar: #ffffff;
       --bg-card: #ffffff;
-      --bg-hover: #fff6d9; /* Zartes Sonnengelb beim Hover */
-      --bg-active: #ffeaa7; /* Kräftigeres Sommergelb */
-      --yellow: #ffde00; /* Strahlendes Enten-Gelb */
-      --orange: #ffa502; /* Warmes Orange */
-      --text-main: #332f2a; /* Weicheres, warmes Schwarz/Braun */
-      --text-muted: #6e675c; /* Wärmeres Grau für Untertitel */
+      --bg-hover: #fff6d9; 
+      --bg-active: #ffeaa7; 
+      --yellow: #ffde00; 
+      --orange: #ffa502; 
+      --text-main: #332f2a; 
+      --text-muted: #6e675c; 
       --text-dim: #c2baab;
-      --border: #f7eed7; /* Weiche, warme Ränder statt hartem Grau */
+      --border: #f7eed7; 
       --row-hover: rgba(255, 222, 0, 0.15);
-      --shadow-sm: 0 4px 12px rgba(255, 165, 2, 0.06); /* Warme Schatten */
+      --shadow-sm: 0 4px 12px rgba(255, 165, 2, 0.06); 
       --shadow-md: 0 8px 24px rgba(255, 165, 2, 0.12);
     }
 
@@ -100,7 +100,7 @@
     .playlist-info { display: flex; flex-direction: column; gap: 16px; }
     .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
     .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
-    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; }
+    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } /* white-space hinzugefügt für Zeilenumbrüche */
     
     .playlist-actions { padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
     .play-btn-large { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #111; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 16px rgba(255,222,0,0.4); }
@@ -187,10 +187,10 @@
     .intro-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--yellow), var(--orange)); transition: width 0.1s linear; }
 
     /* ========== BACKGROUND DUCKS ========== */
-    #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.35; } /* Enten sind jetzt besser sichtbar und gelb! */
-    .duck { position: absolute; left: -10%; filter: none; } /* Graufilter entfernt! */
+    #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.35; } 
+    .duck { position: absolute; left: -10%; filter: none; } 
     .duck img { width: 32px; animation: duckBob 2.4s ease-in-out infinite alternate; }
-    #duck3D { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; } /* 3D Ente ein bisschen sichtbarer gemacht */
+    #duck3D { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; } 
 
     /* ========== RESPONSIVE (MOBILE) ========== */
     @media (max-width: 900px) {
@@ -452,7 +452,18 @@
       songs = getAllSongs();
       title = 'ALL SONGS';
       icon = '⚡';
-      desc = 'I\'ve been creating music since 2008, driven by curiosity, storytelling, and a love for exploring different musical worlds. Whether it\'s an 80s synth anthem, an electronic journey, a heavy metal track, or a quiet acoustic piece, every song begins with an idea that I genuinely care about. Enjoy the archive.';
+      
+      // =========================================================================
+      // HIER DEINEN URSPRÜNGLICHEN LANGEN TEXT EINFÜGEN!
+      // Du kannst Zeilenumbrüche genau so machen, wie du willst.
+      // Ersetze einfach den Text zwischen den beiden schrägen Anführungszeichen (`).
+      // =========================================================================
+      desc = `I've been creating music since 2008, driven by curiosity, storytelling, and a love for exploring different musical worlds. 
+      
+Whether it's an 80s synth anthem, an electronic journey, a heavy metal track, or a quiet acoustic piece, every song begins with an idea that I genuinely care about. 
+
+Enjoy the archive.`;
+
     } else {
       var g = genres.find(function(x) { return x.id === genreId; });
       songs = g.songs.map(function(s) {
