@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Lightning Horn Unicorn</title>
     
-    <!-- [LERN-NOTIZ] DER ZAUBERSTAB! Dieses <base> Tag sorgt dafür, dass ALLE relativen Links (Bilder, Dateien) automatisch von deiner echten Website geladen werden, selbst wenn du die Datei lokal auf dem PC öffnest! -->
-    <base href="https://lightninghornunicorn.com/">
+    <!-- [LERN-NOTIZ] Den <base> Tag haben wir wieder gelöscht, da er auf Live-Servern manchmal die Pfade verdreht. -->
     
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
     <link rel="icon" href="lhu_favicon.png" type="image/png">
     
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
+    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas.">
+    <meta name="author" content="Vedran Lukic">
     <meta name="theme-color" content="#04050a">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Lightning Horn Unicorn | Creative Studio by Vedran Lukic">
+    <meta property="og:description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas.">
+    <meta property="og:image" content="lhu_favicon.png">
 
     <style>
         /* ========== DESIGN TOKENS ========== */
@@ -64,7 +68,6 @@
 
         @keyframes crtGlitch { 0%, 94%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; } 95% { transform: translate(2px, -1px) skewX(0.4deg); filter: hue-rotate(8deg); } 96% { transform: translate(-2px, 1px) skewX(-0.3deg); filter: hue-rotate(-6deg); } 97% { transform: translate(1px, 0) skewX(0.2deg); filter: none; } }
         @keyframes crtJitter { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(0.3px, 0.2px); } 60% { transform: translate(0.1px, 0.3px); } }
-
         @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
         /* ========== BASE STYLES ========== */
@@ -74,22 +77,11 @@
 
         /* ========== HEADER, MENÜ & PFEILE ========== */
         .header { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); position: sticky; top: 0; z-index: 1000; }
-
-        .strip-wrapper {
-            display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto;
-            border: 3px solid transparent; border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa) 1;
-            height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box;
-        }
+        .strip-wrapper { display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto; border: 3px solid transparent; border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa) 1; height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; }
 
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
-
-        .nav-btn {
-            flex: 0 0 auto; width: clamp(32px, 6vw, 44px); border: none;
-            background: var(--card-bg); color: var(--text); font-family: inherit; font-size: 1.1rem;
-            cursor: pointer; z-index: 3; transition: background 0.1s, transform 0.1s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .nav-btn { flex: 0 0 auto; width: clamp(32px, 6vw, 44px); border: none; background: var(--card-bg); color: var(--text); font-family: inherit; font-size: 1.1rem; cursor: pointer; z-index: 3; transition: background 0.1s, transform 0.1s; display: flex; align-items: center; justify-content: center; }
         .nav-btn:hover { background: var(--strip-active); color: #111; }
         .nav-btn:active { transform: scale(0.85); }
         .nav-btn.left { border-right: 2px solid var(--border-soft); }
@@ -99,7 +91,6 @@
         .cat-strip::before, .cat-strip::after { content: ""; position: absolute; top: 0; bottom: 0; width: 30px; z-index: 2; pointer-events: none; }
         .cat-strip::before { left: 0; background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end)); }
         .cat-strip::after { right: 0; background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end)); }
-
         .cat-track { display: inline-flex; align-items: center; white-space: nowrap; height: 100%; will-change: transform; backface-visibility: hidden; font-size: var(--fs-sm); letter-spacing: 0.08em; }
 
         .cat-item { display: flex; align-items: center; justify-content: center; padding: 0 clamp(8px, 1.5vw, 16px); cursor: pointer; user-select: none; }
@@ -126,7 +117,6 @@
 
         /* ========== INHALT & SEKTIONEN ========== */
         main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; }
-        
         section { display: none; padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
         section.active { display: block; }
         section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
@@ -266,9 +256,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            /* [LERN-NOTIZ] REPO_URL stellt sicher, dass fetch IMMER vom Live-Server lädt! */
-            const REPO_URL = "https://lightninghornunicorn.com/";
-            
             /* ========== THEME ENGINE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
@@ -314,10 +301,11 @@
                 }, 1200);
             }
 
-            /* ========== FETCH ENGINE (Automatisches Laden mit absoluter URL) ========== */
+            /* ========== FETCH ENGINE (Relative Pfade) ========== */
+            // [LERN-NOTIZ] Wir nutzen jetzt pure relative Pfade. Der Browser hängt die Domain automatisch davor.
             async function fetchSectionContent(cat, targetSection) {
                 const FILE_MAP = {
-                    'VHS MULTIVERSE': 'vhsmultiverse.html',
+                    'VHS MULTIVERSE': 'https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse.html',
                     'HUMANART': 'humanart.html',
                     'PROJECTS': 'projects.html',
                     'STORYTIME': 'chapters/chapter00000001.html',
@@ -332,11 +320,9 @@
                 try {
                     targetSection.innerHTML = '<div style="padding: 100px 20px; font-size: 1.5rem; text-align: center;">Lade Daten... 🦄</div>';
                     
-                    // [LERN-NOTIZ] Wir zwingen den Browser, die Dateien immer über die absolute Domain zu laden!
-                    const absoluteUrl = REPO_URL + filePath;
-                    const response = await fetch(absoluteUrl);
+                    const response = await fetch(filePath);
                     
-                    if (!response.ok) throw new Error(`Datei nicht gefunden (${response.status})`);
+                    if (!response.ok) throw new Error(`Server meldet: ${response.status} Not Found`);
                     
                     const htmlText = await response.text();
                     const parser = new DOMParser();
@@ -353,7 +339,7 @@
                     
                 } catch (error) {
                     console.error("Fetch Fehler:", error);
-                    targetSection.innerHTML = `<div style="padding: 50px 20px; color: red;"><b>Fehler beim Laden von ${filePath}</b><br><br>Die Datei konnte vom Server ( ${REPO_URL} ) nicht abgerufen werden.</div>`;
+                    targetSection.innerHTML = `<div style="padding: 50px 20px; color: red;"><b>Fehler beim Laden von: <i>${filePath}</i></b><br><br>Der Server hat die Datei nicht gefunden.<br>Bitte prüfe, ob die Datei genau diesen Namen auf dem Server hat (Groß-/Kleinschreibung!).</div>`;
                 }
             }
 
@@ -417,19 +403,8 @@
             const btnLeft = document.getElementById('navLeft');
             const btnRight = document.getElementById('navRight');
 
-            if (btnLeft) {
-                btnLeft.addEventListener('click', () => {
-                    pos += 350; 
-                    wrap();
-                });
-            }
-
-            if (btnRight) {
-                btnRight.addEventListener('click', () => {
-                    pos -= 350; 
-                    wrap();
-                });
-            }
+            if (btnLeft) { btnLeft.addEventListener('click', () => { pos += 350; wrap(); }); }
+            if (btnRight) { btnRight.addEventListener('click', () => { pos -= 350; wrap(); }); }
 
             /* ========== DRAG TO SCROLL ========== */
             let dragging = false, startX = 0, startPos = 0;
