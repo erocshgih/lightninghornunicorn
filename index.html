@@ -149,12 +149,11 @@
   #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; transition: opacity 0.4s ease; opacity: 1; }
   #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
   
-  /* NEU: HUD Text vor dem Kopf (z-index 6) und kleiner (clamp angepasst) */
   #wisdom-display { 
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
     width: 90vw; max-width: 1000px;
     font-family: "Impact", monospace; 
-    font-size: clamp(20px, 4vw, 55px); /* <--- Hier verkleinert */
+    font-size: clamp(20px, 4vw, 55px); 
     line-height: 1.2; font-style: italic; text-align: center;
     color: rgba(255, 255, 255, 0.5); 
     text-transform: uppercase;
@@ -162,7 +161,7 @@
     white-space: pre-wrap; 
     word-wrap: break-word;
     pointer-events: none; 
-    z-index: 6; /* <--- Liegt jetzt vor container3D (z-index 5) */
+    z-index: 6; 
     display: none; 
   }
   .wisdom-active { display: block !important; }
@@ -189,6 +188,26 @@
   #loading.show { display: flex; }
   .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* --- EFFECTS (RESTORED BLOCK) --- */
+  #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
+  #rainbow-aura.active { display: block; animation: rainbowAura 0.55s linear infinite; }
+  @keyframes rainbowAura { from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; } 50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; } to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; } }
+
+  /* SHMUP MULTI-LASER SYSTEM */
+  .shmup-center { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+  .shmup-beam { position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0; }
+  .shmup-beam.right { left: 0; transform-origin: left center; background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireRight var(--speed) linear infinite; animation-delay: var(--delay); }
+  .shmup-beam.left { right: 0; transform-origin: right center; background: linear-gradient(-90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireLeft var(--speed) linear infinite; animation-delay: var(--delay); }
+  @keyframes fireRight { 0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
+  @keyframes fireLeft { 0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
+
+  /* EMOJI SYSTEM */
+  #heart-emojis.active, #rainbow-emojis.active { display: block; }
+  .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
+  @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
+
+  @media (max-width: 600px) { #effect-buttons { bottom: max(76px, calc(env(safe-area-inset-bottom) + 64px)); } }
 </style>
 </head>
 
