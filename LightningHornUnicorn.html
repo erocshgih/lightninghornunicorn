@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Lightning Horn Unicorn</title>
     
+    <!-- [LERN-NOTIZ] DER ZAUBERSTAB! Dieses <base> Tag sorgt dafür, dass ALLE relativen Links (Bilder, Dateien) automatisch von deiner echten Website geladen werden, selbst wenn du die Datei lokal auf dem PC öffnest! -->
+    <base href="https://lightninghornunicorn.com/">
+    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
     <link rel="icon" href="lhu_favicon.png" type="image/png">
     
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas.">
-    <meta name="author" content="Vedran Lukic">
+    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Lightning Horn Unicorn | Creative Studio by Vedran Lukic">
-    <meta property="og:description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic, bringing together music, writing, conceptual art, 3D design and experimental ideas.">
-    <meta property="og:image" content="lhu_favicon.png">
 
     <style>
         /* ========== DESIGN TOKENS ========== */
@@ -129,7 +127,6 @@
         /* ========== INHALT & SEKTIONEN ========== */
         main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; }
         
-        /* [LERN-NOTIZ] MOBILE FIRST: Standardmäßig ist das Layout schmal für Handys. */
         section { display: none; padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
         section.active { display: block; }
         section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
@@ -138,30 +135,13 @@
         section img { display: block; width: 100%; height: auto; margin: 28px auto; border-radius: var(--radius); box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06); }
         hr { border: 0; height: 1px; background: var(--border-soft); margin: 28px auto; width: 100%; }
 
-        /* [LERN-NOTIZ] DESKTOP FIX: Sobald der Bildschirm breiter als 768px ist, greifen diese neuen, großzügigeren Regeln! */
         @media (min-width: 769px) {
-            section { 
-                width: min(85vw, 1000px); /* Sektion darf am PC bis zu 1000 Pixel breit werden */
-                padding: 60px;
-            }
-            section h2 {
-                font-size: var(--fs-xl); /* Titel noch wuchtiger */
-            }
-            section p {
-                font-size: var(--fs-base); /* Text minimal größer zum besseren Lesen am Monitor */
-                line-height: 2.2;
-                max-width: 800px; /* Verhindert, dass eine Textzeile endlos lang wird */
-                margin-left: auto;
-                margin-right: auto;
-            }
-            section img {
-                max-width: 75%; /* Bilder sprengen nicht den Bildschirm */
-                max-height: 60vh; /* Hochkant-Bilder werden nicht endlos hoch */
-                object-fit: contain; /* Bild wird sauber in die Box eingepasst */
-            }
+            section { width: min(85vw, 1000px); padding: 60px; }
+            section h2 { font-size: var(--fs-xl); }
+            section p { font-size: var(--fs-base); line-height: 2.2; max-width: 800px; margin-left: auto; margin-right: auto; }
+            section img { max-width: 75%; max-height: 60vh; object-fit: contain; }
         }
 
-        /* Kleine Handys Anpassung */
         @media (max-width: 480px) {
             .header { padding: 10px 4px; }
             .nav-btn { width: 28px; font-size: 0.9rem; }
@@ -286,6 +266,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
+            /* [LERN-NOTIZ] REPO_URL stellt sicher, dass fetch IMMER vom Live-Server lädt! */
+            const REPO_URL = "https://lightninghornunicorn.com/";
+            
             /* ========== THEME ENGINE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
@@ -331,8 +314,7 @@
                 }, 1200);
             }
 
-            /* ========== FETCH ENGINE (Automatisches Laden) ========== */
-            // [LERN-NOTIZ] Diese Funktion wird ausgelöst, wenn du auf einen Button klickst. Sie saugt die HTML-Datei vom Server!
+            /* ========== FETCH ENGINE (Automatisches Laden mit absoluter URL) ========== */
             async function fetchSectionContent(cat, targetSection) {
                 const FILE_MAP = {
                     'VHS MULTIVERSE': 'vhsmultiverse.html',
@@ -344,39 +326,34 @@
                     'DONATE': 'donate.html'
                 };
                 
-                const url = FILE_MAP[cat];
-                
-                // Wenn es kein extra File gibt (z.B. ABOUT) oder es schon geladen wurde, brechen wir ab.
-                if (!url || targetSection.dataset.loaded === 'true') return;
+                const filePath = FILE_MAP[cat];
+                if (!filePath || targetSection.dataset.loaded === 'true') return;
 
                 try {
-                    // Zeige kurz an, dass geladen wird
                     targetSection.innerHTML = '<div style="padding: 100px 20px; font-size: 1.5rem; text-align: center;">Lade Daten... 🦄</div>';
                     
-                    // Holt die HTML-Datei vom Server (Funktioniert meist nicht lokal per Doppelklick!)
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error('Datei nicht gefunden auf dem Server.');
+                    // [LERN-NOTIZ] Wir zwingen den Browser, die Dateien immer über die absolute Domain zu laden!
+                    const absoluteUrl = REPO_URL + filePath;
+                    const response = await fetch(absoluteUrl);
+                    
+                    if (!response.ok) throw new Error(`Datei nicht gefunden (${response.status})`);
                     
                     const htmlText = await response.text();
-                    
-                    // Wir zerlegen den Text in echtes HTML, um nur den <main> Teil rauszuschneiden
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlText, 'text/html');
                     const fetchedMain = doc.querySelector('main');
                     
-                    // Wir kopieren nur den Inhalt, der in der anderen Datei im <main> stand, hier rein
                     if (fetchedMain) {
                         targetSection.innerHTML = fetchedMain.innerHTML;
                     } else {
-                        targetSection.innerHTML = doc.body.innerHTML; // Notfall-Lösung
+                        targetSection.innerHTML = doc.body.innerHTML; 
                     }
                     
-                    // Markiert die Sektion als "geladen", damit wir sie nicht jedes Mal neu aus dem Internet saugen
                     targetSection.dataset.loaded = 'true';
                     
                 } catch (error) {
                     console.error("Fetch Fehler:", error);
-                    targetSection.innerHTML = `<div style="padding: 50px 20px; color: red;"><b>Fehler beim Laden von ${url}</b><br><br>Hinweis: Automatisches Laden (Fetch) wird oft von Browsern blockiert, wenn du die Datei direkt von deiner Festplatte öffnest (CORS-Error). Auf GitHub Pages funktioniert es!</div>`;
+                    targetSection.innerHTML = `<div style="padding: 50px 20px; color: red;"><b>Fehler beim Laden von ${filePath}</b><br><br>Die Datei konnte vom Server ( ${REPO_URL} ) nicht abgerufen werden.</div>`;
                 }
             }
 
@@ -399,13 +376,11 @@
                         allItems.forEach(i => i.el.classList.remove('active'));
                         allItems.forEach(i => { if (i.cat === cat) i.el.classList.add('active'); });
                         
-                        // 1. Löst den Download im Hintergrund aus (falls noch nicht passiert)
                         const targetSection = document.getElementById(cat);
                         if (targetSection) {
                             fetchSectionContent(cat, targetSection);
                         }
                         
-                        // 2. Schließt die Tür und blendet die Sektion ein
                         switchSection(cat);
                     });
                     
@@ -444,14 +419,14 @@
 
             if (btnLeft) {
                 btnLeft.addEventListener('click', () => {
-                    pos += 350; // Scrollt nach Links
+                    pos += 350; 
                     wrap();
                 });
             }
 
             if (btnRight) {
                 btnRight.addEventListener('click', () => {
-                    pos -= 350; // Scrollt nach Rechts
+                    pos -= 350; 
                     wrap();
                 });
             }
