@@ -12,6 +12,10 @@
     <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
 
+    <!-- [LERN-NOTIZ] Hier laden wir die Three.js 3D-Engine und die OrbitControls für die Freefly-Kamera -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
     <style>
         /* ========== DESIGN TOKENS ========== */
         :root {
@@ -29,13 +33,6 @@
             --border-soft:    #e0ddd8;
             --card-bg:        #ffffff;
             --door-bg:        #f5f3f0;
-            --dot:            #d5d0ca;
-            --dot-active:     #b33;
-            
-            /* Akzentfarben */
-            --accent-red:     #e02424;
-            --accent-blue:    #1a73e8;
-            --accent-green:   #00ff28;
 
             --fs-xs:          clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
             --fs-sm:          clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
@@ -49,14 +46,13 @@
         }
 
         /* ========== THEME MODES ========== */
-        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --accent-red: #ff4d4d; --accent-blue: #3b82f6; --accent-green: #39ff14; } }
-        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --accent-red: #ff4d4d; --accent-blue: #3b82f6; --accent-green: #39ff14; }
-        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; --accent-red: #aaaaaa; --accent-blue: #cccccc; --accent-green: #ffffff; }
-        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; --accent-red: #66bb6a; --accent-blue: #b6ffb6; --accent-green: #39ff14; }
-        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; --accent-red: #ff9999; --accent-blue: #99ccff; --accent-green: #66ff66; }
+        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; } }
+        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; }
+        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; }
+        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; }
+        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; }
 
         html[data-theme="dark"] section img { box-shadow: 0 3px 18px rgba(0, 0, 0, 0.35); }
-        html[data-theme="dark"] .cats-cradle-box { background: #111 !important; border-color: #555 !important; box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.9) !important; }
         html[data-theme="mono-gray"] main { filter: grayscale(1); }
         html[data-theme="mono-green"] main { filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9); }
         
@@ -110,7 +106,7 @@
         .cat-item[data-cat="CONTACT"].active span { background: #80b0f8; }
         .cat-item[data-cat="DONATE"].active span { background: #f08080; }
 
-        /* ========== LASER (Geschwindigkeit für HUMANART) ========== */
+        /* ========== LASER ========== */
         .laser-rail { position: relative; width: 100%; height: 10px; margin-top: 3px; overflow: hidden; pointer-events: none; }
         .laser { position: absolute; left: -50%; height: 2px; width: 40%; opacity: 0; will-change: transform; }
         
@@ -121,91 +117,78 @@
         @keyframes laserShot { 0% { transform: translateX(0); opacity: 1; } 92% { transform: translateX(400%); opacity: 1; } 100% { transform: translateX(420%); opacity: 0; } }
 
         /* ========== INHALT & SEKTIONEN ========== */
-        main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; }
-        section { padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
-        section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
+        main { display: flex; flex-direction: column; align-items: center; margin: 24px auto; z-index: 1; width: 100%; }
+        section { padding: var(--space-section); width: min(94vw, 800px); box-sizing: border-box; }
         
-        /* ========== HUMANART SPEZIFISCHES CSS ========== */
-        #HUMANART > div:first-of-type {
-            width: min(85vw, 420px) !important;
-            height: auto !important;
-            aspect-ratio: 300 / 380;
-        }
-
-        #catsCradleCanvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-            touch-action: none;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-            /* Der Cursor wird jetzt dynamisch über JS gesteuert (grab, pointer, etc.) */
-        }
-
-        #humanart-caption {
-            font-size: var(--fs-xs);
-            color: var(--accent-green);
-            margin-top: 14px;
-            text-align: center;
-            min-height: 1.4em;
-            letter-spacing: 0.15em;
-            font-family: 'Press Start 2P', cursive;
-            word-wrap: break-word;
+        section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
+        section p { font-size: var(--fs-sm); margin: 18px auto; text-align: left; line-height: 2.8; }
+        
+        /* ========== 3D CONTAINER & UI STYLES ========== */
+        #three-container {
             width: 100%;
-            text-transform: uppercase;
+            height: 55vh;
+            min-height: 400px;
+            cursor: grab;
+            margin: 0 auto;
+            position: relative;
+            background: transparent;
+        }
+        #three-container:active {
+            cursor: grabbing;
+        }
+
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-btn {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--border-soft);
+            border-radius: 50%;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .gallery-btn:hover, .gallery-btn:active {
+            background: var(--strip-active);
+            color: #111;
+            border-color: var(--strip-active);
+            transform: scale(1.1);
         }
 
         .atom-disclaimer {
             font-size: 0.55rem;
-            margin-top: 20px;
-            color: var(--text-soft);
+            margin-top: 25px;
+            color: #00ff28;
             letter-spacing: 2px;
-            text-align: center;
-            text-transform: uppercase;
+            text-align: center !important;
         }
-
-        /* [LERN-NOTIZ] BALENCIAGA X VIDEO GAME MANIFESTO STYLES */
-        .humanart-manifesto {
-            font-family: 'Press Start 2P', monospace;
-            font-size: var(--fs-xs);
-            line-height: 2.5;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            text-align: left;
-            border-left: 4px solid var(--accent-green);
-            padding-left: 18px;
-            margin: 40px auto;
-            width: 100%;
-            background: linear-gradient(90deg, rgba(0,255,40,0.03) 0%, transparent 100%);
-        }
-
-        .humanart-manifesto span.high-fashion { color: var(--accent-green); font-weight: bold; }
-        .humanart-manifesto span.brutal { color: var(--accent-red); }
-        .humanart-manifesto span.digital { color: var(--accent-blue); text-decoration: underline; text-underline-offset: 4px; }
-        
-        .humanart-manifesto p { margin-bottom: 24px; font-size: inherit; line-height: inherit; text-align: left; }
 
         @media (min-width: 769px) {
-            section { width: min(85vw, 1000px); padding: 60px; }
+            section { width: min(90vw, 1200px); padding: 40px; }
             section h2 { font-size: var(--fs-xl); }
-            .humanart-manifesto { 
-                font-size: var(--fs-sm); 
-                line-height: 2.2; 
-                max-width: 700px; 
-                padding-left: 24px;
-                margin-top: 60px;
-            }
-            #HUMANART > div:first-of-type {
-                width: min(70vw, 500px) !important;
-            }
+            section p { font-size: var(--fs-base); line-height: 2.2; max-width: 700px; margin-left: auto; margin-right: auto; }
+            #three-container { height: 65vh; }
         }
 
         @media (max-width: 480px) {
             .header { padding: 10px 4px; }
             .nav-btn { width: 28px; font-size: 0.9rem; }
             .theme-btn { width: 36px; }
-            #HUMANART > div:first-of-type { width: min(90vw, 360px) !important; }
-            .humanart-manifesto { padding-left: 12px; letter-spacing: 0.05em; margin: 30px auto; }
+            #three-container { height: 45vh; }
         }
 
         /* ========== METALLTÜR ========== */
@@ -221,7 +204,7 @@
         <div class="door-panel"></div>
     </div>
 
-    <!-- MENU-BLOCK -->
+    <!-- HIER STARTET DER MENU-BLOCK -->
     <header class="header">
         <div class="strip-wrapper">
             <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus">☀</button>
@@ -239,49 +222,31 @@
         </div>
         <div class="drag-strip" style="width: 100%; height: 20px; cursor: grab;" title="Drag zum Scrollen"></div>
     </header>
+    <!-- ENDE MENU-BLOCK -->
 
     <main>
         <section id="HUMANART" class="active">
             <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
-            <div class="cats-cradle-box" style="position: relative; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); border: 2px solid #333;">
-                <div style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 5px;">
-                    <button id="zoomIn" type="button" style="width: 36px; height: 36px; background: rgba(255,255,255,0.85); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px; font-size: 18px; line-height: 1; -webkit-tap-highlight-color: transparent;" aria-label="Zoom in">+</button>
-                    <button id="zoomOut" type="button" style="width: 36px; height: 36px; background: rgba(255,255,255,0.85); border: 2px solid #333; cursor: pointer; font-family: sans-serif; font-weight: bold; border-radius: 4px; font-size: 18px; line-height: 1; -webkit-tap-highlight-color: transparent;" aria-label="Zoom out">−</button>
-                </div>
-                <canvas id="catsCradleCanvas"></canvas>
+            <!-- [LERN-NOTIZ] Das hier ist der rahmenlose Container für den 3D Raum -->
+            <div id="three-container"></div>
+            
+            <!-- [LERN-NOTIZ] Die neuen Pfeiltasten zur direkten Bildsteuerung -->
+            <div class="gallery-controls">
+                <button id="galPrev" class="gallery-btn" aria-label="Vorheriges Bild">◀</button>
+                <button id="galNext" class="gallery-btn" aria-label="Nächstes Bild">▶</button>
             </div>
 
-            <div id="humanart-caption">&nbsp;</div>
-            
             <p class="atom-disclaimer">
-                ART BY VEDRAN LUKIC : EVERYTHING IS CONNECTED.
+                ART BY VEDRAN LUKIC : everything is connected...
             </p>
 
-            <!-- [LERN-NOTIZ] Das Balenciaga / Arcade Manifesto! In Absätze geteilt, starke Farbkontraste. -->
-            <div class="humanart-manifesto">
-                <p data-lang-en="Explore the beauty of <span class='high-fashion'>Human Art</span>."
-                   data-lang-de="Erkunde die Schönheit der <span class='high-fashion'>menschlichen Kunst</span>.">
-                    Explore the beauty of <span class='high-fashion'>Human Art</span>.
-                </p>
-                <p data-lang-en="Entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention."
-                   data-lang-de="Vollständig von mir erschaffen. Jedes Stück beginnt mit einer originellen Idee und wird mit Sorgfalt zum Leben erweckt.">
-                    Entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention.
-                </p>
-                <p data-lang-en="<span class='digital'>Digital Tools</span> X <span class='brutal'>Traditional Methods</span>."
-                   data-lang-de="<span class='digital'>Digitale Werkzeuge</span> X <span class='brutal'>Traditionelle Methoden</span>.">
-                    <span class='digital'>Digital Tools</span> X <span class='brutal'>Traditional Methods</span>.
-                </p>
-                <p data-lang-en="I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch."
-                   data-lang-de="Ich arbeite oft mit Bleistift und minimaler Farbe, fokussiert auf Einfachheit und Eleganz. Wenn ich Farbe hinzufüge, dann als besonderen Akzent.">
-                    I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch.
-                </p>
-                <p data-lang-en="Enjoy the purity of handcrafted art."
-                   data-lang-de="Genieße die Reinheit handgefertigter Kunst.">
-                    Enjoy the purity of handcrafted art.
-                </p>
-            </div>
+            <p data-lang-en="Explore the beauty of Human Art, entirely crafted by me. Each piece starts with my original ideas and is brought to life with careful attention. Using both digital tools and traditional methods, I often work with pencils and minimal color, focusing on simplicity and elegance. When I add color, it's to create a special touch. Enjoy the purity of handcrafted art."
+               data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet. Jedes Stück beginnt mit meinen originellen Ideen und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf Einfachheit und Eleganz liegt. Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen. Genieße die Reinheit handgefertigter Kunst.">
+                Explore the beauty of Human Art, entirely crafted by me.
+            </p>
 
+            <!-- Versteckte Bilder-Datenquelle -->
             <div class="cats-cradle-source-images" style="display: none;" aria-hidden="true">
                 <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/mynameisrain.webp" alt="">
                 <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/candle.webp" alt="">
@@ -315,6 +280,9 @@
                 document.documentElement.setAttribute('data-theme', theme);
                 try { localStorage.setItem('lhu-theme', theme); } catch(e) {}
                 if (themeBtn) themeBtn.textContent = THEME_ICONS[theme] || '☀';
+                
+                // Wir informieren die 3D Engine über Farbwechsel!
+                if(window.updateThreeJsTheme) window.updateThreeJsTheme(theme);
             }
 
             let currentTheme = 'light';
@@ -402,28 +370,23 @@
                 requestAnimationFrame(loop);
             }
 
-            /* ========== KLICK-PFEILE LOGIK ========== */
             const btnLeft = document.getElementById('navLeft');
             const btnRight = document.getElementById('navRight');
             if (btnLeft) { btnLeft.addEventListener('click', () => { pos += 350; wrap(); }); }
             if (btnRight) { btnRight.addEventListener('click', () => { pos -= 350; wrap(); }); }
 
-            /* ========== DRAG TO SCROLL ========== */
             let dragging = false, startX = 0, startPos = 0;
-            function down(e) { if(e.target.closest('#themeToggle') || e.target.closest('.nav-btn') || e.target.closest('canvas')) return; dragging = true; startX = e.touches ? e.touches[0].clientX : e.clientX; startPos = pos; }
+            function down(e) { if(e.target.closest('#themeToggle') || e.target.closest('.nav-btn')) return; dragging = true; startX = e.touches ? e.touches[0].clientX : e.clientX; startPos = pos; }
             function move(e) { if (!dragging) return; pos = startPos + ((e.touches ? e.touches[0].clientX : e.clientX) - startX); wrap(); track.style.transform = `translateX(${pos}px)`; e.preventDefault(); }
             function up() { dragging = false; }
 
             strip.addEventListener('mousedown', down); window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
             strip.addEventListener('touchstart', down, { passive: false }); strip.addEventListener('touchmove', move, { passive: false }); window.addEventListener('touchend', up);
-            const dragStrip = document.querySelector('.drag-strip');
-            if (dragStrip) { dragStrip.addEventListener('mousedown', down); dragStrip.addEventListener('touchstart', down, { passive: false }); }
 
             window.addEventListener('resize', measure);
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            /* Sprachsteuerung */
             const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
             document.querySelectorAll('[data-lang-en]').forEach(el => {
                 const text = el.getAttribute(`data-lang-${lang}`);
@@ -431,356 +394,155 @@
             });
 
 
-            /* ========== 3D CAT'S CRADLE ENGINE (UPGRADED) ========== */
-            function initCatsCradle() {
-                const canvas = document.getElementById('catsCradleCanvas');
-                if (!canvas) return;
+            /* =========================================================
+               🚀 NEUE THREE.JS 3D ENGINE
+               ========================================================= */
+            
+            function initThreeJsCradle() {
+                const container = document.getElementById('three-container');
+                if (!container || typeof THREE === 'undefined') return;
 
-                function sizeCanvas() {
-                    const container = canvas.parentElement;
-                    if (container) {
-                        canvas.width = container.clientWidth || 300;
-                        canvas.height = container.clientHeight || 380;
-                    } else {
-                        canvas.width = 300;
-                        canvas.height = 380;
-                    }
-                }
-                sizeCanvas();
-                window.addEventListener('resize', sizeCanvas);
+                // 1. Szene, Kamera & Renderer Setup
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+                
+                // Alpha: true sorgt dafür, dass der CSS Hintergrund durchscheint!
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Scharf auf Handys, schonend für Batterie
+                container.appendChild(renderer.domElement);
 
-                const ctx = canvas.getContext('2d');
+                // 2. Freefly OrbitControls
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true; // butterweiches Nachziehen
+                controls.dampingFactor = 0.05;
+                controls.enablePan = false;    // Nur drehen und zoomen ist cooler
+                controls.minDistance = 20;
+                controls.maxDistance = 350;
 
-                const zoomInBtn = document.getElementById('zoomIn');
-                const zoomOutBtn = document.getElementById('zoomOut');
-
+                // 3. Bilder laden und Koordinaten berechnen
                 const htmlImages = document.querySelectorAll('.cats-cradle-source-images img');
-                let nodes = [];
+                const textureLoader = new THREE.TextureLoader();
+                const nodesData = [];
+                const radius = 80; // Größe der Sphäre
 
-                htmlImages.forEach((imgEl, index) => {
-                    const imgUrl = imgEl.getAttribute('src') || imgEl.src;
-                    if (!imgUrl) return;
-
+                // Wir berechnen erst alle X/Y/Z Positionen für eine gleichmäßige Kugel (Fibonacci-Sphere)
+                for(let index = 0; index < htmlImages.length; index++) {
                     const phi = Math.acos(-1 + (2 * index) / htmlImages.length);
                     const theta = Math.sqrt(htmlImages.length * Math.PI) * phi;
-                    const radius = 95;
+                    nodesData.push(new THREE.Vector3(
+                        radius * Math.sin(phi) * Math.cos(theta),
+                        radius * Math.sin(phi) * Math.sin(theta),
+                        radius * Math.cos(phi)
+                    ));
+                }
 
-                    nodes.push({
-                        x: radius * Math.sin(phi) * Math.cos(theta),
-                        y: radius * Math.sin(phi) * Math.sin(theta),
-                        z: radius * Math.cos(phi),
-                        imgUrl: imgUrl,
-                        img: null,
-                        aspect: 1
-                    });
-                });
-
-                nodes.forEach(node => {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.src = node.imgUrl;
-                    img.onload = () => {
-                        node.img = img;
-                        node.aspect = img.width / img.height;
-                    };
-                });
-
-                let isCanvasDragging = false;
-                let previousMousePosition = { x: 0, y: 0 };
-                let cameraDistance = 300;
-
-                let rotX = 0, rotY = 0;
-                let targetRotX = null, targetRotY = null;
-                let targetCamDist = null;
-                let isAnimatingNode = false;
-                let isFocused = false;
+                // 4. Verbindungslinien (Fäden) zeichnen
+                const linePositions = [];
+                // Verbinde jeden Punkt mit den zwei nächsten Nachbarn
+                for (let i = 0; i < nodesData.length; i++) {
+                    for(let j = i + 1; j < Math.min(i + 3, nodesData.length); j++) {
+                        linePositions.push(nodesData[i].x, nodesData[i].y, nodesData[i].z);
+                        linePositions.push(nodesData[j].x, nodesData[j].y, nodesData[j].z);
+                    }
+                }
+                const lineGeo = new THREE.BufferGeometry();
+                lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
                 
-                // [LERN-NOTIZ] Neue Variablen für Desktop Parallax & Hover
-                let mouseXOffset = 0;
-                let mouseYOffset = 0;
-                let hoveredIdx = -1;
+                // Neon-Grün als Standard-Laserfarbe
+                const lineMat = new THREE.LineBasicMaterial({ color: 0x00ff28, transparent: true, opacity: 0.4 });
+                const lines = new THREE.LineSegments(lineGeo, lineMat);
+                scene.add(lines);
 
-                if (zoomInBtn) {
-                    zoomInBtn.addEventListener('click', () => {
-                        targetCamDist = Math.max(120, (targetCamDist || cameraDistance) - 40);
+                // Globale Funktion um Linienfarbe per Theme zu steuern
+                window.updateThreeJsTheme = function(themeName) {
+                    if (themeName === 'mono-gray') lineMat.color.setHex(0xbbbbbb);
+                    else lineMat.color.setHex(0x00ff28);
+                };
+                window.updateThreeJsTheme(currentTheme);
+
+                // 5. Bilder als "Sprites" in den Raum setzen (Sprites schauen immer zur Kamera!)
+                htmlImages.forEach((imgEl, i) => {
+                    textureLoader.load(imgEl.src, (texture) => {
+                        const aspect = texture.image.width / texture.image.height;
+                        const material = new THREE.SpriteMaterial({ map: texture, depthTest: false }); 
+                        const sprite = new THREE.Sprite(material);
+                        
+                        const baseSize = 30; // Grundgröße der Bilder im 3D Raum
+                        sprite.scale.set(baseSize * (aspect > 1 ? aspect : 1), baseSize * (aspect < 1 ? 1/aspect : 1), 1);
+                        sprite.position.copy(nodesData[i]);
+                        scene.add(sprite);
                     });
-                }
-                if (zoomOutBtn) {
-                    zoomOutBtn.addEventListener('click', () => {
-                        targetCamDist = Math.min(550, (targetCamDist || cameraDistance) + 40);
-                    });
-                }
+                });
 
-                function project(x, y, z) {
-                    const fov = 280;
-                    const scale = fov / (parseInt(z) + cameraDistance);
-                    return {
-                        x: x * scale + canvas.width / 2,
-                        y: y * scale + canvas.height / 2,
-                        scale: scale
-                    };
-                }
+                // 6. Navigation Logik (Kino-Modus)
+                let currentFocusIndex = -1;
+                let isAutoFlying = false;
+                let targetCameraPos = new THREE.Vector3(0, 0, 220); // Startposition (weit weg)
+                let targetControlsTarget = new THREE.Vector3(0, 0, 0);
 
-                function rotateNet(ax, ay) {
-                    rotX += ax;
-                    rotY += ay;
-                    nodes.forEach(node => {
-                        let cosY = Math.cos(ay), sinY = Math.sin(ay);
-                        let x1 = node.x * cosY - node.z * sinY;
-                        let z1 = node.z * cosY + node.x * sinY;
-                        let cosX = Math.cos(ax), sinX = Math.sin(ax);
-                        let y2 = node.y * cosX - z1 * sinX;
-                        let z2 = z1 * cosX + node.y * sinX;
-                        node.x = x1;
-                        node.y = y2;
-                        node.z = z2;
-                    });
+                camera.position.copy(targetCameraPos);
+
+                function focusImage(index) {
+                    if (nodesData.length === 0) return;
+                    
+                    // Array-Grenzen überschreiten = wieder von vorne/hinten anfangen
+                    if (index < 0) index = nodesData.length - 1;
+                    if (index >= nodesData.length) index = 0;
+                    
+                    currentFocusIndex = index;
+                    isAutoFlying = true;
+                    
+                    const nodePos = nodesData[index];
+                    
+                    // Wir berechnen einen Punkt, der EXAKT vor dem Bild liegt (Abstand 45 Units)
+                    const camOffset = nodePos.clone().normalize().multiplyScalar(45); 
+                    targetCameraPos.copy(nodePos).add(camOffset);
+                    targetControlsTarget.copy(nodePos);
                 }
 
-                function drawNet() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Button Events
+                document.getElementById('galPrev').addEventListener('click', () => focusImage(currentFocusIndex - 1));
+                document.getElementById('galNext').addEventListener('click', () => focusImage(currentFocusIndex + 1));
 
-                    // Parallax & Rotation Logic
-                    if (isAnimatingNode && targetRotX !== null) {
-                        const dx = targetRotX - rotX;
-                        const dy = targetRotY - rotY;
-                        if (Math.abs(dx) > 0.002 || Math.abs(dy) > 0.002) {
-                            rotateNet(dx * 0.045, dy * 0.045);
-                        } else {
-                            isAnimatingNode = false;
-                        }
-                    } else if (!isCanvasDragging && !isFocused) {
-                        // Der Maus-Parallax Effekt (dreht sich minimal in Richtung der Maus)
-                        let baseRotX = 0.0005 + (mouseYOffset * 0.00003);
-                        let baseRotY = 0.0008 + (mouseXOffset * 0.00003);
-                        rotateNet(baseRotX, baseRotY);
-                    }
+                // Wenn der User selbst zieht, brechen wir den Auto-Flug sofort ab!
+                controls.addEventListener('start', () => {
+                    isAutoFlying = false;
+                });
 
-                    if (targetCamDist !== null) {
-                        cameraDistance += (targetCamDist - cameraDistance) * 0.06;
-                    }
-
-                    nodes.sort((a, b) => b.z - a.z);
-
-                    /* Threads */
-                    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-green').trim() || '#00FF28';
-                    ctx.lineWidth = 1.5;
-                    for (let i = 0; i < nodes.length; i++) {
-                        for (let j = i + 1; j < Math.min(i + 3, nodes.length); j++) {
-                            let p1 = project(nodes[i].x, nodes[i].y, nodes[i].z);
-                            let p2 = project(nodes[j].x, nodes[j].y, nodes[j].z);
-                            ctx.beginPath();
-                            ctx.moveTo(p1.x, p1.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
-                    }
-
-                    /* Nodes */
-                    nodes.forEach((node, index) => {
-                        if (!node.img) return;
-                        let p = project(node.x, node.y, node.z);
-                        
-                        // Wenn der User über das Bild hovert, wird es größer!
-                        let isHovered = (index === hoveredIdx);
-                        let dynamicScale = isHovered ? (p.scale * 1.35) : p.scale;
-                        
-                        let baseSize = 45 * dynamicScale;
-                        if (baseSize <= 0) return;
-                        
-                        let imgWidth = baseSize, imgHeight = baseSize;
-                        if (node.aspect > 1) imgHeight = baseSize / node.aspect;
-                        else if (node.aspect < 1) imgWidth = baseSize * node.aspect;
-
-                        ctx.save();
-                        // Glüheffekt beim Hovern
-                        if(isHovered) {
-                            ctx.shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-green').trim() || '#00FF28';
-                            ctx.shadowBlur = 20;
-                        } else {
-                            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-                            ctx.shadowBlur = 8;
-                        }
-                        
-                        ctx.drawImage(node.img, p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
-                        ctx.restore();
-                        
-                        ctx.strokeStyle = isHovered ? '#fff' : '#111';
-                        ctx.lineWidth = isHovered ? 2 : 1;
-                        ctx.strokeRect(p.x - imgWidth / 2, p.y - imgHeight / 2, imgWidth, imgHeight);
-                    });
-
-                    // Update Cursor
-                    if (isCanvasDragging) {
-                        canvas.style.cursor = 'grabbing';
-                    } else if (hoveredIdx >= 0) {
-                        canvas.style.cursor = 'pointer';
+                // 7. Animations-Schleife (Rendern & weiche Kamerafahrten)
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    if (isAutoFlying) {
+                        // Kamera sanft zur Zielposition gleiten lassen (Lerp)
+                        camera.position.lerp(targetCameraPos, 0.06);
+                        controls.target.lerp(targetControlsTarget, 0.06);
                     } else {
-                        canvas.style.cursor = 'grab';
+                        // Wenn der User gerade nichts macht, lassen wir das Netz GANZ leicht von selbst rotieren
+                        scene.rotation.y -= 0.0005;
+                        scene.rotation.x -= 0.0002;
                     }
-
-                    requestAnimationFrame(drawNet);
-                }
-
-                /* Mouse & Hover Detection */
-                canvas.addEventListener('mousemove', e => {
-                    const rect = canvas.getBoundingClientRect();
-                    const mx = e.clientX - rect.left;
-                    const my = e.clientY - rect.top;
                     
-                    // Parallax Offset berechnen (-50 bis +50 relativ zur Mitte)
-                    mouseXOffset = mx - (rect.width / 2);
-                    mouseYOffset = my - (rect.height / 2);
+                    controls.update();
+                    renderer.render(scene, camera);
+                }
+                animate();
 
-                    if (isCanvasDragging) {
-                        rotateNet(
-                            -(e.clientY - previousMousePosition.y) * 0.007,
-                            (e.clientX - previousMousePosition.x) * 0.007
-                        );
-                        previousMousePosition = { x: e.clientX, y: e.clientY };
-                    } else {
-                        // Hover-Erkennung für PC (Prüft, ob die Maus über einem Bild ist)
-                        const sx = canvas.width / rect.width;
-                        const sy = canvas.height / rect.height;
-                        const canvasMx = mx * sx;
-                        const canvasMy = my * sy;
-                        
-                        let hit = -1, minD = 40; // Etwas größere Hitbox
-                        nodes.forEach((n, i) => {
-                            if (!n.img) return;
-                            const p = project(n.x, n.y, n.z);
-                            const d = Math.hypot(canvasMx - p.x, canvasMy - p.y);
-                            if (d < minD) {
-                                minD = d;
-                                hit = i;
-                            }
-                        });
-                        hoveredIdx = hit;
-                    }
+                // 8. Responsive Design (Größenanpassung wenn das Fenster sich ändert)
+                window.addEventListener('resize', () => {
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    renderer.setSize(width, height);
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
                 });
-
-                canvas.addEventListener('mousedown', e => {
-                    isCanvasDragging = true;
-                    previousMousePosition = { x: e.clientX, y: e.clientY };
-                });
-                
-                canvas.addEventListener('mouseleave', () => {
-                    isCanvasDragging = false;
-                    hoveredIdx = -1;
-                    mouseXOffset = 0;
-                    mouseYOffset = 0;
-                });
-                window.addEventListener('mouseup', () => { isCanvasDragging = false; });
-
-                /* Touch drag (Mobile Optimized - hit box increased!) */
-                canvas.addEventListener('touchstart', e => {
-                    if (e.touches.length === 1) {
-                        isCanvasDragging = true;
-                        previousMousePosition = {
-                            x: e.touches[0].clientX,
-                            y: e.touches[0].clientY
-                        };
-                    }
-                }, { passive: true });
-
-                canvas.addEventListener('touchmove', e => {
-                    if (isCanvasDragging && e.touches.length === 1) {
-                        rotateNet(
-                            -(e.touches[0].clientY - previousMousePosition.y) * 0.007,
-                            (e.touches[0].clientX - previousMousePosition.x) * 0.007
-                        );
-                        previousMousePosition = {
-                            x: e.touches[0].clientX,
-                            y: e.touches[0].clientY
-                        };
-                    }
-                }, { passive: true });
-
-                canvas.addEventListener('touchend', () => { isCanvasDragging = false; });
-
-                /* Click / tap to focus node */
-                let focusedIdx = -1;
-                const capEl = document.getElementById('humanart-caption');
-
-                function centerNode(n) {
-                    if (!n) return;
-                    const r = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
-                    if (r === 0) return;
-                    const ay = Math.atan2(n.x, n.z);
-                    const nz = Math.sqrt(n.x * n.x + n.z * n.z);
-                    const ax = Math.atan2(n.y, nz);
-                    targetRotX = rotX + ax;
-                    targetRotY = rotY + ay;
-                    targetCamDist = 130;
-                    isAnimatingNode = true;
-                    isFocused = true;
-                }
-
-                function setCaption(n) {
-                    if (capEl && n) {
-                        const fn = n.imgUrl.split('/').pop().replace(/\.\w+$/, '').replace(/[_-]/g, ' ');
-                        capEl.textContent = fn.charAt(0).toUpperCase() + fn.slice(1);
-                    }
-                }
-
-                function focusNode(idx) {
-                    if (idx < 0 || idx >= nodes.length) return;
-                    focusedIdx = idx;
-                    centerNode(nodes[idx]);
-                    setCaption(nodes[idx]);
-                }
-
-                function resetView() {
-                    focusedIdx = -1;
-                    targetCamDist = 300;
-                    targetRotX = null;
-                    targetRotY = null;
-                    isAnimatingNode = false;
-                    isFocused = false;
-                    if (capEl) capEl.innerHTML = '&nbsp;';
-                }
-
-                canvas.addEventListener('click', (e) => {
-                    if (isAnimatingNode) return;
-                    const rect = canvas.getBoundingClientRect();
-                    const sx = canvas.width / rect.width;
-                    const sy = canvas.height / rect.height;
-                    
-                    // Maus oder Touch Koordinaten verarbeiten
-                    let clientX = e.clientX;
-                    let clientY = e.clientY;
-                    if(e.changedTouches && e.changedTouches.length > 0) {
-                        clientX = e.changedTouches[0].clientX;
-                        clientY = e.changedTouches[0].clientY;
-                    }
-
-                    const mx = (clientX - rect.left) * sx;
-                    const my = (clientY - rect.top) * sy;
-                    
-                    // Für Mobile haben wir die Hitbox von 32 auf 55 extrem vergrößert!
-                    let hit = -1, minD = 55; 
-                    
-                    nodes.forEach((n, i) => {
-                        if (!n.img) return;
-                        const p = project(n.x, n.y, n.z);
-                        const d = Math.hypot(mx - p.x, my - p.y);
-                        if (d < minD) {
-                            minD = d;
-                            hit = i;
-                        }
-                    });
-                    
-                    if (hit >= 0) {
-                        focusNode(hit);
-                    } else if (focusedIdx >= 0) {
-                        resetView();
-                    }
-                });
-
-                drawNet();
             }
 
-            initCatsCradle();
+            // Engine Starten
+            initThreeJsCradle();
+
+            /* Tür hochziehen, wenn alles geladen ist */
             setTimeout(() => { document.getElementById('door-overlay').classList.replace('closed', 'open'); }, 400);
         });
     </script>
