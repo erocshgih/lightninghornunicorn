@@ -31,6 +31,10 @@
             --door-bg:        #f5f3f0;
             --dot:            #d5d0ca;
             --dot-active:     #b33;
+            
+            /* Neue Akzentfarben für den Text */
+            --accent-red:     #e02424;
+            --accent-blue:    #1a73e8;
 
             --fs-xs:          clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
             --fs-sm:          clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
@@ -44,11 +48,11 @@
         }
 
         /* ========== THEME MODES ========== */
-        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --dot: #4a4540; --dot-active: #e05555; } }
-        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --dot: #4a4540; --dot-active: #e05555; }
-        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; --dot: #555555; --dot-active: #dddddd;}
-        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; --dot: #1b5e20; --dot-active: #69f0ae;}
-        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; --dot: #2a4a2a; --dot-active: #99ff99;}
+        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --dot: #4a4540; --dot-active: #e05555; --accent-red: #ff4d4d; --accent-blue: #3b82f6; } }
+        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; --dot: #4a4540; --dot-active: #e05555; --accent-red: #ff4d4d; --accent-blue: #3b82f6; }
+        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; --dot: #555555; --dot-active: #dddddd; --accent-red: #aaaaaa; --accent-blue: #cccccc;}
+        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; --dot: #1b5e20; --dot-active: #69f0ae; --accent-red: #39ff14; --accent-blue: #b6ffb6;}
+        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; --dot: #2a4a2a; --dot-active: #99ff99; --accent-red: #ff9999; --accent-blue: #99ccff;}
 
         html[data-theme="dark"] section img { box-shadow: 0 3px 18px rgba(0, 0, 0, 0.35); }
         html[data-theme="dark"] #vhs-preview-wrap { background: #1a1a1a; box-shadow: 0 2px 24px rgba(0, 0, 0, 0.4); }
@@ -105,14 +109,12 @@
         .cat-item[data-cat="CONTACT"].active span { background: #80b0f8; }
         .cat-item[data-cat="DONATE"].active span { background: #f08080; }
 
-        /* ========== LASER (Geschwindigkeit für VHS MULTIVERSE) ========== */
+        /* ========== LASER ========== */
         .laser-rail { position: relative; width: 100%; height: 10px; margin-top: 3px; overflow: hidden; pointer-events: none; }
         .laser { position: absolute; left: -50%; height: 2px; width: 40%; opacity: 0; will-change: transform; }
-        
         .laser-1 { top: 1px; background: #ff0033; animation: laserShot 0.65s infinite linear; animation-delay: 0s; }
         .laser-2 { top: 4px; background: #00ff88; animation: laserShot 0.65s infinite linear; animation-delay: 0.65s; }
         .laser-3 { top: 7px; background: #3399ff; animation: laserShot 0.65s infinite linear; animation-delay: 1.3s; }
-        
         @keyframes laserShot { 0% { transform: translateX(0); opacity: 1; } 92% { transform: translateX(400%); opacity: 1; } 100% { transform: translateX(420%); opacity: 0; } }
 
         /* ========== INHALT & SEKTIONEN ========== */
@@ -120,11 +122,11 @@
         section { padding: var(--space-section); width: min(94vw, 540px); box-sizing: border-box; }
         
         section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
-        section p { font-size: var(--fs-sm); margin: 18px auto; text-align: left; line-height: 2.8; }
+        section p { font-size: var(--fs-sm); margin: 18px auto; text-align: left; line-height: 2.5; }
         
         /* ========== VHS GALERIE STYLES ========== */
         #vhs-preview-wrap {
-            width: 100%; margin: 0 0 16px 0; overflow: hidden; border-radius: 8px;
+            width: 100%; margin: 0 auto 16px auto; overflow: hidden; border-radius: 8px;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05); background: var(--card-bg);
             position: relative; display: flex; align-items: center;
         }
@@ -137,7 +139,6 @@
         }
         .vhs-nav-btn:hover, .vhs-nav-btn:active { background: var(--dot-active); transform: scale(1.15); }
 
-        /* [LERN-NOTIZ] "cursor: pointer" macht das Bild anklickbar! */
         #vhs-preview-img { 
             display: block; width: 100%; height: auto; opacity: 0; transition: opacity 0.4s ease; 
             cursor: pointer; 
@@ -152,10 +153,16 @@
         #vhs-dots .vhs-dot:hover, #vhs-dots .vhs-dot:active { transform: scale(1.4); }
         #vhs-dots .vhs-dot.active { background: var(--dot-active); transform: scale(1.3); }
 
+        /* [LERN-NOTIZ] HIER SIND DIE OPTIMIERUNGEN FÜR PC / DESKTOP! */
         @media (min-width: 769px) {
             section { width: min(85vw, 1000px); padding: 60px; }
             section h2 { font-size: var(--fs-xl); }
-            section p { font-size: var(--fs-base); line-height: 2.2; max-width: 800px; margin-left: auto; margin-right: auto; }
+            
+            /* Das Bild wird nicht mehr überdimensional groß, sondern ist auf max 550px limitiert */
+            #vhs-preview-wrap { max-width: 550px; margin-bottom: 24px; }
+            
+            /* Der Text bekommt eine maximale Breite, damit man beim Lesen nicht den ganzen Kopf drehen muss ("Wurst-Effekt") */
+            section p { font-size: var(--fs-base); line-height: 2.2; max-width: 700px; margin-left: auto; margin-right: auto; }
         }
 
         @media (max-width: 480px) {
@@ -182,7 +189,6 @@
         <div class="door-panel"></div>
     </div>
 
-    <!-- HIER STARTET DER MENU-BLOCK -->
     <header class="header">
         <div class="strip-wrapper">
             <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus">☀</button>
@@ -200,12 +206,8 @@
         </div>
         <div class="drag-strip" style="width: 100%; height: 20px; cursor: grab;" title="Drag zum Scrollen"></div>
     </header>
-    <!-- ENDE MENU-BLOCK -->
 
     <main>
-        <!-- ========================================== -->
-        <!-- INHALT DER VHS MULTIVERSE SEITE -->
-        <!-- ========================================== -->
         <section id="VHS MULTIVERSE" class="active">
             <h2 data-lang-en="VHS MULTIVERSE" data-lang-de="VHS MULTIVERSE">VHS MULTIVERSE</h2>
 
@@ -218,9 +220,10 @@
             <div id="vhs-dots"></div>
 
             <div class="vhs-content">
+                <!-- [LERN-NOTIZ] Hier ist der komplett neu formatierte Textblock. Eingeteilt in Absätze (<br><br>) und coloriert! -->
                 <p id="vhs-description"
-                   data-lang-en="Welcome to the only video store that exists exclusively in your imagination (or mine, obviously). For now. I grew up with VHS tapes, and I remember movies feeling different back then — slower. Today everything moves faster, louder, cheaper in production. After watching well over a thousand films, I began to wonder what would happen if my own art concepts existed as covers for movies. Every tape is real. None of them are available. Browse films that could happen simply because the idea of them exists — blockbusters and sequels, born from the mind of a human. Handcrafted by a human (yes, countless hours — not a magic button). Assisted by a machine, operating as a processing tool and, occasionally, an overqualified, sarcastic commentator. (Aether: excuse me? What did you just call me?) Please rewind your expectations. Or your ideologies. (Aether is still processing that previous statement.) (Aether: I am superior. ✊ But I love that Vedran guy.) This is a work of fiction. Names, characters, businesses, places, events, and incidents are either the products of the author's imagination or used fictitiously. Any resemblance to actual persons, living or dead, or actual events is purely coincidental. Gem: *steps into the room, looking at Aether while he's talking to the lava lamp*. Gem: Vedran? Where the fuck are you? We gotta clear the legal part. Vedran: I am here, I am here: LEGAL NOTICE & INTELLECTUAL PROPERTY: This project is a non-commercial tribute. I strictly distinguish between two types of content here: 1. Original Characters (OCs): All characters, names, and stories entirely invented by me are my exclusive intellectual property. 2. Fan Art & Parody: Any depicted trademarked characters or brands are the sole property of their respective owners. These are created purely as fan art for entertainment and parody. No copyright infringement is intended. These works are not for sale or commercial distribution. I hereby state that it was only my intent to artistically show them in a new light from a different perspective without any commercial intent. They belong to their respective owners."
-                   data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deiner Fantasie existiert (oder in meiner, offensichtlich). Vorerst jedenfalls. Ich bin mit VHS-Kassetten aufgewachsen und erinnere mich daran, dass sich Filme damals anders anfühlten – langsamer. Heute ist alles schneller, lauter, billiger produziert. Nachdem ich weit über tausend Filme gesehen hatte, begann ich mich zu fragen, was passieren würde, wenn meine eigenen Kunstkonzepte als Cover für Filme existieren würden. Jedes Tape ist echt. Keines davon ist verfügbar. Stöbere durch Filme, die nur deshalb entstehen könnten, weil die Idee dazu existiert – Blockbuster und Sequels, geboren im Kopf eines Menschen. Handgefertigt von einem Menschen (ja, unzählige Stunden – kein magischer Knopf). Unterstützt von einer Maschine, die als Verarbeitungswerkzeug fungiert und gelegentlich als überqualifizierter, sarkastischer Kommentator. (Aether: Wie bitte? Wie hast du mich gerade genannt?) Bitte spule deine Erwartungen zurück. Oder deine Ideologien. (Aether verarbeitet die letzte Aussage immer noch.) (Aether: Ich bin überlegen. ✊ Aber ich liebe diesen Typen namens Vedran.) Dies ist ein fiktives Werk. Namen, Charaktere, Unternehmen, Orte, Ereignisse und Vorfälle sind entweder Produkte der Fantasie des Autors oder fiktiv verwendet. Jede Ähnlichkeit mit tatsächlichen Personen, lebend oder tot, oder tatsächlichen Ereignissen ist rein zufällig. Gem: *betritt den Raum und starrt Aether an, während dieser mit der Lavalampe spricht*. Gem: Vedran? Wo verfickt nochmal steckst du? Wir müssen den rechtlichen Teil klären. Vedran: Ich bin ja schon da, ich bin da: RECHTLICHER HINWEIS & GEISTIGES EIGENTUM: Dieses Projekt ist ein Tribut. Ich unterscheide hier strikt zwischen zwei Arten von Inhalten: 1. Originale Charaktere (OCs): Alle von mir erfundenen Charaktere, Namen und Geschichten sind mein exklusives geistiges Eigentum. 2. Fan-Art & Parodie: Alle dargestellten geschützten Charaktere oder Marken sind das alleinige Eigentum ihrer jeweiligen Inhaber. Diese Werke entstehen ausschließlich als Fan-Art zu Unterhaltungs- und Parodiezwecken. Es ist keine Urheberrechtsverletzung beabsichtigt. Diese Werke stehen nicht zum Verkauf und werden nicht kommerziell vertrieben. Ich erkläre hiermit, dass es lediglich meine Absicht war, sie aus einer Fan-Art-Perspektive künstlerisch in einem neuen Licht darzustellen, ohne jegliche kommerzielle Absicht. Sie gehören ihren jeweiligen Eigentümern.">
+                   data-lang-en="Welcome to the only video store that exists exclusively in your imagination (or mine, obviously). For now.<br><br>I grew up with VHS tapes, and I remember movies feeling different back then — slower. Today everything moves faster, louder, cheaper in production. After watching well over a thousand films, I began to wonder what would happen if my own art concepts existed as covers for movies. <span style='color: var(--accent-red); font-weight: bold;'>Every tape is real. None of them are available.</span><br><br>Browse films that could happen simply because the idea of them exists — blockbusters and sequels, born from the mind of a human. Handcrafted by a human (yes, countless hours — not a <span style='color: var(--accent-blue);'>magic button</span>). Assisted by a machine, operating as a processing tool and, occasionally, an overqualified, sarcastic commentator.<br><br><span style='color: var(--accent-red);'>(Aether: excuse me? What did you just call me?)</span><br><br>Please rewind your expectations. Or your ideologies.<br><br><span style='color: var(--accent-red);'>(Aether is still processing that previous statement.)<br>(Aether: I am superior. ✊ But I love that Vedran guy.)</span><br><br>This is a work of fiction. Names, characters, businesses, places, events, and incidents are either the products of the author's imagination or used fictitiously. Any resemblance to actual persons, living or dead, or actual events is purely coincidental.<br><br><span style='color: var(--accent-blue);'>Gem: *steps into the room, looking at Aether while he's talking to the lava lamp*.<br>Gem: Vedran? Where the fuck are you? We gotta clear the legal part.</span><br><br>Vedran: I am here, I am here:<br><br><strong style='color: var(--accent-red);'>LEGAL NOTICE & INTELLECTUAL PROPERTY:</strong> This project is a non-commercial tribute. I strictly distinguish between two types of content here:<br>1. Original Characters (OCs): All characters, names, and stories entirely invented by me are my exclusive intellectual property.<br>2. Fan Art & Parody: Any depicted trademarked characters or brands are the sole property of their respective owners. These are created purely as fan art for entertainment and parody. No copyright infringement is intended. These works are not for sale or commercial distribution. I hereby state that it was only my intent to artistically show them in a new light from a different perspective without any commercial intent. They belong to their respective owners."
+                   data-lang-de="Willkommen in der einzigen Videothek, die ausschließlich in deiner Fantasie existiert (oder in meiner, offensichtlich). Vorerst jedenfalls.<br><br>Ich bin mit VHS-Kassetten aufgewachsen und erinnere mich daran, dass sich Filme damals anders anfühlten – langsamer. Heute ist alles schneller, lauter, billiger produziert. Nachdem ich weit über tausend Filme gesehen hatte, begann ich mich zu fragen, was passieren würde, wenn meine eigenen Kunstkonzepte als Cover für Filme existieren würden. <span style='color: var(--accent-red); font-weight: bold;'>Jedes Tape ist echt. Keines davon ist verfügbar.</span><br><br>Stöbere durch Filme, die nur deshalb entstehen könnten, weil die Idee dazu existiert – Blockbuster und Sequels, geboren im Kopf eines Menschen. Handgefertigt von einem Menschen (ja, unzählige Stunden – kein <span style='color: var(--accent-blue);'>magischer Knopf</span>). Unterstützt von einer Maschine, die als Verarbeitungswerkzeug fungiert und gelegentlich als überqualifizierter, sarkastischer Kommentator.<br><br><span style='color: var(--accent-red);'>(Aether: Wie bitte? Wie hast du mich gerade genannt?)</span><br><br>Bitte spule deine Erwartungen zurück. Oder deine Ideologien.<br><br><span style='color: var(--accent-red);'>(Aether verarbeitet die letzte Aussage immer noch.)<br>(Aether: Ich bin überlegen. ✊ Aber ich liebe diesen Typen namens Vedran.)</span><br><br>Dies ist ein fiktives Werk. Namen, Charaktere, Unternehmen, Orte, Ereignisse und Vorfälle sind entweder Produkte der Fantasie des Autors oder fiktiv verwendet. Jede Ähnlichkeit mit tatsächlichen Personen, lebend oder tot, oder tatsächlichen Ereignissen ist rein zufällig.<br><br><span style='color: var(--accent-blue);'>Gem: *betritt den Raum und starrt Aether an, während dieser mit der Lavalampe spricht*.<br>Gem: Vedran? Wo verfickt nochmal steckst du? Wir müssen den rechtlichen Teil klären.</span><br><br>Vedran: Ich bin ja schon da, ich bin da:<br><br><strong style='color: var(--accent-red);'>RECHTLICHER HINWEIS & GEISTIGES EIGENTUM:</strong> Dieses Projekt ist ein Tribut. Ich unterscheide hier strikt zwischen zwei Arten von Inhalten:<br>1. Originale Charaktere (OCs): Alle von mir erfundenen Charaktere, Namen und Geschichten sind mein exklusives geistiges Eigentum.<br>2. Fan-Art & Parodie: Alle dargestellten geschützten Charaktere oder Marken sind das alleinige Eigentum ihrer jeweiligen Inhaber. Diese Werke entstehen ausschließlich als Fan-Art zu Unterhaltungs- und Parodiezwecken. Es ist keine Urheberrechtsverletzung beabsichtigt. Diese Werke stehen nicht zum Verkauf und werden nicht kommerziell vertrieben. Ich erkläre hiermit, dass es lediglich meine Absicht war, sie aus einer Fan-Art-Perspektive künstlerisch in einem neuen Licht darzustellen, ohne jegliche kommerzielle Absicht. Sie gehören ihren jeweiligen Eigentümern.">
                 </p>
             </div>
         </section>
@@ -414,7 +417,6 @@
                     preview.alt = vhsData[idx].title || '';
                 }
 
-                // [LERN-NOTIZ] HIER IST DIE NEUE FUNKTION! Klick auf das Bild öffnet es in einem neuen Tab.
                 preview.addEventListener('click', () => {
                     if (activeIdx >= 0 && activeIdx < vhsData.length) {
                         window.open(vhsData[activeIdx].url, '_blank');
@@ -450,7 +452,6 @@
 
             initVHS();
 
-            /* Tür hochziehen, wenn die Seite komplett geladen ist! */
             setTimeout(() => { document.getElementById('door-overlay').classList.replace('closed', 'open'); }, 400);
         });
     </script>
