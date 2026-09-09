@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>duckwifi – Lightning Horn Unicorn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+     :root {
+      /* Sommerliches, warmes Farbschema */
+      --bg-main: #fffdf7; 
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --bg-hover: #fff6d9; 
+      --bg-active: #ffeaa7; 
+      --yellow: #ffde00; 
+      --orange: #ffa502; 
+      --text-main: #332f2a; 
+      --text-muted: #6e675c; 
+      --text-dim: #c2baab;
+      --border: #f7eed7; 
+      --row-hover: rgba(255, 222, 0, 0.15);
+      --shadow-sm: 0 4px 12px rgba(255, 165, 2, 0.06); 
+      --shadow-md: 0 8px 24px rgba(255, 165, 2, 0.12);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes duckBob {
+      from { transform: translateY(-5px) rotate(-7deg); }
+      to { transform: translateY(5px) rotate(7deg); }
+    }
+    @keyframes duckFly {
+      from { transform: translateX(0); }
+      to { transform: translateX(122vw); }
+    }
+
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background: var(--bg-main);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========== LAYOUT ========== */
+    .app { display: flex; height: 100vh; width: 100vw; }
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 24px 20px; margin-bottom: 10px; }
+    .sidebar-logo .duck-icon { font-size: 24px; animation: pulse 2s ease-in-out infinite; }
+    .sidebar-logo h1 { font-size: 14px; color: var(--text-main); letter-spacing: 0.5px; }
+    .sidebar-section-title { font-size: 9px; color: var(--text-dim); padding: 0 20px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar-playlists { display: flex; flex-direction: column; gap: 4px; padding: 0 12px; overflow-y: auto; flex: 1; }
+    .sidebar-playlists::-webkit-scrollbar { width: 6px; }
+    .sidebar-playlists::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .sidebar-playlist { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; line-height: 1.4; }
+    .sidebar-playlist:hover { background: var(--bg-hover); color: var(--text-main); }
+    .sidebar-playlist.active { background: var(--bg-active); color: var(--text-main); font-weight: bold; }
+    .sidebar-playlist .pl-cover { width: 32px; height: 32px; border-radius: 6px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+    /* ========== MAIN CONTENT ========== */
+    .main {
+      flex: 1;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 120px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--yellow) var(--bg-main);
+    }
+    .main::-webkit-scrollbar { width: 10px; }
+    .main::-webkit-scrollbar-track { background: transparent; }
+    .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 3px solid var(--bg-main); }
+    .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
+
+    /* ========== PLAYLIST HEADER ========== */
+    .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 32px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
+    .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: linear-gradient(135deg, var(--yellow), var(--orange)); display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; }
+    .playlist-info { display: flex; flex-direction: column; gap: 16px; }
+    .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
+    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } /* white-space hinzugefügt für Zeilenumbrüche */
+    
+    .playlist-actions { padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
+    .play-btn-large { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #111; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 16px rgba(255,222,0,0.4); }
+    .play-btn-large:hover { transform: scale(1.08); background: var(--orange); }
+
+    /* ========== SONG LIST ========== */
+    .song-list-container { padding: 0 40px; }
+    .song-list-header { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .song-list-header span:nth-child(3), .song-list-header span:nth-child(4) { text-align: right; }
+    
+    .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 12px 16px; border-radius: 8px; cursor: pointer; align-items: center; transition: background 0.2s; animation: fadeIn 0.4s ease forwards; opacity: 0; }
+    .song-row:hover { background: var(--row-hover); }
+    .song-row.playing { background: rgba(255,222,0,0.2); }
+    .song-row:hover .song-num { display: none; }
+    .song-row:hover .song-play-icon { display: flex; }
+    .song-row.playing .song-num { color: var(--orange); }
+    .song-row.playing .song-title { color: var(--orange); }
+
+    .song-num-play { display: flex; align-items: center; justify-content: center; }
+    .song-num { font-size: 10px; color: var(--text-muted); }
+    .song-play-icon { display: none; font-size: 12px; color: var(--text-main); }
+    .song-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .song-title { font-size: 11px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-artist { font-size: 9px; color: var(--text-muted); }
+    
+    .song-version-dots { display: flex; gap: 6px; justify-content: flex-end; }
+    .version-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); }
+    .version-dot:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
+    .version-dot.active { background: var(--orange); border-color: var(--orange); box-shadow: 0 0 8px rgba(255,165,2,0.5); }
+    
+    .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
+    .song-download { display: flex; align-items: center; justify-content: center; }
+    .dl-btn { width: 32px; height: 32px; border-radius: 50%; background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; opacity: 0; }
+    .song-row:hover .dl-btn { opacity: 1; }
+    .dl-btn:hover { border-color: var(--text-main); color: var(--text-main); transform: scale(1.1); background: var(--bg-main); }
+    .dl-btn.dl-active { border-color: var(--orange); color: var(--orange); opacity: 1; }
+    .dl-btn svg { width: 14px; height: 14px; }
+
+    /* ========== NOW PLAYING BAR ========== */
+    .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 1px solid var(--border); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
+    .np-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .np-cover { width: 56px; height: 56px; border-radius: 8px; background: linear-gradient(135deg, var(--yellow), var(--orange)); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 4px 8px rgba(255,165,2,0.15); }
+    .np-track-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .np-track-name { font-size: 10px; color: var(--text-main); white-space: nowrap; overflow: hidden; position: relative; }
+    .np-track-artist { font-size: 8px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .np-title-text { display: inline-block; white-space: nowrap; }
+    .np-track-name.marquee .np-title-text { padding-left: 100%; animation: titleMarquee 7s linear infinite; }
+    @keyframes titleMarquee { 0%, 10% { transform: translateX(0); } 90%, 100% { transform: translateX(-100%); } }
+
+    /* NP Versions (Player Bar Dots) */
+    .np-versions { display: none; align-items: center; gap: 6px; margin-top: 2px; }
+    .np-version { width: 10px; height: 10px; border: 1px solid var(--text-dim); border-radius: 50%; background: transparent; cursor: pointer; transition: all 0.2s; }
+    .np-version:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
+    .np-version.active { background: var(--orange); border-color: var(--orange); box-shadow: 0 0 6px rgba(255,165,2,0.5); }
+
+    .np-center { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .np-controls { display: flex; align-items: center; gap: 24px; }
+    .np-btn { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; transition: all 0.2s; }
+    .np-btn:hover { color: var(--text-main); transform: scale(1.1); }
+    .np-btn.play { width: 40px; height: 40px; border-radius: 50%; background: var(--text-main); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .np-btn.play:hover { transform: scale(1.1) !important; background: var(--orange); color: #111; }
+    
+    .np-progress { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 500px; }
+    .np-time { font-size: 9px; color: var(--text-muted); min-width: 40px; text-align: center; font-family: monospace; }
+    .np-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; position: relative; cursor: pointer; }
+    .np-bar:hover { height: 8px; }
+    .np-fill { height: 100%; width: 0; background: var(--orange); border-radius: 3px; position: relative; transition: width 0.1s linear; }
+    .np-thumb { position: absolute; top: 50%; right: -8px; width: 24px; height: 24px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
+
+    .np-right { display: flex; align-items: center; justify-content: flex-end; }
+    .np-dl-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-hover); border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .np-dl-btn:hover { background: var(--yellow); transform: scale(1.1); }
+    .np-dl-btn svg { width: 16px; height: 16px; }
+
+    /* ========== INTRO ========== */
+    #intro { position: fixed; inset: 0; z-index: 9999; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.6s, visibility 0.6s; }
+    #intro.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .intro-logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; opacity: 0; animation: fadeIn 0.6s ease 0.4s forwards; }
+    #intro-duck-canvas { width: 80px !important; height: 80px !important; outline: none; }
+    .intro-title { font-size: clamp(32px, 6vw, 64px); color: var(--text-main); letter-spacing: 2px; }
+    .intro-sub { font-size: clamp(8px, 2vw, 12px); color: var(--text-muted); opacity: 0; animation: fadeIn 0.6s ease 1s forwards; }
+    .intro-bar { position: absolute; bottom: 80px; width: 240px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; opacity: 0; animation: fadeIn 0.4s ease 1.2s forwards; }
+    .intro-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--yellow), var(--orange)); transition: width 0.1s linear; }
+
+    /* ========== BACKGROUND DUCKS ========== */
+    #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.35; } 
+    .duck { position: absolute; left: -10%; filter: none; } 
+    .duck img { width: 32px; animation: duckBob 2.4s ease-in-out infinite alternate; }
+    #duck3D { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; } 
+
+    /* ========== RESPONSIVE (MOBILE) ========== */
+    @media (max-width: 900px) {
+      .app { flex-direction: column; }
+      .sidebar { display: none; }
+      .main { padding-bottom: 140px; }
+      
+      .playlist-header { flex-direction: column; align-items: center; text-align: center; padding: 40px 20px 20px; gap: 20px; }
+      .playlist-cover { width: 160px; height: 160px; font-size: 64px; }
+      .playlist-title { font-size: 24px; }
+      
+      .song-list-container { padding: 0 12px; }
+      .song-list-header { display: none; }
+      
+      .song-row {
+        grid-template-columns: 24px 1fr auto auto;
+        padding: 12px;
+        gap: 12px;
+        background: #fff;
+        margin-bottom: 8px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+      }
+      .song-row:hover { background: #fff; }
+      .song-row .song-duration { display: none; }
+      .song-row .dl-btn { opacity: 1; border-color: var(--border); }
+
+      .now-playing { height: 130px; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 12px; padding: 12px 16px; bottom: 0; }
+      .np-left { grid-column: 1; grid-row: 1; }
+      .np-right { grid-column: 2; grid-row: 1; }
+      .np-center { grid-column: 1 / -1; grid-row: 2; flex-direction: row; justify-content: space-between; gap: 16px; }
+      .np-progress { max-width: 100%; flex: 1; }
+      .np-controls { gap: 16px; }
+      
+      .intro-logo-wrapper { flex-direction: column; }
+      #intro-duck-canvas { width: 100px !important; height: 100px !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="duck-icon">🦆</span>
+      <h1>duckwifi</h1>
+    </div>
+    <div class="sidebar-section-title">Playlists</div>
+    <div class="sidebar-playlists">
+      <div class="sidebar-playlist active" data-genre="all">
+        <div class="pl-cover">⚡</div><span>All Songs</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="80ies">
+        <div class="pl-cover">🎸</div><span>80ies</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="bsides">
+        <div class="pl-cover">🎤</div><span>B-Sides Acoustic</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="calm">
+        <div class="pl-cover">🌊</div><span>Calm Lofi OST</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="electro">
+        <div class="pl-cover">⚡</div><span>Electro Neurofunk</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="indie">
+        <div class="pl-cover">🎭</div><span>Indie Artpop</span>
+      </div>
+      <div class="sidebar-playlist" data-genre="rock">
+        <div class="pl-cover">🔥</div><span>Rock Powermetal</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main-content"></main>
+
+  <!-- NOW PLAYING BAR -->
+  <div class="now-playing">
+    <div class="np-left">
+      <div class="np-cover" id="np-cover">🦆</div>
+      <div class="np-track-info">
+        <div class="np-track-name" id="np-title"><span class="np-title-text">No track selected</span></div>
+        <div class="np-track-artist" id="np-artist">Lightning Horn Unicorn</div>
+        <div class="np-versions" id="np-versions"></div>
+      </div>
+    </div>
+    <div class="np-center">
+      <div class="np-controls">
+        <button class="np-btn" id="np-prev">⏮</button>
+        <button class="np-btn play" id="np-play">▶</button>
+        <button class="np-btn" id="np-next">⏭</button>
+      </div>
+      <div class="np-progress">
+        <span class="np-time" id="np-current">0:00</span>
+        <div class="np-bar" id="np-bar">
+          <div class="np-fill" id="np-fill">
+            <img class="np-thumb" id="np-thumb" src="duck.png" alt="">
+          </div>
+        </div>
+        <span class="np-time" id="np-total">0:00</span>
+      </div>
+    </div>
+    <div class="np-right">
+      <button class="np-dl-btn" id="np-dl" title="Download"><svg viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4V3Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 3v7h9V3M8 17h8v4H8v-4Z" fill="currentColor" opacity=".18"/><path d="M8 17h8v4H8v-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div id="intro">
+  <div class="intro-logo-wrapper">
+    <canvas id="intro-duck-canvas"></canvas>
+    <div class="intro-title">duckwifi</div>
+  </div>
+  <div class="intro-sub">CONNECTING TO QUACK NETWORK...</div>
+  <div class="intro-bar"><div class="intro-bar-fill" id="intro-bar-fill"></div></div>
+</div>
+
+<div id="duckFlock"></div>
+<canvas id="duck3D"></canvas>
+
+<script>
+(function() {
+  var genres = [
+    {
+      id: '80ies', name: '80ies', icon: '🎸',
+      songs: [
+        { title: 'A Force You', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_A_FORCE_YOU.MP3' },
+        { title: 'City Of Fathers', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_CITY_OF_FATHERS.MP3' },
+        { title: 'Dreaming', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_DREAMING.MP3' },
+        { title: 'Laserette', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE.MP3' },
+        { title: 'Oscillators Of 1985', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3' },
+        { title: 'Tonagag', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_TONAGAG.MP3' }
+      ]
+    },
+    {
+      id: 'bsides', name: 'B-Sides Acoustic Etc', icon: '🎤',
+      songs: [
+        { title: 'Duck Pants', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_DUCK_PANTS.MP3' },
+        { title: 'Elk Emil', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.MP3' },
+        { title: 'How Do You Milk An Invisible Cow', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_HOW_DO_YOU_MILK_AN_INVISIBLE_COW.MP3' },
+        { title: 'My Mk-Ultra Country Music...', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_MY_MK-ULTRA_COUNTRY_MUSIC_TURNED_A_KILLER_AI_INTO_A_HORSE-PROTECTING_QUEEN.MP3' },
+        { title: 'What Does A Musician Look Like', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_WHAT_DOES_A_MUSICIAN_LOOK_LIKE.MP3' }
+      ]
+    },
+    {
+      id: 'calm', name: 'Calm Chillout Lofi', icon: '🌊',
+      songs: [
+        { title: '1.17', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1.17.MP3' },
+        { title: 'Another Ps1 Dream I Had', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_ANOTHER_PS1_DREAM_I_HAD.MP3' },
+        { title: 'Loading Screens', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_LOADING_SCREENS.MP3' },
+        { title: 'The Chosen Ones', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_THE_CHOSEN_ONES.MP3' }
+      ]
+    },
+    {
+      id: 'electro', name: 'Electro Neurofunk Edm', icon: '⚡',
+      songs: [
+        { title: 'Extraterrestrial Mega Tarsier', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_EXTRATERRESTRIAL_MEGA_TARSIER.MP3' },
+        { title: 'Rise', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_RISE.MP3' },
+        { title: 'Unison Unicorns', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_UNISON_UNICORNS.MP3' },
+        { title: 'Velvet Anabolica Twerk', file: 'downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_VELVET_ANABOLICA_TWERK.MP3' }
+      ]
+    },
+    {
+      id: 'indie', name: 'Indie Operarock Artpop', icon: '🎭',
+      songs: [
+        { title: 'Cloud How Do You Lift That...', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_CLOUD_HOW_DO_YOU_LIFT_THAT_MIGHTY_SWORD.MP3' },
+        { title: 'Everybody Has Ptsd...', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3',
+          versions: [
+            { label: 'Original', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.MP3' },
+            { label: 'Alt Version', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER_ALTERNATE_VERSION.MP3' }
+          ]
+        },
+        { title: 'Harambe Has A Melon Cannon', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_HARAMBE_HAS_A_MELON_CANNON.MP3' },
+        { title: 'Kate Plush And Her Meow Piano', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3',
+          versions: [
+            { label: 'Brians Theme', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_BRIANS_THEME).mp3' },
+            { label: 'Red Key', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_(ALTERNATE_VERSION_RED_KEY_PIANO_VERSION).mp3' }
+          ]
+        },
+        { title: 'Sassy Ghoul', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3',
+          versions: [
+            { label: 'Original', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3' },
+            { label: 'Breathy', file: 'downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL_BREATHY_VOICE.mp3' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'rock', name: 'Rock Powermetal Punk', icon: '🔥',
+      songs: [
+        { title: 'I Split Mountains', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_I_SPLIT_MOUNTAINS.MP3' },
+        { title: 'Kittens', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KITTENS.MP3' },
+        { title: 'Knight Handhart', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KNIGHT_HANDHART.MP3' },
+        { title: 'Oh Giant Moth', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3',
+          versions: [
+            { label: 'Crimson', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.MP3' },
+            { label: 'Voltage', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.MP3' },
+            { label: 'Riot', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.MP3' }
+          ]
+        },
+        { title: 'Ritter Handhart Und Die...', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_RITTER_HANDHART_UND_DIE_BACKPFEIFEN_DER_GERECHTIGKEIT.mp3' },
+        { title: 'The Legend Of Furarri', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.MP3' },
+        { title: 'Universal Lazer Goat', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3' }
+      ]
+    }
+  ];
+
+  function initIntroDuck() {
+    var canvas = document.getElementById('intro-duck-canvas');
+    if (!canvas) return;
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(100, 100);
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.z = 4.5;
+    scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+    var dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    dirLight.position.set(2, 2, 2);
+    scene.add(dirLight);
+
+    var duckMesh;
+    var loader = new THREE.GLTFLoader();
+    loader.load('glb/rubberduck.glb', function(gltf) {
+      duckMesh = gltf.scene;
+      duckMesh.scale.set(1.4, 1.4, 1.4);
+      duckMesh.position.set(0, -0.4, 0);
+      scene.add(duckMesh);
+    });
+
+    function animateIntro() {
+      requestAnimationFrame(animateIntro);
+      if (duckMesh) duckMesh.rotation.y += 0.04;
+      renderer.render(scene, camera);
+    }
+    animateIntro();
+  }
+  initIntroDuck();
+
+  var mainEl = document.getElementById('main-content');
+  var currentGenre = 'all';
+  var songList = [];
+  var currentAudio = null;
+  var currentSongIdx = -1;
+
+  function getAllSongs() {
+    var all = [];
+    genres.forEach(function(g) {
+      g.songs.forEach(function(s) {
+        all.push({ genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null });
+      });
+    });
+    return all;
+  }
+
+  function renderPlaylist(genreId) {
+    currentGenre = genreId;
+    var songs, title, icon, desc;
+
+    if (genreId === 'all') {
+      songs = getAllSongs();
+      title = 'ALL SONGS';
+      icon = '⚡';
+      
+      // =========================================================================
+      // HIER DEINEN URSPRÜNGLICHEN LANGEN TEXT EINFÜGEN!
+      // Du kannst Zeilenumbrüche genau so machen, wie du willst.
+      // Ersetze einfach den Text zwischen den beiden schrägen Anführungszeichen (`).
+      // =========================================================================
+      desc = `Thanks for supporting an independent artist from Vienna, Austria.
+      
+I've been creating music since 2008, driven by curiosity, storytelling, and a love for exploring different musical worlds.
+Whether it's an 80s synth anthem, an electronic journey, a heavy metal track, or a quiet acoustic piece, every song begins with an idea that I genuinely care about.
+
+Creating music the traditional way has always been my dream: with a band, a guitar, honest songwriting, and people sharing the same passion in the same room. I still love that kind of music more than anything.
+Over the years, however, I found it incredibly difficult to build a reliable band, find musicians who could commit long-term, or work with people who shared the same creative vision.
+Rather than leaving hundreds of ideas unfinished, I decided to embrace modern technology as another creative instrument.
+
+Some of the songs on this website were created with the help of AI tools as part of that process. For me, AI doesn't replace creativity.
+
+It doesn't replace emotion, imagination, or the countless nights spent searching for exactly the right melody, atmosphere, arrangement, or sound. Just like a guitar, a synthesizer, or a recording studio, it's simply another tool that helps me bring ideas to life.
+
+Stay kind. Stay curious. Stay inspired.
+
+Lightning Horn Unicorn
+Vedran Lukic & Aether Veylan`;
+
+    } else {
+      var g = genres.find(function(x) { return x.id === genreId; });
+      songs = g.songs.map(function(s) {
+        return { genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null };
+      });
+      title = g.name.toUpperCase();
+      icon = g.icon;
+      desc = g.name + ' – Lightning Horn Unicorn';
+    }
+
+    var html = '';
+    html += '<div class="playlist-header">';
+    html += '  <div class="playlist-cover">' + icon + '</div>';
+    html += '  <div class="playlist-info">';
+    html += '    <div class="playlist-type">Playlist</div>';
+    html += '    <div class="playlist-title">' + title + '</div>';
+    html += '    <div class="playlist-desc">' + desc + '</div>';
+    html += '  </div>';
+    html += '</div>';
+
+    html += '<div class="playlist-actions">';
+    html += '  <button class="play-btn-large" id="play-all-btn">▶</button>';
+    html += '</div>';
+
+    html += '<div class="song-list-container">';
+    html += '  <div class="song-list-header">';
+    html += '    <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span></span>';
+    html += '  </div>';
+
+    songs.forEach(function(song, i) {
+      var delay = (i * 0.03).toFixed(2);
+      var hasVersions = song.versions && song.versions.length > 1;
+
+      html += '  <div class="song-row" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+      html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">▶</span></div>';
+      html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
+      html += '    <div class="song-version-dots">';
+      if (hasVersions) {
+        song.versions.forEach(function(v, vi) {
+          html += '<span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.label + '"></span>';
+        });
+      }
+      html += '    </div>';
+      html += '    <div class="song-duration">--:--</div>';
+      html += '    <div class="song-download"><button class="dl-btn" data-song="' + i + '"><svg viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4V3Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 3v7h9V3M8 17h8v4H8v-4Z" fill="currentColor" opacity=".18"/><path d="M8 17h8v4H8v-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>';
+      html += '  </div>';
+    });
+    html += '</div>';
+
+    mainEl.innerHTML = html;
+    songList = songs;
+
+    document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
+      el.classList.toggle('active', el.dataset.genre === genreId);
+    });
+
+    bindSongEvents();
+    loadDurations();
+    mainEl.scrollTop = 0;
+  }
+
+  function bindSongEvents() {
+    document.querySelectorAll('.song-row').forEach(function(row) {
+      row.addEventListener('click', function(e) {
+        if (e.target.closest('.version-dot') || e.target.closest('.dl-btn')) return;
+        playSong(parseInt(row.dataset.idx));
+      });
+    });
+
+    document.querySelectorAll('.version-dot').forEach(function(dot) {
+      dot.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var songIdx = parseInt(dot.dataset.song);
+        var verIdx = parseInt(dot.dataset.ver);
+        var song = songList[songIdx];
+        
+        dot.closest('.song-version-dots').querySelectorAll('.version-dot').forEach(function(d) { d.classList.remove('active'); });
+        dot.classList.add('active');
+        song.file = song.versions[verIdx].file;
+        
+        var row = dot.closest('.song-row');
+        row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+
+        if (currentSongIdx === songIdx && currentAudio) {
+          var wasPlaying = !currentAudio.paused;
+          playSong(currentSongIdx);
+          if (!wasPlaying) { currentAudio.pause(); updatePlayBtn(false); }
+        }
+      });
+    });
+
+    document.querySelectorAll('.dl-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var song = songList[parseInt(btn.dataset.song)];
+        var a = document.createElement('a');
+        a.href = song.file; a.download = song.title;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      });
+    });
+
+    var playAllBtn = document.getElementById('play-all-btn');
+    if (playAllBtn) {
+      playAllBtn.addEventListener('click', function() {
+        if (currentAudio && !currentAudio.paused) { currentAudio.pause(); updatePlayBtn(false); }
+        else if (currentAudio && currentAudio.paused) { currentAudio.play(); updatePlayBtn(true); }
+        else { playSong(0); }
+      });
+    }
+  }
+
+  // ========== PLAYER CORE ==========
+  var npTitleText = document.querySelector('.np-title-text');
+  var npArtist = document.getElementById('np-artist');
+  var npPlay = document.getElementById('np-play');
+  var npFill = document.getElementById('np-fill');
+  var npCurrent = document.getElementById('np-current');
+  var npTotal = document.getElementById('np-total');
+  var npTitleContainer = document.getElementById('np-title');
+  var npVersions = document.getElementById('np-versions');
+
+  function fmtTime(s) {
+    if (isNaN(s)) return '0:00';
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function updatePlayBtn(playing) {
+    npPlay.innerHTML = playing ? '⏸' : '▶';
+    document.querySelectorAll('.song-row').forEach(function(r) { r.classList.remove('playing'); });
+    if (playing && currentSongIdx >= 0) {
+      var r = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
+      if (r) r.classList.add('playing');
+    }
+  }
+
+  function renderPlayerVersions(song) {
+    npVersions.innerHTML = '';
+    if (song.versions && song.versions.length > 1) {
+      npVersions.style.display = 'flex';
+      song.versions.forEach(function(version, idx) {
+        var btn = document.createElement('button');
+        btn.className = 'np-version' + (song.file === version.file ? ' active' : '');
+        btn.title = version.label;
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          song.file = version.file;
+          
+          var row = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
+          if (row) {
+            row.querySelectorAll('.version-dot').forEach(d => d.classList.remove('active'));
+            var activeDot = row.querySelector('.version-dot[data-ver="' + idx + '"]');
+            if (activeDot) activeDot.classList.add('active');
+            row.querySelector('.song-artist').textContent = song.genreName + ' — ' + version.label;
+          }
+
+          var wasPlaying = !currentAudio.paused;
+          playSong(currentSongIdx);
+          if (!wasPlaying) { currentAudio.pause(); updatePlayBtn(false); }
+        });
+        npVersions.appendChild(btn);
+      });
+    } else {
+      npVersions.style.display = 'none';
+    }
+  }
+
+  function playSong(idx) {
+    if (idx < 0 || idx >= songList.length) return;
+    if (currentAudio) { currentAudio.pause(); }
+    
+    var song = songList[idx];
+    currentAudio = new Audio(song.file);
+    currentSongIdx = idx;
+
+    npTitleText.textContent = song.title;
+    npTitleContainer.classList.add('marquee');
+    
+    var activeLabel = "";
+    if (song.versions) {
+      var activeVer = song.versions.find(v => v.file === song.file);
+      if (activeVer && activeVer.label !== 'Original') activeLabel = ' — ' + activeVer.label;
+    }
+    npArtist.textContent = song.genreName + activeLabel;
+    
+    renderPlayerVersions(song);
+
+    npFill.style.width = '0%';
+    
+    currentAudio.addEventListener('loadedmetadata', function() { npTotal.textContent = fmtTime(currentAudio.duration); });
+    currentAudio.addEventListener('timeupdate', function() {
+      npFill.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + '%';
+      npCurrent.textContent = fmtTime(currentAudio.currentTime);
+    });
+    currentAudio.addEventListener('ended', function() { playSong(idx + 1); });
+
+    currentAudio.play();
+    updatePlayBtn(true);
+  }
+
+  npPlay.addEventListener('click', function() {
+    if (currentSongIdx === -1 && songList.length > 0) playSong(0);
+    else if (currentAudio && !currentAudio.paused) { currentAudio.pause(); updatePlayBtn(false); }
+    else if (currentAudio) { currentAudio.play(); updatePlayBtn(true); }
+  });
+
+  document.getElementById('np-prev').addEventListener('click', function() { playSong(currentSongIdx <= 0 ? songList.length - 1 : currentSongIdx - 1); });
+  document.getElementById('np-next').addEventListener('click', function() { playSong(currentSongIdx >= songList.length - 1 ? 0 : currentSongIdx + 1); });
+
+  document.getElementById('np-dl').addEventListener('click', function() {
+    if (currentSongIdx === -1) return;
+    var a = document.createElement('a');
+    a.href = songList[currentSongIdx].file; a.download = songList[currentSongIdx].title;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+
+  document.getElementById('np-bar').addEventListener('click', function(e) {
+    if (!currentAudio) return;
+    var rect = this.getBoundingClientRect();
+    var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    currentAudio.currentTime = pct * currentAudio.duration;
+  });
+
+  document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
+    el.addEventListener('click', function() { renderPlaylist(el.dataset.genre); });
+  });
+
+  function loadDurations() {
+    document.querySelectorAll('.song-row').forEach(function(row) {
+      var song = songList[parseInt(row.dataset.idx)];
+      var audio = new Audio(); audio.preload = 'metadata'; audio.src = song.file;
+      audio.addEventListener('loadedmetadata', function() {
+        var el = row.querySelector('.song-duration');
+        if (el) el.textContent = fmtTime(audio.duration);
+      });
+    });
+  }
+
+  // ========== BACKGROUND DUCKS ==========
+  var flock = document.getElementById('duckFlock');
+  if (flock) {
+    for (var k = 0; k < 15; k++) {
+      var d = document.createElement('div'); d.className = 'duck';
+      var img = document.createElement('img'); img.src = 'duck.png';
+      var size = 16 + Math.floor(Math.random() * 20);
+      d.style.top = Math.floor(Math.random() * 90) + 'vh';
+      d.style.animation = 'duckFly ' + (15 + Math.random() * 15) + 's linear infinite';
+      d.style.animationDelay = -(Math.random() * 26) + 's';
+      img.style.width = size + 'px';
+      d.appendChild(img); flock.appendChild(d);
+    }
+  }
+
+  try {
+    var bgCanvas = document.getElementById('duck3D');
+    var bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+    var bgScene = new THREE.Scene();
+    var bgCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    bgCamera.position.z = 5;
+    bgScene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    var bgDirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    bgDirLight.position.set(2, 3, 4);
+    bgScene.add(bgDirLight);
+
+    var gltfLoader = new THREE.GLTFLoader();
+    var ducks3D = [];
+    setInterval(function() {
+      gltfLoader.load('glb/rubberduck.glb', function(gltf) {
+        var m = gltf.scene;
+        m.scale.setScalar(0.6 + Math.random() * 1.2);
+        m.rotation.y = Math.PI;
+        m.position.set(-7, -2 + Math.random() * 4, 0);
+        bgScene.add(m);
+        ducks3D.push({ mesh: m, speed: 14 / (12 + Math.random() * 8), born: performance.now(), lifetime: 20000 });
+      });
+    }, 12000);
+
+    window.addEventListener('resize', function() {
+      bgCamera.aspect = window.innerWidth / window.innerHeight;
+      bgCamera.updateProjectionMatrix();
+      bgRenderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function bgAnimate() {
+      requestAnimationFrame(bgAnimate);
+      var now = performance.now();
+      for (var i = ducks3D.length - 1; i >= 0; i--) {
+        var duck = ducks3D[i];
+        duck.mesh.position.x = -7 + duck.speed * ((now - duck.born) / 1000);
+        duck.mesh.rotation.z += 0.015;
+        if (now - duck.born > duck.lifetime) { bgScene.remove(duck.mesh); ducks3D.splice(i, 1); }
+      }
+      bgRenderer.render(bgScene, bgCamera);
+    }
+    bgAnimate();
+  } catch(e) {}
+
+  renderPlaylist('all');
+
+  // ========== INTRO ANIMATION ==========
+  var introEl = document.getElementById('intro');
+  var introBarFill = document.getElementById('intro-bar-fill');
+  var introProgress = 0;
+
+  function introTick() {
+    if (introProgress >= 100) {
+      introEl.classList.add('hidden');
+      setTimeout(function() { introEl.remove(); }, 700);
+      return;
+    }
+    introProgress += 2 + Math.random() * 5;
+    introBarFill.style.width = Math.min(100, introProgress) + '%';
+    setTimeout(introTick, 40 + Math.random() * 80);
+  }
+  setTimeout(introTick, 800);
+
+})();
+</script>
+</body>
+</html>
