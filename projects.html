@@ -71,24 +71,7 @@
         /* ========== BASE STYLES ========== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-        body { background: transparent; font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
-
-        /* ========== GRADIENT BLINDS WEBGL CANVAS ========== */
-        #blinds-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1; 
-            background-color: #000;
-            mix-blend-mode: lighten; /* WICHTIG für den Effekt */
-        }
-
-        /* Pointer-Events-Layer für das Spotlight Tracking über dem ganzen Screen */
-        #interaction-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-        }
+        body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
 
         /* ========== HEADER, MENÜ & PFEILE ========== */
         .header { 
@@ -315,12 +298,6 @@
 </head>
 <body>
     
-    <!-- GRADIENT BLINDS WEBGL CANVAS -->
-    <canvas id="blinds-canvas"></canvas>
-    
-    <!-- Ebene für Mouse-Tracking im Hintergrund -->
-    <div id="interaction-layer"></div>
-
     <div id="door-overlay" class="closed">
         <div class="door-panel"></div>
     </div>
@@ -356,272 +333,6 @@
 
     <script>
         /* ======================================================================
-           GRADIENT BLINDS WEBGL ENGINE (Pure Vanilla WebGL2 Port)
-           ====================================================================== */
-        (function initGradientBlindsWebGL() {
-            const canvas = document.getElementById('blinds-canvas');
-            const interactionLayer = document.getElementById('interaction-layer');
-            const gl = canvas.getContext('webgl2', { alpha: true, antialias: true });
-            if (!gl) return;
-
-            // Farben Setup (nur hellblau/blaue Töne)
-            const colors = ['#80eaf8', '#3399ff'];
-            const hexToRGB = hex => {
-                const c = hex.replace('#', '').padEnd(6, '0');
-                return [parseInt(c.slice(0, 2), 16) / 255, parseInt(c.slice(2, 4), 16) / 255, parseInt(c.slice(4, 6), 16) / 255];
-            };
-            
-            const MAX_COLORS = 8;
-            const colorArr = [];
-            let baseColors = colors.slice(0, MAX_COLORS);
-            if (baseColors.length === 1) baseColors.push(baseColors[0]);
-            while (baseColors.length < MAX_COLORS) baseColors.push(baseColors[baseColors.length - 1]);
-            for (let i = 0; i < MAX_COLORS; i++) colorArr.push(hexToRGB(baseColors[i]));
-
-            const vertexShaderSource = `#version 300 es
-                in vec2 position;
-                out vec2 vUv;
-                void main() { 
-                    vUv = position * 0.5 + 0.5;
-                    gl_Position = vec4(position, 0.0, 1.0); 
-                }
-            `;
-
-            const fragmentShaderSource = `#version 300 es
-                precision highp float;
-                
-                uniform vec3  iResolution;
-                uniform vec2  iMouse;
-                uniform float iTime;
-
-                uniform float uAngle;
-                uniform float uNoise;
-                uniform float uBlindCount;
-                uniform float uSpotlightRadius;
-                uniform float uSpotlightSoftness;
-                uniform float uSpotlightOpacity;
-                uniform float uMirror;
-                uniform float uDistort;
-                uniform float uShineFlip;
-                uniform vec3  uColor0;
-                uniform vec3  uColor1;
-                uniform vec3  uColor2;
-                uniform vec3  uColor3;
-                uniform vec3  uColor4;
-                uniform vec3  uColor5;
-                uniform vec3  uColor6;
-                uniform vec3  uColor7;
-                uniform int   uColorCount;
-                uniform float uLightMode;
-
-                in vec2 vUv;
-                out vec4 fragColor;
-
-                float rand(vec2 co){
-                  return fract(sin(dot(co, vec2(12.9898,78.233))) * 43758.5453);
-                }
-
-                vec2 rotate2D(vec2 p, float a){
-                  float c = cos(a);
-                  float s = sin(a);
-                  return mat2(c, -s, s, c) * p;
-                }
-
-                vec3 getGradientColor(float t){
-                  float tt = clamp(t, 0.0, 1.0);
-                  int count = uColorCount;
-                  if (count < 2) count = 2;
-                  float scaled = tt * float(count - 1);
-                  float seg = floor(scaled);
-                  float f = fract(scaled);
-
-                  if (seg < 1.0) return mix(uColor0, uColor1, f);
-                  if (seg < 2.0 && count > 2) return mix(uColor1, uColor2, f);
-                  if (seg < 3.0 && count > 3) return mix(uColor2, uColor3, f);
-                  if (seg < 4.0 && count > 4) return mix(uColor3, uColor4, f);
-                  if (seg < 5.0 && count > 5) return mix(uColor4, uColor5, f);
-                  if (seg < 6.0 && count > 6) return mix(uColor5, uColor6, f);
-                  if (seg < 7.0 && count > 7) return mix(uColor6, uColor7, f);
-                  if (count > 7) return uColor7;
-                  if (count > 6) return uColor6;
-                  if (count > 5) return uColor5;
-                  if (count > 4) return uColor4;
-                  if (count > 3) return uColor3;
-                  if (count > 2) return uColor2;
-                  return uColor1;
-                }
-
-                void main() {
-                    vec2 uv0 = gl_FragCoord.xy / iResolution.xy;
-                    float aspect = iResolution.x / iResolution.y;
-                    
-                    vec2 p = uv0 * 2.0 - 1.0;
-                    p.x *= aspect;
-                    vec2 pr = rotate2D(p, uAngle);
-                    pr.x /= aspect;
-                    vec2 uv = pr * 0.5 + 0.5;
-
-                    vec2 uvMod = uv;
-                    if (uDistort > 0.0) {
-                      float a = uvMod.y * 6.0;
-                      float b = uvMod.x * 6.0;
-                      float w = 0.01 * uDistort;
-                      uvMod.x += sin(a) * w;
-                      uvMod.y += cos(b) * w;
-                    }
-                    
-                    float t = uvMod.x;
-                    if (uMirror > 0.5) {
-                      t = 1.0 - abs(1.0 - 2.0 * fract(t));
-                    }
-                    vec3 base = getGradientColor(t);
-
-                    vec2 offset = vec2(iMouse.x / iResolution.x, iMouse.y / iResolution.y);
-                    float d = length(uv0 - offset);
-                    float r = max(uSpotlightRadius, 1e-4);
-                    float dn = d / r;
-                    float spot = (1.0 - 2.0 * pow(dn, uSpotlightSoftness)) * uSpotlightOpacity;
-                    vec3 cir = vec3(spot);
-                    
-                    float blindCount = max(uBlindCount, 1.0);
-                    float stripePhase = uvMod.x * blindCount;
-                    float stripe = fract(stripePhase);
-                    float stripeAA = clamp(blindCount * 1.25 / min(iResolution.x, iResolution.y), 0.001, 0.12);
-                    float edgeDistance = min(stripe, 1.0 - stripe);
-                    float edgeBlend = 1.0 - smoothstep(0.0, stripeAA, edgeDistance);
-                    stripe = mix(stripe, 0.5, edgeBlend);
-                    if (uShineFlip > 0.5) stripe = 1.0 - stripe;
-                    
-                    vec3 ran = vec3(stripe);
-                    vec3 revealSignal = cir + base - ran;
-
-                    vec3 col;
-                    if (uLightMode > 0.5) {
-                        float peak = max(base.r, max(base.g, base.b));
-                        vec3 pigment = base / max(peak, 0.0001);
-                        float neutral = min(pigment.r, min(pigment.g, pigment.b));
-                        pigment = max(pigment - vec3(neutral * 0.72), vec3(0.0));
-                        pigment /= max(max(pigment.r, max(pigment.g, pigment.b)), 0.0001);
-                        pigment = mix(pigment, pigment * pigment, 0.12) * 0.72;
-                        vec3 revealed = clamp(revealSignal, 0.0, 1.0);
-                        float coverage = max(revealed.r, max(revealed.g, revealed.b));
-                        col = mix(vec3(1.0), pigment, coverage);
-                        float grain = max(rand(gl_FragCoord.xy + iTime) - 0.5, 0.0);
-                        float grainAmount = grain * uNoise * mix(0.12, 0.18, coverage);
-                        col = clamp(col - vec3(grainAmount), 0.0, 1.0);
-                    } else {
-                        col = revealSignal;
-                        col += (rand(gl_FragCoord.xy + iTime) - 0.5) * uNoise;
-                    }
-
-                    fragColor = vec4(col, 1.0);
-                }
-            `;
-
-            function compileShader(type, source) {
-                const shader = gl.createShader(type);
-                gl.shaderSource(shader, source);
-                gl.compileShader(shader);
-                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                    console.error("Shader Error:", gl.getShaderInfoLog(shader));
-                    gl.deleteShader(shader);
-                    return null;
-                }
-                return shader;
-            }
-
-            const vs = compileShader(gl.VERTEX_SHADER, vertexShaderSource);
-            const fs = compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
-            const program = gl.createProgram();
-            gl.attachShader(program, vs);
-            gl.attachShader(program, fs);
-            gl.linkProgram(program);
-            gl.useProgram(program);
-
-            // Fullscreen Quad
-            const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
-            const buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-            
-            const positionLoc = gl.getAttribLocation(program, "position");
-            gl.enableVertexAttribArray(positionLoc);
-            gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
-
-            // Setup Uniforms aus den React-Settings
-            const getLoc = name => gl.getUniformLocation(program, name);
-            gl.uniform1f(getLoc("uAngle"), 20 * Math.PI / 180);
-            gl.uniform1f(getLoc("uNoise"), 0.5);
-            gl.uniform1f(getLoc("uSpotlightRadius"), 0.5);
-            gl.uniform1f(getLoc("uSpotlightSoftness"), 1);
-            gl.uniform1f(getLoc("uSpotlightOpacity"), 1);
-            gl.uniform1f(getLoc("uMirror"), 0);
-            gl.uniform1f(getLoc("uDistort"), 0);
-            gl.uniform1f(getLoc("uShineFlip"), 0); // "left" = 0
-            gl.uniform1i(getLoc("uColorCount"), 2);
-            gl.uniform1f(getLoc("uLightMode"), 0);
-
-            for (let i = 0; i < 8; i++) {
-                gl.uniform3f(getLoc(`uColor${i}`), colorArr[i][0], colorArr[i][1], colorArr[i][2]);
-            }
-
-            const resLoc = getLoc("iResolution");
-            const timeLoc = getLoc("iTime");
-            const mouseLoc = getLoc("iMouse");
-            const blindCountLoc = getLoc("uBlindCount");
-
-            const blindMinWidth = 60;
-            const targetBlindCount = 16;
-
-            function resize() {
-                const dpr = Math.min(window.devicePixelRatio, 1.5); 
-                canvas.width = window.innerWidth * dpr;
-                canvas.height = window.innerHeight * dpr;
-                gl.viewport(0, 0, canvas.width, canvas.height);
-                gl.uniform3f(resLoc, canvas.width, canvas.height, 1.0);
-                
-                // Responsive Blinds Logik (verhindert, dass sie auf Handys zu eng werden)
-                const maxByMinWidth = Math.max(1, Math.floor(window.innerWidth / blindMinWidth));
-                const effective = Math.min(targetBlindCount, maxByMinWidth);
-                gl.uniform1f(blindCountLoc, effective);
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            // Interaktives Maus/Touch-Tracking mit Dämpfung (Dampening)
-            let mouseTarget = [canvas.width / 2, canvas.height / 2];
-            let currentMouse = [...mouseTarget];
-            gl.uniform2f(mouseLoc, currentMouse[0], currentMouse[1]);
-            
-            // Wir binden das Event an document, da der Canvas im Hintergrund liegt
-            document.addEventListener('pointermove', (e) => {
-                const scale = Math.min(window.devicePixelRatio, 1.5);
-                mouseTarget[0] = e.clientX * scale;
-                mouseTarget[1] = (window.innerHeight - e.clientY) * scale;
-            });
-
-            let lastTime = performance.now();
-            function render(now) {
-                let dt = (now - lastTime) / 1000;
-                lastTime = now;
-
-                // Mouse Dampening Logik (0.15)
-                const tau = 0.15;
-                let factor = 1 - Math.exp(-dt / tau);
-                if (factor > 1) factor = 1;
-                currentMouse[0] += (mouseTarget[0] - currentMouse[0]) * factor;
-                currentMouse[1] += (mouseTarget[1] - currentMouse[1]) * factor;
-
-                gl.uniform1f(timeLoc, now / 1000);
-                gl.uniform2f(mouseLoc, currentMouse[0], currentMouse[1]);
-                
-                gl.drawArrays(gl.TRIANGLES, 0, 6);
-                requestAnimationFrame(render);
-            }
-            requestAnimationFrame(render);
-        })();
-
-        /* ======================================================================
            MAIN PAGE LOGIC
            ====================================================================== */
         document.addEventListener('DOMContentLoaded', () => {
@@ -639,7 +350,7 @@
                 if (themeBtn) themeBtn.textContent = THEME_ICONS[theme] || '☀';
             }
 
-            let currentTheme = 'dark'; // Dark default, sieht mit WebGL am besten aus
+            let currentTheme = 'dark'; // Dark default
             try { currentTheme = localStorage.getItem('lhu-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch(e){}
             if (!THEMES.includes(currentTheme)) currentTheme = 'dark';
             applyTheme(currentTheme);
@@ -893,7 +604,6 @@
                             mv.addEventListener('load', hideLoader, { once: true });
                             mv.addEventListener('error', hideLoader, { once: true });
                         } else {
-                            // HIER IST DER NEUE ZOOM-BUTTON FÜR NORMALE BILDER
                             slide.innerHTML = `
                                 <img src="${img.src}" loading="lazy">
                                 <a href="${img.src}" target="_blank" class="zoom-btn" title="Bild in neuem Tab öffnen & zoomen">🔍</a>
