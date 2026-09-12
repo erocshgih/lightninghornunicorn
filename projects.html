@@ -339,6 +339,9 @@
             
             const CURRENT_PAGE = 'PROJECTS'; 
 
+            /* ========== SPRACHERKENNUNG FÜR JS DATEN ========== */
+            const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
+
             /* ========== THEME ENGINE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
@@ -450,23 +453,24 @@
             const dragStrip = document.querySelector('.drag-strip');
             if (dragStrip) { dragStrip.addEventListener('mousedown', down); dragStrip.addEventListener('touchstart', down, { passive: false }); }
 
-
             window.addEventListener('resize', measure);
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
             document.querySelectorAll('[data-lang-en]').forEach(el => {
                 const text = el.getAttribute(`data-lang-${lang}`);
                 if (text) el.innerHTML = text;
             });
 
-            /* ========== PROJECTS DATA & LOGIC ========== */
+            /* ========== PROJECTS DATA & LOGIC (BILINGUAL) ========== */
             const projects = [
                 {
                     cat: 'GLASSES',
                     products: [
-                        { name: 'DUCKPARADA: THUNDERBOLT', desc: `Inspired by Bauhaus, aircraft carriers, ducks, and Japanese superheroes, Thunderbolt 1 was born after over two years of development and more than 30 self-made drafts in Blender 3D.\n\nA modular glasses structure with optical lenses and genuine everyday utility.\n\nThe idea was simple: Grab the lightning from the sky and wear it as eyewear.\n\nZeus: Who the fuck stole my glasses?\nNarrator: For risks and side effects, bargain with feta cheese.`, images: [
+                        { name: 'DUCKPARADA: THUNDERBOLT', desc: {
+                            en: `Inspired by Bauhaus, aircraft carriers, ducks, and Japanese superheroes, Thunderbolt 1 was born after over two years of development and more than 30 self-made drafts in Blender 3D.\n\nA modular glasses structure with optical lenses and genuine everyday utility.\n\nThe idea was simple: Grab the lightning from the sky and wear it as eyewear.\n\nZeus: Who the fuck stole my glasses?\nNarrator: For risks and side effects, bargain with feta cheese.`,
+                            de: `Inspiriert von Bauhaus, Flugzeugträgern, Enten und japanischen Superhelden, entstand Thunderbolt 1 nach über zwei Jahren Entwicklung und mehr als 30 selbstgemachten Entwürfen in Blender 3D.\n\nEine modulare Brillenstruktur mit optischen Linsen und echtem Alltagsnutzen.\n\nDie Idee war simpel: Greif dir den Blitz vom Himmel und trag ihn als Brille.\n\nZeus: Wer zur Hölle hat meine Brille geklaut?\nErzähler: Zu Risiken und Nebenwirkungen feilschen Sie mit Feta-Käse.`
+                        }, images: [
                             { src: 'projects/projects_glasses_duckparada_thunderbolt1vedran.webp' },
                             { src: 'projects/projects_glasses_duckparada_thunderbolt2package.webp' },
                             { src: 'projects/projects_glasses_duckparada_thunderbolt3comic.webp' },
@@ -477,7 +481,10 @@
                 {
                     cat: 'HELMET',
                     products: [
-                        { name: 'DUCKPARADA: DUCKLIGHT', desc: `Began as a decorative duck from a flea market. After removing the plastic bottom, it was defined as headgear.\n\nThis resulted in the first unlicensed Duckparada helmet.\n\nUltralight, striking, and completely uncontrollable. A prototype and proof that good ideas sometimes show up when your mind is open for illegal usage of all day objects.`, images: [
+                        { name: 'DUCKPARADA: DUCKLIGHT', desc: {
+                            en: `Began as a decorative duck from a flea market. After removing the plastic bottom, it was defined as headgear.\n\nThis resulted in the first unlicensed Duckparada helmet.\n\nUltralight, striking, and completely uncontrollable. A prototype and proof that good ideas sometimes show up when your mind is open for illegal usage of all day objects.`,
+                            de: `Begann als dekorative Ente vom Flohmarkt. Nachdem der Plastikboden entfernt wurde, definierte man es kurzerhand als Kopfbedeckung.\n\nDas war die Geburtsstunde des ersten unlizenzierten Duckparada-Helms.\n\nUltraleicht, auffällig und völlig unkontrollierbar. Ein Prototyp und der Beweis dafür, dass gute Ideen manchmal dann entstehen, wenn man bereit ist, Alltagsgegenstände zweckzuentfremden.`
+                        }, images: [
                             { src: 'projects/projects_helmet_duckparada_ducklight_package1.webp' },
                             { src: 'projects/projects_helmet_duckparada_mark123comic.webp' },
                             { src: 'projects/projects_helmet_duckparada_mark12goldmine.webp' },
@@ -487,7 +494,10 @@
                 {
                     cat: 'RINGS',
                     products: [
-                        { name: 'TURN ME ON RING', desc: `One ring to give them all… emotional confusion.\n\nBuilt around a grotesque sculptural form with a tongue, staring eyes, tail, and a small mechanical-looking button marked "ON".\n\nAt the top sits a simple message:\n\nLOVE ME.\nLOVE. ME.\nYES WE CAN.\n\nPart wearable object, part miniature character. Lickable? …rusty and risk-obvious.\n\nA ring with no purpose.\nExcept perhaps turning something on.`, images: [
+                        { name: 'TURN ME ON RING', desc: {
+                            en: `One ring to give them all… emotional confusion.\n\nBuilt around a grotesque sculptural form with a tongue, staring eyes, tail, and a small mechanical-looking button marked "ON".\n\nAt the top sits a simple message:\n\nLOVE ME.\nLOVE. ME.\nYES WE CAN.\n\nPart wearable object, part miniature character. Lickable? …rusty and risk-obvious.\n\nA ring with no purpose.\nExcept perhaps turning something on.`,
+                            de: `Ein Ring, um sie alle... in emotionale Verwirrung zu stürzen.\n\nGebaut um eine groteske skulpturale Form mit einer Zunge, starrenden Augen, einem Schwanz und einem kleinen mechanisch aussehenden Knopf mit der Aufschrift "ON".\n\nOben prangt eine einfache Botschaft:\n\nLOVE ME.\nLOVE. ME.\nYES WE CAN.\n\nTeils tragbares Objekt, teils Miniatur-Charakter. Kann man ihn ablecken? …er ist rostig und birgt offensichtliche Risiken.\n\nEin Ring ohne Zweck.\nAußer vielleicht, irgendetwas "anzuschalten".`
+                        }, images: [
                             { src: 'projects/projects_rings_turnmeonring_1package.webp' },
                             { model: 'glb/turnmeonring.glb' },
                             { src: 'projects/projects_rings_turnmeonring_2comic.webp' },
@@ -498,13 +508,19 @@
                 {
                     cat: 'FIGURINE',
                     products: [
-                        { name: 'BERTA', desc: `Berta was developed for a future in which vegetables became necessary weapons.\n\nA pink goat equipped with two of the juiciest hi-tek cucumbers… in Dolby surround ASMR. Maybe.\n\nAfter the battle, there is only one thing left to do:\n\nEat your weapons, Berta.`, images: [
+                        { name: 'BERTA', desc: {
+                            en: `Berta was developed for a future in which vegetables became necessary weapons.\n\nA pink goat equipped with two of the juiciest hi-tek cucumbers… in Dolby surround ASMR. Maybe.\n\nAfter the battle, there is only one thing left to do:\n\nEat your weapons, Berta.`,
+                            de: `Berta wurde für eine Zukunft entwickelt, in der Gemüse zu notwendigen Waffen wurde.\n\nEine rosa Ziege, ausgerüstet mit zwei der saftigsten Hi-Tek-Gurken… in Dolby Surround ASMR. Vielleicht.\n\nNach der Schlacht bleibt nur noch eines zu tun:\n\nFriss deine Waffen, Berta.`
+                        }, images: [
                             { src: 'projects/projects_figurine_berta1package.webp' },
                             { model: 'glb/Berta.glb' },
                             { src: 'projects/projects_figurine_berta3drawing.webp' },
                             { src: 'projects/projects_figurine_berta4newspaper.webp' },
                         ]},
-                        { name: 'DUDDHA', desc: `Duddha was created. Yes.\n\nA sculptural duck combining Buddhist bullshitery, retro science fiction, and the unmistakable attitude of… flipping the bird.\n\nHe's obese. He may eat your last pretzel from your lunchbox.\n\nEnlightenment is just Tron throwing up in a meditation room.\n\nThis whole package is the most disrespectful, glorious, motherfuckin' spiritual awakening you've ever seen. You don't meditate with this thing — you put it on your desk, stare at it, and suddenly every corporate meeting, every traffic jam, every "live laugh love" sign in the world just feels a little more… fuckable.\n\nForget the red pill. Forget the blue pill. He ate both of 'em and now we're stuck here while he waves his hands, politely asking for the next sandwich.`, images: [
+                        { name: 'DUDDHA', desc: {
+                            en: `Duddha was created. Yes.\n\nA sculptural duck combining Buddhist bullshitery, retro science fiction, and the unmistakable attitude of… flipping the bird.\n\nHe's obese. He may eat your last pretzel from your lunchbox.\n\nEnlightenment is just Tron throwing up in a meditation room.\n\nThis whole package is the most disrespectful, glorious, motherfuckin' spiritual awakening you've ever seen. You don't meditate with this thing — you put it on your desk, stare at it, and suddenly every corporate meeting, every traffic jam, every "live laugh love" sign in the world just feels a little more… fuckable.\n\nForget the red pill. Forget the blue pill. He ate both of 'em and now we're stuck here while he waves his hands, politely asking for the next sandwich.`,
+                            de: `Duddha wurde erschaffen. Ja.\n\nEine skulpturale Ente, die buddhistischen Bullshit, Retro-Science-Fiction und die unverkennbare Attitüde des... Mittelfingers kombiniert.\n\nEr ist fettleibig. Er könnte dir die letzte Brezel aus deiner Brotdose klauen.\n\nErleuchtung ist einfach nur Tron, der in einem Meditationsraum kotzt.\n\nDieses ganze Paket ist das respektloseste, glorreichste, verfickteste spirituelle Erwachen, das du je gesehen hast. Man meditiert nicht mit diesem Ding – man stellt es auf den Schreibtisch, starrt es an und plötzlich fühlt sich jedes Firmenmeeting, jeder Stau und jedes "Live Laugh Love"-Schild auf der Welt ein bisschen... fickbarer an.\n\nVergiss die rote Pille. Vergiss die blaue Pille. Er hat beide gefressen und jetzt sitzen wir hier fest, während er mit den Händen wedelt und höflich nach dem nächsten Sandwich fragt.`
+                        }, images: [
                             { src: 'projects/projects_figurine_duddha1package.webp' },
                             { src: 'projects/projects_figurine_duddha2figurine.webp' },
                         ]}
@@ -515,7 +531,10 @@
                     products: [
                         { 
                             name: 'DUCK ARMOR: BACKPACK', 
-                            desc: `Duck Armor began as a simple question:\nWhat if a backpack had armor...\n...\n...\n...\n...\n...\nAnd duck faces obviously...?\nIt looks like a backpack designed by a medieval knight who had only seen ducks.\nImagine a riot shield, but instead of protecting you, it asks for bread.\nDon't feed the armor.\nBuilt around a sculptural duck-shaped shell with integrated... well fuck this explanational summary...\nDesigned for everyday movement through streets, crowds, and questionable adventures.\nIt carries your stuff.\nWHAT! DO... YOU... WANT... MORE!\nUGH.\nIt’s not fashion.\nIt’s a tactical misunderstanding.\nThe only thing more powerful than two duck heads on your chest is three duck heads on your chest.\nUnfortunately...\nTHAT'S TOO POWERFUL.`, 
+                            desc: {
+                                en: `Duck Armor began as a simple question:\nWhat if a backpack had armor...\n...\n...\n...\n...\n...\nAnd duck faces obviously...?\nIt looks like a backpack designed by a medieval knight who had only seen ducks.\nImagine a riot shield, but instead of protecting you, it asks for bread.\nDon't feed the armor.\nBuilt around a sculptural duck-shaped shell with integrated... well fuck this explanational summary...\nDesigned for everyday movement through streets, crowds, and questionable adventures.\nIt carries your stuff.\nWHAT! DO... YOU... WANT... MORE!\nUGH.\nIt’s not fashion.\nIt’s a tactical misunderstanding.\nThe only thing more powerful than two duck heads on your chest is three duck heads on your chest.\nUnfortunately...\nTHAT'S TOO POWERFUL.`,
+                                de: `Duck Armor begann mit einer einfachen Frage:\nWas wäre, wenn ein Rucksack eine Rüstung hätte...\n...\n...\n...\n...\n...\nUnd natürlich Entengesichter...?\nEs sieht aus wie ein Rucksack, entworfen von einem mittelalterlichen Ritter, der in seinem Leben nur Enten gesehen hat.\nStell dir ein Schutzschild vor, das dich nicht beschützt, sondern nach Brot fragt.\nBitte die Rüstung nicht füttern.\nGebaut um eine skulpturale entenförmige Schale mit integriertem... ach, scheiß auf diese Erklärung...\nEntwickelt für die tägliche Bewegung durch Straßen, Menschenmassen und fragwürdige Abenteuer.\nEr trägt dein Zeug.\nWAS! WILLST... DU... MEHR!\nUGH.\nEs ist keine Mode.\nEs ist ein taktisches Missverständnis.\nDas Einzige, was mächtiger ist als zwei Entenköpfe auf der Brust, sind drei Entenköpfe auf der Brust.\nLeider...\nIST DAS ZU MÄCHTIG.`
+                            }, 
                             images: [
                                 { src: 'projects/projects_accessoire_duckarmorbackpack_vernissage.webp' },
                                 { model: 'glb/duckarmorbackpack.glb' },
@@ -525,21 +544,27 @@
                                 { src: 'projects/projects_accessoire_duckarmorbackpack_poster.webp' }
                             ]
                         },
-                        { name: 'NOT PLUG', desc: `Designed as a playful attachment for headphones, the glossy black cat ears transform an ordinary pair into something less ordinary. *slurp*\n\nInspired by the strange intersection of consumer electronics, fashion, cosplay, and the approval of your local OnlyFans artist.\n\nEasy to attach. Explanations are discussable.`, images: [
+                        { name: 'NOT PLUG', desc: {
+                            en: `Designed as a playful attachment for headphones, the glossy black cat ears transform an ordinary pair into something less ordinary. *slurp*\n\nInspired by the strange intersection of consumer electronics, fashion, cosplay, and the approval of your local OnlyFans artist.\n\nEasy to attach. Explanations are discussable.`,
+                            de: `Als verspieltes Zubehör für Kopfhörer entworfen, verwandeln die glänzend schwarzen Katzenohren ein gewöhnliches Paar in etwas weniger Gewöhnliches. *schlürf*\n\nInspiriert von der seltsamen Schnittmenge aus Unterhaltungselektronik, Mode, Cosplay und der Zustimmung deines lokalen OnlyFans-Artists.\n\nEinfach zu befestigen. Erklärungen sind verhandelbar.`
+                        }, images: [
                             { src: 'projects/projects_accessoire_notplug1package.webp' },
                             { src: 'projects/projects_accessoire_notplug2comic.webp' },
                         ]}
                     ]
                 },
                 {
-                    cat: 'TSHIRT CONCEPTS',
+                    cat: 'TSHIRTS',
                     products: [
                         {
                             name: 'BALKAN PARK',
-                            desc: `Coming soon.`,
+                            desc: {
+                                en: `The T-shirt that makes you the ruler.\n(Well... or at least the undisputed king of the next medieval festival. Or it annoys the security standing there wordlessly in heavy knight armor and helmets.)\n\n'Do these pigs have a stage pass?'\n\n<strong>Look:</strong>\nWell... it looks a bit like a race with a mushroom-slurping plumber who took the route into the swamp.\n\nYou put it on, and your body says:\n'Yes. Yes man. Tonight we ride wild boars into the mosh pit. Tradition is tradition.'\n\n⚔️ <strong>Why is this shirt special?</strong>\nThis is the shirt of the uncle who cuts the wedding cake with his fist at family celebrations. Because it's the official uniform of men who keep their Oakley sunglasses on at night in the bathtub.\n\nWe at Lightning Horn Unicorn cannot offer a guarantee for this garment, but with every purchase comes a roll of duct tape. Maybe. 50/50.`,
+                                de: `Das T-Shirt, das dich zum Herrscher macht.\n(Naja… oder zumindest zum unangefochtenen König des nächsten Mittelalterfests. Oder es verärgert die Security, die wortlos in schweren Ritterrüstungen und Helmen dasteht.)\n\n„Haben diese Schweine einen Stagepass?“\n\n<strong>Optik:</strong>\nNaja… es sieht ein bisschen wie ein Rennen mit einem pilzschlabbernden Klempner aus, der die Route in den Sumpf genommen hat.\n\nDu ziehst es an, und dein Körper sagt:\n„Ja. Ja, Mann. Heute Nacht reiten wir auf Wildsäuen in den Moshpit. Tradition ist Tradition.“\n\n⚔️ <strong>Warum dieses Shirt besonders ist?</strong>\nDas ist das Shirt von dem Onkel, der auf Familienfeiern die Hochzeitstorte mit der Faust anschneidet. Weil es die offizielle Uniform von Männern ist, die ihre Oakley-Sonnenbrille auch nachts in der Badewanne aufbehalten.\n\nWir bei Lightning Horn Unicorn können für dieses Kleidungsstück keine Garantie anbieten, aber bei jedem Kauf gibt es eine Rolle Panzertape dazu. Vielleicht. 50/50.`
+                            },
                             images: [
-                                { src: 'projects/projects_tshirt_balkanpark1.webp' },
-                                { src: 'projects/projects_tshirt_balkanpark2.webp' }
+                                { src: 'projects/projects_tshirts_balkanpark.webp' },
+                                { src: 'projects/projects_tshirts_balkanparkmodel.webp' }
                             ]
                         }
                     ]
@@ -656,10 +681,12 @@
                     });
                     inner.appendChild(dots);
 
+                    // ========== NEUE SPRACH-LOGIK FÜR PRODUKTE ==========
                     if (prod.desc) {
                         const desc = document.createElement('div');
                         desc.className = 'prod-desc';
-                        desc.textContent = prod.desc;
+                        // Holt sich den Text in der entsprechenden Sprache, fällt auf Englisch zurück, falls was fehlt
+                        desc.innerHTML = prod.desc[lang] || prod.desc['en'];
                         inner.appendChild(desc);
                     }
 
