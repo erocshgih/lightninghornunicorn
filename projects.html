@@ -260,7 +260,7 @@
             border-color: #111;
         }
 
-        /* ========== NAV ARROWS & DOTS ========== */
+        /* ========== NAV ACCENT & DOTS ========== */
         .carousel-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 8px; }
         .carousel-btn {
             width: 36px; height: 36px; border: 2px solid var(--border-soft); border-radius: 50%;
@@ -462,7 +462,7 @@
                 if (text) el.innerHTML = text;
             });
 
-            /* ========== PROJECTS DATA & LOGIC (BILINGUAL) ========== */
+            /* ========== PROJECTS DATA (BILINGUAL) ========== */
             const projects = [
                 {
                     cat: 'GLASSES',
@@ -510,7 +510,7 @@
                     products: [
                         { name: 'BERTA', desc: {
                             en: `Berta was developed for a future in which vegetables became necessary weapons.\n\nA pink goat equipped with two of the juiciest hi-tek cucumbers… in Dolby surround ASMR. Maybe.\n\nAfter the battle, there is only one thing left to do:\n\nEat your weapons, Berta.`,
-                            de: `Berta wurde für eine Zukunft entwickelt, in der Gemüse zu notwendigen Waffen wurde.\n\nEine rosa Ziege, ausgerüstet mit zwei der saftigsten Hi-Tek-Gurken… in Dolby Surround ASMR. Vielleicht.\n\nNach der Schlacht bleibt nur noch eines zu tun:\n\nFriss deine Waffen, Berta.`
+                            de: `Berta wurde für eine Zukunft entwickelt, in der Gemüse zu notwendigen Waffen wurde.\n\nA rosa Ziege, ausgerüstet mit zwei der saftigsten Hi-Tek-Gurken… in Dolby Surround ASMR. Vielleicht.\n\nNach der Schlacht bleibt nur noch eines zu tun:\n\nFriss deine Waffen, Berta.`
                         }, images: [
                             { src: 'projects/projects_figurine_berta1package.webp' },
                             { model: 'glb/Berta.glb' },
@@ -563,7 +563,7 @@
                                 de: `Das T-Shirt, das dich zum Herrscher macht.\n(Naja… oder zumindest zum unangefochtenen König des nächsten Mittelalterfests. Oder es verärgert die Security, die wortlos in schweren Ritterrüstungen und Helmen dasteht.)\n\n„Haben diese Schweine einen Stagepass?“\n\n<strong>Optik:</strong>\nNaja… es sieht ein bisschen wie ein Rennen mit einem pilzschlabbernden Klempner aus, der die Route in den Sumpf genommen hat.\n\nDu ziehst es an, und dein Körper sagt:\n„Ja. Ja, Mann. Heute Nacht reiten wir auf Wildsäuen in den Moshpit. Tradition ist Tradition.“\n\n⚔️ <strong>Warum dieses Shirt besonders ist?</strong>\nDas ist das Shirt von dem Onkel, der auf Familienfeiern die Hochzeitstorte mit der Faust anschneidet. Weil es die offizielle Uniform von Männern ist, die ihre Oakley-Sonnenbrille auch nachts in der Badewanne aufbehalten.\n\nWir bei Lightning Horn Unicorn können für dieses Kleidungsstück keine Garantie anbieten, aber bei jedem Kauf gibt es eine Rolle Panzertape dazu. Vielleicht. 50/50.`
                             },
                             images: [
-                                { src: 'projects/projects_tshirts_balkanparkband.webp' },
+                                { src: 'projects/projects_tshirts_balkanpark.webp' },
                                 { src: 'projects/projects_tshirts_balkanparkmodel.webp' }
                             ]
                         }
@@ -615,36 +615,17 @@
                     stage.className = 'carousel-stage';
                     stage.setAttribute('data-gidx', gIdx);
 
-                    prod.images.forEach((img, i) => {
+                    // Speichere die Rohdaten für den Slide im Element, damit wir sie dynamisch laden/entladen können
+                    prod.images.forEach((item, i) => {
                         const slide = document.createElement('div');
                         slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-                        if (img.model) {
-                            const mv = document.createElement('model-viewer');
-                            mv.setAttribute('src', img.model);
-                            mv.setAttribute('camera-controls', '');
-                            mv.setAttribute('auto-rotate', '');
-                            mv.setAttribute('auto-rotate-delay', '0');
-                            mv.setAttribute('rotation-per-second', '30deg');
-                            mv.setAttribute('shadow-intensity', '1');
-                            mv.setAttribute('exposure', '1');
-                            mv.setAttribute('loading', 'eager');
-                            mv.setAttribute('reveal', 'auto');
-                            mv.setAttribute('ar', '');
-                            mv.style.width = '100%';
-                            mv.style.height = '100%';
-                            slide.appendChild(mv);
-
-                            const loader = document.createElement('div');
-                            loader.className = 'model-loading';
-                            loader.innerHTML = '<div class="spinner"></div><div class="label">Loading 3D</div>';
-                            slide.appendChild(loader);
-                            const hideLoader = () => loader.remove();
-                            mv.addEventListener('load', hideLoader, { once: true });
-                            mv.addEventListener('error', hideLoader, { once: true });
+                        
+                        if (item.model) {
+                            slide.setAttribute('data-model', item.model);
                         } else {
                             slide.innerHTML = `
-                                <img src="${img.src}" loading="lazy">
-                                <a href="${img.src}" target="_blank" class="zoom-btn" title="Bild in neuem Tab öffnen & zoomen">🔍</a>
+                                <img src="${item.src}" loading="lazy">
+                                <a href="${item.src}" target="_blank" class="zoom-btn" title="Bild in neuem Tab öffnen & zoomen">🔍</a>
                             `;
                         }
                         stage.appendChild(slide);
@@ -681,11 +662,9 @@
                     });
                     inner.appendChild(dots);
 
-                    // ========== NEUE SPRACH-LOGIK FÜR PRODUKTE ==========
                     if (prod.desc) {
                         const desc = document.createElement('div');
                         desc.className = 'prod-desc';
-                        // Holt sich den Text in der entsprechenden Sprache, fällt auf Englisch zurück, falls was fehlt
                         desc.innerHTML = prod.desc[lang] || prod.desc['en'];
                         inner.appendChild(desc);
                     }
@@ -710,20 +689,20 @@
                 if (firstProd) firstProd.classList.add('open');
             }
 
-            syncViewers();
+            updateStageManager();
 
             function toggleCat(el) {
                 const isOpen = el.classList.contains('open');
                 document.querySelectorAll('.cat-group').forEach(c => c.classList.remove('open'));
                 if (!isOpen) el.classList.add('open');
-                syncViewers();
+                updateStageManager();
             }
 
             function toggleProd(el) {
                 const isOpen = el.classList.contains('open');
                 el.parentElement.querySelectorAll('.prod-item').forEach(p => p.classList.remove('open'));
                 if (!isOpen) el.classList.add('open');
-                syncViewers();
+                updateStageManager();
             }
 
             function navigate(gi, dir) {
@@ -746,25 +725,50 @@
                 if (!stage) return;
                 stage.querySelectorAll('.carousel-slide').forEach((sl, i) => sl.classList.toggle('active', i === s.idx));
                 document.querySelectorAll(`#dots-${gi} .carousel-dot`).forEach((d, i) => d.classList.toggle('active', i === s.idx));
-                syncViewers();
+                updateStageManager();
             }
 
-            /* Pausiert 3D Modelle, die gerade nicht im Fokus sind */
-            function syncViewers() {
+            /* ========== DYNAMISCHES GLB-LOAD & DESTROY SYSTEM (Speicherschutz) ========== */
+            function updateStageManager() {
                 document.querySelectorAll('.carousel-stage').forEach(stage => {
                     const gi = +stage.dataset.gidx;
                     const s = state[gi];
-                    const open = stage.closest('.cat-group.open') && stage.closest('.prod-item.open');
+                    const isOpen = stage.closest('.cat-group.open') && stage.closest('.prod-item.open');
+
                     stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
-                        const mv = sl.querySelector('model-viewer');
-                        if (!mv) return;
-                        const active = !!(open && s && s.idx === i);
+                        const modelSrc = sl.dataset.model;
+                        if (!modelSrc) return; // Ist nur ein Bild
+
+                        const active = !!(isOpen && s && s.idx === i);
+
                         if (active) {
-                            mv.setAttribute('auto-rotate', '');
-                            try { if (mv.play) mv.play(); } catch (e) {}
+                            // Wenn aktiv und noch kein model-viewer da ist, frisch bauen!
+                            if (!sl.querySelector('model-viewer')) {
+                                sl.innerHTML = `
+                                    <model-viewer src="${modelSrc}" camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="30deg" shadow-intensity="1" exposure="1" loading="eager" reveal="auto" ar style="width: 100%; height: 100%; background: transparent; --poster-color: transparent; display: block;"></model-viewer>
+                                    <div class="model-loading">
+                                        <div class="spinner"></div>
+                                        <div class="label">Loading 3D</div>
+                                    </div>
+                                `;
+                                const mv = sl.querySelector('model-viewer');
+                                const loader = sl.querySelector('.model-loading');
+                                const hideLoader = () => { if(loader) loader.remove(); };
+                                mv.addEventListener('load', hideLoader, { once: true });
+                                mv.addEventListener('error', hideLoader, { once: true });
+                            } else {
+                                // Aktivieren
+                                const mv = sl.querySelector('model-viewer');
+                                if (mv) {
+                                    mv.setAttribute('auto-rotate', '');
+                                    try { if (mv.play) mv.play(); } catch(e) {}
+                                }
+                            }
                         } else {
-                            mv.removeAttribute('auto-rotate');
-                            try { if (mv.pause) mv.pause(); } catch (e) {}
+                            // Wenn nicht aktiv (anderes Slide oder eingeklappt): SOFORT WEGWERFEN, um RAM/GPU zu entlasten!
+                            if (sl.querySelector('model-viewer')) {
+                                sl.innerHTML = '';
+                            }
                         }
                     });
                 });
@@ -789,7 +793,6 @@
     <script>
             /* ========== BACK-BUTTON FIX (BFCache) ========== */
             window.addEventListener('pageshow', (event) => {
-                // Wenn die Seite aus dem Browser-Verlauf geladen wird, zwingen wir die Tür auf
                 if (event.persisted) {
                     const door = document.getElementById('door-overlay');
                     if (door) {
