@@ -177,7 +177,7 @@
   </audio>
   <audio id="snd-wolf" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/wolfwhistttle.mp3"></audio>
   <audio id="snd-rizz" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rizz-sound-effect.mp3"></audio>
-  <audio id="snd-rainbow" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/Rainbow.mp3"></audio>
+  <audio id="snd-rainbow" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow.mp3"></audio>
 
   <!-- INTRO LAYER -->
   <div id="lhu-intro" aria-hidden="true">
@@ -247,7 +247,7 @@
 
   <div id="disclaimer-modal">
     <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
-    <p>These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity.</p>
+    <p id="disclaimer-text">These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity.</p>
     <button id="close-disclaimer" class="btn glass">OK</button>
   </div>
 
@@ -260,18 +260,14 @@
   let W, H, cx, cy;
   let currentBgIndex = 0;
   
-  // Flag für die 10-Sekunden Traffic Cone Override
   window.isTrafficConePhase = false;
   
-  // --- THEME 1: FPS 7s ---
   let stars = [];
   
-  // --- THEME 2: 3x VERTICAL LIQUID WORDS ---
   const LHU_WORDS = ["AETHER", "VEDRAN", "DNA 🧬", "BLITZ ⚡", "INTELLIGENCE", "ART", "SOUND", "PERSONA", "SCIENCE", "UNICORN", "ROBOT", "IMAGINATION", "AESTHETICS"];
   let currentWordIdx = 0;
   let wordTimer = 0;
 
-  // --- THEME 3: BALLPIT ---
   const ballCanvases = [];
   const ballColors = [ ['#fff', '#ff3333', '#390000'], ['#fff', '#ffd400', '#3e3000'], ['#fff', '#33bbff', '#00162f'] ];
   ballColors.forEach(c => {
@@ -284,7 +280,6 @@
   });
   let balls = [];
 
-  // --- THEME 4 (OVERRIDE): EMOJI CONES ---
   const coneCanvas = document.createElement('canvas');
   coneCanvas.width = 64; coneCanvas.height = 64;
   const cctx = coneCanvas.getContext('2d');
@@ -300,15 +295,12 @@
     H = mcanvas.height = Math.floor(innerHeight * DOWNSCALE);
     cx = W / 2; cy = H / 2;
     
-    // Init Stars
     stars = [];
     for(let i=0; i<35; i++) stars.push({ x: (Math.random()-0.5)*W*2, y: (Math.random()-0.5)*H*2, z: Math.random()*1000 + 1, s: Math.random()*3+2 });
     
-    // Init Balls
     balls = [];
     for(let i=0; i<18; i++) balls.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*3, vy: (Math.random()-0.5)*3, s: Math.random()*35 + 20, img: ballCanvases[Math.floor(Math.random()*ballCanvases.length)] });
       
-    // Init Emoji Cones
     conesArr = [];
     for(let i=0; i<25; i++) conesArr.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*30 + 30, speed: Math.random()*3 + 2 });
   }
@@ -322,14 +314,12 @@
     mctx.fillRect(0, 0, W, H);
     
     if (window.isTrafficConePhase) {
-      // OVERRIDE: Traffic Emojis Animation
       for (let c of conesArr) {
         c.y += c.speed;
         if (c.y > H + 50) { c.y = -50; c.x = Math.random() * W; }
         mctx.drawImage(coneCanvas, c.x, c.y, c.s, c.s);
       }
     } else {
-      // NORMAL THEMES
       if (currentBgIndex === 0) {
         mctx.fillStyle = "#fff"; mctx.textAlign = "center"; mctx.textBaseline = "middle";
         for (let p of stars) {
@@ -419,7 +409,17 @@
   
   let availableWisdomIndices = [];
   let currentWisdomLang = '';
+
   // =========================================================================
+  // ⚠️ DISCLAIMER TEXTE (DE / EN)
+  // =========================================================================
+  const disclaimerTexts = {
+    de: "Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.",
+    en: "These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity."
+  };
+
+  const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
+  document.getElementById("disclaimer-text").textContent = isGerman ? disclaimerTexts.de : disclaimerTexts.en;
 
   document.getElementById("disclaimer-btn").onclick = () => { document.getElementById("disclaimer-modal").style.display = "block"; };
   document.getElementById("close-disclaimer").onclick = () => { document.getElementById("disclaimer-modal").style.display = "none"; };
@@ -596,7 +596,6 @@
         controls.autoRotate = false; object.rotation.set(0,0,0);
     });
 
-    const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
     const targetLang = isGerman ? 'de' : 'en';
     const activeWisdom = isGerman ? dailyWisdom.de : dailyWisdom.en;
     
@@ -634,14 +633,13 @@
       window._lhuUtterance = utterance; 
       utterance.lang = isGerman ? 'de-DE' : 'en-US'; 
       
-      // NEU: STIMMEN-PROFIL BASIEREND AUF AUSGEWÄHLTEM KOPF!
       const headIdx = document.getElementById("head-select").selectedIndex;
       const profiles = [
-        { p: 0.1, r: 0.85 }, // 0: unibrowserloadicorn (Tief, langsam, default)
-        { p: 1.8, r: 1.15 }, // 1: uniturnoeyeballhorn (Hoch, schnell, nervös)
-        { p: 0.4, r: 0.70 }, // 2: duckybulbywaterhorn (Sehr tief, sehr lahm)
-        { p: 0.8, r: 1.05 }, // 3: obesewarrior (Mittlere Tiefe, aggressiver)
-        { p: 1.5, r: 1.10 }  // 4: askflamongostache (Etwas höher, elegant)
+        { p: 0.1, r: 0.85 },
+        { p: 1.8, r: 1.15 },
+        { p: 0.4, r: 0.70 },
+        { p: 0.8, r: 1.05 },
+        { p: 1.5, r: 1.10 }
       ];
       
       const prof = profiles[headIdx % profiles.length];
@@ -652,8 +650,6 @@
       const langVoices = voices.filter(v => v.lang.startsWith(isGerman ? "de" : "en"));
       
       if (langVoices.length > 0) {
-          // Rotiert auch physisch die installierten Stimmen durch, 
-          // basierend auf der Kopf-Nummer
           utterance.voice = langVoices[headIdx % langVoices.length];
       }
 
@@ -904,7 +900,6 @@
             targetRotY = Math.sin(musicPhase) * 0.45; 
             targetRotZ = Math.cos(musicPhase) * 0.22; 
         } else if (loopTime < 40) {
-            // BAUSTELLEN-WARNBLINKER + EMOJI CONES
             phase4Active = true;
             window.isTrafficConePhase = true;
             targetRotX = Math.sin(loopTime * 40) * 0.08;
