@@ -105,7 +105,6 @@
     /* ========== PLAYLIST HEADER ========== */
     .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 32px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
     
-    /* Limit Break Cover Styles (Jetzt Gelb-Orange statt Türkis) */
     .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
     .playlist-cover:active { transform: scale(0.96); }
     .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; animation: lightningGlow 2.5s infinite ease-in-out; }
@@ -133,11 +132,12 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
     }
 
+    /* Laser-Effekt komplett auf Gelb/Gold umgestellt */
     .laser-sweep {
       position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
-      background: linear-gradient(90deg, transparent 0%, rgba(255, 71, 87, 0.6) 20%, #ffffff 50%, rgba(255, 71, 87, 0.6) 80%, transparent 100%);
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 222, 0, 0.6) 20%, #ffffff 50%, rgba(255, 222, 0, 0.6) 80%, transparent 100%);
       z-index: 100000; pointer-events: none; transform: skewX(-12deg);
-      box-shadow: 0 0 100px var(--red), 0 0 50px #fff; mix-blend-mode: screen;
+      box-shadow: 0 0 100px var(--yellow), 0 0 50px #fff; mix-blend-mode: screen;
     }
     @keyframes sweepAnim {
       0% { left: -40vw; opacity: 0; }
@@ -223,14 +223,13 @@
     .np-bar:hover { height: 10px; }
     .np-fill { height: 100%; width: 0; background: var(--orange); position: relative; transition: width 0.1s linear; border-right: 2px solid var(--text-main); }
     
-    /* Regler / Thumb (Ente oder Lade-Spinner) */
     .np-thumb { position: absolute; top: 50%; right: -12px; width: 22px; height: 22px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
     .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
 
-    /* Lade-Icon (Spinner) wenn MP3 noch lädt beim Spulen */
+    /* Lade-Spinner in Gelb/Orange statt Türkis */
     .np-loader-icon {
       position: absolute; top: 50%; right: -10px; width: 16px; height: 16px;
-      border: 2px solid var(--orange); border-top-color: transparent; border-radius: 50%;
+      border: 2px solid var(--yellow); border-top-color: transparent; border-radius: 50%;
       transform: translateY(-50%); animation: spinLoader 0.6s linear infinite; display: none; z-index: 5;
     }
     .np-bar.buffering .np-loader-icon { display: block; }
@@ -384,7 +383,6 @@ function initLimitAudio() {
   }
 }
 
-// Quack Sound abspielen (quack.mp3 von der Root)
 function playQuackSound() {
   try {
     var quack = new Audio('quack.mp3');
@@ -897,7 +895,6 @@ Vedran Lukic & Aether Veylan`;
       }
     });
     
-    // Check ob Daten geladen werden müssen beim Spulen / Buffering
     currentAudio.addEventListener('waiting', function() {
       npBar.classList.add('buffering');
     });
@@ -927,10 +924,9 @@ Vedran Lukic & Aether Veylan`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   });
 
-  // Klick auf die Progress-Leiste (Spulen + Quack-Sound + Loading Check)
   npBar.addEventListener('click', function(e) {
     if (!currentAudio) return;
-    playQuackSound(); // Quack beim Spulen abspielen
+    playQuackSound();
     
     var rect = this.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -938,7 +934,6 @@ Vedran Lukic & Aether Veylan`;
     
     currentAudio.currentTime = targetTime;
     
-    // Wenn die Zielstelle noch nicht gepuffert ist, Loader anzeigen
     if (currentAudio.buffered.length > 0) {
       var buffered = false;
       for (var i = 0; i < currentAudio.buffered.length; i++) {
