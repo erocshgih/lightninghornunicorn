@@ -11,7 +11,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
      :root {
-      /* Sommerliches, warmes Farbschema */
       --bg-main: #fffdf7; 
       --bg-sidebar: #ffffff;
       --bg-card: #ffffff;
@@ -19,6 +18,7 @@
       --bg-active: #ffeaa7; 
       --yellow: #ffde00; 
       --orange: #ffa502; 
+      --red: #ff4757;
       --text-main: #332f2a; 
       --text-muted: #6e675c; 
       --text-dim: #c2baab;
@@ -43,6 +43,10 @@
     @keyframes duckFly {
       from { transform: translateX(0); }
       to { transform: translateX(122vw); }
+    }
+    @keyframes lightningGlow {
+      0%, 100% { filter: drop-shadow(0 0 2px rgba(255,222,0,0.4)); }
+      50% { filter: drop-shadow(0 0 12px rgba(255,165,2,0.9)); }
     }
 
     body {
@@ -100,9 +104,9 @@
     /* Limit Break Cover Styles */
     .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
     .playlist-cover:active { transform: scale(0.96); }
-    .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; }
+    .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; animation: lightningGlow 2.5s infinite ease-in-out; }
     .limit-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--charge, 0%); background: linear-gradient(0deg, var(--orange), var(--yellow)); transition: height 0.05s linear; z-index: 1; pointer-events: none; }
-    .playlist-cover.unlocked .limit-fill { background: rgba(0, 255, 255, 0.8); box-shadow: 0 0 30px #00ffff; height: 100% !important; }
+    .playlist-cover.unlocked .limit-fill { background: rgba(255, 71, 87, 0.8); box-shadow: 0 0 30px var(--red); height: 100% !important; }
     
     @keyframes coverShake {
       0% { transform: translate(3px, 2px) rotate(0deg); }
@@ -113,12 +117,25 @@
     }
     .playlist-cover.shake { animation: coverShake 0.15s ease-out; }
 
-    /* Fetter Laser Effekt */
+    /* Spawning Lightning Particles beim Klick */
+    .click-sparkle {
+      position: absolute;
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 10;
+      animation: sparkleFly 0.6s ease-out forwards;
+    }
+    @keyframes sparkleFly {
+      0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
+    }
+
+    /* Fetter roter Laser Effekt */
     .laser-sweep {
-      position: fixed; top: 0; left: -40vw; width: 25vw; height: 100vh;
-      background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.5) 20%, #ffffff 50%, rgba(0, 255, 255, 0.5) 80%, transparent 100%);
+      position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 71, 87, 0.6) 20%, #ffffff 50%, rgba(255, 71, 87, 0.6) 80%, transparent 100%);
       z-index: 100000; pointer-events: none; transform: skewX(-12deg);
-      box-shadow: 0 0 80px rgba(0,255,255,1), 0 0 40px #fff; mix-blend-mode: screen;
+      box-shadow: 0 0 100px var(--red), 0 0 50px #fff; mix-blend-mode: screen;
     }
     @keyframes sweepAnim {
       0% { left: -40vw; opacity: 0; }
@@ -157,9 +174,8 @@
     .song-title { font-size: 11px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .song-artist { font-size: 9px; color: var(--text-muted); }
     
-    /* Versions & Lock Logic */
     .song-version-dots { display: flex; gap: 6px; justify-content: flex-end; }
-    .song-version-dots.locked { display: none; } /* Versteckt die Versionen, bis sie freigeschaltet sind */
+    .song-version-dots.locked { display: none; }
     .version-dot { width: 12px; height: 12px; border-radius: 2px; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); }
     .version-dot:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
     .version-dot.active { background: var(--orange); border-color: var(--text-main); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
@@ -204,7 +220,9 @@
     .np-bar { flex: 1; height: 8px; background: var(--border); border-radius: 2px; border: 1px solid var(--text-dim); position: relative; cursor: pointer; }
     .np-bar:hover { height: 10px; }
     .np-fill { height: 100%; width: 0; background: var(--orange); position: relative; transition: width 0.1s linear; border-right: 2px solid var(--text-main); }
-    .np-thumb { position: absolute; top: 50%; right: -8px; width: 24px; height: 24px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    
+    /* Ente auf der Progress Bar (sichtbar & funktional) */
+    .np-thumb { position: absolute; top: 50%; right: -12px; width: 22px; height: 22px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
     .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
 
     .np-right { display: flex; align-items: center; justify-content: flex-end; }
@@ -315,7 +333,7 @@
         <span class="np-time" id="np-current">0:00</span>
         <div class="np-bar" id="np-bar">
           <div class="np-fill" id="np-fill">
-            <img class="np-thumb" id="np-thumb" src="duck.png" alt="">
+            <img class="np-thumb visible" id="np-thumb" src="duck.png" alt="">
           </div>
         </div>
         <span class="np-time" id="np-total">0:00</span>
@@ -340,7 +358,6 @@
 <canvas id="duck3D"></canvas>
 
 <script>
-// Globale Variablen für das Limit-Break-System
 var isLimitUnlocked = false;
 var limitCharge = 0;
 var limitAudioCtx = null;
@@ -361,7 +378,6 @@ function playZapSound() {
   var osc = limitAudioCtx.createOscillator();
   var gain = limitAudioCtx.createGain();
   osc.type = 'square';
-  // Tonhöhe steigt, je voller der Balken wird
   osc.frequency.setValueAtTime(150 + limitCharge * 3, limitAudioCtx.currentTime); 
   osc.frequency.exponentialRampToValueAtTime(40, limitAudioCtx.currentTime + 0.15);
   gain.gain.setValueAtTime(0.3, limitAudioCtx.currentTime);
@@ -370,32 +386,52 @@ function playZapSound() {
   osc.start(); osc.stop(limitAudioCtx.currentTime + 0.15);
 }
 
-// Fetter Laser Sound beim Freischalten
+// Langer, epischer roter Sci-Fi Lasersound
 function playLaserSound() {
   if (!limitAudioCtx) return;
+  var now = limitAudioCtx.currentTime;
+  
   var osc = limitAudioCtx.createOscillator();
   var osc2 = limitAudioCtx.createOscillator();
+  var subOsc = limitAudioCtx.createOscillator();
+  var filter = limitAudioCtx.createBiquadFilter();
   var gain = limitAudioCtx.createGain();
+  
   osc.type = 'sawtooth';
   osc2.type = 'square';
+  subOsc.type = 'sine';
   
-  osc.frequency.setValueAtTime(1400, limitAudioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(10, limitAudioCtx.currentTime + 0.9);
-  osc2.frequency.setValueAtTime(900, limitAudioCtx.currentTime);
-  osc2.frequency.exponentialRampToValueAtTime(5, limitAudioCtx.currentTime + 0.9);
+  // Tiefer, langer Downsweep
+  osc.frequency.setValueAtTime(1800, now);
+  osc.frequency.exponentialRampToValueAtTime(30, now + 1.4);
   
-  gain.gain.setValueAtTime(0.6, limitAudioCtx.currentTime);
-  gain.gain.linearRampToValueAtTime(0, limitAudioCtx.currentTime + 0.9);
+  osc2.frequency.setValueAtTime(1200, now);
+  osc2.frequency.exponentialRampToValueAtTime(20, now + 1.4);
+
+  subOsc.frequency.setValueAtTime(150, now);
+  subOsc.frequency.linearRampToValueAtTime(20, now + 1.4);
   
-  osc.connect(gain); osc2.connect(gain); gain.connect(limitAudioCtx.destination);
-  osc.start(); osc2.start();
-  osc.stop(limitAudioCtx.currentTime + 0.9); osc2.stop(limitAudioCtx.currentTime + 0.9);
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(3000, now);
+  filter.frequency.exponentialRampToValueAtTime(200, now + 1.4);
+
+  gain.gain.setValueAtTime(0.7, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+  
+  osc.connect(filter);
+  osc2.connect(filter);
+  subOsc.connect(filter);
+  filter.connect(gain);
+  gain.connect(limitAudioCtx.destination);
+  
+  osc.start(now); osc2.start(now); subOsc.start(now);
+  osc.stop(now + 1.5); osc2.stop(now + 1.5); subOsc.stop(now + 1.5);
 }
 
 // Entladung (Decay) des Balkens im Hintergrund
 setInterval(function() {
   if (!isLimitUnlocked && limitCharge > 0) {
-    limitCharge -= 2.5; // Zieht Ladung ab (Man muss schnell klicken!)
+    limitCharge -= 2.5;
     if (limitCharge < 0) limitCharge = 0;
     var fill = document.getElementById('limit-fill');
     if (fill) fill.style.setProperty('--charge', limitCharge + '%');
@@ -409,14 +445,13 @@ function unlockSecret() {
   var cover = document.getElementById('limit-btn');
   if (cover) cover.classList.add('unlocked');
   
-  // Laser Animation in den Body injecten
+  // Laser Animation in Rot
   var laser = document.createElement('div');
   laser.className = 'laser-sweep';
-  laser.style.animation = 'sweepAnim 0.7s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
+  laser.style.animation = 'sweepAnim 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
   document.body.appendChild(laser);
-  setTimeout(function() { laser.remove(); }, 1000);
+  setTimeout(function() { laser.remove(); }, 1100);
   
-  // Alternative Versionen anzeigen!
   document.querySelectorAll('.song-version-dots.locked').forEach(function(el) {
     el.classList.remove('locked');
   });
@@ -609,7 +644,7 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     html += '<div class="playlist-header">';
-    // Limit Break Button (Cover)
+    // Limit Break Button (Cover) mit leuchtendem Blitz
     html += '  <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="limit-btn">';
     html += '    <div class="limit-fill" id="limit-fill" style="--charge: ' + limitCharge + '%"></div>';
     html += '    <div class="playlist-cover-icon">' + icon + '</div>';
@@ -639,7 +674,6 @@ Vedran Lukic & Aether Veylan`;
       html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">▶</span></div>';
       html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
       
-      // Wenn nicht freigeschaltet, kriegen die Versionen die Klasse "locked" und werden per CSS versteckt
       html += '    <div class="song-version-dots' + (isLimitUnlocked ? '' : ' locked') + '">';
       if (hasVersions) {
         song.versions.forEach(function(v, vi) {
@@ -665,16 +699,37 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
-    // Bind Limit Break Event an das neue Cover
+    // Bind Limit Break Event mit Blitz-Emojis am Klickort
     setTimeout(function() {
       var btn = document.getElementById('limit-btn');
       var fill = document.getElementById('limit-fill');
       if (btn && fill) {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
           initLimitAudio();
           if (isLimitUnlocked) return;
           
-          limitCharge += 18; // 6 schnelle Klicks benötigt
+          // Drei kleine Blitz-Emojis um den Klickpunkt spawnen
+          var rect = btn.getBoundingClientRect();
+          var clickX = e.clientX - rect.left;
+          var clickY = e.clientY - rect.top;
+          
+          for (var b = 0; b < 3; b++) {
+            var spark = document.createElement('div');
+            spark.className = 'click-sparkle';
+            spark.textContent = '⚡';
+            spark.style.left = clickX + 'px';
+            spark.style.top = clickY + 'px';
+            
+            var angle = Math.random() * Math.PI * 2;
+            var dist = 30 + Math.random() * 40;
+            spark.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+            spark.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+            
+            btn.appendChild(spark);
+            setTimeout(function(s) { s.remove(); }, 600, spark);
+          }
+
+          limitCharge += 18;
           if (limitCharge >= 100) {
             limitCharge = 100;
             unlockSecret();
@@ -682,7 +737,6 @@ Vedran Lukic & Aether Veylan`;
           } else {
             playZapSound();
             fill.style.setProperty('--charge', limitCharge + '%');
-            // Shake Animation neu triggern
             btn.classList.remove('shake');
             void btn.offsetWidth; 
             btn.classList.add('shake');
@@ -770,7 +824,6 @@ Vedran Lukic & Aether Veylan`;
 
   function renderPlayerVersions(song) {
     npVersions.innerHTML = '';
-    // Player-Bar Versionen auch erst zeigen, wenn das Secret freigeschaltet ist
     if (isLimitUnlocked && song.versions && song.versions.length > 1) {
       npVersions.style.display = 'flex';
       song.versions.forEach(function(version, idx) {
@@ -948,7 +1001,7 @@ Vedran Lukic & Aether Veylan`;
     introBarFill.style.width = Math.min(100, introProgress) + '%';
     setTimeout(introTick, 40 + Math.random() * 80);
   }
-  setTimeout(introTick, 600); // Startet nach 600ms von alleine
+  setTimeout(introTick, 600);
 
 })();
 </script>
