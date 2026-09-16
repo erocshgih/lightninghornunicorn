@@ -48,6 +48,10 @@
       0%, 100% { filter: drop-shadow(0 0 2px rgba(255,222,0,0.4)); }
       50% { filter: drop-shadow(0 0 12px rgba(255,165,2,0.9)); }
     }
+    @keyframes spinLoader {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
 
     body {
       font-family: 'Press Start 2P', monospace;
@@ -101,11 +105,11 @@
     /* ========== PLAYLIST HEADER ========== */
     .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 32px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
     
-    /* Limit Break Cover Styles */
+    /* Limit Break Cover Styles (Jetzt Gelb-Orange statt Türkis) */
     .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
     .playlist-cover:active { transform: scale(0.96); }
     .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; animation: lightningGlow 2.5s infinite ease-in-out; }
-    .limit-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--charge, 0%); background: linear-gradient(0deg, var(--orange), var(--yellow)); transition: height 0.05s linear; z-index: 1; pointer-events: none; }
+    .limit-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--charge, 0%); background: linear-gradient(0deg, var(--yellow), var(--orange)); transition: height 0.05s linear; z-index: 1; pointer-events: none; }
     .playlist-cover.unlocked .limit-fill { background: rgba(255, 71, 87, 0.8); box-shadow: 0 0 30px var(--red); height: 100% !important; }
     
     @keyframes coverShake {
@@ -117,7 +121,6 @@
     }
     .playlist-cover.shake { animation: coverShake 0.15s ease-out; }
 
-    /* Spawning Lightning Particles beim Klick */
     .click-sparkle {
       position: absolute;
       font-size: 16px;
@@ -130,7 +133,6 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
     }
 
-    /* Fetter roter Laser Effekt */
     .laser-sweep {
       position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
       background: linear-gradient(90deg, transparent 0%, rgba(255, 71, 87, 0.6) 20%, #ffffff 50%, rgba(255, 71, 87, 0.6) 80%, transparent 100%);
@@ -221,9 +223,18 @@
     .np-bar:hover { height: 10px; }
     .np-fill { height: 100%; width: 0; background: var(--orange); position: relative; transition: width 0.1s linear; border-right: 2px solid var(--text-main); }
     
-    /* Ente auf der Progress Bar (sichtbar & funktional) */
+    /* Regler / Thumb (Ente oder Lade-Spinner) */
     .np-thumb { position: absolute; top: 50%; right: -12px; width: 22px; height: 22px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
     .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
+
+    /* Lade-Icon (Spinner) wenn MP3 noch lädt beim Spulen */
+    .np-loader-icon {
+      position: absolute; top: 50%; right: -10px; width: 16px; height: 16px;
+      border: 2px solid var(--orange); border-top-color: transparent; border-radius: 50%;
+      transform: translateY(-50%); animation: spinLoader 0.6s linear infinite; display: none; z-index: 5;
+    }
+    .np-bar.buffering .np-loader-icon { display: block; }
+    .np-bar.buffering .np-thumb { opacity: 0 !important; }
 
     .np-right { display: flex; align-items: center; justify-content: flex-end; }
     .np-dl-btn { width: 44px; height: 44px; border-radius: 4px; background: var(--bg-hover); border: 2px solid var(--text-main); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 20px; box-shadow: 2px 2px 0px var(--text-main); }
@@ -335,6 +346,7 @@
           <div class="np-fill" id="np-fill">
             <img class="np-thumb visible" id="np-thumb" src="duck.png" alt="">
           </div>
+          <div class="np-loader-icon" id="np-loader"></div>
         </div>
         <span class="np-time" id="np-total">0:00</span>
       </div>
@@ -372,7 +384,15 @@ function initLimitAudio() {
   }
 }
 
-// 8-Bit Zap Sound beim Klicken
+// Quack Sound abspielen (quack.mp3 von der Root)
+function playQuackSound() {
+  try {
+    var quack = new Audio('quack.mp3');
+    quack.volume = 0.8;
+    quack.play().catch(function() {});
+  } catch(e) {}
+}
+
 function playZapSound() {
   if (!limitAudioCtx) return;
   var osc = limitAudioCtx.createOscillator();
@@ -386,7 +406,6 @@ function playZapSound() {
   osc.start(); osc.stop(limitAudioCtx.currentTime + 0.15);
 }
 
-// Langer, epischer roter Sci-Fi Lasersound
 function playLaserSound() {
   if (!limitAudioCtx) return;
   var now = limitAudioCtx.currentTime;
@@ -401,7 +420,6 @@ function playLaserSound() {
   osc2.type = 'square';
   subOsc.type = 'sine';
   
-  // Tiefer, langer Downsweep
   osc.frequency.setValueAtTime(1800, now);
   osc.frequency.exponentialRampToValueAtTime(30, now + 1.4);
   
@@ -428,7 +446,6 @@ function playLaserSound() {
   osc.stop(now + 1.5); osc2.stop(now + 1.5); subOsc.stop(now + 1.5);
 }
 
-// Entladung (Decay) des Balkens im Hintergrund
 setInterval(function() {
   if (!isLimitUnlocked && limitCharge > 0) {
     limitCharge -= 2.5;
@@ -445,7 +462,6 @@ function unlockSecret() {
   var cover = document.getElementById('limit-btn');
   if (cover) cover.classList.add('unlocked');
   
-  // Laser Animation in Rot
   var laser = document.createElement('div');
   laser.className = 'laser-sweep';
   laser.style.animation = 'sweepAnim 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
@@ -644,7 +660,6 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     html += '<div class="playlist-header">';
-    // Limit Break Button (Cover) mit leuchtendem Blitz
     html += '  <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="limit-btn">';
     html += '    <div class="limit-fill" id="limit-fill" style="--charge: ' + limitCharge + '%"></div>';
     html += '    <div class="playlist-cover-icon">' + icon + '</div>';
@@ -699,7 +714,6 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
-    // Bind Limit Break Event mit Blitz-Emojis am Klickort
     setTimeout(function() {
       var btn = document.getElementById('limit-btn');
       var fill = document.getElementById('limit-fill');
@@ -708,7 +722,6 @@ Vedran Lukic & Aether Veylan`;
           initLimitAudio();
           if (isLimitUnlocked) return;
           
-          // Drei kleine Blitz-Emojis um den Klickpunkt spawnen
           var rect = btn.getBoundingClientRect();
           var clickX = e.clientX - rect.left;
           var clickY = e.clientY - rect.top;
@@ -765,7 +778,7 @@ Vedran Lukic & Aether Veylan`;
         dot.classList.add('active');
         song.file = song.versions[verIdx].file;
         
-        var row = dot.closest('.song-row');
+        var row = document.querySelector('.song-row[data-idx="' + songIdx + '"]');
         row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
 
         if (currentSongIdx === songIdx && currentAudio) {
@@ -805,6 +818,7 @@ Vedran Lukic & Aether Veylan`;
   var npTotal = document.getElementById('np-total');
   var npTitleContainer = document.getElementById('np-title');
   var npVersions = document.getElementById('np-versions');
+  var npBar = document.getElementById('np-bar');
 
   function fmtTime(s) {
     if (isNaN(s)) return '0:00';
@@ -877,9 +891,20 @@ Vedran Lukic & Aether Veylan`;
     
     currentAudio.addEventListener('loadedmetadata', function() { npTotal.textContent = fmtTime(currentAudio.duration); });
     currentAudio.addEventListener('timeupdate', function() {
-      npFill.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + '%';
-      npCurrent.textContent = fmtTime(currentAudio.currentTime);
+      if (currentAudio.duration) {
+        npFill.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + '%';
+        npCurrent.textContent = fmtTime(currentAudio.currentTime);
+      }
     });
+    
+    // Check ob Daten geladen werden müssen beim Spulen / Buffering
+    currentAudio.addEventListener('waiting', function() {
+      npBar.classList.add('buffering');
+    });
+    currentAudio.addEventListener('canplay', function() {
+      npBar.classList.remove('buffering');
+    });
+
     currentAudio.addEventListener('ended', function() { playSong(idx + 1); });
 
     currentAudio.play();
@@ -902,11 +927,30 @@ Vedran Lukic & Aether Veylan`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   });
 
-  document.getElementById('np-bar').addEventListener('click', function(e) {
+  // Klick auf die Progress-Leiste (Spulen + Quack-Sound + Loading Check)
+  npBar.addEventListener('click', function(e) {
     if (!currentAudio) return;
+    playQuackSound(); // Quack beim Spulen abspielen
+    
     var rect = this.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    currentAudio.currentTime = pct * currentAudio.duration;
+    var targetTime = pct * currentAudio.duration;
+    
+    currentAudio.currentTime = targetTime;
+    
+    // Wenn die Zielstelle noch nicht gepuffert ist, Loader anzeigen
+    if (currentAudio.buffered.length > 0) {
+      var buffered = false;
+      for (var i = 0; i < currentAudio.buffered.length; i++) {
+        if (currentAudio.buffered.start(i) <= targetTime && targetTime <= currentAudio.buffered.end(i)) {
+          buffered = true;
+          break;
+        }
+      }
+      if (!buffered) {
+        npBar.classList.add('buffering');
+      }
+    }
   });
 
   document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
@@ -986,7 +1030,6 @@ Vedran Lukic & Aether Veylan`;
 
   renderPlaylist('all');
 
-  // ========== INTRO ANIMATION (Auto-Start) ==========
   var introEl = document.getElementById('intro');
   var introBarFill = document.getElementById('intro-bar-fill');
   var introProgress = 0;
