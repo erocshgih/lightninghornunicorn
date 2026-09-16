@@ -52,6 +52,10 @@
       0% { transform: translateY(-50%) rotate(0deg); }
       100% { transform: translateY(-50%) rotate(360deg); }
     }
+    @keyframes textFlash {
+      0%, 100% { color: var(--text-muted); }
+      50% { color: var(--orange); text-shadow: 0 0 10px rgba(255,165,2,0.6); }
+    }
 
     body {
       font-family: 'Press Start 2P', monospace;
@@ -60,7 +64,7 @@
       overflow: hidden;
       height: 100vh;
       -webkit-font-smoothing: antialiased;
-      -webkit-tap-highlight-color: transparent; /* Entfernt den blauen Klick-Effekt auf Mobile (iOS/Android) */
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* ========== LAYOUT ========== */
@@ -147,7 +151,9 @@
     }
 
     .playlist-info { display: flex; flex-direction: column; gap: 16px; }
-    .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
+    .playlist-type.activated { color: var(--orange); font-weight: bold; animation: textFlash 1.5s infinite ease-in-out; }
+    
     .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } 
     
@@ -459,6 +465,13 @@ function unlockSecret() {
   var cover = document.getElementById('limit-btn');
   if (cover) cover.classList.add('unlocked');
   
+  // Text oben im Header auf Blockschrift "ALTERNATE VERSIONS ACTIVATED" ändern
+  var typeEl = document.getElementById('playlist-type-text');
+  if (typeEl) {
+    typeEl.textContent = 'ALTERNATE VERSIONS ACTIVATED';
+    typeEl.classList.add('activated');
+  }
+  
   var laser = document.createElement('div');
   laser.className = 'laser-sweep';
   laser.style.animation = 'sweepAnim 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
@@ -663,7 +676,11 @@ Vedran Lukic & Aether Veylan`;
     html += '  </div>';
     
     html += '  <div class="playlist-info">';
-    html += '    <div class="playlist-type">Lightning Horn Unicorn</div>';
+    // Hier wird der Text je nach Freischaltungsstatus gesetzt (Blockschrift falls unlocked)
+    var typeText = isLimitUnlocked ? 'ALTERNATE VERSIONS ACTIVATED' : 'Lightning Horn Unicorn';
+    var typeClass = isLimitUnlocked ? 'playlist-type activated' : 'playlist-type';
+    html += '    <div class="' + typeClass + '" id="playlist-type-text">' + typeText + '</div>';
+    
     html += '    <div class="playlist-title">' + title + '</div>';
     html += '    <div class="playlist-desc">' + desc + '</div>';
     html += '  </div>';
