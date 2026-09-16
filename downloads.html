@@ -60,6 +60,7 @@
       overflow: hidden;
       height: 100vh;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent; /* Entfernt den blauen Klick-Effekt auf Mobile (iOS/Android) */
     }
 
     /* ========== LAYOUT ========== */
@@ -132,7 +133,6 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
     }
 
-    /* Laser-Effekt komplett auf Gelb/Gold umgestellt */
     .laser-sweep {
       position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
       background: linear-gradient(90deg, transparent 0%, rgba(255, 222, 0, 0.6) 20%, #ffffff 50%, rgba(255, 222, 0, 0.6) 80%, transparent 100%);
@@ -152,7 +152,7 @@
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } 
     
     .playlist-actions { padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
-    .play-btn-large { background: var(--yellow); border: 3px solid var(--text-main); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; color: var(--text-main); font-family: 'Press Start 2P', monospace; padding: 16px 24px; transition: all 0.1s ease; box-shadow: 4px 4px 0px var(--text-main); }
+    .play-btn-large { background: var(--yellow); border: 3px solid var(--text-main); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; color: var(--text-main); font-family: 'Press Start 2P', monospace; padding: 16px 24px; transition: all 0.1s ease; box-shadow: 4px 4px 0px var(--text-main); outline: none; }
     .play-btn-large:hover { background: var(--orange); }
     .play-btn-large:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--text-main); }
 
@@ -178,14 +178,14 @@
     
     .song-version-dots { display: flex; gap: 6px; justify-content: flex-end; }
     .song-version-dots.locked { display: none; }
-    .version-dot { width: 12px; height: 12px; border-radius: 2px; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); }
+    .version-dot { width: 12px; height: 12px; border-radius: 2px; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); outline: none; }
     .version-dot:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
     .version-dot.active { background: var(--orange); border-color: var(--text-main); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
     
     .song-download { display: flex; align-items: center; justify-content: center; }
-    .dl-btn { width: 36px; height: 36px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; opacity: 0; font-size: 16px; }
+    .dl-btn { width: 36px; height: 36px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; opacity: 0; font-size: 16px; outline: none; }
     .song-row:hover .dl-btn { opacity: 1; }
     .dl-btn:hover { border-color: var(--text-main); color: var(--text-main); background: var(--bg-main); box-shadow: 2px 2px 0px var(--text-main); transform: translate(-2px, -2px); }
     .dl-btn.dl-active { border-color: var(--orange); color: var(--orange); opacity: 1; }
@@ -204,13 +204,13 @@
     @keyframes titleMarquee { 0%, 10% { transform: translateX(0); } 90%, 100% { transform: translateX(-100%); } }
 
     .np-versions { display: none; align-items: center; gap: 6px; margin-top: 2px; }
-    .np-version { width: 10px; height: 10px; border: 1px solid var(--text-dim); border-radius: 2px; background: transparent; cursor: pointer; transition: all 0.2s; }
+    .np-version { width: 10px; height: 10px; border: 1px solid var(--text-dim); border-radius: 2px; background: transparent; cursor: pointer; transition: all 0.2s; outline: none; }
     .np-version:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
     .np-version.active { background: var(--orange); border-color: var(--text-main); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
 
     .np-center { display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .np-controls { display: flex; align-items: center; gap: 24px; }
-    .np-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; transition: all 0.1s; }
+    .np-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; transition: all 0.1s; outline: none; }
     .np-btn:hover { color: var(--text-main); transform: scale(1.2); }
     
     .np-btn.play { width: 44px; height: 44px; border-radius: 4px; background: var(--yellow); border: 2px solid var(--text-main); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 2px 2px 0px var(--text-main); }
@@ -219,14 +219,13 @@
     
     .np-progress { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 500px; }
     .np-time { font-size: 9px; color: var(--text-muted); min-width: 40px; text-align: center; font-family: monospace; }
-    .np-bar { flex: 1; height: 8px; background: var(--border); border-radius: 2px; border: 1px solid var(--text-dim); position: relative; cursor: pointer; }
+    .np-bar { flex: 1; height: 8px; background: var(--border); border-radius: 2px; border: 1px solid var(--text-dim); position: relative; cursor: pointer; outline: none; }
     .np-bar:hover { height: 10px; }
     .np-fill { height: 100%; width: 0; background: var(--orange); position: relative; transition: width 0.1s linear; border-right: 2px solid var(--text-main); }
     
     .np-thumb { position: absolute; top: 50%; right: -12px; width: 22px; height: 22px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
     .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
 
-    /* Lade-Spinner in Gelb/Orange statt Türkis */
     .np-loader-icon {
       position: absolute; top: 50%; right: -10px; width: 16px; height: 16px;
       border: 2px solid var(--yellow); border-top-color: transparent; border-radius: 50%;
@@ -236,7 +235,7 @@
     .np-bar.buffering .np-thumb { opacity: 0 !important; }
 
     .np-right { display: flex; align-items: center; justify-content: flex-end; }
-    .np-dl-btn { width: 44px; height: 44px; border-radius: 4px; background: var(--bg-hover); border: 2px solid var(--text-main); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 20px; box-shadow: 2px 2px 0px var(--text-main); }
+    .np-dl-btn { width: 44px; height: 44px; border-radius: 4px; background: var(--bg-hover); border: 2px solid var(--text-main); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 20px; box-shadow: 2px 2px 0px var(--text-main); outline: none; }
     .np-dl-btn:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--text-main); }
     .np-dl-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--text-main); }
     .np-dl-btn svg { display: none; }
