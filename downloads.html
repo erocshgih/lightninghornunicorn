@@ -96,31 +96,44 @@
 
     /* ========== PLAYLIST HEADER ========== */
     .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 32px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
-    .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: linear-gradient(135deg, var(--yellow), var(--orange)); display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); }
+    
+    /* Limit Break Cover Styles */
+    .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
+    .playlist-cover:active { transform: scale(0.96); }
+    .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; }
+    .limit-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--charge, 0%); background: linear-gradient(0deg, var(--orange), var(--yellow)); transition: height 0.05s linear; z-index: 1; pointer-events: none; }
+    .playlist-cover.unlocked .limit-fill { background: rgba(0, 255, 255, 0.8); box-shadow: 0 0 30px #00ffff; height: 100% !important; }
+    
+    @keyframes coverShake {
+      0% { transform: translate(3px, 2px) rotate(0deg); }
+      25% { transform: translate(-3px, -2px) rotate(-2deg); }
+      50% { transform: translate(3px, -2px) rotate(2deg); }
+      75% { transform: translate(-3px, 3px) rotate(-1deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    .playlist-cover.shake { animation: coverShake 0.15s ease-out; }
+
+    /* Fetter Laser Effekt */
+    .laser-sweep {
+      position: fixed; top: 0; left: -40vw; width: 25vw; height: 100vh;
+      background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.5) 20%, #ffffff 50%, rgba(0, 255, 255, 0.5) 80%, transparent 100%);
+      z-index: 100000; pointer-events: none; transform: skewX(-12deg);
+      box-shadow: 0 0 80px rgba(0,255,255,1), 0 0 40px #fff; mix-blend-mode: screen;
+    }
+    @keyframes sweepAnim {
+      0% { left: -40vw; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 130vw; opacity: 0; }
+    }
+
     .playlist-info { display: flex; flex-direction: column; gap: 16px; }
     .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
     .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } 
     
     .playlist-actions { padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
-    
-    /* RETRO PLAY BUTTON (Ex-Spotify-Look) */
-    .play-btn-large { 
-      background: var(--yellow); 
-      border: 3px solid var(--text-main); 
-      border-radius: 4px; /* Eckiger */
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 12px;
-      font-size: 14px; 
-      color: var(--text-main); 
-      font-family: 'Press Start 2P', monospace;
-      padding: 16px 24px;
-      transition: all 0.1s ease; 
-      box-shadow: 4px 4px 0px var(--text-main); /* Retro 3D Schatten */
-    }
+    .play-btn-large { background: var(--yellow); border: 3px solid var(--text-main); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; color: var(--text-main); font-family: 'Press Start 2P', monospace; padding: 16px 24px; transition: all 0.1s ease; box-shadow: 4px 4px 0px var(--text-main); }
     .play-btn-large:hover { background: var(--orange); }
     .play-btn-large:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--text-main); }
 
@@ -144,21 +157,22 @@
     .song-title { font-size: 11px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .song-artist { font-size: 9px; color: var(--text-muted); }
     
+    /* Versions & Lock Logic */
     .song-version-dots { display: flex; gap: 6px; justify-content: flex-end; }
-    .version-dot { width: 12px; height: 12px; border-radius: 2px; /* Eckige Retro Dots */ background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); }
+    .song-version-dots.locked { display: none; } /* Versteckt die Versionen, bis sie freigeschaltet sind */
+    .version-dot { width: 12px; height: 12px; border-radius: 2px; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); }
     .version-dot:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
     .version-dot.active { background: var(--orange); border-color: var(--text-main); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
     
-    /* DISKETTEN DOWNLOAD BUTTONS */
     .song-download { display: flex; align-items: center; justify-content: center; }
     .dl-btn { width: 36px; height: 36px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; opacity: 0; font-size: 16px; }
     .song-row:hover .dl-btn { opacity: 1; }
     .dl-btn:hover { border-color: var(--text-main); color: var(--text-main); background: var(--bg-main); box-shadow: 2px 2px 0px var(--text-main); transform: translate(-2px, -2px); }
     .dl-btn.dl-active { border-color: var(--orange); color: var(--orange); opacity: 1; }
-    .dl-btn svg { display: none; } /* Alte SVGs ausblenden */
-    .dl-btn::after { content: '💾'; } /* Disketten Emoji */
+    .dl-btn svg { display: none; } 
+    .dl-btn::after { content: '💾'; } 
 
     /* ========== NOW PLAYING BAR ========== */
     .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 3px solid var(--text-main); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
@@ -181,7 +195,6 @@
     .np-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; transition: all 0.1s; }
     .np-btn:hover { color: var(--text-main); transform: scale(1.2); }
     
-    /* Eckiger Main Play Button */
     .np-btn.play { width: 44px; height: 44px; border-radius: 4px; background: var(--yellow); border: 2px solid var(--text-main); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 2px 2px 0px var(--text-main); }
     .np-btn.play:hover { transform: translate(1px, 1px) !important; background: var(--orange); box-shadow: 1px 1px 0px var(--text-main); }
     .np-btn.play:active { transform: translate(2px, 2px) !important; box-shadow: 0px 0px 0px var(--text-main); }
@@ -195,8 +208,6 @@
     .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
 
     .np-right { display: flex; align-items: center; justify-content: flex-end; }
-    
-    /* Disketten Download Button unten rechts */
     .np-dl-btn { width: 44px; height: 44px; border-radius: 4px; background: var(--bg-hover); border: 2px solid var(--text-main); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 20px; box-shadow: 2px 2px 0px var(--text-main); }
     .np-dl-btn:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--text-main); }
     .np-dl-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--text-main); }
@@ -209,12 +220,6 @@
     .intro-logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; }
     #intro-duck-canvas { width: 80px !important; height: 80px !important; outline: none; }
     .intro-title { font-size: clamp(32px, 6vw, 64px); color: var(--text-main); letter-spacing: 2px; }
-    
-    /* Connect Button für Audio-Freigabe */
-    #intro-start-btn { margin-top: 20px; padding: 15px 30px; font-family: 'Press Start 2P', monospace; background: var(--yellow); border: 4px solid var(--text-main); cursor: pointer; font-size: 16px; animation: pulse 1.5s infinite; box-shadow: 6px 6px 0px var(--text-main); transition: all 0.1s; }
-    #intro-start-btn:hover { background: var(--orange); transform: translate(2px, 2px); box-shadow: 4px 4px 0px var(--text-main); }
-    #intro-start-btn:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--text-main); animation: none; }
-    
     .intro-sub { font-size: clamp(8px, 2vw, 12px); color: var(--text-muted); opacity: 0; animation: fadeIn 0.6s ease forwards; }
     .intro-bar { position: absolute; bottom: 80px; width: 240px; height: 8px; background: var(--border); border: 2px solid var(--text-main); overflow: hidden; opacity: 0; animation: fadeIn 0.4s ease forwards; }
     .intro-bar-fill { height: 100%; width: 0%; background: var(--orange); border-right: 2px solid var(--text-main); transition: width 0.1s linear; }
@@ -327,39 +332,94 @@
     <canvas id="intro-duck-canvas"></canvas>
     <div class="intro-title">duckwifi</div>
   </div>
-  
-  <button id="intro-start-btn">CONNECT</button>
-  
-  <div class="intro-sub" id="intro-sub-text" style="display: none;">CONNECTING TO QUACK NETWORK...</div>
-  <div class="intro-bar" id="intro-bar-container" style="display: none;"><div class="intro-bar-fill" id="intro-bar-fill"></div></div>
+  <div class="intro-sub" id="intro-sub-text">CONNECTING TO QUACK NETWORK...</div>
+  <div class="intro-bar" id="intro-bar-container"><div class="intro-bar-fill" id="intro-bar-fill"></div></div>
 </div>
 
 <div id="duckFlock"></div>
 <canvas id="duck3D"></canvas>
 
 <script>
-// Funktion für den Retro Sonar-Ping (Web Audio API - generiert on the fly)
-function playSonarPing() {
-  var AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return;
-  var ctx = new AudioContext();
-  var osc = ctx.createOscillator();
-  var gain = ctx.createGain();
+// Globale Variablen für das Limit-Break-System
+var isLimitUnlocked = false;
+var limitCharge = 0;
+var limitAudioCtx = null;
+
+function initLimitAudio() {
+  if (!limitAudioCtx) {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (Ctx) limitAudioCtx = new Ctx();
+  }
+  if (limitAudioCtx && limitAudioCtx.state === 'suspended') {
+    limitAudioCtx.resume();
+  }
+}
+
+// 8-Bit Zap Sound beim Klicken
+function playZapSound() {
+  if (!limitAudioCtx) return;
+  var osc = limitAudioCtx.createOscillator();
+  var gain = limitAudioCtx.createGain();
+  osc.type = 'square';
+  // Tonhöhe steigt, je voller der Balken wird
+  osc.frequency.setValueAtTime(150 + limitCharge * 3, limitAudioCtx.currentTime); 
+  osc.frequency.exponentialRampToValueAtTime(40, limitAudioCtx.currentTime + 0.15);
+  gain.gain.setValueAtTime(0.3, limitAudioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, limitAudioCtx.currentTime + 0.15);
+  osc.connect(gain); gain.connect(limitAudioCtx.destination);
+  osc.start(); osc.stop(limitAudioCtx.currentTime + 0.15);
+}
+
+// Fetter Laser Sound beim Freischalten
+function playLaserSound() {
+  if (!limitAudioCtx) return;
+  var osc = limitAudioCtx.createOscillator();
+  var osc2 = limitAudioCtx.createOscillator();
+  var gain = limitAudioCtx.createGain();
+  osc.type = 'sawtooth';
+  osc2.type = 'square';
   
-  // Frequenz für den hohen Sonar-Ping einstellen
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(1000, ctx.currentTime);
+  osc.frequency.setValueAtTime(1400, limitAudioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(10, limitAudioCtx.currentTime + 0.9);
+  osc2.frequency.setValueAtTime(900, limitAudioCtx.currentTime);
+  osc2.frequency.exponentialRampToValueAtTime(5, limitAudioCtx.currentTime + 0.9);
   
-  // Kurzer, plötzlicher Sound der ausschwingt (Ping)
-  gain.gain.setValueAtTime(0, ctx.currentTime);
-  gain.gain.linearRampToValueAtTime(0.8, ctx.currentTime + 0.05);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+  gain.gain.setValueAtTime(0.6, limitAudioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(0, limitAudioCtx.currentTime + 0.9);
   
-  osc.connect(gain);
-  gain.connect(ctx.destination);
+  osc.connect(gain); osc2.connect(gain); gain.connect(limitAudioCtx.destination);
+  osc.start(); osc2.start();
+  osc.stop(limitAudioCtx.currentTime + 0.9); osc2.stop(limitAudioCtx.currentTime + 0.9);
+}
+
+// Entladung (Decay) des Balkens im Hintergrund
+setInterval(function() {
+  if (!isLimitUnlocked && limitCharge > 0) {
+    limitCharge -= 2.5; // Zieht Ladung ab (Man muss schnell klicken!)
+    if (limitCharge < 0) limitCharge = 0;
+    var fill = document.getElementById('limit-fill');
+    if (fill) fill.style.setProperty('--charge', limitCharge + '%');
+  }
+}, 100);
+
+function unlockSecret() {
+  isLimitUnlocked = true;
+  playLaserSound();
   
-  osc.start();
-  osc.stop(ctx.currentTime + 1.2);
+  var cover = document.getElementById('limit-btn');
+  if (cover) cover.classList.add('unlocked');
+  
+  // Laser Animation in den Body injecten
+  var laser = document.createElement('div');
+  laser.className = 'laser-sweep';
+  laser.style.animation = 'sweepAnim 0.7s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
+  document.body.appendChild(laser);
+  setTimeout(function() { laser.remove(); }, 1000);
+  
+  // Alternative Versionen anzeigen!
+  document.querySelectorAll('.song-version-dots.locked').forEach(function(el) {
+    el.classList.remove('locked');
+  });
 }
 
 (function() {
@@ -470,11 +530,10 @@ function playSonarPing() {
       duckMesh.scale.set(1.4, 1.4, 1.4);
       duckMesh.position.set(0, -0.4, 0);
       
-      // Vorbereitung für das Leuchten (emissive)
       duckMesh.traverse(function(child) {
         if (child.isMesh && child.material) {
            child.material = child.material.clone();
-           child.material.emissive = new THREE.Color(0xffff00); // Gelbes Leuchten
+           child.material.emissive = new THREE.Color(0xffff00); 
            child.material.emissiveIntensity = 0;
            duckMats.push(child.material);
         }
@@ -486,15 +545,9 @@ function playSonarPing() {
       requestAnimationFrame(animateIntro);
       if (duckMesh) {
         duckMesh.rotation.y += 0.04;
-        
-        // Berechnet zweimal pro Drehung einen harten Blitz
-        // Sinus erzeugt eine Welle, Math.max filtert halbe Welle, Math.pow macht den Blitz spitz
         var flash = Math.pow(Math.max(0, Math.sin(duckMesh.rotation.y * 2)), 12);
-        var glowIntensity = flash * 1.5; // Stärke des Leuchtens
-        
-        duckMats.forEach(function(m) {
-          m.emissiveIntensity = glowIntensity;
-        });
+        var glowIntensity = flash * 1.5; 
+        duckMats.forEach(function(m) { m.emissiveIntensity = glowIntensity; });
       }
       renderer.render(scene, camera);
     }
@@ -556,16 +609,20 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     html += '<div class="playlist-header">';
-    html += '  <div class="playlist-cover">' + icon + '</div>';
+    // Limit Break Button (Cover)
+    html += '  <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="limit-btn">';
+    html += '    <div class="limit-fill" id="limit-fill" style="--charge: ' + limitCharge + '%"></div>';
+    html += '    <div class="playlist-cover-icon">' + icon + '</div>';
+    html += '  </div>';
+    
     html += '  <div class="playlist-info">';
-    html += '    <div class="playlist-type">Playlist</div>';
+    html += '    <div class="playlist-type">Lightning Horn Unicorn</div>';
     html += '    <div class="playlist-title">' + title + '</div>';
     html += '    <div class="playlist-desc">' + desc + '</div>';
     html += '  </div>';
     html += '</div>';
 
     html += '<div class="playlist-actions">';
-    // Neuer Retro Play Button
     html += '  <button class="play-btn-large" id="play-all-btn">▶ PLAY ALL</button>';
     html += '</div>';
 
@@ -581,13 +638,16 @@ Vedran Lukic & Aether Veylan`;
       html += '  <div class="song-row" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
       html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">▶</span></div>';
       html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
-      html += '    <div class="song-version-dots">';
+      
+      // Wenn nicht freigeschaltet, kriegen die Versionen die Klasse "locked" und werden per CSS versteckt
+      html += '    <div class="song-version-dots' + (isLimitUnlocked ? '' : ' locked') + '">';
       if (hasVersions) {
         song.versions.forEach(function(v, vi) {
           html += '<span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.label + '"></span>';
         });
       }
       html += '    </div>';
+      
       html += '    <div class="song-duration">--:--</div>';
       html += '    <div class="song-download"><button class="dl-btn" data-song="' + i + '" title="Download"></button></div>';
       html += '  </div>';
@@ -604,6 +664,32 @@ Vedran Lukic & Aether Veylan`;
     bindSongEvents();
     loadDurations();
     mainEl.scrollTop = 0;
+    
+    // Bind Limit Break Event an das neue Cover
+    setTimeout(function() {
+      var btn = document.getElementById('limit-btn');
+      var fill = document.getElementById('limit-fill');
+      if (btn && fill) {
+        btn.addEventListener('click', function() {
+          initLimitAudio();
+          if (isLimitUnlocked) return;
+          
+          limitCharge += 18; // 6 schnelle Klicks benötigt
+          if (limitCharge >= 100) {
+            limitCharge = 100;
+            unlockSecret();
+            fill.style.setProperty('--charge', '100%');
+          } else {
+            playZapSound();
+            fill.style.setProperty('--charge', limitCharge + '%');
+            // Shake Animation neu triggern
+            btn.classList.remove('shake');
+            void btn.offsetWidth; 
+            btn.classList.add('shake');
+          }
+        });
+      }
+    }, 0);
   }
 
   function bindSongEvents() {
@@ -684,7 +770,8 @@ Vedran Lukic & Aether Veylan`;
 
   function renderPlayerVersions(song) {
     npVersions.innerHTML = '';
-    if (song.versions && song.versions.length > 1) {
+    // Player-Bar Versionen auch erst zeigen, wenn das Secret freigeschaltet ist
+    if (isLimitUnlocked && song.versions && song.versions.length > 1) {
       npVersions.style.display = 'flex';
       song.versions.forEach(function(version, idx) {
         var btn = document.createElement('button');
@@ -846,26 +933,10 @@ Vedran Lukic & Aether Veylan`;
 
   renderPlaylist('all');
 
-  // ========== INTRO ANIMATION ==========
+  // ========== INTRO ANIMATION (Auto-Start) ==========
   var introEl = document.getElementById('intro');
-  var startBtn = document.getElementById('intro-start-btn');
   var introBarFill = document.getElementById('intro-bar-fill');
-  var introSubText = document.getElementById('intro-sub-text');
-  var introBarContainer = document.getElementById('intro-bar-container');
   var introProgress = 0;
-
-  // Start-Flow mit Button für Web Audio API Freigabe
-  startBtn.addEventListener('click', function() {
-    playSonarPing(); // Sound abspielen
-    
-    // Button verstecken, Ladebalken anzeigen
-    startBtn.style.display = 'none';
-    introSubText.style.display = 'block';
-    introBarContainer.style.display = 'block';
-    
-    // Animation starten
-    setTimeout(introTick, 200);
-  });
 
   function introTick() {
     if (introProgress >= 100) {
@@ -877,6 +948,7 @@ Vedran Lukic & Aether Veylan`;
     introBarFill.style.width = Math.min(100, introProgress) + '%';
     setTimeout(introTick, 40 + Math.random() * 80);
   }
+  setTimeout(introTick, 600); // Startet nach 600ms von alleine
 
 })();
 </script>
