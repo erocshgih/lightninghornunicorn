@@ -108,7 +108,7 @@
     .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
     /* ========== PLAYLIST HEADER ========== */
-    .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 32px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
+    .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 40px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
     
     .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
     .playlist-cover:active { transform: scale(0.96); }
@@ -156,11 +156,6 @@
     
     .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } 
-    
-    .playlist-actions { padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
-    .play-btn-large { background: var(--yellow); border: 3px solid var(--text-main); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; color: var(--text-main); font-family: 'Press Start 2P', monospace; padding: 16px 24px; transition: all 0.1s ease; box-shadow: 4px 4px 0px var(--text-main); outline: none; }
-    .play-btn-large:hover { background: var(--orange); }
-    .play-btn-large:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--text-main); }
 
     /* ========== SONG LIST ========== */
     .song-list-container { padding: 0 40px; }
@@ -170,12 +165,15 @@
     .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 12px 16px; border-radius: 8px; cursor: pointer; align-items: center; transition: background 0.2s; animation: fadeIn 0.4s ease forwards; opacity: 0; }
     .song-row:hover { background: var(--row-hover); }
     .song-row.playing { background: rgba(255,222,0,0.2); }
+    
     .song-row:hover .song-num { display: none; }
     .song-row:hover .song-play-icon { display: flex; }
-    .song-row.playing .song-num { color: var(--orange); }
-    .song-row.playing .song-title { color: var(--orange); }
+    
+    /* Wenn der Song spielt, bleibt das Play-Icon (bzw. Pause-Icon) dauerhaft sichtbar statt der Nummer */
+    .song-row.playing .song-num { display: none; }
+    .song-row.playing .song-play-icon { display: flex; color: var(--orange); }
 
-    .song-num-play { display: flex; align-items: center; justify-content: center; }
+    .song-num-play { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
     .song-num { font-size: 10px; color: var(--text-muted); }
     .song-play-icon { display: none; font-size: 10px; color: var(--text-main); }
     .song-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -465,7 +463,6 @@ function unlockSecret() {
   var cover = document.getElementById('limit-btn');
   if (cover) cover.classList.add('unlocked');
   
-  // Text oben im Header auf Blockschrift "ALTERNATE VERSIONS ACTIVATED" ändern
   var typeEl = document.getElementById('playlist-type-text');
   if (typeEl) {
     typeEl.textContent = 'ALTERNATE VERSIONS ACTIVATED';
@@ -676,7 +673,6 @@ Vedran Lukic & Aether Veylan`;
     html += '  </div>';
     
     html += '  <div class="playlist-info">';
-    // Hier wird der Text je nach Freischaltungsstatus gesetzt (Blockschrift falls unlocked)
     var typeText = isLimitUnlocked ? 'ALTERNATE VERSIONS ACTIVATED' : 'Lightning Horn Unicorn';
     var typeClass = isLimitUnlocked ? 'playlist-type activated' : 'playlist-type';
     html += '    <div class="' + typeClass + '" id="playlist-type-text">' + typeText + '</div>';
@@ -684,10 +680,6 @@ Vedran Lukic & Aether Veylan`;
     html += '    <div class="playlist-title">' + title + '</div>';
     html += '    <div class="playlist-desc">' + desc + '</div>';
     html += '  </div>';
-    html += '</div>';
-
-    html += '<div class="playlist-actions">';
-    html += '  <button class="play-btn-large" id="play-all-btn">▶ PLAY ALL</button>';
     html += '</div>';
 
     html += '<div class="song-list-container">';
@@ -698,9 +690,10 @@ Vedran Lukic & Aether Veylan`;
     songs.forEach(function(song, i) {
       var delay = (i * 0.03).toFixed(2);
       var hasVersions = song.versions && song.versions.length > 1;
+      var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
 
-      html += '  <div class="song-row" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
-      html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">▶</span></div>';
+      html += '  <div class="song-row' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+      html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">' + (isThisPlaying ? '⏸' : '▶') + '</span></div>';
       html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
       
       html += '    <div class="song-version-dots' + (isLimitUnlocked ? '' : ' locked') + '">';
@@ -777,7 +770,20 @@ Vedran Lukic & Aether Veylan`;
     document.querySelectorAll('.song-row').forEach(function(row) {
       row.addEventListener('click', function(e) {
         if (e.target.closest('.version-dot') || e.target.closest('.dl-btn')) return;
-        playSong(parseInt(row.dataset.idx));
+        var idx = parseInt(row.dataset.idx);
+        
+        // Toggle-Logik: Wenn derselbe Song läuft -> Pause. Wenn pausiert/anderer Song -> Play
+        if (currentSongIdx === idx && currentAudio) {
+          if (!currentAudio.paused) {
+            currentAudio.pause();
+            updatePlayBtn(false);
+          } else {
+            currentAudio.play();
+            updatePlayBtn(true);
+          }
+        } else {
+          playSong(idx);
+        }
       });
     });
 
@@ -793,7 +799,9 @@ Vedran Lukic & Aether Veylan`;
         song.file = song.versions[verIdx].file;
         
         var row = document.querySelector('.song-row[data-idx="' + songIdx + '"]');
-        row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+        if (row) {
+          row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+        }
 
         if (currentSongIdx === songIdx && currentAudio) {
           var wasPlaying = !currentAudio.paused;
@@ -812,15 +820,6 @@ Vedran Lukic & Aether Veylan`;
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
       });
     });
-
-    var playAllBtn = document.getElementById('play-all-btn');
-    if (playAllBtn) {
-      playAllBtn.addEventListener('click', function() {
-        if (currentAudio && !currentAudio.paused) { currentAudio.pause(); updatePlayBtn(false); }
-        else if (currentAudio && currentAudio.paused) { currentAudio.play(); updatePlayBtn(true); }
-        else { playSong(0); }
-      });
-    }
   }
 
   // ========== PLAYER CORE ==========
@@ -843,10 +842,19 @@ Vedran Lukic & Aether Veylan`;
 
   function updatePlayBtn(playing) {
     npPlay.innerHTML = playing ? '⏸' : '▶';
-    document.querySelectorAll('.song-row').forEach(function(r) { r.classList.remove('playing'); });
-    if (playing && currentSongIdx >= 0) {
+    document.querySelectorAll('.song-row').forEach(function(r) { 
+      r.classList.remove('playing');
+      var icon = r.querySelector('.song-play-icon');
+      if (icon) icon.textContent = '▶';
+    });
+    
+    if (currentSongIdx >= 0) {
       var r = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
-      if (r) r.classList.add('playing');
+      if (r) {
+        if (playing) r.classList.add('playing');
+        var icon = r.querySelector('.song-play-icon');
+        if (icon) icon.textContent = playing ? '⏸' : '▶';
+      }
     }
   }
 
