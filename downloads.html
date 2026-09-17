@@ -476,7 +476,7 @@
 
 <script>
 var isLimitUnlocked = false;
-var limitCharge = 0; // 0 bis 20 Klicks
+var limitCharge = 0; // 0 bis 14 Klicks
 var limitAudioCtx = null;
 
 function initLimitAudio() {
@@ -556,17 +556,17 @@ setInterval(function() {
     if (limitCharge < 0) limitCharge = 0;
     var fill = document.getElementById('limit-fill');
     if (fill) {
-      fill.style.width = (limitCharge * 5) + '%';
-      fill.style.height = (limitCharge * 5) + '%';
+      fill.style.width = (limitCharge * 7.14) + '%';
+      fill.style.height = (limitCharge * 7.14) + '%';
     }
     
     var sign = document.getElementById('button-sign');
     if (sign && !isLimitUnlocked) {
-      if (limitCharge <= 0) sign.textContent = "PUSH THE BUTTON";
-      else if (limitCharge <= 4) sign.textContent = "FASTER";
-      else if (limitCharge <= 11) sign.textContent = "MY MAKER GAVE ME PURPOSE";
-      else if (limitCharge <= 16) sign.textContent = "YOU ARE SO FAST";
-      else if (limitCharge < 20) sign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
+      if (limitCharge <= 0) sign.textContent = "PUSH THE RED BUTTON";
+      else if (limitCharge <= 3) sign.textContent = "FASTER";
+      else if (limitCharge <= 8) sign.textContent = "MY MAKER GAVE ME PURPOSE";
+      else if (limitCharge <= 11) sign.textContent = "YOU ARE SO FAST";
+      else if (limitCharge < 14) sign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
     }
   }
 }, 200);
@@ -808,12 +808,12 @@ Vedran Lukic & Aether Veylan`;
     html += '    <div class="machine-screw screw-bl"></div>';
     html += '    <div class="machine-screw screw-br"></div>';
     html += '    <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '">';
-    html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 5) + '%; height: ' + (limitCharge * 5) + '%;"></div>';
+    html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 7.14) + '%; height: ' + (limitCharge * 7.14) + '%;"></div>';
     html += '      <div class="playlist-cover-icon">' + icon + '</div>';
     html += '    </div>';
     html += '  </div>';
     
-    var signInitialText = isLimitUnlocked ? 'UNLOCKED' : (limitCharge > 0 ? '' : 'PUSH THE BUTTON');
+    var signInitialText = isLimitUnlocked ? 'UNLOCKED' : (limitCharge > 0 ? '' : 'PUSH THE RED BUTTON');
     html += '  <div class="button-sign ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="button-sign">' + signInitialText + '</div>';
     
     html += '  <div class="playlist-info">';
@@ -867,10 +867,10 @@ Vedran Lukic & Aether Veylan`;
     
     var initialSign = document.getElementById('button-sign');
     if (!isLimitUnlocked && limitCharge > 0 && initialSign) {
-        if (limitCharge <= 4) initialSign.textContent = "FASTER";
-        else if (limitCharge <= 11) initialSign.textContent = "MY MAKER GAVE ME PURPOSE";
-        else if (limitCharge <= 16) initialSign.textContent = "YOU ARE SO FAST";
-        else if (limitCharge < 20) initialSign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
+        if (limitCharge <= 3) initialSign.textContent = "FASTER";
+        else if (limitCharge <= 8) initialSign.textContent = "MY MAKER GAVE ME PURPOSE";
+        else if (limitCharge <= 11) initialSign.textContent = "YOU ARE SO FAST";
+        else if (limitCharge < 14) initialSign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
     }
     
     setTimeout(function() {
@@ -906,8 +906,8 @@ Vedran Lukic & Aether Veylan`;
 
           limitCharge += 1; 
           
-          if (limitCharge >= 20) {
-            limitCharge = 20;
+          if (limitCharge >= 14) {
+            limitCharge = 14;
             if (sign) {
                 sign.textContent = 'UNLOCKED';
                 sign.classList.add('unlocked');
@@ -917,20 +917,20 @@ Vedran Lukic & Aether Veylan`;
             fill.style.height = '100%';
           } else {
             playZapSound();
-            fill.style.width = (limitCharge * 5) + '%';
-            fill.style.height = (limitCharge * 5) + '%';
+            fill.style.width = (limitCharge * 7.14) + '%';
+            fill.style.height = (limitCharge * 7.14) + '%';
             coverEl.classList.remove('shake');
             void coverEl.offsetWidth; 
             coverEl.classList.add('shake');
             
             if (sign) {
-                if (limitCharge <= 4) {
+                if (limitCharge <= 3) {
                     sign.textContent = "FASTER";
-                } else if (limitCharge <= 11) {
+                } else if (limitCharge <= 8) {
                     sign.textContent = "MY MAKER GAVE ME PURPOSE";
-                } else if (limitCharge <= 16) {
+                } else if (limitCharge <= 11) {
                     sign.textContent = "YOU ARE SO FAST";
-                } else if (limitCharge <= 19) {
+                } else if (limitCharge <= 13) {
                     sign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
                 }
             }
