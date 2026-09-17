@@ -164,11 +164,7 @@
       width: 150px; 
       height: 150px; 
       border-radius: 50%; 
-      background-color: #c0392b; 
-      background-image: 
-        linear-gradient(rgba(0,0,0,0.12) 1px, transparent 1px), 
-        linear-gradient(90deg, rgba(0,0,0,0.12) 1px, transparent 1px);
-      background-size: 12px 12px;
+      background-color: #c0392b; /* Raster-Linien entfernt für soliden Look */
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -211,7 +207,7 @@
     }
     .playlist-cover.shake { animation: coverShake 0.15s ease-out; }
 
-    /* Das neue Zusatz-Schild unter dem Button */
+    /* Das Zusatz-Schild unter dem Button */
     .button-sign {
       background: #1e272e;
       color: var(--yellow);
@@ -569,10 +565,11 @@ setInterval(function() {
     // Schild-Text auch beim automatischen Entladen anpassen
     var sign = document.getElementById('button-sign');
     if (sign && !isLimitUnlocked) {
-      if (limitCharge <= 0) sign.textContent = "PUSH THE BUTTON FASTER";
-      else if (limitCharge <= 5) sign.textContent = "FASTER";
-      else if (limitCharge <= 15) sign.textContent = "MY MAKER GAVE ME PURPOSE";
-      else if (limitCharge < 20) sign.textContent = "YOU ARE SO FAST";
+      if (limitCharge <= 0) sign.textContent = "PUSH THE BUTTON";
+      else if (limitCharge <= 4) sign.textContent = "FASTER";
+      else if (limitCharge <= 11) sign.textContent = "MY MAKER GAVE ME PURPOSE";
+      else if (limitCharge <= 16) sign.textContent = "YOU ARE SO FAST";
+      else if (limitCharge < 20) sign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
     }
   }
 }, 200);
@@ -591,7 +588,7 @@ function unlockSecret() {
     typeEl.classList.add('activated');
   }
   
-  // Neuer Laserbeam: Ein fetter horizontaler Balken, der von ganz unten nach ganz oben fliegt
+  // Laserbeam: Ein fetter horizontaler Balken, der von ganz unten nach ganz oben fliegt
   var laserBeam = document.createElement('div');
   laserBeam.className = 'laser-sweep-bottom-up';
   document.body.appendChild(laserBeam);
@@ -812,7 +809,7 @@ Vedran Lukic & Aether Veylan`;
     html += '    </div>';
     html += '  </div>';
     
-    var signInitialText = isLimitUnlocked ? 'UNLOCKED' : (limitCharge > 0 ? '' : 'PUSH THE BUTTON FASTER');
+    var signInitialText = isLimitUnlocked ? 'UNLOCKED' : (limitCharge > 0 ? '' : 'PUSH THE BUTTON');
     html += '  <div class="button-sign ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="button-sign">' + signInitialText + '</div>';
     
     html += '  <div class="playlist-info">';
@@ -867,9 +864,10 @@ Vedran Lukic & Aether Veylan`;
     // Updates initial sign if we rendered while charged but not unlocked
     var initialSign = document.getElementById('button-sign');
     if (!isLimitUnlocked && limitCharge > 0 && initialSign) {
-        if (limitCharge <= 5) initialSign.textContent = "FASTER";
-        else if (limitCharge <= 15) initialSign.textContent = "MY MAKER GAVE ME PURPOSE";
-        else if (limitCharge < 20) initialSign.textContent = "YOU ARE SO FAST";
+        if (limitCharge <= 4) initialSign.textContent = "FASTER";
+        else if (limitCharge <= 11) initialSign.textContent = "MY MAKER GAVE ME PURPOSE";
+        else if (limitCharge <= 16) initialSign.textContent = "YOU ARE SO FAST";
+        else if (limitCharge < 20) initialSign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
     }
     
     setTimeout(function() {
@@ -924,12 +922,14 @@ Vedran Lukic & Aether Veylan`;
             
             // Schild Text aktualisieren
             if (sign) {
-                if (limitCharge <= 5) {
+                if (limitCharge <= 4) {
                     sign.textContent = "FASTER";
-                } else if (limitCharge <= 15) {
+                } else if (limitCharge <= 11) {
                     sign.textContent = "MY MAKER GAVE ME PURPOSE";
-                } else if (limitCharge <= 19) {
+                } else if (limitCharge <= 16) {
                     sign.textContent = "YOU ARE SO FAST";
+                } else if (limitCharge <= 19) {
+                    sign.textContent = "¡ARRIBA, ARRIBA! ¡ÁNDALE, ÁNDALE!";
                 }
             }
           }
