@@ -57,12 +57,30 @@
       50% { color: var(--orange); text-shadow: 0 0 10px rgba(255,165,2,0.6); }
     }
 
-    /* Floating Vocoder Text Animation */
+    /* Neu: Animation für den Vocoder-Text (Fliegt sicher nach oben) */
     @keyframes floatOutVocoder {
-      0% { opacity: 0; transform: translate(-50%, 0) scale(0.8); }
-      20% { opacity: 1; transform: translate(-50%, -20px) scale(1); }
-      80% { opacity: 1; transform: translate(-50%, -55px) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -85px) scale(0.9); }
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
+      15% { opacity: 1; transform: translate(-50%, -20px) scale(1.1); }
+      85% { opacity: 1; transform: translate(-50%, -60px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -80px) scale(0.8); }
+    }
+
+    /* Neu: Styling für die Sprechblase (jetzt fixed am Body, um Overflow zu umgehen) */
+    .vocoder-speech {
+      position: fixed;
+      font-size: 8px;
+      background: var(--text-main);
+      color: var(--yellow);
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      z-index: 999999; /* Garantiert über allem */
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border: 1px solid var(--yellow);
+      animation: floatOutVocoder 2s ease-out forwards;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     body {
@@ -139,7 +157,6 @@
       box-shadow: var(--shadow-sm);
       cursor: pointer;
       user-select: none;
-      overflow: visible; 
     }
 
     .machine-screw {
@@ -168,25 +185,6 @@
     .screw-tr { top: 6px; right: 6px; }
     .screw-bl { bottom: 6px; left: 6px; }
     .screw-br { bottom: 6px; right: 6px; }
-
-    /* Floating Vocoder Speech Bubble */
-    .vocoder-speech {
-      position: absolute;
-      bottom: 0px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 7px;
-      background: var(--text-main);
-      color: var(--yellow);
-      padding: 5px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-      z-index: 1000;
-      pointer-events: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      animation: floatOutVocoder 2s ease-out forwards;
-      border: 1px solid var(--yellow);
-    }
 
     .playlist-cover { 
       width: 150px; 
@@ -501,8 +499,13 @@
 var isLimitUnlocked = false;
 var limitCharge = 0; // 0 bis 20 Klicks
 var limitAudioCtx = null;
+var userInteracted = false; // Sicherheits-Flag für die Sprachausgabe
 
-// Vocoder Sprüche (DE & EN) mit Sprachcode für die Web Speech API
+// Registriere Interaktion (wichtig für Browser-Policy)
+window.addEventListener('click', function() { userInteracted = true; });
+window.addEventListener('touchstart', function() { userInteracted = true; });
+
+// Vocoder Sprüche (DE & EN)
 var vocoderPhrases = [
   { text: "You know you could press me", lang: "en-US" },
   { text: "Du weißt, dass du mich drücken könntest", lang: "de-DE" },
@@ -512,11 +515,12 @@ var vocoderPhrases = [
   { text: "Beweis, dass deine Hände so schnell sind", lang: "de-DE" }
 ];
 
-// Alle 3 Sekunden Vocoder-Trigger & Sprachausgabe (nur wenn keine Musik läuft)
+// Alle 3 Sekunden Vocoder-Trigger & Sprachausgabe
 setInterval(function() {
   if (isLimitUnlocked) return;
   
-  var isPlayingMusic = currentAudio && !currentAudio.paused;
+  // Sicherer Check, falls currentAudio null ist! (Das hat den Code vorher blockiert)
+  var isPlayingMusic = currentAudio ? !currentAudio.paused : false;
   if (isPlayingMusic) return; // Klappe halten während Musik läuft!
 
   var wrapper = document.getElementById('limit-btn');
@@ -524,28 +528,33 @@ setInterval(function() {
 
   var randomObj = vocoderPhrases[Math.floor(Math.random() * vocoderPhrases.length)];
 
-  // 1. Visuelle schwebende Sprechblase anzeigen
+  // 1. Visuelle Sprechblase (direkt am Body, um Overflows zu überleben)
   var speech = document.createElement('div');
   speech.className = 'vocoder-speech';
   speech.textContent = randomObj.text;
-  wrapper.appendChild(speech);
+  
+  var rect = wrapper.getBoundingClientRect();
+  // Perfekt mittig über dem Button platzieren
+  speech.style.left = (rect.left + rect.width / 2) + 'px';
+  speech.style.top = rect.top + 'px';
+  
+  document.body.appendChild(speech);
 
   setTimeout(function() {
     speech.remove();
-  }, 2000);
+  }, 2500);
 
-  // 2. Echte Browser-Sprachausgabe (Vocoder-Vibe)
-  if ('speechSynthesis' in window) {
+  // 2. Sprachausgabe (Nur wenn der User schon mal geklickt hat)
+  if (userInteracted && 'speechSynthesis' in window) {
     try {
-      window.speechSynthesis.cancel(); // Vorherige Sätze abbrechen
+      window.speechSynthesis.cancel(); // Vorherige abbrechen
       var utterance = new SpeechSynthesisUtterance(randomObj.text);
       utterance.lang = randomObj.lang;
-      utterance.rate = 1.1; // Etwas schneller für Roboter-Effekt
-      utterance.pitch = 0.8; // Etwas tiefer
+      utterance.rate = 1.0; 
+      utterance.pitch = 0.5; // Etwas tiefer für den Maschinen-Look
       window.speechSynthesis.speak(utterance);
     } catch(e) {}
   }
-
 }, 3000);
 
 
