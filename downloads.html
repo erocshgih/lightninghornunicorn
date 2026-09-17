@@ -57,6 +57,14 @@
       50% { color: var(--orange); text-shadow: 0 0 10px rgba(255,165,2,0.6); }
     }
 
+    /* Floating Vocoder Text Animation */
+    @keyframes floatOutVocoder {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.8); }
+      20% { opacity: 1; transform: translate(-50%, -15px) scale(1); }
+      80% { opacity: 1; transform: translate(-50%, -45px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -70px) scale(0.9); }
+    }
+
     body {
       font-family: 'Press Start 2P', monospace;
       background: var(--bg-main);
@@ -121,6 +129,7 @@
     .playlist-cover-wrapper {
       position: relative;
       display: inline-flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 16px;
@@ -130,6 +139,7 @@
       box-shadow: var(--shadow-sm);
       cursor: pointer;
       user-select: none;
+      overflow: visible; /* Erlaubt dem Vocoder-Text aus dem Rahmen zu fliegen */
     }
 
     .machine-screw {
@@ -159,6 +169,36 @@
     .screw-bl { bottom: 6px; left: 6px; }
     .screw-br { bottom: 6px; right: 6px; }
 
+    /* Lippen-Emoji Container zentriert zwischen den unteren Schrauben */
+    .button-lips {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      z-index: 4;
+      pointer-events: none;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+    }
+
+    /* Floating Vocoder Speech Bubble */
+    .vocoder-speech {
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 7px;
+      background: var(--text-main);
+      color: var(--yellow);
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 100;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      animation: floatOutVocoder 2s ease-out forwards;
+    }
+
     .playlist-cover { 
       width: 150px; 
       height: 150px; 
@@ -182,7 +222,6 @@
     
     .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; }
     
-    /* Perfekter Stopp an der schwarzen Umrandung (max 100% = Button-Größe) */
     .limit-fill { 
       position: absolute; 
       top: 50%; left: 50%;
@@ -223,13 +262,12 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
     }
 
-    /* Horizontaler und vertikaler Kombi-Strahl */
     .laser-sweep-vertical {
       position: fixed; top: -40vh; left: 0; width: 100vw; height: 30vh;
       background: linear-gradient(180deg, transparent 0%, rgba(255, 222, 0, 0.7) 50%, #ffffff 100%);
       z-index: 100000; pointer-events: none;
       box-shadow: 0 0 80px var(--yellow); mix-blend-mode: screen;
-      animation: sweepVert 0.9s cubic-bezier(0.1, 0,8, 0.1, 1) forwards;
+      animation: sweepVert 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
     }
     @keyframes sweepVert {
       0% { top: -40vh; opacity: 0; }
@@ -475,6 +513,43 @@ var isLimitUnlocked = false;
 var limitCharge = 0; // 0 bis 20 Klicks
 var limitAudioCtx = null;
 
+// Vocoder Sprüche (DE & EN)
+var vocoderPhrases = [
+  "You know you could press me",
+  "Du weißt, dass du mich drücken könntest",
+  "My maker gave me purpose",
+  "Mein Schöpfer gab mir einen Sinn",
+  "Proof your hands are that fast",
+  "Beweis, dass deine Hände so schnell sind"
+];
+
+// Alle 3 Sekunden Vocoder-Trigger (nur wenn keine Musik läuft)
+setInterval(function() {
+  if (isLimitUnlocked) return;
+  
+  // Prüfen ob Musik läuft (currentAudio ist nicht null und nicht pausiert)
+  var isPlayingMusic = currentAudio && !currentAudio.paused;
+  if (isPlayingMusic) return; // Klappe halten während Musik spielt!
+
+  var wrapper = document.getElementById('limit-btn');
+  if (!wrapper) return;
+
+  // Zufälligen Spruch aussuchen
+  var randomPhrase = vocoderPhrases[Math.floor(Math.random() * vocoderPhrases.length)];
+
+  var speech = document.createElement('div');
+  speech.className = 'vocoder-speech';
+  speech.textContent = randomPhrase;
+  wrapper.appendChild(speech);
+
+  // Nach 2 Sekunden wieder entfernen
+  setTimeout(function() {
+    speech.remove();
+  }, 2000);
+
+}, 3000);
+
+
 function initLimitAudio() {
   if (!limitAudioCtx) {
     var Ctx = window.AudioContext || window.webkitAudioContext;
@@ -552,7 +627,6 @@ setInterval(function() {
     if (limitCharge < 0) limitCharge = 0;
     var fill = document.getElementById('limit-fill');
     if (fill) {
-      // 5% pro Klick (bei 20 Klicks = 100% genau an der Umrandung)
       fill.style.width = (limitCharge * 5) + '%';
       fill.style.height = (limitCharge * 5) + '%';
     }
@@ -573,13 +647,11 @@ function unlockSecret() {
     typeEl.classList.add('activated');
   }
   
-  // Vertikaler Strahl
   var laserVert = document.createElement('div');
   laserVert.className = 'laser-sweep-vertical';
   document.body.appendChild(laserVert);
   setTimeout(function() { laserVert.remove(); }, 1000);
 
-  // Horizontaler Strahl
   var laserHoriz = document.createElement('div');
   laserHoriz.className = 'laser-sweep-horizontal';
   document.body.appendChild(laserHoriz);
@@ -794,6 +866,7 @@ Vedran Lukic & Aether Veylan`;
     html += '    <div class="machine-screw screw-tr"></div>';
     html += '    <div class="machine-screw screw-bl"></div>';
     html += '    <div class="machine-screw screw-br"></div>';
+    html += '    <div class="button-lips">👄</div>';
     html += '    <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '">';
     html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 5) + '%; height: ' + (limitCharge * 5) + '%;"></div>';
     html += '      <div class="playlist-cover-icon">' + icon + '</div>';
