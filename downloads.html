@@ -115,67 +115,77 @@
       text-align: center; 
       padding: 40px 40px 30px; 
       background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); 
-      gap: 24px; 
+      gap: 20px; 
     }
     
-    /* Neugestalteter runder Maschinen-Button mit Ledertextur & Schrauben */
+    /* Maschinen-Button Wrapper mit 4 Kreuzschrauben in den Ecken */
     .playlist-cover-wrapper {
       position: relative;
-      display: flex;
-      flex-direction: column;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 18px 0;
+      padding: 16px;
+      background: #f4ebd0;
+      border: 3px solid var(--text-main);
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
       cursor: pointer;
       user-select: none;
     }
 
     .machine-screw {
+      position: absolute;
       width: 12px;
       height: 12px;
       background: linear-gradient(135deg, #bdc3c7, #7f8c8d);
       border-radius: 50%;
       border: 1px solid #332f2a;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
       z-index: 3;
     }
-    .machine-screw::after {
+    /* Echte Kreuzschrauben-Optik (+) */
+    .machine-screw::before {
       content: '';
       position: absolute;
       top: 4px; left: 1px; width: 8px; height: 2px;
       background: #2c3e50;
-      transform: rotate(45deg);
     }
+    .machine-screw::after {
+      content: '';
+      position: absolute;
+      top: 1px; left: 4px; width: 2px; height: 8px;
+      background: #2c3e50;
+    }
+    .screw-tl { top: 6px; left: 6px; }
+    .screw-tr { top: 6px; right: 6px; }
+    .screw-bl { bottom: 6px; left: 6px; }
+    .screw-br { bottom: 6px; right: 6px; }
 
     .playlist-cover { 
-      width: 160px; 
-      height: 160px; 
+      width: 150px; 
+      height: 150px; 
       border-radius: 50%; 
       background-color: #c0392b; 
-      /* Symmetrische Ledertextur (Rautenmuster) per CSS */
+      /* Symmetrisches, feines Gitternetz (Linien-Raster) */
       background-image: 
-        linear-gradient(135deg, rgba(0,0,0,0.15) 25%, transparent 25%), 
-        linear-gradient(225deg, rgba(0,0,0,0.15) 25%, transparent 25%), 
-        linear-gradient(45deg, rgba(0,0,0,0.15) 25%, transparent 25%), 
-        linear-gradient(315deg, rgba(0,0,0,0.15) 25%, #c0392b 25%);
-      background-size: 10px 10px;
+        linear-gradient(rgba(0,0,0,0.12) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(0,0,0,0.12) 1px, transparent 1px);
+      background-size: 12px 12px;
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      font-size: 56px; 
+      font-size: 52px; 
       border: 4px solid var(--text-main); 
       position: relative; 
       overflow: hidden; 
-      margin: 8px 0;
       animation: slowYellowGlow 4s infinite ease-in-out;
       transition: transform 0.1s;
     }
-    .playlist-cover:active { transform: scale(0.95); }
+    .playlist-cover-wrapper:active .playlist-cover { transform: scale(0.95); }
     
     .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; }
     
-    /* Kreisförmiger Füll-Effekt von innen (mit radialem Verlauf) */
+    /* Kreisförmiger Füll-Effekt von innen */
     .limit-fill { 
       position: absolute; 
       top: 50%; left: 50%;
@@ -346,7 +356,7 @@
       .main { padding-bottom: 140px; }
       
       .playlist-header { padding: 30px 20px 20px; gap: 16px; }
-      .playlist-cover { width: 130px; height: 130px; font-size: 46px; }
+      .playlist-cover { width: 120px; height: 120px; font-size: 42px; }
       .playlist-title { font-size: 22px; }
       
       .song-list-container { padding: 0 12px; }
@@ -541,7 +551,8 @@ function unlockSecret() {
   isLimitUnlocked = true;
   playLaserSound();
   
-  var cover = document.getElementById('limit-btn');
+  var wrapper = document.getElementById('limit-btn');
+  var cover = wrapper ? wrapper.querySelector('.playlist-cover') : null;
   if (cover) cover.classList.add('unlocked');
   
   var typeEl = document.getElementById('playlist-type-text');
@@ -760,14 +771,16 @@ Vedran Lukic & Aether Veylan`;
     var html = '';
     html += '<div class="playlist-header">';
     
-    // Neuer runder Maschinen-Button mit Schrauben oben & unten und Füll-Animation
+    // Maschinen-Button mit 4 Kreuzschrauben (Ecken) und Linien-Raster
     html += '  <div class="playlist-cover-wrapper" id="limit-btn">';
-    html += '    <div class="machine-screw"></div>';
+    html += '    <div class="machine-screw screw-tl"></div>';
+    html += '    <div class="machine-screw screw-tr"></div>';
+    html += '    <div class="machine-screw screw-bl"></div>';
+    html += '    <div class="machine-screw screw-br"></div>';
     html += '    <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '">';
     html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 2.2) + '%; height: ' + (limitCharge * 2.2) + '%;"></div>';
     html += '      <div class="playlist-cover-icon">' + icon + '</div>';
     html += '    </div>';
-    html += '    <div class="machine-screw"></div>';
     html += '  </div>';
     
     html += '  <div class="playlist-info">';
@@ -820,12 +833,12 @@ Vedran Lukic & Aether Veylan`;
     mainEl.scrollTop = 0;
     
     setTimeout(function() {
-      var btn = document.getElementById('limit-btn');
+      var wrapper = document.getElementById('limit-btn');
       var fill = document.getElementById('limit-fill');
-      var coverEl = btn ? btn.querySelector('.playlist-cover') : null;
+      var coverEl = wrapper ? wrapper.querySelector('.playlist-cover') : null;
       
-      if (btn && fill && coverEl) {
-        btn.addEventListener('click', function(e) {
+      if (wrapper && fill && coverEl) {
+        wrapper.addEventListener('click', function(e) {
           initLimitAudio();
           if (isLimitUnlocked) return;
           
