@@ -11,7 +11,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
      :root {
-      /* Sommerliches, warmes Farbschema */
       --bg-main: #fffdf7; 
       --bg-sidebar: #ffffff;
       --bg-card: #ffffff;
@@ -19,6 +18,7 @@
       --bg-active: #ffeaa7; 
       --yellow: #ffde00; 
       --orange: #ffa502; 
+      --red: #ff4757;
       --text-main: #332f2a; 
       --text-muted: #6e675c; 
       --text-dim: #c2baab;
@@ -44,6 +44,18 @@
       from { transform: translateX(0); }
       to { transform: translateX(122vw); }
     }
+    @keyframes lightningGlow {
+      0%, 100% { filter: drop-shadow(0 0 2px rgba(255,222,0,0.4)); }
+      50% { filter: drop-shadow(0 0 12px rgba(255,165,2,0.9)); }
+    }
+    @keyframes spinLoader {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+    @keyframes textFlash {
+      0%, 100% { color: var(--text-muted); }
+      50% { color: var(--orange); text-shadow: 0 0 10px rgba(255,165,2,0.6); }
+    }
 
     body {
       font-family: 'Press Start 2P', monospace;
@@ -52,6 +64,7 @@
       overflow: hidden;
       height: 100vh;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* ========== LAYOUT ========== */
@@ -95,16 +108,54 @@
     .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
     /* ========== PLAYLIST HEADER ========== */
-    .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 32px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
-    .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: linear-gradient(135deg, var(--yellow), var(--orange)); display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; }
-    .playlist-info { display: flex; flex-direction: column; gap: 16px; }
-    .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
-    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } /* white-space hinzugefügt für Zeilenumbrüche */
+    .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 40px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
     
-    .playlist-actions { padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
-    .play-btn-large { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #111; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 16px rgba(255,222,0,0.4); }
-    .play-btn-large:hover { transform: scale(1.08); background: var(--orange); }
+    .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
+    .playlist-cover:active { transform: scale(0.96); }
+    .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; animation: lightningGlow 2.5s infinite ease-in-out; }
+    .limit-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--charge, 0%); background: linear-gradient(0deg, var(--yellow), var(--orange)); transition: height 0.05s linear; z-index: 1; pointer-events: none; }
+    .playlist-cover.unlocked .limit-fill { background: rgba(255, 71, 87, 0.8); box-shadow: 0 0 30px var(--red); height: 100% !important; }
+    
+    @keyframes coverShake {
+      0% { transform: translate(3px, 2px) rotate(0deg); }
+      25% { transform: translate(-3px, -2px) rotate(-2deg); }
+      50% { transform: translate(3px, -2px) rotate(2deg); }
+      75% { transform: translate(-3px, 3px) rotate(-1deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    .playlist-cover.shake { animation: coverShake 0.15s ease-out; }
+
+    .click-sparkle {
+      position: absolute;
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 10;
+      animation: sparkleFly 0.6s ease-out forwards;
+    }
+    @keyframes sparkleFly {
+      0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
+    }
+
+    .laser-sweep {
+      position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 222, 0, 0.6) 20%, #ffffff 50%, rgba(255, 222, 0, 0.6) 80%, transparent 100%);
+      z-index: 100000; pointer-events: none; transform: skewX(-12deg);
+      box-shadow: 0 0 100px var(--yellow), 0 0 50px #fff; mix-blend-mode: screen;
+    }
+    @keyframes sweepAnim {
+      0% { left: -40vw; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 130vw; opacity: 0; }
+    }
+
+    .playlist-info { display: flex; flex-direction: column; gap: 16px; }
+    .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
+    .playlist-type.activated { color: var(--orange); font-weight: bold; animation: textFlash 1.5s infinite ease-in-out; }
+    
+    .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
+    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } 
 
     /* ========== SONG LIST ========== */
     .song-list-container { padding: 0 40px; }
@@ -114,35 +165,41 @@
     .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 12px 16px; border-radius: 8px; cursor: pointer; align-items: center; transition: background 0.2s; animation: fadeIn 0.4s ease forwards; opacity: 0; }
     .song-row:hover { background: var(--row-hover); }
     .song-row.playing { background: rgba(255,222,0,0.2); }
+    
     .song-row:hover .song-num { display: none; }
     .song-row:hover .song-play-icon { display: flex; }
-    .song-row.playing .song-num { color: var(--orange); }
-    .song-row.playing .song-title { color: var(--orange); }
+    
+    /* Wenn der Song spielt, bleibt das Play-Icon (bzw. Pause-Icon) dauerhaft sichtbar statt der Nummer */
+    .song-row.playing .song-num { display: none; }
+    .song-row.playing .song-play-icon { display: flex; color: var(--orange); }
 
-    .song-num-play { display: flex; align-items: center; justify-content: center; }
+    .song-num-play { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
     .song-num { font-size: 10px; color: var(--text-muted); }
-    .song-play-icon { display: none; font-size: 12px; color: var(--text-main); }
+    .song-play-icon { display: none; font-size: 10px; color: var(--text-main); }
     .song-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .song-title { font-size: 11px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .song-artist { font-size: 9px; color: var(--text-muted); }
     
     .song-version-dots { display: flex; gap: 6px; justify-content: flex-end; }
-    .version-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); }
+    .song-version-dots.locked { display: none; }
+    .version-dot { width: 12px; height: 12px; border-radius: 2px; background: var(--border); cursor: pointer; transition: all 0.2s; border: 1px solid var(--text-dim); outline: none; }
     .version-dot:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
-    .version-dot.active { background: var(--orange); border-color: var(--orange); box-shadow: 0 0 8px rgba(255,165,2,0.5); }
+    .version-dot.active { background: var(--orange); border-color: var(--text-main); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
+    
     .song-download { display: flex; align-items: center; justify-content: center; }
-    .dl-btn { width: 32px; height: 32px; border-radius: 50%; background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; opacity: 0; }
+    .dl-btn { width: 36px; height: 36px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; opacity: 0; font-size: 16px; outline: none; }
     .song-row:hover .dl-btn { opacity: 1; }
-    .dl-btn:hover { border-color: var(--text-main); color: var(--text-main); transform: scale(1.1); background: var(--bg-main); }
+    .dl-btn:hover { border-color: var(--text-main); color: var(--text-main); background: var(--bg-main); box-shadow: 2px 2px 0px var(--text-main); transform: translate(-2px, -2px); }
     .dl-btn.dl-active { border-color: var(--orange); color: var(--orange); opacity: 1; }
-    .dl-btn svg { width: 14px; height: 14px; }
+    .dl-btn svg { display: none; } 
+    .dl-btn::after { content: '💾'; } 
 
     /* ========== NOW PLAYING BAR ========== */
-    .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 1px solid var(--border); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
+    .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 3px solid var(--text-main); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
     .np-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
-    .np-cover { width: 56px; height: 56px; border-radius: 8px; background: linear-gradient(135deg, var(--yellow), var(--orange)); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 4px 8px rgba(255,165,2,0.15); }
+    .np-cover { width: 56px; height: 56px; border-radius: 4px; background: linear-gradient(135deg, var(--yellow), var(--orange)); border: 2px solid var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
     .np-track-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .np-track-name { font-size: 10px; color: var(--text-main); white-space: nowrap; overflow: hidden; position: relative; }
     .np-track-artist { font-size: 8px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -150,41 +207,53 @@
     .np-track-name.marquee .np-title-text { padding-left: 100%; animation: titleMarquee 7s linear infinite; }
     @keyframes titleMarquee { 0%, 10% { transform: translateX(0); } 90%, 100% { transform: translateX(-100%); } }
 
-    /* NP Versions (Player Bar Dots) */
     .np-versions { display: none; align-items: center; gap: 6px; margin-top: 2px; }
-    .np-version { width: 10px; height: 10px; border: 1px solid var(--text-dim); border-radius: 50%; background: transparent; cursor: pointer; transition: all 0.2s; }
+    .np-version { width: 10px; height: 10px; border: 1px solid var(--text-dim); border-radius: 2px; background: transparent; cursor: pointer; transition: all 0.2s; outline: none; }
     .np-version:hover { background: var(--text-muted); border-color: var(--text-muted); transform: scale(1.2); }
-    .np-version.active { background: var(--orange); border-color: var(--orange); box-shadow: 0 0 6px rgba(255,165,2,0.5); }
+    .np-version.active { background: var(--orange); border-color: var(--text-main); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
 
     .np-center { display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .np-controls { display: flex; align-items: center; gap: 24px; }
-    .np-btn { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; transition: all 0.2s; }
-    .np-btn:hover { color: var(--text-main); transform: scale(1.1); }
-    .np-btn.play { width: 40px; height: 40px; border-radius: 50%; background: var(--text-main); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-    .np-btn.play:hover { transform: scale(1.1) !important; background: var(--orange); color: #111; }
+    .np-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; transition: all 0.1s; outline: none; }
+    .np-btn:hover { color: var(--text-main); transform: scale(1.2); }
+    
+    .np-btn.play { width: 44px; height: 44px; border-radius: 4px; background: var(--yellow); border: 2px solid var(--text-main); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 2px 2px 0px var(--text-main); }
+    .np-btn.play:hover { transform: translate(1px, 1px) !important; background: var(--orange); box-shadow: 1px 1px 0px var(--text-main); }
+    .np-btn.play:active { transform: translate(2px, 2px) !important; box-shadow: 0px 0px 0px var(--text-main); }
     
     .np-progress { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 500px; }
     .np-time { font-size: 9px; color: var(--text-muted); min-width: 40px; text-align: center; font-family: monospace; }
-    .np-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; position: relative; cursor: pointer; }
-    .np-bar:hover { height: 8px; }
-    .np-fill { height: 100%; width: 0; background: var(--orange); border-radius: 3px; position: relative; transition: width 0.1s linear; }
-    .np-thumb { position: absolute; top: 50%; right: -8px; width: 24px; height: 24px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .np-bar { flex: 1; height: 8px; background: var(--border); border-radius: 2px; border: 1px solid var(--text-dim); position: relative; cursor: pointer; outline: none; }
+    .np-bar:hover { height: 10px; }
+    .np-fill { height: 100%; width: 0; background: var(--orange); position: relative; transition: width 0.1s linear; border-right: 2px solid var(--text-main); }
+    
+    .np-thumb { position: absolute; top: 50%; right: -12px; width: 22px; height: 22px; transform: translateY(-50%); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
     .np-bar:hover .np-thumb, .np-thumb.visible { opacity: 1; }
 
+    .np-loader-icon {
+      position: absolute; top: 50%; right: -10px; width: 16px; height: 16px;
+      border: 2px solid var(--yellow); border-top-color: transparent; border-radius: 50%;
+      transform: translateY(-50%); animation: spinLoader 0.6s linear infinite; display: none; z-index: 5;
+    }
+    .np-bar.buffering .np-loader-icon { display: block; }
+    .np-bar.buffering .np-thumb { opacity: 0 !important; }
+
     .np-right { display: flex; align-items: center; justify-content: flex-end; }
-    .np-dl-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-hover); border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-    .np-dl-btn:hover { background: var(--yellow); transform: scale(1.1); }
-    .np-dl-btn svg { width: 16px; height: 16px; }
+    .np-dl-btn { width: 44px; height: 44px; border-radius: 4px; background: var(--bg-hover); border: 2px solid var(--text-main); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 20px; box-shadow: 2px 2px 0px var(--text-main); outline: none; }
+    .np-dl-btn:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--text-main); }
+    .np-dl-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--text-main); }
+    .np-dl-btn svg { display: none; }
+    .np-dl-btn::after { content: '💾'; }
 
     /* ========== INTRO ========== */
     #intro { position: fixed; inset: 0; z-index: 9999; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.6s, visibility 0.6s; }
     #intro.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    .intro-logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; opacity: 0; animation: fadeIn 0.6s ease 0.4s forwards; }
+    .intro-logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; }
     #intro-duck-canvas { width: 80px !important; height: 80px !important; outline: none; }
     .intro-title { font-size: clamp(32px, 6vw, 64px); color: var(--text-main); letter-spacing: 2px; }
-    .intro-sub { font-size: clamp(8px, 2vw, 12px); color: var(--text-muted); opacity: 0; animation: fadeIn 0.6s ease 1s forwards; }
-    .intro-bar { position: absolute; bottom: 80px; width: 240px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; opacity: 0; animation: fadeIn 0.4s ease 1.2s forwards; }
-    .intro-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--yellow), var(--orange)); transition: width 0.1s linear; }
+    .intro-sub { font-size: clamp(8px, 2vw, 12px); color: var(--text-muted); opacity: 0; animation: fadeIn 0.6s ease forwards; }
+    .intro-bar { position: absolute; bottom: 80px; width: 240px; height: 8px; background: var(--border); border: 2px solid var(--text-main); overflow: hidden; opacity: 0; animation: fadeIn 0.4s ease forwards; }
+    .intro-bar-fill { height: 100%; width: 0%; background: var(--orange); border-right: 2px solid var(--text-main); transition: width 0.1s linear; }
 
     /* ========== BACKGROUND DUCKS ========== */
     #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.35; } 
@@ -205,16 +274,7 @@
       .song-list-container { padding: 0 12px; }
       .song-list-header { display: none; }
       
-      .song-row {
-        grid-template-columns: 24px 1fr auto auto;
-        padding: 12px;
-        gap: 12px;
-        background: #fff;
-        margin-bottom: 8px;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border);
-      }
-      .song-row:hover { background: #fff; }
+      .song-row { grid-template-columns: 24px 1fr auto auto; padding: 12px; gap: 12px; background: #fff; margin-bottom: 8px; box-shadow: var(--shadow-sm); border: 2px solid var(--border); }
       .song-row .song-duration { display: none; }
       .song-row .dl-btn { opacity: 1; border-color: var(--border); }
 
@@ -286,14 +346,15 @@
         <span class="np-time" id="np-current">0:00</span>
         <div class="np-bar" id="np-bar">
           <div class="np-fill" id="np-fill">
-            <img class="np-thumb" id="np-thumb" src="duck.png" alt="">
+            <img class="np-thumb visible" id="np-thumb" src="duck.png" alt="">
           </div>
+          <div class="np-loader-icon" id="np-loader"></div>
         </div>
         <span class="np-time" id="np-total">0:00</span>
       </div>
     </div>
     <div class="np-right">
-      <button class="np-dl-btn" id="np-dl" title="Download"><svg viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4V3Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 3v7h9V3M8 17h8v4H8v-4Z" fill="currentColor" opacity=".18"/><path d="M8 17h8v4H8v-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <button class="np-dl-btn" id="np-dl" title="Download"></button>
     </div>
   </div>
 </div>
@@ -303,14 +364,122 @@
     <canvas id="intro-duck-canvas"></canvas>
     <div class="intro-title">duckwifi</div>
   </div>
-  <div class="intro-sub">CONNECTING TO QUACK NETWORK...</div>
-  <div class="intro-bar"><div class="intro-bar-fill" id="intro-bar-fill"></div></div>
+  <div class="intro-sub" id="intro-sub-text">CONNECTING TO QUACK NETWORK...</div>
+  <div class="intro-bar" id="intro-bar-container"><div class="intro-bar-fill" id="intro-bar-fill"></div></div>
 </div>
 
 <div id="duckFlock"></div>
 <canvas id="duck3D"></canvas>
 
 <script>
+var isLimitUnlocked = false;
+var limitCharge = 0;
+var limitAudioCtx = null;
+
+function initLimitAudio() {
+  if (!limitAudioCtx) {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (Ctx) limitAudioCtx = new Ctx();
+  }
+  if (limitAudioCtx && limitAudioCtx.state === 'suspended') {
+    limitAudioCtx.resume();
+  }
+}
+
+function playQuackSound() {
+  try {
+    var quack = new Audio('quack.mp3');
+    quack.volume = 0.8;
+    quack.play().catch(function() {});
+  } catch(e) {}
+}
+
+function playZapSound() {
+  if (!limitAudioCtx) return;
+  var osc = limitAudioCtx.createOscillator();
+  var gain = limitAudioCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(150 + limitCharge * 3, limitAudioCtx.currentTime); 
+  osc.frequency.exponentialRampToValueAtTime(40, limitAudioCtx.currentTime + 0.15);
+  gain.gain.setValueAtTime(0.3, limitAudioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, limitAudioCtx.currentTime + 0.15);
+  osc.connect(gain); gain.connect(limitAudioCtx.destination);
+  osc.start(); osc.stop(limitAudioCtx.currentTime + 0.15);
+}
+
+function playLaserSound() {
+  if (!limitAudioCtx) return;
+  var now = limitAudioCtx.currentTime;
+  
+  var osc = limitAudioCtx.createOscillator();
+  var osc2 = limitAudioCtx.createOscillator();
+  var subOsc = limitAudioCtx.createOscillator();
+  var filter = limitAudioCtx.createBiquadFilter();
+  var gain = limitAudioCtx.createGain();
+  
+  osc.type = 'sawtooth';
+  osc2.type = 'square';
+  subOsc.type = 'sine';
+  
+  osc.frequency.setValueAtTime(1800, now);
+  osc.frequency.exponentialRampToValueAtTime(30, now + 1.4);
+  
+  osc2.frequency.setValueAtTime(1200, now);
+  osc2.frequency.exponentialRampToValueAtTime(20, now + 1.4);
+
+  subOsc.frequency.setValueAtTime(150, now);
+  subOsc.frequency.linearRampToValueAtTime(20, now + 1.4);
+  
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(3000, now);
+  filter.frequency.exponentialRampToValueAtTime(200, now + 1.4);
+
+  gain.gain.setValueAtTime(0.7, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+  
+  osc.connect(filter);
+  osc2.connect(filter);
+  subOsc.connect(filter);
+  filter.connect(gain);
+  gain.connect(limitAudioCtx.destination);
+  
+  osc.start(now); osc2.start(now); subOsc.start(now);
+  osc.stop(now + 1.5); osc2.stop(now + 1.5); subOsc.stop(now + 1.5);
+}
+
+setInterval(function() {
+  if (!isLimitUnlocked && limitCharge > 0) {
+    limitCharge -= 2.5;
+    if (limitCharge < 0) limitCharge = 0;
+    var fill = document.getElementById('limit-fill');
+    if (fill) fill.style.setProperty('--charge', limitCharge + '%');
+  }
+}, 100);
+
+function unlockSecret() {
+  isLimitUnlocked = true;
+  playLaserSound();
+  
+  var cover = document.getElementById('limit-btn');
+  if (cover) cover.classList.add('unlocked');
+  
+  var typeEl = document.getElementById('playlist-type-text');
+  if (typeEl) {
+    typeEl.textContent = 'ALTERNATE VERSIONS ACTIVATED';
+    typeEl.classList.add('activated');
+  }
+  
+  var laser = document.createElement('div');
+  laser.className = 'laser-sweep';
+  laser.style.animation = 'sweepAnim 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
+  document.body.appendChild(laser);
+  setTimeout(function() { laser.remove(); }, 1100);
+  
+  document.querySelectorAll('.song-version-dots.locked').forEach(function(el) {
+    el.classList.remove('locked');
+  });
+}
+
 (function() {
   var genres = [
     {
@@ -411,17 +580,33 @@
     scene.add(dirLight);
 
     var duckMesh;
+    var duckMats = [];
     var loader = new THREE.GLTFLoader();
+    
     loader.load('glb/rubberduck.glb', function(gltf) {
       duckMesh = gltf.scene;
       duckMesh.scale.set(1.4, 1.4, 1.4);
       duckMesh.position.set(0, -0.4, 0);
+      
+      duckMesh.traverse(function(child) {
+        if (child.isMesh && child.material) {
+           child.material = child.material.clone();
+           child.material.emissive = new THREE.Color(0xffff00); 
+           child.material.emissiveIntensity = 0;
+           duckMats.push(child.material);
+        }
+      });
       scene.add(duckMesh);
     });
 
     function animateIntro() {
       requestAnimationFrame(animateIntro);
-      if (duckMesh) duckMesh.rotation.y += 0.04;
+      if (duckMesh) {
+        duckMesh.rotation.y += 0.04;
+        var flash = Math.pow(Math.max(0, Math.sin(duckMesh.rotation.y * 2)), 12);
+        var glowIntensity = flash * 1.5; 
+        duckMats.forEach(function(m) { m.emissiveIntensity = glowIntensity; });
+      }
       renderer.render(scene, camera);
     }
     animateIntro();
@@ -452,12 +637,6 @@
       songs = getAllSongs();
       title = 'ALL SONGS';
       icon = '⚡';
-      
-      // =========================================================================
-      // HIER DEINEN URSPRÜNGLICHEN LANGEN TEXT EINFÜGEN!
-      // Du kannst Zeilenumbrüche genau so machen, wie du willst.
-      // Ersetze einfach den Text zwischen den beiden schrägen Anführungszeichen (`).
-      // =========================================================================
       desc = `Thanks for supporting an independent artist from Vienna, Austria.
       
 I've been creating music since 2008, driven by curiosity, storytelling, and a love for exploring different musical worlds.
@@ -488,16 +667,19 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     html += '<div class="playlist-header">';
-    html += '  <div class="playlist-cover">' + icon + '</div>';
+    html += '  <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="limit-btn">';
+    html += '    <div class="limit-fill" id="limit-fill" style="--charge: ' + limitCharge + '%"></div>';
+    html += '    <div class="playlist-cover-icon">' + icon + '</div>';
+    html += '  </div>';
+    
     html += '  <div class="playlist-info">';
-    html += '    <div class="playlist-type">Playlist</div>';
+    var typeText = isLimitUnlocked ? 'ALTERNATE VERSIONS ACTIVATED' : 'Lightning Horn Unicorn';
+    var typeClass = isLimitUnlocked ? 'playlist-type activated' : 'playlist-type';
+    html += '    <div class="' + typeClass + '" id="playlist-type-text">' + typeText + '</div>';
+    
     html += '    <div class="playlist-title">' + title + '</div>';
     html += '    <div class="playlist-desc">' + desc + '</div>';
     html += '  </div>';
-    html += '</div>';
-
-    html += '<div class="playlist-actions">';
-    html += '  <button class="play-btn-large" id="play-all-btn">▶</button>';
     html += '</div>';
 
     html += '<div class="song-list-container">';
@@ -508,19 +690,22 @@ Vedran Lukic & Aether Veylan`;
     songs.forEach(function(song, i) {
       var delay = (i * 0.03).toFixed(2);
       var hasVersions = song.versions && song.versions.length > 1;
+      var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
 
-      html += '  <div class="song-row" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
-      html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">▶</span></div>';
+      html += '  <div class="song-row' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+      html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">' + (isThisPlaying ? '⏸' : '▶') + '</span></div>';
       html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
-      html += '    <div class="song-version-dots">';
+      
+      html += '    <div class="song-version-dots' + (isLimitUnlocked ? '' : ' locked') + '">';
       if (hasVersions) {
         song.versions.forEach(function(v, vi) {
           html += '<span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.label + '"></span>';
         });
       }
       html += '    </div>';
+      
       html += '    <div class="song-duration">--:--</div>';
-      html += '    <div class="song-download"><button class="dl-btn" data-song="' + i + '"><svg viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4V3Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 3v7h9V3M8 17h8v4H8v-4Z" fill="currentColor" opacity=".18"/><path d="M8 17h8v4H8v-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>';
+      html += '    <div class="song-download"><button class="dl-btn" data-song="' + i + '" title="Download"></button></div>';
       html += '  </div>';
     });
     html += '</div>';
@@ -535,13 +720,70 @@ Vedran Lukic & Aether Veylan`;
     bindSongEvents();
     loadDurations();
     mainEl.scrollTop = 0;
+    
+    setTimeout(function() {
+      var btn = document.getElementById('limit-btn');
+      var fill = document.getElementById('limit-fill');
+      if (btn && fill) {
+        btn.addEventListener('click', function(e) {
+          initLimitAudio();
+          if (isLimitUnlocked) return;
+          
+          var rect = btn.getBoundingClientRect();
+          var clickX = e.clientX - rect.left;
+          var clickY = e.clientY - rect.top;
+          
+          for (var b = 0; b < 3; b++) {
+            var spark = document.createElement('div');
+            spark.className = 'click-sparkle';
+            spark.textContent = '⚡';
+            spark.style.left = clickX + 'px';
+            spark.style.top = clickY + 'px';
+            
+            var angle = Math.random() * Math.PI * 2;
+            var dist = 30 + Math.random() * 40;
+            spark.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+            spark.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+            
+            btn.appendChild(spark);
+            setTimeout(function(s) { s.remove(); }, 600, spark);
+          }
+
+          limitCharge += 18;
+          if (limitCharge >= 100) {
+            limitCharge = 100;
+            unlockSecret();
+            fill.style.setProperty('--charge', '100%');
+          } else {
+            playZapSound();
+            fill.style.setProperty('--charge', limitCharge + '%');
+            btn.classList.remove('shake');
+            void btn.offsetWidth; 
+            btn.classList.add('shake');
+          }
+        });
+      }
+    }, 0);
   }
 
   function bindSongEvents() {
     document.querySelectorAll('.song-row').forEach(function(row) {
       row.addEventListener('click', function(e) {
         if (e.target.closest('.version-dot') || e.target.closest('.dl-btn')) return;
-        playSong(parseInt(row.dataset.idx));
+        var idx = parseInt(row.dataset.idx);
+        
+        // Toggle-Logik: Wenn derselbe Song läuft -> Pause. Wenn pausiert/anderer Song -> Play
+        if (currentSongIdx === idx && currentAudio) {
+          if (!currentAudio.paused) {
+            currentAudio.pause();
+            updatePlayBtn(false);
+          } else {
+            currentAudio.play();
+            updatePlayBtn(true);
+          }
+        } else {
+          playSong(idx);
+        }
       });
     });
 
@@ -556,8 +798,10 @@ Vedran Lukic & Aether Veylan`;
         dot.classList.add('active');
         song.file = song.versions[verIdx].file;
         
-        var row = dot.closest('.song-row');
-        row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+        var row = document.querySelector('.song-row[data-idx="' + songIdx + '"]');
+        if (row) {
+          row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+        }
 
         if (currentSongIdx === songIdx && currentAudio) {
           var wasPlaying = !currentAudio.paused;
@@ -576,15 +820,6 @@ Vedran Lukic & Aether Veylan`;
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
       });
     });
-
-    var playAllBtn = document.getElementById('play-all-btn');
-    if (playAllBtn) {
-      playAllBtn.addEventListener('click', function() {
-        if (currentAudio && !currentAudio.paused) { currentAudio.pause(); updatePlayBtn(false); }
-        else if (currentAudio && currentAudio.paused) { currentAudio.play(); updatePlayBtn(true); }
-        else { playSong(0); }
-      });
-    }
   }
 
   // ========== PLAYER CORE ==========
@@ -596,6 +831,7 @@ Vedran Lukic & Aether Veylan`;
   var npTotal = document.getElementById('np-total');
   var npTitleContainer = document.getElementById('np-title');
   var npVersions = document.getElementById('np-versions');
+  var npBar = document.getElementById('np-bar');
 
   function fmtTime(s) {
     if (isNaN(s)) return '0:00';
@@ -606,16 +842,25 @@ Vedran Lukic & Aether Veylan`;
 
   function updatePlayBtn(playing) {
     npPlay.innerHTML = playing ? '⏸' : '▶';
-    document.querySelectorAll('.song-row').forEach(function(r) { r.classList.remove('playing'); });
-    if (playing && currentSongIdx >= 0) {
+    document.querySelectorAll('.song-row').forEach(function(r) { 
+      r.classList.remove('playing');
+      var icon = r.querySelector('.song-play-icon');
+      if (icon) icon.textContent = '▶';
+    });
+    
+    if (currentSongIdx >= 0) {
       var r = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
-      if (r) r.classList.add('playing');
+      if (r) {
+        if (playing) r.classList.add('playing');
+        var icon = r.querySelector('.song-play-icon');
+        if (icon) icon.textContent = playing ? '⏸' : '▶';
+      }
     }
   }
 
   function renderPlayerVersions(song) {
     npVersions.innerHTML = '';
-    if (song.versions && song.versions.length > 1) {
+    if (isLimitUnlocked && song.versions && song.versions.length > 1) {
       npVersions.style.display = 'flex';
       song.versions.forEach(function(version, idx) {
         var btn = document.createElement('button');
@@ -668,9 +913,19 @@ Vedran Lukic & Aether Veylan`;
     
     currentAudio.addEventListener('loadedmetadata', function() { npTotal.textContent = fmtTime(currentAudio.duration); });
     currentAudio.addEventListener('timeupdate', function() {
-      npFill.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + '%';
-      npCurrent.textContent = fmtTime(currentAudio.currentTime);
+      if (currentAudio.duration) {
+        npFill.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + '%';
+        npCurrent.textContent = fmtTime(currentAudio.currentTime);
+      }
     });
+    
+    currentAudio.addEventListener('waiting', function() {
+      npBar.classList.add('buffering');
+    });
+    currentAudio.addEventListener('canplay', function() {
+      npBar.classList.remove('buffering');
+    });
+
     currentAudio.addEventListener('ended', function() { playSong(idx + 1); });
 
     currentAudio.play();
@@ -693,11 +948,28 @@ Vedran Lukic & Aether Veylan`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   });
 
-  document.getElementById('np-bar').addEventListener('click', function(e) {
+  npBar.addEventListener('click', function(e) {
     if (!currentAudio) return;
+    playQuackSound();
+    
     var rect = this.getBoundingClientRect();
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    currentAudio.currentTime = pct * currentAudio.duration;
+    var targetTime = pct * currentAudio.duration;
+    
+    currentAudio.currentTime = targetTime;
+    
+    if (currentAudio.buffered.length > 0) {
+      var buffered = false;
+      for (var i = 0; i < currentAudio.buffered.length; i++) {
+        if (currentAudio.buffered.start(i) <= targetTime && targetTime <= currentAudio.buffered.end(i)) {
+          buffered = true;
+          break;
+        }
+      }
+      if (!buffered) {
+        npBar.classList.add('buffering');
+      }
+    }
   });
 
   document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
@@ -777,7 +1049,6 @@ Vedran Lukic & Aether Veylan`;
 
   renderPlaylist('all');
 
-  // ========== INTRO ANIMATION ==========
   var introEl = document.getElementById('intro');
   var introBarFill = document.getElementById('intro-bar-fill');
   var introProgress = 0;
@@ -792,7 +1063,7 @@ Vedran Lukic & Aether Veylan`;
     introBarFill.style.width = Math.min(100, introProgress) + '%';
     setTimeout(introTick, 40 + Math.random() * 80);
   }
-  setTimeout(introTick, 800);
+  setTimeout(introTick, 600);
 
 })();
 </script>
