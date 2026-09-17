@@ -118,7 +118,6 @@
       gap: 20px; 
     }
     
-    /* Maschinen-Button Wrapper mit 4 Kreuzschrauben in den Ecken */
     .playlist-cover-wrapper {
       position: relative;
       display: inline-flex;
@@ -143,7 +142,6 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
       z-index: 3;
     }
-    /* Echte Kreuzschrauben-Optik (+) */
     .machine-screw::before {
       content: '';
       position: absolute;
@@ -166,7 +164,6 @@
       height: 150px; 
       border-radius: 50%; 
       background-color: #c0392b; 
-      /* Symmetrisches, feines Gitternetz (Linien-Raster) */
       background-image: 
         linear-gradient(rgba(0,0,0,0.12) 1px, transparent 1px), 
         linear-gradient(90deg, rgba(0,0,0,0.12) 1px, transparent 1px);
@@ -185,7 +182,7 @@
     
     .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; }
     
-    /* Kreisförmiger Füll-Effekt von innen */
+    /* Perfekter Stopp an der schwarzen Umrandung (max 100% = Button-Größe) */
     .limit-fill { 
       position: absolute; 
       top: 50%; left: 50%;
@@ -199,10 +196,10 @@
       opacity: 0.85;
     }
     .playlist-cover.unlocked .limit-fill { 
-      width: 220% !important; 
-      height: 220% !important; 
+      width: 100% !important; 
+      height: 100% !important; 
       background: radial-gradient(circle, rgba(255, 71, 87, 0.9) 0%, var(--red) 100%);
-      box-shadow: 0 0 35px var(--red); 
+      box-shadow: inset 0 0 20px var(--red); 
     }
     
     @keyframes coverShake {
@@ -226,16 +223,30 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
     }
 
-    .laser-sweep {
-      position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
-      background: linear-gradient(90deg, transparent 0%, rgba(255, 222, 0, 0.6) 20%, #ffffff 50%, rgba(255, 222, 0, 0.6) 80%, transparent 100%);
-      z-index: 100000; pointer-events: none; transform: skewX(-12deg);
-      box-shadow: 0 0 100px var(--yellow), 0 0 50px #fff; mix-blend-mode: screen;
+    /* Horizontaler und vertikaler Kombi-Strahl */
+    .laser-sweep-vertical {
+      position: fixed; top: -40vh; left: 0; width: 100vw; height: 30vh;
+      background: linear-gradient(180deg, transparent 0%, rgba(255, 222, 0, 0.7) 50%, #ffffff 100%);
+      z-index: 100000; pointer-events: none;
+      box-shadow: 0 0 80px var(--yellow); mix-blend-mode: screen;
+      animation: sweepVert 0.9s cubic-bezier(0.1, 0,8, 0.1, 1) forwards;
     }
-    @keyframes sweepAnim {
+    @keyframes sweepVert {
+      0% { top: -40vh; opacity: 0; }
+      20% { opacity: 1; }
+      100% { top: 110vh; opacity: 0; }
+    }
+
+    .laser-sweep-horizontal {
+      position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 222, 0, 0.7) 50%, #ffffff 100%);
+      z-index: 100000; pointer-events: none; transform: skewX(-12deg);
+      box-shadow: 0 0 80px var(--yellow); mix-blend-mode: screen;
+      animation: sweepHoriz 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
+    }
+    @keyframes sweepHoriz {
       0% { left: -40vw; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
+      20% { opacity: 1; }
       100% { left: 130vw; opacity: 0; }
     }
 
@@ -461,7 +472,7 @@
 
 <script>
 var isLimitUnlocked = false;
-var limitCharge = 0;
+var limitCharge = 0; // 0 bis 20 Klicks
 var limitAudioCtx = null;
 
 function initLimitAudio() {
@@ -487,7 +498,7 @@ function playZapSound() {
   var osc = limitAudioCtx.createOscillator();
   var gain = limitAudioCtx.createGain();
   osc.type = 'square';
-  osc.frequency.setValueAtTime(150 + limitCharge * 3, limitAudioCtx.currentTime); 
+  osc.frequency.setValueAtTime(150 + limitCharge * 10, limitAudioCtx.currentTime); 
   osc.frequency.exponentialRampToValueAtTime(40, limitAudioCtx.currentTime + 0.15);
   gain.gain.setValueAtTime(0.3, limitAudioCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.01, limitAudioCtx.currentTime + 0.15);
@@ -537,15 +548,16 @@ function playLaserSound() {
 
 setInterval(function() {
   if (!isLimitUnlocked && limitCharge > 0) {
-    limitCharge -= 2.5;
+    limitCharge -= 0.5;
     if (limitCharge < 0) limitCharge = 0;
     var fill = document.getElementById('limit-fill');
     if (fill) {
-      fill.style.width = limitCharge * 2.2 + '%';
-      fill.style.height = limitCharge * 2.2 + '%';
+      // 5% pro Klick (bei 20 Klicks = 100% genau an der Umrandung)
+      fill.style.width = (limitCharge * 5) + '%';
+      fill.style.height = (limitCharge * 5) + '%';
     }
   }
-}, 100);
+}, 200);
 
 function unlockSecret() {
   isLimitUnlocked = true;
@@ -561,11 +573,17 @@ function unlockSecret() {
     typeEl.classList.add('activated');
   }
   
-  var laser = document.createElement('div');
-  laser.className = 'laser-sweep';
-  laser.style.animation = 'sweepAnim 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards';
-  document.body.appendChild(laser);
-  setTimeout(function() { laser.remove(); }, 1100);
+  // Vertikaler Strahl
+  var laserVert = document.createElement('div');
+  laserVert.className = 'laser-sweep-vertical';
+  document.body.appendChild(laserVert);
+  setTimeout(function() { laserVert.remove(); }, 1000);
+
+  // Horizontaler Strahl
+  var laserHoriz = document.createElement('div');
+  laserHoriz.className = 'laser-sweep-horizontal';
+  document.body.appendChild(laserHoriz);
+  setTimeout(function() { laserHoriz.remove(); }, 1000);
   
   document.querySelectorAll('.song-version-dots.locked').forEach(function(el) {
     el.classList.remove('locked');
@@ -771,14 +789,13 @@ Vedran Lukic & Aether Veylan`;
     var html = '';
     html += '<div class="playlist-header">';
     
-    // Maschinen-Button mit 4 Kreuzschrauben (Ecken) und Linien-Raster
     html += '  <div class="playlist-cover-wrapper" id="limit-btn">';
     html += '    <div class="machine-screw screw-tl"></div>';
     html += '    <div class="machine-screw screw-tr"></div>';
     html += '    <div class="machine-screw screw-bl"></div>';
     html += '    <div class="machine-screw screw-br"></div>';
     html += '    <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '">';
-    html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 2.2) + '%; height: ' + (limitCharge * 2.2) + '%;"></div>';
+    html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 5) + '%; height: ' + (limitCharge * 5) + '%;"></div>';
     html += '      <div class="playlist-cover-icon">' + icon + '</div>';
     html += '    </div>';
     html += '  </div>';
@@ -862,16 +879,16 @@ Vedran Lukic & Aether Veylan`;
             setTimeout(function(s) { s.remove(); }, 600, spark);
           }
 
-          limitCharge += 18;
-          if (limitCharge >= 100) {
-            limitCharge = 100;
+          limitCharge += 1; // 1 von 20 Klicks
+          if (limitCharge >= 20) {
+            limitCharge = 20;
             unlockSecret();
-            fill.style.width = '220%';
-            fill.style.height = '220%';
+            fill.style.width = '100%';
+            fill.style.height = '100%';
           } else {
             playZapSound();
-            fill.style.width = (limitCharge * 2.2) + '%';
-            fill.style.height = (limitCharge * 2.2) + '%';
+            fill.style.width = (limitCharge * 5) + '%';
+            fill.style.height = (limitCharge * 5) + '%';
             coverEl.classList.remove('shake');
             void coverEl.offsetWidth; 
             coverEl.classList.add('shake');
