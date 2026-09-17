@@ -44,9 +44,9 @@
       from { transform: translateX(0); }
       to { transform: translateX(122vw); }
     }
-    @keyframes lightningGlow {
-      0%, 100% { filter: drop-shadow(0 0 2px rgba(255,222,0,0.4)); }
-      50% { filter: drop-shadow(0 0 12px rgba(255,165,2,0.9)); }
+    @keyframes slowYellowGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 222, 0, 0.2), inset 0 0 15px rgba(0,0,0,0.3); }
+      50% { box-shadow: 0 0 25px rgba(255, 222, 0, 0.6), inset 0 0 15px rgba(0,0,0,0.3); }
     }
     @keyframes spinLoader {
       0% { transform: translateY(-50%) rotate(0deg); }
@@ -108,13 +108,92 @@
     .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
     /* ========== PLAYLIST HEADER ========== */
-    .playlist-header { display: flex; align-items: flex-end; gap: 32px; padding: 60px 40px 40px; background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); }
+    .playlist-header { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center; 
+      padding: 40px 40px 30px; 
+      background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); 
+      gap: 24px; 
+    }
     
-    .playlist-cover { width: 220px; height: 220px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: var(--shadow-md); flex-shrink: 0; border: 4px solid var(--text-main); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
-    .playlist-cover:active { transform: scale(0.96); }
-    .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; animation: lightningGlow 2.5s infinite ease-in-out; }
-    .limit-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--charge, 0%); background: linear-gradient(0deg, var(--yellow), var(--orange)); transition: height 0.05s linear; z-index: 1; pointer-events: none; }
-    .playlist-cover.unlocked .limit-fill { background: rgba(255, 71, 87, 0.8); box-shadow: 0 0 30px var(--red); height: 100% !important; }
+    /* Neugestalteter runder Maschinen-Button mit Ledertextur & Schrauben */
+    .playlist-cover-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .machine-screw {
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, #bdc3c7, #7f8c8d);
+      border-radius: 50%;
+      border: 1px solid #332f2a;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 3;
+    }
+    .machine-screw::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 1px; width: 8px; height: 2px;
+      background: #2c3e50;
+      transform: rotate(45deg);
+    }
+
+    .playlist-cover { 
+      width: 160px; 
+      height: 160px; 
+      border-radius: 50%; 
+      background-color: #c0392b; 
+      /* Symmetrische Ledertextur (Rautenmuster) per CSS */
+      background-image: 
+        linear-gradient(135deg, rgba(0,0,0,0.15) 25%, transparent 25%), 
+        linear-gradient(225deg, rgba(0,0,0,0.15) 25%, transparent 25%), 
+        linear-gradient(45deg, rgba(0,0,0,0.15) 25%, transparent 25%), 
+        linear-gradient(315deg, rgba(0,0,0,0.15) 25%, #c0392b 25%);
+      background-size: 10px 10px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 56px; 
+      border: 4px solid var(--text-main); 
+      position: relative; 
+      overflow: hidden; 
+      margin: 8px 0;
+      animation: slowYellowGlow 4s infinite ease-in-out;
+      transition: transform 0.1s;
+    }
+    .playlist-cover:active { transform: scale(0.95); }
+    
+    .playlist-cover-icon { position: relative; z-index: 2; pointer-events: none; }
+    
+    /* Kreisförmiger Füll-Effekt von innen (mit radialem Verlauf) */
+    .limit-fill { 
+      position: absolute; 
+      top: 50%; left: 50%;
+      width: 0%; height: 0%;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--yellow) 0%, var(--orange) 100%);
+      transform: translate(-50%, -50%);
+      transition: width 0.15s ease-out, height 0.15s ease-out;
+      z-index: 1; 
+      pointer-events: none; 
+      opacity: 0.85;
+    }
+    .playlist-cover.unlocked .limit-fill { 
+      width: 220% !important; 
+      height: 220% !important; 
+      background: radial-gradient(circle, rgba(255, 71, 87, 0.9) 0%, var(--red) 100%);
+      box-shadow: 0 0 35px var(--red); 
+    }
     
     @keyframes coverShake {
       0% { transform: translate(3px, 2px) rotate(0deg); }
@@ -150,12 +229,12 @@
       100% { left: 130vw; opacity: 0; }
     }
 
-    .playlist-info { display: flex; flex-direction: column; gap: 16px; }
+    .playlist-info { display: flex; flex-direction: column; gap: 12px; align-items: center; }
     .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
     .playlist-type.activated { color: var(--orange); font-weight: bold; animation: textFlash 1.5s infinite ease-in-out; }
     
-    .playlist-title { font-size: clamp(28px, 4vw, 56px); color: var(--text-main); line-height: 1.2; }
-    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; } 
+    .playlist-title { font-size: clamp(24px, 3.5vw, 42px); color: var(--text-main); line-height: 1.2; }
+    .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; text-align: center; } 
 
     /* ========== SONG LIST ========== */
     .song-list-container { padding: 0 40px; }
@@ -266,9 +345,9 @@
       .sidebar { display: none; }
       .main { padding-bottom: 140px; }
       
-      .playlist-header { flex-direction: column; align-items: center; text-align: center; padding: 40px 20px 20px; gap: 20px; }
-      .playlist-cover { width: 160px; height: 160px; font-size: 64px; }
-      .playlist-title { font-size: 24px; }
+      .playlist-header { padding: 30px 20px 20px; gap: 16px; }
+      .playlist-cover { width: 130px; height: 130px; font-size: 46px; }
+      .playlist-title { font-size: 22px; }
       
       .song-list-container { padding: 0 12px; }
       .song-list-header { display: none; }
@@ -451,7 +530,10 @@ setInterval(function() {
     limitCharge -= 2.5;
     if (limitCharge < 0) limitCharge = 0;
     var fill = document.getElementById('limit-fill');
-    if (fill) fill.style.setProperty('--charge', limitCharge + '%');
+    if (fill) {
+      fill.style.width = limitCharge * 2.2 + '%';
+      fill.style.height = limitCharge * 2.2 + '%';
+    }
   }
 }, 100);
 
@@ -677,9 +759,15 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     html += '<div class="playlist-header">';
-    html += '  <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="limit-btn">';
-    html += '    <div class="limit-fill" id="limit-fill" style="--charge: ' + limitCharge + '%"></div>';
-    html += '    <div class="playlist-cover-icon">' + icon + '</div>';
+    
+    // Neuer runder Maschinen-Button mit Schrauben oben & unten und Füll-Animation
+    html += '  <div class="playlist-cover-wrapper" id="limit-btn">';
+    html += '    <div class="machine-screw"></div>';
+    html += '    <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '">';
+    html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 2.2) + '%; height: ' + (limitCharge * 2.2) + '%;"></div>';
+    html += '      <div class="playlist-cover-icon">' + icon + '</div>';
+    html += '    </div>';
+    html += '    <div class="machine-screw"></div>';
     html += '  </div>';
     
     html += '  <div class="playlist-info">';
@@ -734,12 +822,14 @@ Vedran Lukic & Aether Veylan`;
     setTimeout(function() {
       var btn = document.getElementById('limit-btn');
       var fill = document.getElementById('limit-fill');
-      if (btn && fill) {
+      var coverEl = btn ? btn.querySelector('.playlist-cover') : null;
+      
+      if (btn && fill && coverEl) {
         btn.addEventListener('click', function(e) {
           initLimitAudio();
           if (isLimitUnlocked) return;
           
-          var rect = btn.getBoundingClientRect();
+          var rect = coverEl.getBoundingClientRect();
           var clickX = e.clientX - rect.left;
           var clickY = e.clientY - rect.top;
           
@@ -755,7 +845,7 @@ Vedran Lukic & Aether Veylan`;
             spark.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
             spark.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
             
-            btn.appendChild(spark);
+            coverEl.appendChild(spark);
             setTimeout(function(s) { s.remove(); }, 600, spark);
           }
 
@@ -763,13 +853,15 @@ Vedran Lukic & Aether Veylan`;
           if (limitCharge >= 100) {
             limitCharge = 100;
             unlockSecret();
-            fill.style.setProperty('--charge', '100%');
+            fill.style.width = '220%';
+            fill.style.height = '220%';
           } else {
             playZapSound();
-            fill.style.setProperty('--charge', limitCharge + '%');
-            btn.classList.remove('shake');
-            void btn.offsetWidth; 
-            btn.classList.add('shake');
+            fill.style.width = (limitCharge * 2.2) + '%';
+            fill.style.height = (limitCharge * 2.2) + '%';
+            coverEl.classList.remove('shake');
+            void coverEl.offsetWidth; 
+            coverEl.classList.add('shake');
           }
         });
       }
