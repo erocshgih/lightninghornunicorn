@@ -169,7 +169,6 @@
     .song-row:hover .song-num { display: none; }
     .song-row:hover .song-play-icon { display: flex; }
     
-    /* Wenn der Song spielt, bleibt das Play-Icon (bzw. Pause-Icon) dauerhaft sichtbar statt der Nummer */
     .song-row.playing .song-num { display: none; }
     .song-row.playing .song-play-icon { display: flex; color: var(--orange); }
 
@@ -489,7 +488,12 @@ function unlockSecret() {
         { title: 'City Of Fathers', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_CITY_OF_FATHERS.MP3' },
         { title: 'Dreaming', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_DREAMING.MP3' },
         { title: 'Laserette', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE.MP3' },
-        { title: 'Oscillators Of 1985', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3' },
+        { title: 'Oscillators Of 1985', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3',
+          versions: [
+            { label: 'Original', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.MP3' },
+            { label: 'Alt Version', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985_ALTERNATE_VERSION.MP3' }
+          ]
+        },
         { title: 'Tonagag', file: 'downloads/80IES/LIGHTNING_HORN_UNICORN_TONAGAG.MP3' }
       ]
     },
@@ -772,7 +776,6 @@ Vedran Lukic & Aether Veylan`;
         if (e.target.closest('.version-dot') || e.target.closest('.dl-btn')) return;
         var idx = parseInt(row.dataset.idx);
         
-        // Toggle-Logik: Wenn derselbe Song läuft -> Pause. Wenn pausiert/anderer Song -> Play
         if (currentSongIdx === idx && currentAudio) {
           if (!currentAudio.paused) {
             currentAudio.pause();
