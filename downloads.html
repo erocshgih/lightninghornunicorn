@@ -57,32 +57,6 @@
       50% { color: var(--orange); text-shadow: 0 0 10px rgba(255,165,2,0.6); }
     }
 
-    /* Neu: Animation für den Vocoder-Text (Fliegt sicher nach oben) */
-    @keyframes floatOutVocoder {
-      0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
-      15% { opacity: 1; transform: translate(-50%, -20px) scale(1.1); }
-      85% { opacity: 1; transform: translate(-50%, -60px) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -80px) scale(0.8); }
-    }
-
-    /* Neu: Styling für die Sprechblase (jetzt fixed am Body, um Overflow zu umgehen) */
-    .vocoder-speech {
-      position: fixed;
-      font-size: 8px;
-      background: var(--text-main);
-      color: var(--yellow);
-      padding: 6px 10px;
-      border-radius: 6px;
-      white-space: nowrap;
-      z-index: 999999; /* Garantiert über allem */
-      pointer-events: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      border: 1px solid var(--yellow);
-      animation: floatOutVocoder 2s ease-out forwards;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
     body {
       font-family: 'Press Start 2P', monospace;
       background: var(--bg-main);
@@ -141,7 +115,7 @@
       text-align: center; 
       padding: 40px 40px 30px; 
       background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); 
-      gap: 20px; 
+      gap: 16px; 
     }
     
     .playlist-cover-wrapper {
@@ -237,6 +211,28 @@
     }
     .playlist-cover.shake { animation: coverShake 0.15s ease-out; }
 
+    /* Das neue Zusatz-Schild unter dem Button */
+    .button-sign {
+      background: #1e272e;
+      color: var(--yellow);
+      border: 2px solid var(--text-main);
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 9px;
+      text-align: center;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 5;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .button-sign.unlocked {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--text-main);
+      box-shadow: 0 0 15px var(--red);
+    }
+
     .click-sparkle {
       position: absolute;
       font-size: 16px;
@@ -249,33 +245,22 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 0; }
     }
 
-    .laser-sweep-vertical {
-      position: fixed; top: -40vh; left: 0; width: 100vw; height: 30vh;
-      background: linear-gradient(180deg, transparent 0%, rgba(255, 222, 0, 0.7) 50%, #ffffff 100%);
+    /* Horizontaler Laserbeam der von unten nach oben sweeped */
+    .laser-sweep-bottom-up {
+      position: fixed; left: 0; width: 100vw; height: 15vh;
+      background: linear-gradient(0deg, transparent 0%, rgba(255, 222, 0, 0.9) 50%, #ffffff 100%);
       z-index: 100000; pointer-events: none;
       box-shadow: 0 0 80px var(--yellow); mix-blend-mode: screen;
-      animation: sweepVert 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
+      animation: sweepUp 1s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
     }
-    @keyframes sweepVert {
-      0% { top: -40vh; opacity: 0; }
-      20% { opacity: 1; }
-      100% { top: 110vh; opacity: 0; }
-    }
-
-    .laser-sweep-horizontal {
-      position: fixed; top: 0; left: -40vw; width: 30vw; height: 100vh;
-      background: linear-gradient(90deg, transparent 0%, rgba(255, 222, 0, 0.7) 50%, #ffffff 100%);
-      z-index: 100000; pointer-events: none; transform: skewX(-12deg);
-      box-shadow: 0 0 80px var(--yellow); mix-blend-mode: screen;
-      animation: sweepHoriz 0.9s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
-    }
-    @keyframes sweepHoriz {
-      0% { left: -40vw; opacity: 0; }
-      20% { opacity: 1; }
-      100% { left: 130vw; opacity: 0; }
+    @keyframes sweepUp {
+      0% { bottom: -20vh; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { bottom: 120vh; opacity: 0; }
     }
 
-    .playlist-info { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    .playlist-info { display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 8px; }
     .playlist-type { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
     .playlist-type.activated { color: var(--orange); font-weight: bold; animation: textFlash 1.5s infinite ease-in-out; }
     
@@ -499,64 +484,6 @@
 var isLimitUnlocked = false;
 var limitCharge = 0; // 0 bis 20 Klicks
 var limitAudioCtx = null;
-var userInteracted = false; // Sicherheits-Flag für die Sprachausgabe
-
-// Registriere Interaktion (wichtig für Browser-Policy)
-window.addEventListener('click', function() { userInteracted = true; });
-window.addEventListener('touchstart', function() { userInteracted = true; });
-
-// Vocoder Sprüche (DE & EN)
-var vocoderPhrases = [
-  { text: "You know you could press me", lang: "en-US" },
-  { text: "Du weißt, dass du mich drücken könntest", lang: "de-DE" },
-  { text: "My maker gave me purpose", lang: "en-US" },
-  { text: "Mein Schöpfer gab mir einen Sinn", lang: "de-DE" },
-  { text: "Proof your hands are that fast", lang: "en-US" },
-  { text: "Beweis, dass deine Hände so schnell sind", lang: "de-DE" }
-];
-
-// Alle 3 Sekunden Vocoder-Trigger & Sprachausgabe
-setInterval(function() {
-  if (isLimitUnlocked) return;
-  
-  // Sicherer Check, falls currentAudio null ist! (Das hat den Code vorher blockiert)
-  var isPlayingMusic = currentAudio ? !currentAudio.paused : false;
-  if (isPlayingMusic) return; // Klappe halten während Musik läuft!
-
-  var wrapper = document.getElementById('limit-btn');
-  if (!wrapper) return;
-
-  var randomObj = vocoderPhrases[Math.floor(Math.random() * vocoderPhrases.length)];
-
-  // 1. Visuelle Sprechblase (direkt am Body, um Overflows zu überleben)
-  var speech = document.createElement('div');
-  speech.className = 'vocoder-speech';
-  speech.textContent = randomObj.text;
-  
-  var rect = wrapper.getBoundingClientRect();
-  // Perfekt mittig über dem Button platzieren
-  speech.style.left = (rect.left + rect.width / 2) + 'px';
-  speech.style.top = rect.top + 'px';
-  
-  document.body.appendChild(speech);
-
-  setTimeout(function() {
-    speech.remove();
-  }, 2500);
-
-  // 2. Sprachausgabe (Nur wenn der User schon mal geklickt hat)
-  if (userInteracted && 'speechSynthesis' in window) {
-    try {
-      window.speechSynthesis.cancel(); // Vorherige abbrechen
-      var utterance = new SpeechSynthesisUtterance(randomObj.text);
-      utterance.lang = randomObj.lang;
-      utterance.rate = 1.0; 
-      utterance.pitch = 0.5; // Etwas tiefer für den Maschinen-Look
-      window.speechSynthesis.speak(utterance);
-    } catch(e) {}
-  }
-}, 3000);
-
 
 function initLimitAudio() {
   if (!limitAudioCtx) {
@@ -638,6 +565,15 @@ setInterval(function() {
       fill.style.width = (limitCharge * 5) + '%';
       fill.style.height = (limitCharge * 5) + '%';
     }
+    
+    // Schild-Text auch beim automatischen Entladen anpassen
+    var sign = document.getElementById('button-sign');
+    if (sign && !isLimitUnlocked) {
+      if (limitCharge <= 0) sign.textContent = "PUSH THE BUTTON FASTER";
+      else if (limitCharge <= 5) sign.textContent = "FASTER";
+      else if (limitCharge <= 15) sign.textContent = "MY MAKER GAVE ME PURPOSE";
+      else if (limitCharge < 20) sign.textContent = "YOU ARE SO FAST";
+    }
   }
 }, 200);
 
@@ -655,15 +591,11 @@ function unlockSecret() {
     typeEl.classList.add('activated');
   }
   
-  var laserVert = document.createElement('div');
-  laserVert.className = 'laser-sweep-vertical';
-  document.body.appendChild(laserVert);
-  setTimeout(function() { laserVert.remove(); }, 1000);
-
-  var laserHoriz = document.createElement('div');
-  laserHoriz.className = 'laser-sweep-horizontal';
-  document.body.appendChild(laserHoriz);
-  setTimeout(function() { laserHoriz.remove(); }, 1000);
+  // Neuer Laserbeam: Ein fetter horizontaler Balken, der von ganz unten nach ganz oben fliegt
+  var laserBeam = document.createElement('div');
+  laserBeam.className = 'laser-sweep-bottom-up';
+  document.body.appendChild(laserBeam);
+  setTimeout(function() { laserBeam.remove(); }, 1200);
   
   document.querySelectorAll('.song-version-dots.locked').forEach(function(el) {
     el.classList.remove('locked');
@@ -880,6 +812,9 @@ Vedran Lukic & Aether Veylan`;
     html += '    </div>';
     html += '  </div>';
     
+    var signInitialText = isLimitUnlocked ? 'UNLOCKED' : (limitCharge > 0 ? '' : 'PUSH THE BUTTON FASTER');
+    html += '  <div class="button-sign ' + (isLimitUnlocked ? 'unlocked' : '') + '" id="button-sign">' + signInitialText + '</div>';
+    
     html += '  <div class="playlist-info">';
     var typeText = isLimitUnlocked ? 'ALTERNATE VERSIONS ACTIVATED' : 'Lightning Horn Unicorn';
     var typeClass = isLimitUnlocked ? 'playlist-type activated' : 'playlist-type';
@@ -929,10 +864,19 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
+    // Updates initial sign if we rendered while charged but not unlocked
+    var initialSign = document.getElementById('button-sign');
+    if (!isLimitUnlocked && limitCharge > 0 && initialSign) {
+        if (limitCharge <= 5) initialSign.textContent = "FASTER";
+        else if (limitCharge <= 15) initialSign.textContent = "MY MAKER GAVE ME PURPOSE";
+        else if (limitCharge < 20) initialSign.textContent = "YOU ARE SO FAST";
+    }
+    
     setTimeout(function() {
       var wrapper = document.getElementById('limit-btn');
       var fill = document.getElementById('limit-fill');
       var coverEl = wrapper ? wrapper.querySelector('.playlist-cover') : null;
+      var sign = document.getElementById('button-sign');
       
       if (wrapper && fill && coverEl) {
         wrapper.addEventListener('click', function(e) {
@@ -959,9 +903,14 @@ Vedran Lukic & Aether Veylan`;
             setTimeout(function(s) { s.remove(); }, 600, spark);
           }
 
-          limitCharge += 1; // 1 von 20 Klicks
+          limitCharge += 1; 
+          
           if (limitCharge >= 20) {
             limitCharge = 20;
+            if (sign) {
+                sign.textContent = 'UNLOCKED';
+                sign.classList.add('unlocked');
+            }
             unlockSecret();
             fill.style.width = '100%';
             fill.style.height = '100%';
@@ -972,6 +921,17 @@ Vedran Lukic & Aether Veylan`;
             coverEl.classList.remove('shake');
             void coverEl.offsetWidth; 
             coverEl.classList.add('shake');
+            
+            // Schild Text aktualisieren
+            if (sign) {
+                if (limitCharge <= 5) {
+                    sign.textContent = "FASTER";
+                } else if (limitCharge <= 15) {
+                    sign.textContent = "MY MAKER GAVE ME PURPOSE";
+                } else if (limitCharge <= 19) {
+                    sign.textContent = "YOU ARE SO FAST";
+                }
+            }
           }
         });
       }
