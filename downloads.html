@@ -60,9 +60,9 @@
     /* Floating Vocoder Text Animation */
     @keyframes floatOutVocoder {
       0% { opacity: 0; transform: translate(-50%, 0) scale(0.8); }
-      20% { opacity: 1; transform: translate(-50%, -15px) scale(1); }
-      80% { opacity: 1; transform: translate(-50%, -45px) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -70px) scale(0.9); }
+      20% { opacity: 1; transform: translate(-50%, -20px) scale(1); }
+      80% { opacity: 1; transform: translate(-50%, -55px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -85px) scale(0.9); }
     }
 
     body {
@@ -139,7 +139,7 @@
       box-shadow: var(--shadow-sm);
       cursor: pointer;
       user-select: none;
-      overflow: visible; /* Erlaubt dem Vocoder-Text aus dem Rahmen zu fliegen */
+      overflow: visible; 
     }
 
     .machine-screw {
@@ -169,34 +169,23 @@
     .screw-bl { bottom: 6px; left: 6px; }
     .screw-br { bottom: 6px; right: 6px; }
 
-    /* Lippen-Emoji Container zentriert zwischen den unteren Schrauben */
-    .button-lips {
-      position: absolute;
-      bottom: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 11px;
-      z-index: 4;
-      pointer-events: none;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
-    }
-
     /* Floating Vocoder Speech Bubble */
     .vocoder-speech {
       position: absolute;
-      bottom: -12px;
+      bottom: 0px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 7px;
       background: var(--text-main);
       color: var(--yellow);
-      padding: 4px 8px;
+      padding: 5px 10px;
       border-radius: 4px;
       white-space: nowrap;
-      z-index: 100;
+      z-index: 1000;
       pointer-events: none;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       animation: floatOutVocoder 2s ease-out forwards;
+      border: 1px solid var(--yellow);
     }
 
     .playlist-cover { 
@@ -513,39 +502,49 @@ var isLimitUnlocked = false;
 var limitCharge = 0; // 0 bis 20 Klicks
 var limitAudioCtx = null;
 
-// Vocoder Sprüche (DE & EN)
+// Vocoder Sprüche (DE & EN) mit Sprachcode für die Web Speech API
 var vocoderPhrases = [
-  "You know you could press me",
-  "Du weißt, dass du mich drücken könntest",
-  "My maker gave me purpose",
-  "Mein Schöpfer gab mir einen Sinn",
-  "Proof your hands are that fast",
-  "Beweis, dass deine Hände so schnell sind"
+  { text: "You know you could press me", lang: "en-US" },
+  { text: "Du weißt, dass du mich drücken könntest", lang: "de-DE" },
+  { text: "My maker gave me purpose", lang: "en-US" },
+  { text: "Mein Schöpfer gab mir einen Sinn", lang: "de-DE" },
+  { text: "Proof your hands are that fast", lang: "en-US" },
+  { text: "Beweis, dass deine Hände so schnell sind", lang: "de-DE" }
 ];
 
-// Alle 3 Sekunden Vocoder-Trigger (nur wenn keine Musik läuft)
+// Alle 3 Sekunden Vocoder-Trigger & Sprachausgabe (nur wenn keine Musik läuft)
 setInterval(function() {
   if (isLimitUnlocked) return;
   
-  // Prüfen ob Musik läuft (currentAudio ist nicht null und nicht pausiert)
   var isPlayingMusic = currentAudio && !currentAudio.paused;
-  if (isPlayingMusic) return; // Klappe halten während Musik spielt!
+  if (isPlayingMusic) return; // Klappe halten während Musik läuft!
 
   var wrapper = document.getElementById('limit-btn');
   if (!wrapper) return;
 
-  // Zufälligen Spruch aussuchen
-  var randomPhrase = vocoderPhrases[Math.floor(Math.random() * vocoderPhrases.length)];
+  var randomObj = vocoderPhrases[Math.floor(Math.random() * vocoderPhrases.length)];
 
+  // 1. Visuelle schwebende Sprechblase anzeigen
   var speech = document.createElement('div');
   speech.className = 'vocoder-speech';
-  speech.textContent = randomPhrase;
+  speech.textContent = randomObj.text;
   wrapper.appendChild(speech);
 
-  // Nach 2 Sekunden wieder entfernen
   setTimeout(function() {
     speech.remove();
   }, 2000);
+
+  // 2. Echte Browser-Sprachausgabe (Vocoder-Vibe)
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel(); // Vorherige Sätze abbrechen
+      var utterance = new SpeechSynthesisUtterance(randomObj.text);
+      utterance.lang = randomObj.lang;
+      utterance.rate = 1.1; // Etwas schneller für Roboter-Effekt
+      utterance.pitch = 0.8; // Etwas tiefer
+      window.speechSynthesis.speak(utterance);
+    } catch(e) {}
+  }
 
 }, 3000);
 
@@ -866,7 +865,6 @@ Vedran Lukic & Aether Veylan`;
     html += '    <div class="machine-screw screw-tr"></div>';
     html += '    <div class="machine-screw screw-bl"></div>';
     html += '    <div class="machine-screw screw-br"></div>';
-    html += '    <div class="button-lips">👄</div>';
     html += '    <div class="playlist-cover ' + (isLimitUnlocked ? 'unlocked' : '') + '">';
     html += '      <div class="limit-fill" id="limit-fill" style="width: ' + (limitCharge * 5) + '%; height: ' + (limitCharge * 5) + '%;"></div>';
     html += '      <div class="playlist-cover-icon">' + icon + '</div>';
