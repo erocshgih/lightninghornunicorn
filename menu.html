@@ -69,7 +69,7 @@
         html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
         body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
 
-        /* ========== HEADER & MENÜ (SCHWARZ & ABGERUNDET) ========== */
+        /* ========== HEADER & MENÜ ========== */
         .header { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); position: sticky; top: 0; z-index: 1000; }
         
         .strip-wrapper { 
@@ -78,25 +78,44 @@
             border-radius: 10px; 
             overflow: hidden;
             height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; 
-            transition: max-width 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        /* Wenn eingeklappt, schrumpft der Wrapper auf die Breite der beiden Außen-Buttons */
+        /* Wenn eingeklappt: Rahmen wird komplett durchsichtig & rahmenlos, nur der Button rechts bleibt als Anker */
         .strip-wrapper.collapsed {
-            max-width: 112px !important; 
+            max-width: clamp(40px, 8vw, 56px) !important;
+            margin-left: auto !important;
+            margin-right: 12px !important;
+            border-color: transparent !important;
+            background: transparent !important;
+            box-shadow: none !important;
         }
+
+        .strip-wrapper.collapsed .theme-btn {
+            opacity: 0;
+            pointer-events: none;
+            width: 0px;
+            border: none;
+        }
+
         .strip-wrapper.collapsed .cat-strip {
             opacity: 0;
             pointer-events: none;
             flex: 0 0 0px;
         }
 
-        .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
+        .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
 
-        /* Der neue Collapse/Verengungsbutton rechts */
         .collapse-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-left: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
         .collapse-btn:hover { background: var(--strip-active); color: #111; }
+
+        /* Wenn eingeklappt, verliert der Collapse-Button den linken Rand, damit er sauber aussieht */
+        .strip-wrapper.collapsed .collapse-btn {
+            border-left: 2px solid #111111;
+            border-radius: 6px;
+            box-shadow: 0 4px 0 var(--border-soft);
+        }
 
         .cat-strip { flex: 1 1 auto; overflow: hidden; position: relative; contain: paint; cursor: grab; transition: opacity 0.3s ease, flex 0.5s ease; }
         .cat-strip:active { cursor: grabbing; }
@@ -110,7 +129,7 @@
         .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
         .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
 
-        /* ========== ARCADE SLIDER (STABILISIERT PER JS) ========== */
+        /* ========== ARCADE SLIDER ========== */
         .slider-container-wrap {
             width: min(100%, 1600px);
             margin: 6px auto 0;
@@ -148,7 +167,7 @@
             border: 2px solid var(--text);
             pointer-events: none;
             will-change: transform, background-color;
-            background-color: #ff0000; /* Startfarbe für JS-Loop */
+            background-color: #ff0000;
         }
 
         /* ========== INHALT & MAINTENANCE BANNER ========== */
@@ -195,11 +214,9 @@
             background-repeat: repeat; 
             background-position: top left;
             
-            /* DESKTOP GRID: 8 Spalten, 4 Reihen */
             background-size: 12.5vw 25vh; 
         }
         
-        /* MOBILE GRID: Perfekte 1:1 Quadrate! */
         @media (max-width: 768px) {
             #door-overlay .door-panel {
                 background-size: 25vw 25vw;
@@ -222,7 +239,6 @@
             <div id="catStrip" class="cat-strip">
                 <div id="catTrack" class="cat-track"></div>
             </div>
-            <!-- Neuer Collapse/Verengungsbutton rechts -->
             <button id="collapseToggle" class="collapse-btn" type="button" title="Menü verengen/ausfahren">◀</button>
         </div>
         
@@ -267,7 +283,7 @@
                 });
             }
 
-            /* ========== COLLAPSE / VERENGUNGS-BUTTON LOGIK ========== */
+            /* ========== COLLAPSE / TRANSPARENZ-BUTTON LOGIK ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
@@ -352,19 +368,18 @@
                 }
             }
 
-            /* ========== STABILE JS-BASIERTE RGB-LAMPE (FÜR GTX 1060 & CO) ========== */
+            /* ========== STABILE JS-BASIERTE RGB-LAMPE ========== */
             const rgbColors = [
-                {r: 255, g: 0, b: 0},     // Rot
-                {r: 255, g: 255, b: 0},   // Gelb
-                {r: 0, g: 255, b: 0},     // Grün
-                {r: 0, g: 255, b: 255},   // Cyan
-                {r: 0, g: 0, b: 255},     // Blau
-                {r: 255, g: 0, b: 255}    // Magenta
+                {r: 255, g: 0, b: 0},     
+                {r: 255, g: 255, b: 0},   
+                {r: 0, g: 255, b: 0},     
+                {r: 0, g: 255, b: 255},   
+                {r: 0, g: 0, b: 255},     
+                {r: 255, g: 0, b: 255}    
             ];
             let rgbProgress = 0;
 
             function updateRgbLamp(dt) {
-                // Langsamer, butterweicher Farbwechsel (ca. 16 Sekunden für einen vollen Durchlauf)
                 rgbProgress += dt * 0.0004; 
                 if (rgbProgress >= rgbColors.length) rgbProgress = 0;
 
@@ -446,7 +461,6 @@
                 const dt = time - lastTime;
                 lastTime = time;
                 
-                // RGB Lampe updaten
                 updateRgbLamp(dt);
 
                 if (!dragging) {
