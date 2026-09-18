@@ -24,7 +24,7 @@
             --header-bg:      #f5f3f0;
             --header-shadow:  0 1px 6px rgba(0, 0, 0, 0.04);
             --strip-text:     #4a2c00;
-            --strip-active:   #ff7a00;
+            --strip-active:   #ff7a00; /* Das ist dein sattes Orange */
             --strip-fade:     rgba(245, 243, 240, 1);
             --strip-fade-end: rgba(245, 243, 240, 0);
             --border-soft:    #e0ddd8;
@@ -62,7 +62,6 @@
         @keyframes crtGlitch { 0%, 94%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; } 95% { transform: translate(2px, -1px) skewX(0.4deg); filter: hue-rotate(8deg); } 96% { transform: translate(-2px, 1px) skewX(-0.3deg); filter: hue-rotate(-6deg); } 97% { transform: translate(1px, 0) skewX(0.2deg); filter: none; } }
         @keyframes crtJitter { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(0.3px, 0.2px); } 60% { transform: translate(0.1px, 0.3px); } }
 
-        /* Wenn das Betriebssystem reduzierte Bewegung erfordert, killt es Animationen. Für die Tür haben wir unten einen Fix eingebaut. */
         @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
         /* ========== BASE STYLES ========== */
@@ -73,7 +72,12 @@
         /* ========== HEADER & MENÜ ========== */
         .header { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); position: sticky; top: 0; z-index: 1000; }
         
-        .strip-wrapper { display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto; border: 3px solid transparent; border-image: linear-gradient(90deg, #ff0033, #ffaa00, #00ff88, #0066ff, #ff00aa) 1; height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; }
+        /* Das ist der neue einfarbige Rahmen in Orange */
+        .strip-wrapper { 
+            display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto; 
+            border: 3px solid var(--strip-active); 
+            height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; 
+        }
 
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
@@ -90,7 +94,7 @@
         .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
         .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
 
-        /* ========== ARCADE SLIDER ========== */
+        /* ========== ARCADE SLIDER (RGB UPGRADE) ========== */
         .slider-track {
             width: min(100%, 1600px);
             margin: 6px auto 0;
@@ -112,12 +116,22 @@
             left: 0;
             height: 100%;
             width: clamp(50px, 15vw, 90px); 
-            background: repeating-linear-gradient(45deg, var(--strip-active), var(--strip-active) 6px, var(--text-muted) 6px, var(--text-muted) 10px);
+            
+            /* NEU: RGB Color Shift Animation */
+            background: linear-gradient(90deg, #ff0000, #ff7a00, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            background-size: 400% 100%;
+            animation: rainbowGlide 3s linear infinite;
+
             border-radius: 4px;
             border: 2px solid var(--text);
             pointer-events: none;
-            box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.4);
-            will-change: transform;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.5);
+            will-change: transform, background-position;
+        }
+
+        @keyframes rainbowGlide {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         /* ========== INHALT & MAINTENANCE BANNER ========== */
@@ -141,7 +155,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== METALLTÜR & GRID LOGIK ========== */
+        /* ========== METALLTÜR & GRID LOGIK (CLEVER 1:1 RATIO FIX) ========== */
         #door-overlay { 
             position: fixed; 
             inset: 0; 
@@ -155,8 +169,8 @@
         
         #door-overlay .door-panel { 
             position: absolute; 
-            inset: 0; /* Exact fullscreen matching für sauberes Raster */
-            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; /* !important umgeht Reduced-Motion Blockade am Desktop */
+            inset: 0; 
+            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
             will-change: transform; 
             backface-visibility: hidden; 
             background-color: var(--door-bg); 
@@ -164,14 +178,15 @@
             background-repeat: repeat; 
             background-position: top left;
             
-            /* DESKTOP GRID: Exakt 8 Spalten, 4 Reihen (ohne Rand-Abschnitt) */
+            /* DESKTOP GRID: 8 Spalten, 4 Reihen */
             background-size: 12.5vw 25vh; 
         }
         
-        /* MOBILE GRID: Exakt 4 Spalten, 6 Reihen */
+        /* MOBILE GRID: Perfekte 1:1 Quadrate! Breite UND Höhe binden wir an die Viewport-Breite */
         @media (max-width: 768px) {
             #door-overlay .door-panel {
-                background-size: 25vw 16.6666vh;
+                /* Exakt 4 Spalten (100 / 4 = 25). Weil Breite und Höhe beide 25vw sind, bleiben sie quadratisch! */
+                background-size: 25vw 25vw;
             }
         }
 
@@ -185,7 +200,6 @@
         <div class="door-panel"></div>
     </div>
 
-    <!-- STRIPEMENU HEADER MIT NEUEM SLIDER -->
     <header class="header">
         <div class="strip-wrapper">
             <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus">☀</button>
@@ -194,14 +208,12 @@
             </div>
         </div>
         
-        <!-- Der neue Arcade-Slider -->
         <div class="slider-track" id="sliderTrack">
             <div class="slider-thumb" id="sliderThumb"></div>
         </div>
     </header>
 
     <main>
-        <!-- MAINTENANCE INFOTEXT -->
         <div class="maintenance-card">
             <h2 id="maintTitle">SITE UPGRADE IN PROGRESS</h2>
             <p id="maintText">Under maintenance. LHU is currently upgrading the universe. Grab a coffee and check back soon—we'll return shortly!</p>
@@ -294,7 +306,6 @@
                 }
             }
 
-            // Endlos-Teleport Logik (Loop)
             function wrap() {
                 if (setW > 0) {
                     while (pos <= -setW) pos += setW;
@@ -302,11 +313,11 @@
                 }
             }
 
-            /* ========== ARCADE SLIDER DRAG & MOMENTUM LOGIK ========== */
+            /* ========== ARCADE SLIDER & AUTO-SCROLL LOGIK ========== */
             let dragging = false, startX = 0, lastX = 0;
             let velocity = 0; 
             let lastTimeDrag = 0;
-            let dragMode = 1; // 1 = direkter Slider, -1 = Content-Scroll
+            let dragMode = 1; 
 
             function down(e) { 
                 if(e.target.closest('#themeToggle') || e.target.closest('.cat-item')) return; 
@@ -316,7 +327,6 @@
                 lastX = startX;
                 lastTimeDrag = performance.now();
 
-                // Wenn man das Menü oben greift, zieht man den Inhalt. Wenn man den Slider greift, zieht man den Slider.
                 if(e.target.closest('#catStrip')) {
                     dragMode = -1; 
                 } else {
@@ -331,9 +341,8 @@
                 let dt = now - lastTimeDrag;
 
                 let delta = currentX - lastX; 
-                if (dt > 0) velocity = delta / dt; // Wurfkraft (Speed) messen
+                if (dt > 0) velocity = delta / dt; 
 
-                // Empfindlichkeit berechnen, damit sich der Wisch natürlich anfühlt
                 let sensitivity = (setW / Math.max(100, sliderW)); 
                 pos -= (delta * sensitivity * dragMode);
                 wrap(); 
@@ -362,27 +371,26 @@
 
             let lastTime = performance.now();
             
-            // Render Loop: Berechnet die Physik und den Teleport des Sliders
             function loop(time) {
                 const dt = time - lastTime;
                 lastTime = time;
                 
-                // Wenn wir loslassen, rutscht es durch die velocity weiter (Momentum)
                 if (!dragging) {
-                    if (Math.abs(velocity) > 0.005) {
+                    if (Math.abs(velocity) > 0.05) {
                         pos -= velocity * dt * (setW / Math.max(100, sliderW)) * dragMode;
-                        velocity *= 0.94; // Reibung (Bremst das Werfen sanft ab)
+                        velocity *= 0.94; // Bremst das Werfen sanft ab
                     } else {
                         velocity = 0;
+                        // NEU: Auto-Scroll! Wenn du nichts machst, gleitet die Leiste langsam weiter.
+                        pos -= 0.03 * dt; 
                     }
                 }
 
                 wrap();
                 track.style.transform = `translateX(${pos}px)`;
 
-                // Slider-Thumb optisch updaten (Der "Teleport" Effekt)
                 if (setW > 0 && sliderW > 0) {
-                    let progress = Math.abs(pos) / setW; // 0.0 bis 1.0
+                    let progress = Math.abs(pos) / setW; 
                     let maxThumbX = sliderW - thumbW;
                     sliderThumbEl.style.transform = `translateX(${progress * maxThumbX}px)`;
                 }
@@ -394,8 +402,7 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            /* Tür beim Laden der Seite direkt öffnen (abgesichert) */
-            // Das Timeout reicht dem Browser, um zu kapieren, dass die Tür erst "closed" ist.
+            /* Tür beim Laden der Seite öffnen */
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
