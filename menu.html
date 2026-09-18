@@ -93,7 +93,7 @@
         .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
         .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
 
-        /* ========== ARCADE SLIDER (Der neue 3D-GLOW Effekt) ========== */
+        /* ========== ARCADE SLIDER (SAUBERE RGB LAMPE) ========== */
         .slider-track {
             width: min(100%, 1600px);
             margin: 6px auto 0;
@@ -120,19 +120,20 @@
             pointer-events: none;
             will-change: transform;
             
-            /* NEU: Das garantiert glühende RGB am Desktop und Handy */
-            animation: 3dGlowCycle 6s linear infinite !important;
+            /* Bombensichere Farb-Animation */
+            background-color: #ff0000; /* Fallback */
+            animation: rgbLamp 6s linear infinite;
         }
 
-        /* Rot -> Gelb -> Grün -> Cyan -> Blau -> Magenta -> Rot. Bombensicher durch Keyframes. */
-        @keyframes 3dGlowCycle {
-            0%   { background-color: #ff0033; box-shadow: 0 0 14px #ff0033, inset 0 2px 4px rgba(255,255,255,0.7); }
-            16%  { background-color: #ffcc00; box-shadow: 0 0 14px #ffcc00, inset 0 2px 4px rgba(255,255,255,0.7); }
-            33%  { background-color: #00ff66; box-shadow: 0 0 14px #00ff66, inset 0 2px 4px rgba(255,255,255,0.7); }
-            50%  { background-color: #00ffff; box-shadow: 0 0 14px #00ffff, inset 0 2px 4px rgba(255,255,255,0.7); }
-            66%  { background-color: #3366ff; box-shadow: 0 0 14px #3366ff, inset 0 2px 4px rgba(255,255,255,0.7); }
-            83%  { background-color: #ff00ff; box-shadow: 0 0 14px #ff00ff, inset 0 2px 4px rgba(255,255,255,0.7); }
-            100% { background-color: #ff0033; box-shadow: 0 0 14px #ff0033, inset 0 2px 4px rgba(255,255,255,0.7); }
+        /* Die klassische RGB Farb-Schleife */
+        @keyframes rgbLamp {
+            0%   { background-color: #ff0000; } /* Rot */
+            16%  { background-color: #ffff00; } /* Gelb */
+            33%  { background-color: #00ff00; } /* Grün */
+            50%  { background-color: #00ffff; } /* Cyan */
+            66%  { background-color: #0000ff; } /* Blau */
+            83%  { background-color: #ff00ff; } /* Magenta */
+            100% { background-color: #ff0000; } /* Rot */
         }
 
         /* ========== INHALT & MAINTENANCE BANNER ========== */
