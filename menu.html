@@ -69,12 +69,14 @@
         html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
         body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
 
-        /* ========== HEADER & MENÜ ========== */
+        /* ========== HEADER & MENÜ (SCHWARZ & ABGESCHÄRFT) ========== */
         .header { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); position: sticky; top: 0; z-index: 1000; }
         
         .strip-wrapper { 
             display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto; 
-            border: 3px solid var(--strip-active); 
+            border: 3px solid #111111; /* Schwarzer Rahmen */
+            border-radius: 10px; /* Abgerundete Ecken */
+            overflow: hidden;
             height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; 
         }
 
@@ -93,7 +95,7 @@
         .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
         .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
 
-        /* ========== ARCADE SLIDER (SAUBERE RGB LAMPE) ========== */
+        /* ========== ARCADE SLIDER (VERLANGSAMTE RGB LAMPE) ========== */
         .slider-track {
             width: min(100%, 1600px);
             margin: 6px auto 0;
@@ -120,20 +122,19 @@
             pointer-events: none;
             will-change: transform;
             
-            /* Bombensichere Farb-Animation */
-            background-color: #ff0000; /* Fallback */
-            animation: rgbLamp 6s linear infinite;
+            /* Deutlich verlangsamte Farb-Animation (16s statt 6s) für buttery-smooth Desktop-Performance */
+            background-color: #ff0000;
+            animation: rgbLamp 16s linear infinite;
         }
 
-        /* Die klassische RGB Farb-Schleife */
         @keyframes rgbLamp {
-            0%   { background-color: #ff0000; } /* Rot */
-            16%  { background-color: #ffff00; } /* Gelb */
-            33%  { background-color: #00ff00; } /* Grün */
-            50%  { background-color: #00ffff; } /* Cyan */
-            66%  { background-color: #0000ff; } /* Blau */
-            83%  { background-color: #ff00ff; } /* Magenta */
-            100% { background-color: #ff0000; } /* Rot */
+            0%   { background-color: #ff0000; }
+            16%  { background-color: #ffff00; }
+            33%  { background-color: #00ff00; }
+            50%  { background-color: #00ffff; }
+            66%  { background-color: #0000ff; }
+            83%  { background-color: #ff00ff; }
+            100% { background-color: #ff0000; }
         }
 
         /* ========== INHALT & MAINTENANCE BANNER ========== */
@@ -314,7 +315,7 @@
                 }
             }
 
-            /* ========== ARCADE SLIDER & AUTO-SCROLL LOGIK ========== */
+            /* ========== ARCADE SLIDER & GEDROSSELTE AUTO-SCROLL LOGIK ========== */
             let dragging = false, startX = 0, lastX = 0;
             let velocity = 0; 
             let lastTimeDrag = 0;
@@ -355,8 +356,8 @@
 
             function up() { 
                 dragging = false; 
-                if(velocity > 3) velocity = 3;
-                if(velocity < -3) velocity = -3;
+                if(velocity > 2) velocity = 2; // Maximalwurf gedrosselt
+                if(velocity < -2) velocity = -2;
             }
 
             const dragSurfaces = [strip, sliderTrackEl];
@@ -377,12 +378,12 @@
                 lastTime = time;
                 
                 if (!dragging) {
-                    if (Math.abs(velocity) > 0.05) {
+                    if (Math.abs(velocity) > 0.03) {
                         pos -= velocity * dt * (setW / Math.max(100, sliderW)) * dragMode;
-                        velocity *= 0.94; 
+                        velocity *= 0.92; // Etwas stärkere Reibung zum sanften Abbremsen
                     } else {
                         velocity = 0;
-                        pos -= 0.03 * dt; 
+                        pos -= 0.015 * dt; // Noch gemütlicheres, langsames Auto-Gleiten
                     }
                 }
 
