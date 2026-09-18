@@ -24,7 +24,7 @@
             --header-bg:      #f5f3f0;
             --header-shadow:  0 1px 6px rgba(0, 0, 0, 0.04);
             --strip-text:     #4a2c00;
-            --strip-active:   #ff7a00; /* Das ist dein sattes Orange */
+            --strip-active:   #ff7a00;
             --strip-fade:     rgba(245, 243, 240, 1);
             --strip-fade-end: rgba(245, 243, 240, 0);
             --border-soft:    #e0ddd8;
@@ -72,7 +72,6 @@
         /* ========== HEADER & MENÜ ========== */
         .header { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); position: sticky; top: 0; z-index: 1000; }
         
-        /* Das ist der neue einfarbige Rahmen in Orange */
         .strip-wrapper { 
             display: flex; align-items: stretch; width: min(100%, 1600px); max-width: 100%; margin: 0 auto; 
             border: 3px solid var(--strip-active); 
@@ -94,7 +93,7 @@
         .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
         .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
 
-        /* ========== ARCADE SLIDER (RGB UPGRADE) ========== */
+        /* ========== ARCADE SLIDER (Der neue 3D-GLOW Effekt) ========== */
         .slider-track {
             width: min(100%, 1600px);
             margin: 6px auto 0;
@@ -116,22 +115,24 @@
             left: 0;
             height: 100%;
             width: clamp(50px, 15vw, 90px); 
-            
-            /* NEU: RGB Color Shift Animation */
-            background: linear-gradient(90deg, #ff0000, #ff7a00, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
-            background-size: 400% 100%;
-            animation: rainbowGlide 3s linear infinite;
-
             border-radius: 4px;
             border: 2px solid var(--text);
             pointer-events: none;
-            box-shadow: inset 0 1px 2px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.5);
-            will-change: transform, background-position;
+            will-change: transform;
+            
+            /* NEU: Das garantiert glühende RGB am Desktop und Handy */
+            animation: 3dGlowCycle 6s linear infinite !important;
         }
 
-        @keyframes rainbowGlide {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+        /* Rot -> Gelb -> Grün -> Cyan -> Blau -> Magenta -> Rot. Bombensicher durch Keyframes. */
+        @keyframes 3dGlowCycle {
+            0%   { background-color: #ff0033; box-shadow: 0 0 14px #ff0033, inset 0 2px 4px rgba(255,255,255,0.7); }
+            16%  { background-color: #ffcc00; box-shadow: 0 0 14px #ffcc00, inset 0 2px 4px rgba(255,255,255,0.7); }
+            33%  { background-color: #00ff66; box-shadow: 0 0 14px #00ff66, inset 0 2px 4px rgba(255,255,255,0.7); }
+            50%  { background-color: #00ffff; box-shadow: 0 0 14px #00ffff, inset 0 2px 4px rgba(255,255,255,0.7); }
+            66%  { background-color: #3366ff; box-shadow: 0 0 14px #3366ff, inset 0 2px 4px rgba(255,255,255,0.7); }
+            83%  { background-color: #ff00ff; box-shadow: 0 0 14px #ff00ff, inset 0 2px 4px rgba(255,255,255,0.7); }
+            100% { background-color: #ff0033; box-shadow: 0 0 14px #ff0033, inset 0 2px 4px rgba(255,255,255,0.7); }
         }
 
         /* ========== INHALT & MAINTENANCE BANNER ========== */
@@ -155,7 +156,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== METALLTÜR & GRID LOGIK (CLEVER 1:1 RATIO FIX) ========== */
+        /* ========== METALLTÜR & GRID LOGIK ========== */
         #door-overlay { 
             position: fixed; 
             inset: 0; 
@@ -182,10 +183,9 @@
             background-size: 12.5vw 25vh; 
         }
         
-        /* MOBILE GRID: Perfekte 1:1 Quadrate! Breite UND Höhe binden wir an die Viewport-Breite */
+        /* MOBILE GRID: Perfekte 1:1 Quadrate! */
         @media (max-width: 768px) {
             #door-overlay .door-panel {
-                /* Exakt 4 Spalten (100 / 4 = 25). Weil Breite und Höhe beide 25vw sind, bleiben sie quadratisch! */
                 background-size: 25vw 25vw;
             }
         }
@@ -378,10 +378,9 @@
                 if (!dragging) {
                     if (Math.abs(velocity) > 0.05) {
                         pos -= velocity * dt * (setW / Math.max(100, sliderW)) * dragMode;
-                        velocity *= 0.94; // Bremst das Werfen sanft ab
+                        velocity *= 0.94; 
                     } else {
                         velocity = 0;
-                        // NEU: Auto-Scroll! Wenn du nichts machst, gleitet die Leiste langsam weiter.
                         pos -= 0.03 * dt; 
                     }
                 }
