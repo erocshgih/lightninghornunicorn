@@ -63,6 +63,28 @@
     100% { opacity: 1; text-shadow: 0 0 12px rgba(255,255,255,0.6); }
   }
 
+  /* UNSICHTBARER SKIP-BUTTON BEREICH UNTER DEM HINWEIS */
+  #lhu-secret-skip-area {
+    width: 220px;
+    height: 40px;
+    margin-top: -12px;
+    cursor: pointer;
+    pointer-events: auto;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+  }
+  #lhu-secret-skip-area.clicked-once {
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+  #lhu-secret-skip-area.clicked-twice {
+    background: rgba(143, 217, 251, 0.08);
+    box-shadow: 0 0 15px rgba(143, 217, 251, 0.3);
+  }
+
   #lhu-enter-panel.hidden { opacity: 0; pointer-events: none; transition: opacity .15s ease; }
   
   #lhu-intro-word {
@@ -191,6 +213,8 @@
         <button class="lhu-pill lhu-pill-blue" data-intro="blue" type="button"></button>
       </div>
       <div id="lhu-intro-hint">Press a button to enter</div>
+      <!-- UNSICHTBARER SKIP-BUTTON (3-MAL KLICKEN) -->
+      <button id="lhu-secret-skip-area" type="button" aria-label="Secret Skip"></button>
     </div>
     <div id="lhu-intro-word">
       <span>LIGHTNING</span>
@@ -600,8 +624,8 @@
     const activeWisdom = isGerman ? dailyWisdom.de : dailyWisdom.en;
     
     if (currentWisdomLang !== targetLang || availableWisdomIndices.length === 0) {
-        currentWisdomLang = targetLang;
-        availableWisdomIndices = activeWisdom.map((_, index) => index);
+      currentWisdomLang = targetLang;
+      availableWisdomIndices = activeWisdom.map((_, index) => index);
     }
     
     const randomIndexWithinAvailable = Math.floor(Math.random() * availableWisdomIndices.length);
@@ -672,11 +696,12 @@
   selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
   loadHead(MODELS[0].url);
 
-  /* 3. DYNAMISCHE INTRO LOGIK (MIT WEBGL LIGHTNING) */
+  /* 3. DYNAMISCHE INTRO LOGIK (MIT WEBGL LIGHTNING & SECRET SKIP) */
   (() => {
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
     const canvas = document.getElementById("lhu-intro-canvas");
+    const secretSkipArea = document.getElementById("lhu-secret-skip-area");
     
     const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
     
@@ -685,6 +710,25 @@
     
     let W = 0, H = 0, introStart = 0; let introVariant = "yellow"; 
     
+    // Secret Skip Klick-Zähler
+    let skipClicks = 0;
+    secretSkipArea.addEventListener("click", () => {
+      skipClicks++;
+      if (skipClicks === 1) {
+        secretSkipArea.classList.add("clicked-once");
+      } else if (skipClicks === 2) {
+        secretSkipArea.classList.remove("clicked-once");
+        secretSkipArea.classList.add("clicked-twice");
+      } else if (skipClicks >= 3) {
+        // Sofortiges Überspringen des Intros direkt zu den 3D-Köpfen
+        introVariant = "yellow";
+        document.getElementById("lhu-enter-panel").classList.add("hidden");
+        if (audio) { audio.src = "lhuyellow.mp3"; audio.play().catch(()=>{}); }
+        introStart = performance.now() - 2500; // Direkt ans Ende spulen
+        requestAnimationFrame(animateIntro);
+      }
+    });
+
     const variantColors = {
       red: { color: "#ff3333", bg: "linear-gradient(180deg, #ff9999 0%, #ff3333 24%, #cc0000 48%, #ff6666 68%, #ff3333 100%)", shadow: "rgba(255,50,50,.75)", hue: 0.0 },
       yellow: { color: "#ffd400", bg: "linear-gradient(180deg, #fff6a0 0%, #ffd400 24%, #ff9d00 48%, #fff04a 68%, #ffd400 100%)", shadow: "rgba(255,212,0,.75)", hue: 45.0 },
@@ -875,7 +919,6 @@
       else if (musicOn) { 
         musicPlayTime += delta; 
         const loopTime = musicPlayTime % 70; 
-        // Aktualisiert auf 138 BPM für perfekten Takt-Sync mit GOAT.mp3
         const baseFreq = Math.PI / (60 / 138 * 0.5); 
         
         let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
