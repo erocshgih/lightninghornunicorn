@@ -55,7 +55,7 @@
 
             .prod-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
             .prod-item.open > .prod-body { max-height: 1600px; }
-            .prod-body-inner { padding: 0 16px 18px; }
+            .prod-body-inner { padding: 0 24px 18px; }
 
             /* PRODUCT DESCRIPTION */
             .prod-desc {
@@ -63,6 +63,7 @@
                 font-size: 18px;
                 color: var(--text-muted);
                 line-height: 1.8;
+                margin-top: 16px;
                 margin-bottom: 16px;
                 text-align: left;
                 white-space: pre-line;
@@ -77,11 +78,19 @@
                 letter-spacing: 0.05em;
             }
 
-            /* IMAGE STAGE */
+            /* CAROUSEL WRAPPER & STAGE */
+            .carousel-wrapper {
+                position: relative;
+                width: 100%;
+                max-width: 600px;
+                margin: 15px auto 12px auto;
+            }
+
             .carousel-stage {
                 position: relative; width: 100%; aspect-ratio: 1; border-radius: var(--radius);
-                overflow: hidden; background: var(--bg-solid); margin-bottom: 10px;
-                box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+                overflow: hidden; background: var(--bg-solid);
+                box-shadow: 0 3px 14px rgba(0, 0, 0, 0.15);
+                border: 2px solid var(--border-soft);
             }
 
             .carousel-slide {
@@ -119,22 +128,32 @@
                 background: var(--strip-active); border-color: #111;
             }
 
-            /* NAV ACCENT & DOTS */
-            .carousel-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 8px; }
+            /* SIDE ARROWS & DOTS */
             .carousel-btn {
-                width: 36px; height: 36px; border: 2px solid var(--border-soft); border-radius: 50%;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 10;
+                width: 40px; height: 40px; border: 2px solid var(--border-soft); border-radius: 50%;
                 background: var(--card-bg); color: var(--text-soft); font-size: 16px; cursor: pointer;
                 display: flex; align-items: center; justify-content: center; transition: all 0.2s;
                 -webkit-tap-highlight-color: transparent;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.4);
             }
-            .carousel-btn:hover { background: var(--strip-active); border-color: var(--strip-active); color: #111; transform: scale(1.1); }
-            .carousel-dots { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; margin-bottom: 10px; }
-            .carousel-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot); cursor: pointer; transition: background 0.25s, transform 0.25s; -webkit-tap-highlight-color: transparent; }
+            .carousel-btn.prev-btn { left: 8px; }
+            .carousel-btn.next-btn { right: 8px; }
+
+            .carousel-btn:hover { background: var(--strip-active); border-color: var(--strip-active); color: #111; transform: translateY(-50%) scale(1.1); }
+            
+            .carousel-dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; margin-bottom: 12px; }
+            .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dot, #555); cursor: pointer; transition: background 0.25s, transform 0.25s; -webkit-tap-highlight-color: transparent; border: 1px solid var(--border-soft); }
             .carousel-dot:hover { transform: scale(1.4); }
-            .carousel-dot.active { background: var(--dot-active); transform: scale(1.3); }
+            .carousel-dot.active { background: var(--dot-active, var(--strip-active)); transform: scale(1.3); }
 
             @media (min-width: 769px) {
-                .carousel-stage { max-width: 600px; margin: 0 auto 15px auto; }
+                .carousel-wrapper { max-width: 600px; }
+                .carousel-btn.prev-btn { left: -24px; }
+                .carousel-btn.next-btn { right: -24px; }
                 .prod-desc { max-width: 600px; margin: 0 auto 20px auto; text-align: left; font-size: 20px;}
                 .subtitle { font-size: var(--fs-base); }
             }
@@ -304,6 +323,16 @@
                         const inner = document.createElement('div');
                         inner.className = 'prod-body-inner';
 
+                        // Carussell-Wrapper (enthält Stage und seitliche Pfeile)
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'carousel-wrapper';
+
+                        const prevBtn = document.createElement('button');
+                        prevBtn.className = 'carousel-btn prev-btn';
+                        prevBtn.innerHTML = '&#9664;';
+                        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, -1); });
+                        wrapper.appendChild(prevBtn);
+
                         const stage = document.createElement('div');
                         stage.className = 'carousel-stage';
                         stage.setAttribute('data-gidx', gIdx);
@@ -322,25 +351,17 @@
                             }
                             stage.appendChild(slide);
                         });
-                        inner.appendChild(stage);
-
-                        const nav = document.createElement('div');
-                        nav.className = 'carousel-nav';
-
-                        const prevBtn = document.createElement('button');
-                        prevBtn.className = 'carousel-btn';
-                        prevBtn.innerHTML = '&#9664;';
-                        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, -1); });
+                        wrapper.appendChild(stage);
 
                         const nextBtn = document.createElement('button');
-                        nextBtn.className = 'carousel-btn';
+                        nextBtn.className = 'carousel-btn next-btn';
                         nextBtn.innerHTML = '&#9654;';
                         nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, 1); });
+                        wrapper.appendChild(nextBtn);
 
-                        nav.appendChild(prevBtn);
-                        nav.appendChild(nextBtn);
-                        inner.appendChild(nav);
+                        inner.appendChild(wrapper);
 
+                        // Dots (unterhalb des Bildes)
                         const dots = document.createElement('div');
                         dots.className = 'carousel-dots';
                         dots.id = 'dots-' + gIdx;

@@ -24,7 +24,7 @@
                 height: 55vh;
                 min-height: 400px;
                 cursor: grab;
-                margin: 0 auto 30px auto; 
+                margin: 0 auto 10px auto; 
                 position: relative;
                 background: transparent;
             }
@@ -32,6 +32,38 @@
                 cursor: grabbing;
             }
             
+            /* ZOOM BUTTONS STYLING */
+            .three-zoom-controls {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-bottom: 25px;
+            }
+            .zoom-btn {
+                background: rgba(0, 0, 0, 0.6);
+                border: 1px solid var(--accent-blue);
+                color: var(--accent-blue);
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                font-size: 20px;
+                font-weight: bold;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+                box-shadow: 0 0 8px rgba(26, 115, 232, 0.3);
+            }
+            .zoom-btn:hover {
+                background: var(--accent-blue);
+                color: #000;
+                box-shadow: 0 0 15px var(--accent-blue);
+            }
+            .zoom-btn:active {
+                transform: scale(0.92);
+            }
+
             /* Loading-Text für den 3D Container */
             .loading-text {
                 position: absolute;
@@ -58,7 +90,7 @@
             }
 
             @media (min-width: 769px) {
-                #three-container { height: 65vh; margin-bottom: 40px; }
+                #three-container { height: 65vh; }
             }
 
             @media (max-width: 480px) {
@@ -71,6 +103,12 @@
 
             <div id="three-container">
                 <div id="three-loader" class="loading-text">RENDERING ARTWORK... 0%</div>
+            </div>
+
+            <!-- SEPARATE ZOOM BUTTONS FÜR DESKTOP / TOUCH -->
+            <div class="three-zoom-controls">
+                <button id="zoom-out" class="zoom-btn" title="Herauszoomen" aria-label="Zoom Out">−</button>
+                <button id="zoom-in" class="zoom-btn" title="Hineinzoomen" aria-label="Zoom In">+</button>
             </div>
             
             <p class="atom-disclaimer">
@@ -121,6 +159,26 @@
                 controls.enablePan = false;
                 controls.minDistance = 20;
                 controls.maxDistance = 350;
+
+                // Zoom-Button Logik implementieren
+                const zoomInBtn = document.getElementById('zoom-in');
+                const zoomOutBtn = document.getElementById('zoom-out');
+
+                if (zoomInBtn && zoomOutBtn) {
+                    zoomInBtn.addEventListener('click', () => {
+                        const dir = camera.position.clone().sub(controls.target);
+                        const newDist = Math.max(controls.minDistance, dir.length() * 0.8);
+                        dir.normalize().multiplyScalar(newDist).add(controls.target);
+                        camera.position.copy(dir);
+                    });
+
+                    zoomOutBtn.addEventListener('click', () => {
+                        const dir = camera.position.clone().sub(controls.target);
+                        const newDist = Math.min(controls.maxDistance, dir.length() * 1.25);
+                        dir.normalize().multiplyScalar(newDist).add(controls.target);
+                        camera.position.copy(dir);
+                    });
+                }
 
                 const sourceNodes = document.querySelectorAll('#image-data-source span');
                 const imageUrls = Array.from(sourceNodes).map(node => node.getAttribute('data-src'));
