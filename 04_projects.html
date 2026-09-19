@@ -38,7 +38,7 @@
             .cat-group.open > .cat-header .arrow { transform: rotate(90deg); }
 
             .cat-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-            .cat-group.open > .cat-body { max-height: 2000px; }
+            .cat-group.open > .cat-body { max-height: 5000px; }
 
             /* PRODUCT ACCORDION */
             .prod-item { border-top: 1px solid var(--border-soft); }
@@ -54,8 +54,8 @@
             .prod-item.open > .prod-header .prod-arrow { transform: rotate(90deg); }
 
             .prod-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-            .prod-item.open > .prod-body { max-height: 1600px; }
-            .prod-body-inner { padding: 0 24px 18px; }
+            .prod-item.open > .prod-body { max-height: 3500px; }
+            .prod-body-inner { padding: 0 16px 18px; }
 
             /* PRODUCT DESCRIPTION */
             .prod-desc {
@@ -78,12 +78,14 @@
                 letter-spacing: 0.05em;
             }
 
-            /* CAROUSEL WRAPPER & STAGE */
+            /* CAROUSEL WRAPPER & STAGE (Pfeile komplett außerhalb) */
             .carousel-wrapper {
                 position: relative;
                 width: 100%;
-                max-width: 600px;
-                margin: 15px auto 12px auto;
+                max-width: 640px;
+                margin: 20px auto 12px auto;
+                padding: 0 46px;
+                box-sizing: border-box;
             }
 
             .carousel-stage {
@@ -128,32 +130,31 @@
                 background: var(--strip-active); border-color: #111;
             }
 
-            /* SIDE ARROWS & DOTS */
+            /* OUTSIDE SIDE ARROWS & DOTS */
             .carousel-btn {
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
                 z-index: 10;
-                width: 40px; height: 40px; border: 2px solid var(--border-soft); border-radius: 50%;
+                width: 38px; height: 38px; border: 2px solid var(--border-soft); border-radius: 50%;
                 background: var(--card-bg); color: var(--text-soft); font-size: 16px; cursor: pointer;
                 display: flex; align-items: center; justify-content: center; transition: all 0.2s;
                 -webkit-tap-highlight-color: transparent;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.4);
             }
-            .carousel-btn.prev-btn { left: 8px; }
-            .carousel-btn.next-btn { right: 8px; }
+            .carousel-btn.prev-btn { left: 0; }
+            .carousel-btn.next-btn { right: 0; }
 
             .carousel-btn:hover { background: var(--strip-active); border-color: var(--strip-active); color: #111; transform: translateY(-50%) scale(1.1); }
             
-            .carousel-dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; margin-bottom: 12px; }
+            .carousel-dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; margin-bottom: 12px; }
             .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dot, #555); cursor: pointer; transition: background 0.25s, transform 0.25s; -webkit-tap-highlight-color: transparent; border: 1px solid var(--border-soft); }
             .carousel-dot:hover { transform: scale(1.4); }
             .carousel-dot.active { background: var(--dot-active, var(--strip-active)); transform: scale(1.3); }
 
             @media (min-width: 769px) {
-                .carousel-wrapper { max-width: 600px; }
-                .carousel-btn.prev-btn { left: -24px; }
-                .carousel-btn.next-btn { right: -24px; }
+                .carousel-wrapper { max-width: 640px; padding: 0 52px; }
+                .carousel-btn { width: 42px; height: 42px; }
                 .prod-desc { max-width: 600px; margin: 0 auto 20px auto; text-align: left; font-size: 20px;}
                 .subtitle { font-size: var(--fs-base); }
             }
@@ -270,7 +271,7 @@
                                 name: 'BALKAN PARK',
                                 desc: {
                                     en: `The T-shirt that makes you the ruler.\n(Well... or at least the undisputed king of the next medieval festival. Or it annoys the security standing there wordlessly in heavy knight armor and helmets.)\n\n'Do these pigs have a stage pass?'\n\n<strong>Look:</strong>\nWell... it looks a bit like a race with a mushroom-slurping plumber who took the route into the swamp.\n\nYou put it on, and your body says:\n'Yes. Yes man. Tonight we ride wild boars into the mosh pit. Tradition is tradition.'\n\n⚔️ <strong>Why is this shirt special?</strong>\nThis is the shirt of the uncle who cuts the wedding cake with his fist at family celebrations. Because it's the official uniform of men who keep their Oakley sunglasses on at night in the bathtub.\n\nWe at Lightning Horn Unicorn cannot offer a guarantee for this garment, but with every purchase comes a roll of duct tape. Maybe. 50/50.`,
-                                    de: `Das T-Shirt, das dich zum Herrscher macht.\n(Naja… oder zumindest zum unangefochtenen König des nächsten Mittelalterfests. Oder es verärgert die Security, die wortlos in schweren Ritterrüstungen und Helmen dasteht.)\n\n„Haben diese Schweine einen Stagepass?“\n\n<strong>Optik:</strong>\nNaja… es sieht ein bisschen wie ein Rennen mit einem pilzschlabbernden Klempner aus, der die Route in den Sumpf genommen hat.\n\nDu ziehst es an, und dein Körper sagt:\n„Ja. Ja, Mann. Heute Nacht reiten wir auf Wildsäuen in den Moshpit. Tradition ist Tradition.“\n\n⚔️ <strong>Warum dieses Shirt besonders ist?</strong>\nDas ist das Shirt von dem Onkel, der auf Familienfeiern die Hochzeitstorte mit der Faust anschneidet. Weil es die offizielle Uniform von Männern ist, die ihre Oakley-Sonnenbrille auch nachts in der Badewanne aufbehalten.\n\nWir bei Lightning Horn Unicorn können für dieses Kleidungsstück keine Garantie anbieten, aber bei jedem Kauf gibt es eine Rolle Panzertape dazu. Vielleicht. 50/50.`
+                                    de: `Das T-Shirt, das dich zum Herrscher macht.\n(Naja… oder zumindest zum unangefochtenen König des nächsten Mittelalterfests. Oder es verärgert die Security, die wortlos in schweren Ritterrüstungen und Helmen dasteht.)\n\n„Haben diese Schweine einen Stagepass?“\n\n<strong>Optik:</strong>\nNaja… es sieht ein bisschen wie ein Rennen mit einem pilzschlabbernden Klempner aus, der die Route in den Sumpf genommen hat.\n\nDu ziehst es an, und dein Körper sagt:\n„Ja. Ja, Mann. Heute Nacht reiten wir auf Wildsäuen in den Moshpit. Tradition is Tradition.“\n\n⚔️ <strong>Warum dieses Shirt besonders ist?</strong>\nDas ist das Shirt von dem Onkel, der auf Familienfeiern die Hochzeitstorte mit der Faust anschneidet. Weil es die offizielle Uniform von Männern ist, die ihre Oakley-Sonnenbrille auch nachts in der Badewanne aufbehalten.\n\nWir bei Lightning Horn Unicorn können für dieses Kleidungsstück keine Garantie anbieten, aber bei jedem Kauf gibt es eine Rolle Panzertape dazu. Vielleicht. 50/50.`
                                 },
                                 images: [
                                     { src: 'projects/projects_tshirts_balkanparkband.webp' },
