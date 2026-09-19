@@ -16,44 +16,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
+    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
 
     <style>
         /* ========== DESIGN TOKENS ========== */
         :root {
-            --bg:             transparent;
-            --bg-solid:       #f5f3f0;
-            --text:           #111111;
-            --text-muted:     #555555;
-            --text-soft:      #888888;
-            --header-bg:      #f5f3f0;
-            --header-shadow:  0 1px 6px rgba(0, 0, 0, 0.04);
-            --strip-text:     #4a2c00;
-            --strip-active:   #ff7a00;
-            --strip-fade:     rgba(245, 243, 240, 1);
-            --strip-fade-end: rgba(245, 243, 240, 0);
-            --border-soft:    #e0ddd8;
-            --card-bg:        #ffffff;
-            --door-bg:        #f5f3f0;
+            --bg:              transparent;
+            --bg-solid:        #f5f3f0;
+            --text:            #111111;
+            --text-muted:      #555555;
+            --text-soft:       #888888;
+            --header-bg:       #f5f3f0;
+            --header-shadow:   0 1px 6px rgba(0, 0, 0, 0.04);
+            --strip-text:      #4a2c00;
+            --strip-active:    #ff7a00;
+            --strip-fade:      rgba(245, 243, 240, 1);
+            --strip-fade-end:  rgba(245, 243, 240, 0);
+            --border-soft:     #e0ddd8;
+            --card-bg:         #ffffff;
+            --door-bg:         #f5f3f0;
 
-            --fs-xs:          clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
-            --fs-sm:          clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
-            --fs-base:        clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
-            --fs-md:          clamp(0.62rem, 2.0vw + 0.28rem, 0.85rem);
-            --fs-lg:          clamp(0.72rem, 2.6vw + 0.3rem, 1.1rem);
-            --fs-xl:          clamp(0.8rem,  3.0vw + 0.35rem, 1.5rem);
+            --fs-xs:           clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
+            --fs-sm:           clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
+            --fs-base:         clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
+            --fs-md:           clamp(0.62rem, 2.0vw + 0.28rem, 0.85rem);
+            --fs-lg:           clamp(0.72rem, 2.6vw + 0.3rem, 1.1rem);
+            --fs-xl:           clamp(0.8rem,  3.0vw + 0.35rem, 1.5rem);
             
-            --space-section:  clamp(16px, 4.5vw, 40px);
-            --radius:         10px;
+            --space-section:   clamp(16px, 4.5vw, 40px);
+            --radius:          10px;
         }
 
         /* ========== THEME MODES ========== */
         @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; } }
-        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; }
-        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; }
+        html[data-theme="dark"]        { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; }
+        html[data-theme="mono-gray"]   { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; }
         html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; }
-        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; }
+        html[data-theme="crt"]         { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; }
 
         html[data-theme="mono-gray"] main { filter: grayscale(1); }
         html[data-theme="mono-green"] main { filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9); }
@@ -320,14 +320,14 @@
             background-color: var(--door-bg); 
             background-image: url('pixelart/pixelart_vedran.png'); 
             background-repeat: repeat; 
-            background-position: center center; /* Zentriert die Wiederholungen exakt */
+            background-position: 30px 30px; /* Offset exakt passend zum inset: -30px, damit das Muster an den echten Rändern ohne Schnittkanten beginnt */
             background-size: 12.5vw 25vh; 
         }
         
         @media (max-width: 768px) {
             #door-overlay .door-panel {
                 background-size: 25vw 25vw;
-                background-position: center center; /* Auch auf Mobilgeräten zentriert */
+                background-position: 30px 30px; /* Auch auf Mobilgeräten exakt ausgerichtet */
             }
         }
 
