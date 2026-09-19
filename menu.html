@@ -12,11 +12,6 @@
     <link rel="preload" href="pixelart/pixelart_vedran.png" as="image">
     <link rel="preload" href="duck.png" as="image">
     
-    <!-- ZENTRALE BIBLIOTHEKEN FÜR 3D & MODEL VIEWER (Global geladen, damit es bei Humanart & Projects sofort knallt!) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-    
     <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
 
@@ -84,36 +79,78 @@
             transition: background 0.5s ease, box-shadow 0.5s ease;
         }
 
-        .header.collapsed { background: transparent !important; box-shadow: none !important; pointer-events: none; }
+        .header.collapsed {
+            background: transparent !important;
+            box-shadow: none !important;
+            pointer-events: none;
+        }
         
         .strip-wrapper { 
             display: flex; align-items: stretch; width: 100%; max-width: 1600px; margin: 0 auto; 
-            border: 3px solid #111111; border-radius: 10px; overflow: hidden;
+            border: 3px solid #111111; 
+            border-radius: 10px; 
+            overflow: hidden;
             height: clamp(56px, 9vw, 78px); background: var(--header-bg); box-sizing: border-box; 
-            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: all;
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: all;
         }
 
         .strip-wrapper.collapsed {
-            max-width: clamp(48px, 9vw, 64px) !important; margin-left: auto !important; margin-right: 0 !important;
-            border-color: transparent !important; background: transparent !important; box-shadow: none !important;
+            max-width: clamp(48px, 9vw, 64px) !important;
+            margin-left: auto !important;
+            margin-right: 0 !important;
+            border-color: transparent !important;
+            background: transparent !important;
+            box-shadow: none !important;
         }
 
-        .strip-wrapper.collapsed .theme-btn { opacity: 0; pointer-events: none; width: 0px; border: none; }
-        .strip-wrapper.collapsed .cat-strip { opacity: 0; pointer-events: none; flex: 0 0 0px; }
+        .strip-wrapper.collapsed .theme-btn {
+            opacity: 0;
+            pointer-events: none;
+            width: 0px;
+            border: none;
+        }
+
+        .strip-wrapper.collapsed .cat-strip {
+            opacity: 0;
+            pointer-events: none;
+            flex: 0 0 0px;
+        }
 
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
 
         .collapse-btn { 
-            flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-left: 2px solid var(--border-soft); 
-            background: var(--card-bg); cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; transition: background 0.2s; 
+            flex: 0 0 auto; 
+            width: clamp(40px, 8vw, 56px); 
+            border: none; 
+            border-left: 2px solid var(--border-soft); 
+            background: var(--card-bg); 
+            cursor: pointer; 
+            z-index: 3; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s; 
         }
         .collapse-btn:hover { background: var(--strip-active); }
         
-        .collapse-btn img { width: 75%; height: 75%; object-fit: contain; image-rendering: pixelated; transition: transform 0.2s ease; }
-        .collapse-btn:hover img { transform: scale(1.1); }
+        .collapse-btn img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            image-rendering: pixelated;
+            transition: transform 0.2s ease;
+        }
+        .collapse-btn:hover img {
+            transform: scale(1.1);
+        }
 
-        .strip-wrapper.collapsed .collapse-btn { border-left: 2px solid transparent; background: transparent; box-shadow: none; }
+        .strip-wrapper.collapsed .collapse-btn {
+            border-left: 2px solid transparent;
+            background: transparent;
+            box-shadow: none;
+        }
 
         .cat-strip { flex: 1 1 auto; overflow: hidden; position: relative; contain: paint; cursor: grab; transition: opacity 0.3s ease, flex 0.5s ease; }
         .cat-strip:active { cursor: grabbing; }
@@ -129,39 +166,93 @@
 
         /* ========== ARCADE SLIDER ========== */
         .slider-container-wrap {
-            width: 100%; max-width: 1600px; margin: 6px auto 0;
-            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1); overflow: hidden; pointer-events: all;
+            width: 100%;
+            max-width: 1600px;
+            margin: 6px auto 0;
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            overflow: hidden;
+            pointer-events: all;
         }
-        .slider-container-wrap.collapsed { opacity: 0; max-height: 0px; margin-top: 0px; pointer-events: none; }
+        .slider-container-wrap.collapsed {
+            opacity: 0;
+            max-height: 0px;
+            margin-top: 0px;
+            pointer-events: none;
+        }
 
         .slider-track {
-            width: 100%; height: 14px; background: var(--border-soft); border: 2px solid var(--text-muted);
-            border-radius: 8px; position: relative; overflow: hidden; cursor: grab; box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+            width: 100%;
+            height: 14px;
+            background: var(--border-soft);
+            border: 2px solid var(--text-muted);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
         }
-        .slider-track:active { cursor: grabbing; }
+        .slider-track:active {
+            cursor: grabbing;
+        }
         .slider-thumb {
-            position: absolute; top: 0; left: 0; height: 100%; width: clamp(50px, 15vw, 90px); 
-            border-radius: 4px; border: 2px solid var(--text); pointer-events: none;
-            will-change: transform, background-color; background-color: #ff0000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: clamp(50px, 15vw, 90px); 
+            border-radius: 4px;
+            border: 2px solid var(--text);
+            pointer-events: none;
+            will-change: transform, background-color;
+            background-color: #ff0000;
         }
 
-        /* ========== HAUPTBEREICH (EISERNES KORSETT) ========== */
+        /* ========== DAS EISERNE GESETZ FÜR GELADENE INHALTE ========== */
         main#mainContent { 
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            width: 100%; max-width: 100vw; min-height: calc(100vh - 90px); padding: 20px 10px; 
-            z-index: 1; box-sizing: border-box; overflow-x: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start;
+            width: 100%; 
+            max-width: 100vw; 
+            min-height: calc(100vh - 90px); 
+            padding: 20px 10px; 
+            z-index: 1; 
+            box-sizing: border-box;
+            overflow-x: hidden; 
         }
         
-        main#mainContent section, main#mainContent div { width: 100%; max-width: 100%; box-sizing: border-box; overflow-x: hidden; }
-        main#mainContent p, main#mainContent h2, main#mainContent h3, main#mainContent h4 { word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; max-width: 100%; }
+        main#mainContent section, 
+        main#mainContent div {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        main#mainContent p, 
+        main#mainContent h2, 
+        main#mainContent h3, 
+        main#mainContent h4 {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            max-width: 100%;
+        }
 
         main#mainContent h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; }
         main#mainContent h3 { font-size: var(--fs-md); margin: 1.5em 0 0.8em; }
         main#mainContent p { font-size: var(--fs-sm); margin: 15px auto; line-height: 2.6; text-align: left; }
 
         main#mainContent img {
-            display: block; width: 100% !important; max-width: 100% !important; height: auto !important;
-            margin: 20px auto; box-sizing: border-box; object-fit: contain; border-radius: var(--radius);
+            display: block;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            margin: 20px auto;
+            box-sizing: border-box;
+            object-fit: contain;
+            border-radius: var(--radius);
         }
 
         main#mainContent hr { border: 0; height: 1px; background: var(--border-soft); margin: 28px auto; width: 100%; }
@@ -174,25 +265,54 @@
         }
 
         .maintenance-card {
-            background: var(--card-bg); border: 3px solid var(--text); border-radius: var(--radius);
-            padding: 40px 30px; max-width: 600px; width: 100%; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            background: var(--card-bg);
+            border: 3px solid var(--text);
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.4s ease-out;
             box-sizing: border-box;
         }
         .maintenance-card h2 { font-size: var(--fs-lg); color: var(--strip-active); margin-bottom: 20px; text-transform: uppercase; }
         .maintenance-card p { font-size: var(--fs-sm); line-height: 2.6; color: var(--text-muted); margin-bottom: 10px; }
 
-        /* ========== METALLTÜR LOGIK ========== */
-        #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
-        #door-overlay.closed { pointer-events: all; }
-        
-        #door-overlay .door-panel { 
-            position: absolute; inset: 0; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
-            will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); 
-            background-image: url('pixelart/pixelart_vedran.png'); background-repeat: repeat; 
-            background-position: top left; background-size: 12.5vw 25vh; 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== METALLTÜR & GRID LOGIK ========== */
+        #door-overlay { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 9999; 
+            pointer-events: none; 
+            overflow: hidden; 
+        }
+        #door-overlay.closed { 
+            pointer-events: all; 
         }
         
-        @media (max-width: 768px) { #door-overlay .door-panel { background-size: 25vw 25vw; } }
+        #door-overlay .door-panel { 
+            position: absolute; 
+            inset: 0; 
+            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
+            will-change: transform; 
+            backface-visibility: hidden; 
+            background-color: var(--door-bg); 
+            background-image: url('pixelart/pixelart_vedran.png'); 
+            background-repeat: repeat; 
+            background-position: top left;
+            background-size: 12.5vw 25vh; 
+        }
+        
+        @media (max-width: 768px) {
+            #door-overlay .door-panel {
+                background-size: 25vw 25vw;
+            }
+        }
 
         #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
         #door-overlay.open .door-panel   { transform: translate3d(0, 100%, 0); }
@@ -278,8 +398,8 @@
 
             /* ========== DATEI ZUORDNUNG ========== */
             const categoryPages = {
-                'ABOUT': '01_about_3.html',
-                'VHS MULTIVERSE': '02_vhsmultiverse_2.html',
+                'ABOUT': '01_about.html',
+                'VHS MULTIVERSE': '02_vhsmultiverse.html',
                 'HUMANART': '03_humanart.html',
                 'PROJECTS': '04_projects.html',
                 'STORYTIME': '05_storytime.html',
@@ -323,18 +443,18 @@
                                 if (fetchedMain) {
                                     mainContent.innerHTML = fetchedMain.innerHTML;
                                     
-                                    // Sprache sofort nach dem Laden updaten
+                                    // 1. Sprache sofort nach dem Laden updaten
                                     const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
                                     mainContent.querySelectorAll('[data-lang-en]').forEach(el => {
                                         const text = el.getAttribute(`data-lang-${lang}`);
                                         if (text) el.innerHTML = text;
                                     });
 
-                                    // Skripte der geladenen Seite sicher ausführen (mit global geladenem Three.js & Model-Viewer!)
+                                    // 2. Skripte der geladenen Seite manuell ausführen (Galerien, Three.js etc.)
                                     Array.from(mainContent.querySelectorAll("script")).forEach(oldScript => {
                                         const newScript = document.createElement("script");
                                         Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                                        newScript.text = oldScript.text;
+                                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
                                         oldScript.parentNode.replaceChild(newScript, oldScript);
                                     });
 
@@ -361,6 +481,7 @@
 
             /* ========== MENÜ ERSTELLEN ========== */
             const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
+            const strip = document.getElementById('catStrip');
             const track = document.getElementById('catTrack');
             
             for (let r = 0; r < 6; r++) {
@@ -397,8 +518,15 @@
                 }
             }
 
-            /* ========== RGB LAMPE ========== */
-            const rgbColors = [{r: 255, g: 0, b: 0}, {r: 255, g: 255, b: 0}, {r: 0, g: 255, b: 0}, {r: 0, g: 255, b: 255}, {r: 0, g: 0, b: 255}, {r: 255, g: 0, b: 255}];
+            /* ========== STABILE JS-BASIERTE RGB-LAMPE ========== */
+            const rgbColors = [
+                {r: 255, g: 0, b: 0},     
+                {r: 255, g: 255, b: 0},   
+                {r: 0, g: 255, b: 0},     
+                {r: 0, g: 255, b: 255},   
+                {r: 0, g: 0, b: 255},     
+                {r: 255, g: 0, b: 255}    
+            ];
             let rgbProgress = 0;
 
             function updateRgbLamp(dt) {
@@ -409,50 +537,164 @@
                 let nextIndex = (index + 1) % rgbColors.length;
                 let factor = rgbProgress - index;
 
-                let c1 = rgbColors[index], c2 = rgbColors[nextIndex];
+                let c1 = rgbColors[index];
+                let c2 = rgbColors[nextIndex];
+
                 let r = Math.round(c1.r + (c2.r - c1.r) * factor);
                 let g = Math.round(c1.g + (c2.g - c1.g) * factor);
                 let b = Math.round(c1.b + (c2.b - c1.b) * factor);
 
-                if (sliderThumbEl) sliderThumbEl.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                if (sliderThumbEl) {
+                    sliderThumbEl.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                }
             }
 
-            /* Drag & Drop Logik */
-            let stripDragging = false, stripStartX = 0, stripLastX = 0, stripVelocity = 0, stripTimeDrag = 0;
-            const strip = document.getElementById('catStrip');
+            /* ========== 1. OBERER BEREICH: DIREKTES GREIFEN & WERFEN ========== */
+            let stripDragging = false, stripStartX = 0, stripLastX = 0;
+            let stripVelocity = 0;
+            let stripTimeDrag = 0;
 
             strip.addEventListener('mousedown', (e) => {
                 if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
-                stripDragging = true; stripVelocity = 0; stripStartX = e.clientX; stripLastX = stripStartX; stripTimeDrag = performance.now();
+                stripDragging = true;
+                stripVelocity = 0;
+                stripStartX = e.clientX;
+                stripLastX = stripStartX;
+                stripTimeDrag = performance.now();
             });
 
             window.addEventListener('mousemove', (e) => {
                 if (!stripDragging) return;
-                let currentX = e.clientX, now = performance.now(), dt = now - stripTimeDrag;
+                let currentX = e.clientX;
+                let now = performance.now();
+                let dt = now - stripTimeDrag;
+
                 let delta = currentX - stripLastX;
                 if (dt > 0) stripVelocity = delta / dt;
-                pos += delta; wrap();
-                stripLastX = currentX; stripTimeDrag = now;
+
+                pos += delta;
+                wrap();
+
+                stripLastX = currentX;
+                stripTimeDrag = now;
                 if (e.cancelable) e.preventDefault();
             });
 
             window.addEventListener('mouseup', () => {
-                if (stripDragging) { stripDragging = false; if (stripVelocity > 2.5) stripVelocity = 2.5; if (stripVelocity < -2.5) stripVelocity = -2.5; }
+                if (stripDragging) {
+                    stripDragging = false;
+                    if (stripVelocity > 2.5) stripVelocity = 2.5;
+                    if (stripVelocity < -2.5) stripVelocity = -2.5;
+                }
             });
 
-            /* Animations-Loop */
+            strip.addEventListener('touchstart', (e) => {
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
+                stripDragging = true;
+                stripVelocity = 0;
+                stripStartX = e.touches[0].clientX;
+                stripLastX = stripStartX;
+                stripTimeDrag = performance.now();
+            }, { passive: false });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!stripDragging) return;
+                let currentX = e.touches[0].clientX;
+                let now = performance.now();
+                let dt = now - stripTimeDrag;
+
+                let delta = currentX - stripLastX;
+                if (dt > 0) stripVelocity = delta / dt;
+
+                pos += delta;
+                wrap();
+
+                stripLastX = currentX;
+                stripTimeDrag = now;
+                if (e.cancelable) e.preventDefault();
+            }, { passive: false });
+
+            window.addEventListener('touchend', () => {
+                if (stripDragging) {
+                    stripDragging = false;
+                }
+            });
+
+
+            /* ========== 2. UNTERER BEREICH: DER RGB-REGLER ========== */
+            let sliderDragging = false;
+
+            sliderTrackEl.addEventListener('mousedown', (e) => {
+                sliderDragging = true;
+                updateSliderPos(e.clientX);
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!sliderDragging) return;
+                updateSliderPos(e.clientX);
+            });
+
+            window.addEventListener('mouseup', () => {
+                sliderDragging = false;
+            });
+
+            sliderTrackEl.addEventListener('touchstart', (e) => {
+                sliderDragging = true;
+                updateSliderPos(e.touches[0].clientX);
+            }, { passive: false });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!sliderDragging) return;
+                updateSliderPos(e.touches[0].clientX);
+                if (e.cancelable) e.preventDefault();
+            }, { passive: false });
+
+            window.addEventListener('touchend', () => {
+                sliderDragging = false;
+            });
+
+            function updateSliderPos(clientX) {
+                if (sliderW <= 0 || setW <= 0) return;
+                let rect = sliderTrackEl.getBoundingClientRect();
+                let offsetX = clientX - rect.left - (thumbW / 2);
+                let maxThumbX = sliderW - thumbW;
+                
+                if (offsetX < 0) offsetX = 0;
+                if (offsetX > maxThumbX) offsetX = maxThumbX;
+
+                let progress = maxThumbX > 0 ? (offsetX / maxThumbX) : 0;
+                pos = -progress * setW;
+                wrap();
+            }
+
+            /* ========== ANIMATIONS-LOOP ========== */
             let lastTime = performance.now();
+            
             function loop(time) {
-                const dt = time - lastTime; lastTime = time;
+                const dt = time - lastTime;
+                lastTime = time;
+                
                 updateRgbLamp(dt);
 
-                if (!stripDragging) {
-                    if (Math.abs(stripVelocity) > 0.03) { pos += stripVelocity * dt * 0.6; stripVelocity *= 0.92; } 
-                    else { stripVelocity = 0; pos -= 0.015 * dt; }
+                if (!stripDragging && !sliderDragging) {
+                    if (Math.abs(stripVelocity) > 0.03) {
+                        pos += stripVelocity * dt * 0.6;
+                        stripVelocity *= 0.92; 
+                    } else {
+                        stripVelocity = 0;
+                        pos -= 0.015 * dt; 
+                    }
                 }
 
                 wrap();
                 track.style.transform = `translateX(${pos}px)`;
+
+                if (setW > 0 && sliderW > 0 && !sliderDragging) {
+                    let progress = Math.abs(pos) / setW; 
+                    let maxThumbX = sliderW - thumbW;
+                    sliderThumbEl.style.transform = `translateX(${progress * maxThumbX}px)`;
+                }
+
                 requestAnimationFrame(loop);
             }
 
@@ -460,12 +702,13 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            /* Starten und ABOUT laden */
+            /* Tür beim Laden öffnen und direkt ABOUT laden */
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
                     door.classList.remove('closed');
                     door.classList.add('open');
+                    
                     triggerCategoryChange('ABOUT');
                 }
             }, 100); 
