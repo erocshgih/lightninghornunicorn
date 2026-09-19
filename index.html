@@ -710,7 +710,7 @@
     
     let W = 0, H = 0, introStart = 0; let introVariant = "yellow"; 
     
-    // Secret Skip Klick-Zähler
+    // Secret Skip Klick-Zähler (Ohne Sound, Ohne Intro-Animation, Direkt zu den Köpfen)
     let skipClicks = 0;
     secretSkipArea.addEventListener("click", () => {
       skipClicks++;
@@ -720,12 +720,8 @@
         secretSkipArea.classList.remove("clicked-once");
         secretSkipArea.classList.add("clicked-twice");
       } else if (skipClicks >= 3) {
-        // Sofortiges Überspringen des Intros direkt zu den 3D-Köpfen
-        introVariant = "yellow";
-        document.getElementById("lhu-enter-panel").classList.add("hidden");
-        if (audio) { audio.src = "lhuyellow.mp3"; audio.play().catch(()=>{}); }
-        introStart = performance.now() - 2500; // Direkt ans Ende spulen
-        requestAnimationFrame(animateIntro);
+        // Sofortiges Entfernen des Intros ohne Ton und ohne Intro-Animation
+        if (intro) intro.remove();
       }
     });
 
@@ -788,6 +784,7 @@
     }
     
     function animateIntro(now) {
+      if (!document.body.contains(intro)) return; // Stoppen, falls das Intro entfernt wurde
       const timeOffset = (now - introStart) / 1000;
       const t = timeOffset / 2;
       
