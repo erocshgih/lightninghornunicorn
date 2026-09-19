@@ -265,7 +265,11 @@
             main#mainContent section { max-width: 1000px; padding: 40px; }
             main#mainContent h2 { font-size: var(--fs-xl); }
             main#mainContent p { font-size: var(--fs-base); line-height: 2.2; }
-            main#mainContent img { max-width: 80% !important; }
+            main#mainContent img { 
+                max-width: 80% !important; 
+                max-height: 75vh !important; /* VERHINDERT EWIGES SCROLLEN AM PC */
+                width: auto !important;
+            }
         }
 
         .maintenance-card {
@@ -301,7 +305,7 @@
         
         #door-overlay .door-panel { 
             position: absolute; 
-            inset: 0; 
+            inset: -10px; /* Minimaler Puffer für Ränder */
             transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
             will-change: transform; 
             backface-visibility: hidden; 
@@ -318,8 +322,9 @@
             }
         }
 
+        /* TÜR-RICHTUNG: -120% sorgt dafür, dass sie garantiert nach OBEN komplett aus dem Bildschirm verschwindet */
         #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
-        #door-overlay.open .door-panel   { transform: translate3d(0, 100%, 0); }
+        #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
     </style>
 </head>
 <body>
@@ -422,6 +427,7 @@
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
 
+                // 1. TÜR SCHLIESSEN
                 door.classList.remove('open');
                 door.classList.add('closed');
 
@@ -433,6 +439,7 @@
                     }
                 });
 
+                // 2. WARTEN BIS TÜR KOMPLETT ZU IST (1200ms), DANN INHALT LADEN
                 setTimeout(async () => {
                     const targetPage = categoryPages[cat];
                     if (targetPage) {
@@ -447,14 +454,12 @@
                                 if (fetchedMain) {
                                     mainContent.innerHTML = fetchedMain.innerHTML;
                                     
-                                    // 1. Sprache sofort nach dem Laden updaten
                                     const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
                                     mainContent.querySelectorAll('[data-lang-en]').forEach(el => {
                                         const text = el.getAttribute(`data-lang-${lang}`);
                                         if (text) el.innerHTML = text;
                                     });
 
-                                    // 2. Skripte der geladenen Seite manuell ausführen (Galerien, Three.js etc.)
                                     Array.from(mainContent.querySelectorAll("script")).forEach(oldScript => {
                                         const newScript = document.createElement("script");
                                         Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
@@ -473,14 +478,17 @@
                         }
                     }
 
+                    // Sofort nach oben scrollen, während die Tür noch zu ist
                     window.scrollTo(0, 0);
 
+                    // 3. TÜR WIEDER ÖFFNEN (Kurze Verzögerung fürs DOM Rendering)
                     setTimeout(() => {
+                        measure();
                         door.classList.remove('closed');
                         door.classList.add('open');
-                    }, 200);
+                    }, 150);
 
-                }, 600);
+                }, 1200); // Exakt die Zeit der CSS-Animation
             }
 
             /* ========== MENÜ ERSTELLEN ========== */
@@ -517,8 +525,10 @@
 
             function wrap() {
                 if (setW > 0) {
-                    while (pos <= -setW) pos += setW;
-                    while (pos > 0) pos -= setW;
+                    pos = pos % setW;
+                    if (pos > 0) pos -= setW;
+                } else {
+                    pos = 0;
                 }
             }
 
@@ -534,15 +544,20 @@
             let rgbProgress = 0;
 
             function updateRgbLamp(dt) {
+                if (dt <= 0) return; 
+                
                 rgbProgress += dt * 0.0004; 
-                if (rgbProgress >= rgbColors.length) rgbProgress = 0;
+                rgbProgress = rgbProgress % rgbColors.length; 
 
                 let index = Math.floor(rgbProgress);
+                if (index < 0) index = 0; 
                 let nextIndex = (index + 1) % rgbColors.length;
                 let factor = rgbProgress - index;
 
                 let c1 = rgbColors[index];
                 let c2 = rgbColors[nextIndex];
+
+                if (!c1 || !c2) return; 
 
                 let r = Math.round(c1.r + (c2.r - c1.r) * factor);
                 let g = Math.round(c1.g + (c2.g - c1.g) * factor);
@@ -591,6 +606,7 @@
                     if (stripVelocity < -2.5) stripVelocity = -2.5;
                 }
             });
+            window.addEventListener('mouseleave', () => stripDragging = false);
 
             strip.addEventListener('touchstart', (e) => {
                 if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
@@ -641,6 +657,7 @@
             window.addEventListener('mouseup', () => {
                 sliderDragging = false;
             });
+            window.addEventListener('mouseleave', () => sliderDragging = false);
 
             sliderTrackEl.addEventListener('touchstart', (e) => {
                 sliderDragging = true;
@@ -675,8 +692,12 @@
             let lastTime = performance.now();
             
             function loop(time) {
-                const dt = time - lastTime;
+                if (!time) time = performance.now();
+                let dt = time - lastTime;
                 lastTime = time;
+                
+                if (dt > 100) dt = 16;
+                if (dt < 0) dt = 0;
                 
                 updateRgbLamp(dt);
 
@@ -706,10 +727,11 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            /* Tür beim Laden öffnen und direkt ABOUT laden */
+            /* Tür beim Laden schließen und ABOUT laden */
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
+                    // Beim ersten Laden lassen wir die Tür direkt rauffahren
                     door.classList.remove('closed');
                     door.classList.add('open');
                     
