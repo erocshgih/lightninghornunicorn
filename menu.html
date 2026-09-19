@@ -337,13 +337,22 @@
                 }
             });
 
+            /* ========== ECHTE HTML-DATEI ZUORDNUNG ========== */
+            const categoryPages = {
+                'ABOUT': '01_about.html',
+                'VHS MULTIVERSE': '02_vhsmultiverse.html',
+                'HUMANART': '03_humanart.html',
+                'PROJECTS': '04_projects.html',
+                'STORYTIME': '05_storytime.html',
+                'MUSIC': '06_music.html',
+                'CONTACT': '07_contact.html',
+                'DONATE': '08_donate.html'
+            };
+
             /* ========== NAVIGATION & TÜR ENGINE ========== */
             let currentCategory = 'ABOUT'; 
 
             function triggerCategoryChange(cat) {
-                if (cat === currentCategory) return;
-                currentCategory = cat;
-
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
 
@@ -359,9 +368,11 @@
                 });
 
                 setTimeout(() => {
-                    door.classList.remove('closed');
-                    door.classList.add('open');
-                }, 1200);
+                    const targetPage = categoryPages[cat];
+                    if (targetPage) {
+                        window.location.href = targetPage;
+                    }
+                }, 600);
             }
 
             /* ========== MENÜ ERSTELLEN ========== */
@@ -434,7 +445,7 @@
                 }
             }
 
-            /* ========== 1. OBERER BEREICH: DIREKTES GREIFEN & WERFEN (KATEGORIEN) ========== */
+            /* ========== 1. OBERER BEREICH: DIREKTES GREIFEN & WERFEN ========== */
             let stripDragging = false, stripStartX = 0, stripLastX = 0;
             let stripVelocity = 0;
             let stripTimeDrag = 0;
@@ -473,7 +484,6 @@
                 }
             });
 
-            // Touch Support für oben
             strip.addEventListener('touchstart', (e) => {
                 if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
                 stripDragging = true;
@@ -508,11 +518,10 @@
 
 
             /* ========== 2. UNTERER BEREICH: DER RGB-REGLER ========== */
-            let sliderDragging = false, sliderStartX = 0;
+            let sliderDragging = false;
 
             sliderTrackEl.addEventListener('mousedown', (e) => {
                 sliderDragging = true;
-                sliderStartX = e.clientX;
                 updateSliderPos(e.clientX);
             });
 
@@ -527,7 +536,6 @@
 
             sliderTrackEl.addEventListener('touchstart', (e) => {
                 sliderDragging = true;
-                sliderStartX = e.touches[0].clientX;
                 updateSliderPos(e.touches[0].clientX);
             }, { passive: false });
 
@@ -565,21 +573,19 @@
                 
                 updateRgbLamp(dt);
 
-                // Trägt den Wurf-Schwung von oben weiter, wenn man oben loslässt
                 if (!stripDragging && !sliderDragging) {
                     if (Math.abs(stripVelocity) > 0.03) {
                         pos += stripVelocity * dt * 0.6;
                         stripVelocity *= 0.92; 
                     } else {
                         stripVelocity = 0;
-                        pos -= 0.015 * dt; // Gemütliches Auto-Gleiten
+                        pos -= 0.015 * dt; 
                     }
                 }
 
                 wrap();
                 track.style.transform = `translateX(${pos}px)`;
 
-                // Slider-Thumb synchronisieren, wenn man oben schiebt
                 if (setW > 0 && sliderW > 0 && !sliderDragging) {
                     let progress = Math.abs(pos) / setW; 
                     let maxThumbX = sliderW - thumbW;
