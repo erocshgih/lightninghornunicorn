@@ -338,6 +338,9 @@
 </head>
 <body>
     
+    <!-- AUDIO-ELEMENT FÜR DEN QUACK-SOUND -->
+    <audio id="quackAudio" src="quack.mp3" preload="auto"></audio>
+
     <div id="door-overlay" class="closed">
         <div class="door-panel"></div>
     </div>
@@ -394,14 +397,22 @@
                 });
             }
 
-            /* ========== COLLAPSE BUTTON LOGIK ========== */
+            /* ========== COLLAPSE BUTTON & QUACK LOGIK ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
             const headerEl = document.getElementById('headerEl');
+            const quackAudio = document.getElementById('quackAudio');
             let isCollapsed = false;
 
             collapseBtn.addEventListener('click', () => {
+                // Quack-Sound abspielen und für Mehrfachklicks zurückspulen
+                if (quackAudio) {
+                    quackAudio.currentTime = 0;
+                    quackAudio.play().catch(e => console.log("Audio-Autoplay verhindert:", e));
+                }
+
+                // Bestehende Collapse-Funktion beibehalten
                 isCollapsed = !isCollapsed;
                 if (isCollapsed) {
                     headerEl.classList.add('collapsed');
