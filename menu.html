@@ -434,56 +434,129 @@
                 }
             }
 
-            /* ========== SYNCHRONES DIREKTES GREIFEN (OBEN & UNTEN) ========== */
-            let dragging = false, startX = 0, lastX = 0;
-            let velocity = 0; 
-            let lastTimeDrag = 0;
+            /* ========== 1. OBERER BEREICH: DIREKTES GREIFEN & WERFEN (KATEGORIEN) ========== */
+            let stripDragging = false, stripStartX = 0, stripLastX = 0;
+            let stripVelocity = 0;
+            let stripTimeDrag = 0;
 
-            function down(e) { 
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return; 
-                dragging = true; 
-                velocity = 0;
-                startX = e.touches ? e.touches[0].clientX : e.clientX; 
-                lastX = startX;
-                lastTimeDrag = performance.now();
-            }
-
-            function move(e) { 
-                if (!dragging) return; 
-                let currentX = e.touches ? e.touches[0].clientX : e.clientX; 
-                let now = performance.now();
-                let dt = now - lastTimeDrag;
-
-                let delta = currentX - lastX; 
-                if (dt > 0) velocity = delta / dt; 
-
-                // Unabhängig ob oben im Strip oder unten im Slider gegriffen: 1:1 direkte Steuerung
-                pos += delta; 
-                wrap(); 
-
-                lastX = currentX;
-                lastTimeDrag = now;
-                if (e.cancelable) e.preventDefault(); 
-            }
-
-            function up() { 
-                dragging = false; 
-                if(velocity > 2.5) velocity = 2.5; 
-                if(velocity < -2.5) velocity = -2.5;
-            }
-
-            // Bindet das direkte Greifen an BEIDE Elemente (oben und unten)
-            const dragSurfaces = [strip, sliderTrackEl];
-            dragSurfaces.forEach(surface => {
-                surface.addEventListener('mousedown', down); 
-                surface.addEventListener('touchstart', down, { passive: false });
+            strip.addEventListener('mousedown', (e) => {
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
+                stripDragging = true;
+                stripVelocity = 0;
+                stripStartX = e.clientX;
+                stripLastX = stripStartX;
+                stripTimeDrag = performance.now();
             });
 
-            window.addEventListener('mousemove', move, { passive: false }); 
-            window.addEventListener('mouseup', up);
-            window.addEventListener('touchmove', move, { passive: false }); 
-            window.addEventListener('touchend', up);
+            window.addEventListener('mousemove', (e) => {
+                if (!stripDragging) return;
+                let currentX = e.clientX;
+                let now = performance.now();
+                let dt = now - stripTimeDrag;
 
+                let delta = currentX - stripLastX;
+                if (dt > 0) stripVelocity = delta / dt;
+
+                pos += delta;
+                wrap();
+
+                stripLastX = currentX;
+                stripTimeDrag = now;
+                if (e.cancelable) e.preventDefault();
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (stripDragging) {
+                    stripDragging = false;
+                    if (stripVelocity > 2.5) stripVelocity = 2.5;
+                    if (stripVelocity < -2.5) stripVelocity = -2.5;
+                }
+            });
+
+            // Touch Support für oben
+            strip.addEventListener('touchstart', (e) => {
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
+                stripDragging = true;
+                stripVelocity = 0;
+                stripStartX = e.touches[0].clientX;
+                stripLastX = stripStartX;
+                stripTimeDrag = performance.now();
+            }, { passive: false });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!stripDragging) return;
+                let currentX = e.touches[0].clientX;
+                let now = performance.now();
+                let dt = now - stripTimeDrag;
+
+                let delta = currentX - stripLastX;
+                if (dt > 0) stripVelocity = delta / dt;
+
+                pos += delta;
+                wrap();
+
+                stripLastX = currentX;
+                stripTimeDrag = now;
+                if (e.cancelable) e.preventDefault();
+            }, { passive: false });
+
+            window.addEventListener('touchend', () => {
+                if (stripDragging) {
+                    stripDragging = false;
+                }
+            });
+
+
+            /* ========== 2. UNTERER BEREICH: DER RGB-REGLER ========== */
+            let sliderDragging = false, sliderStartX = 0;
+
+            sliderTrackEl.addEventListener('mousedown', (e) => {
+                sliderDragging = true;
+                sliderStartX = e.clientX;
+                updateSliderPos(e.clientX);
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!sliderDragging) return;
+                updateSliderPos(e.clientX);
+            });
+
+            window.addEventListener('mouseup', () => {
+                sliderDragging = false;
+            });
+
+            sliderTrackEl.addEventListener('touchstart', (e) => {
+                sliderDragging = true;
+                sliderStartX = e.touches[0].clientX;
+                updateSliderPos(e.touches[0].clientX);
+            }, { passive: false });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!sliderDragging) return;
+                updateSliderPos(e.touches[0].clientX);
+                if (e.cancelable) e.preventDefault();
+            }, { passive: false });
+
+            window.addEventListener('touchend', () => {
+                sliderDragging = false;
+            });
+
+            function updateSliderPos(clientX) {
+                if (sliderW <= 0 || setW <= 0) return;
+                let rect = sliderTrackEl.getBoundingClientRect();
+                let offsetX = clientX - rect.left - (thumbW / 2);
+                let maxThumbX = sliderW - thumbW;
+                
+                if (offsetX < 0) offsetX = 0;
+                if (offsetX > maxThumbX) offsetX = maxThumbX;
+
+                let progress = maxThumbX > 0 ? (offsetX / maxThumbX) : 0;
+                pos = -progress * setW;
+                wrap();
+            }
+
+
+            /* ========== ANIMATIONS-LOOP ========== */
             let lastTime = performance.now();
             
             function loop(time) {
@@ -492,21 +565,22 @@
                 
                 updateRgbLamp(dt);
 
-                if (!dragging) {
-                    if (Math.abs(velocity) > 0.03) {
-                        pos += velocity * dt * 0.6; // Wurf-Momentum nach dem Loslassen
-                        velocity *= 0.92; 
+                // Trägt den Wurf-Schwung von oben weiter, wenn man oben loslässt
+                if (!stripDragging && !sliderDragging) {
+                    if (Math.abs(stripVelocity) > 0.03) {
+                        pos += stripVelocity * dt * 0.6;
+                        stripVelocity *= 0.92; 
                     } else {
-                        velocity = 0;
-                        pos -= 0.015 * dt; // Sanftes Auto-Gleiten
+                        stripVelocity = 0;
+                        pos -= 0.015 * dt; // Gemütliches Auto-Gleiten
                     }
                 }
 
                 wrap();
                 track.style.transform = `translateX(${pos}px)`;
 
-                // Slider-Thumb synchronisieren
-                if (setW > 0 && sliderW > 0) {
+                // Slider-Thumb synchronisieren, wenn man oben schiebt
+                if (setW > 0 && sliderW > 0 && !sliderDragging) {
                     let progress = Math.abs(pos) / setW; 
                     let maxThumbX = sliderW - thumbW;
                     sliderThumbEl.style.transform = `translateX(${progress * maxThumbX}px)`;
