@@ -203,8 +203,8 @@
             background-color: #ff0000;
         }
 
-        /* ========== INHALT & MAINTENANCE BANNER ========== */
-        main { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 90px); padding: 40px 20px; z-index: 1; }
+        /* ========== INHALT & MAIN BEREICH ========== */
+        main { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 90px); padding: 40px 20px; z-index: 1; width: 100%; }
         
         .maintenance-card {
             background: var(--card-bg);
@@ -283,10 +283,11 @@
         </div>
     </header>
 
-    <main>
+    <main id="mainContent">
+        <!-- Standard-Inhalt beim Start -->
         <div class="maintenance-card">
-            <h2 id="maintTitle">SITE UPGRADE IN PROGRESS</h2>
-            <p id="maintText">Under maintenance. LHU is currently upgrading the universe. Grab a coffee and check back soon—we'll return shortly!</p>
+            <h2 id="maintTitle">WELCOME TO LHU UNIVERSE</h2>
+            <p id="maintText">Wähle eine Kategorie aus dem Menü, um die Inhalte direkt hier in die Seite zu laden!</p>
         </div>
     </main>
 
@@ -337,7 +338,7 @@
                 }
             });
 
-            /* ========== ECHTE HTML-DATEI ZUORDNUNG ========== */
+            /* ========== ECHTE HTML-DATEI ZUORDNUNG (DYNAMISCHES LADEN) ========== */
             const categoryPages = {
                 'ABOUT': '01_about.html',
                 'VHS MULTIVERSE': '02_vhsmultiverse.html',
@@ -349,16 +350,18 @@
                 'DONATE': '08_donate.html'
             };
 
-            /* ========== NAVIGATION & TÜR ENGINE ========== */
+            const mainContent = document.getElementById('mainContent');
             let currentCategory = 'ABOUT'; 
 
             function triggerCategoryChange(cat) {
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
 
+                // 1. Tür zufahren lassen
                 door.classList.remove('open');
                 door.classList.add('closed');
 
+                // Aktiven Button markieren
                 document.querySelectorAll('.cat-item').forEach(item => {
                     if(item.getAttribute('data-cat') === cat) {
                         item.classList.add('active');
@@ -367,11 +370,38 @@
                     }
                 });
 
-                setTimeout(() => {
+                // 2. Während die Tür zu ist (nach 600ms), HTML-Inhalt per Fetch laden
+                setTimeout(async () => {
                     const targetPage = categoryPages[cat];
                     if (targetPage) {
-                        window.location.href = targetPage;
+                        try {
+                            const response = await fetch(targetPage);
+                            if (response.ok) {
+                                const htmlText = await response.text();
+                                // Parsen wir den HTML-Inhalt, um nur den <main>-Inhalt (oder den Body) zu extrahieren
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(htmlText, 'text/html');
+                                const fetchedMain = doc.querySelector('main') || doc.body;
+                                
+                                if (fetchedMain) {
+                                    mainContent.innerHTML = fetchedMain.innerHTML;
+                                } else {
+                                    mainContent.innerHTML = `<p>Inhalt konnte nicht geladen werden.</p>`;
+                                }
+                            } else {
+                                mainContent.innerHTML = `<p>Fehler beim Laden von ${targetPage}</p>`;
+                            }
+                        } catch (err) {
+                            mainContent.innerHTML = `<p>Netzwerkfehler oder lokale CORS-Einschränkung (nutze einen lokalen Server).</p>`;
+                        }
                     }
+
+                    // 3. Tür wieder öffnen
+                    setTimeout(() => {
+                        door.classList.remove('closed');
+                        door.classList.add('open');
+                    }, 200);
+
                 }, 600);
             }
 
@@ -445,7 +475,7 @@
                 }
             }
 
-            /* ========== 1. OBERER BEREICH: DIREKTES GREIFEN & WERFEN ========== */
+            /* ========== 1. OBERER BEREICH: DIREKTes GREIFEN & WERFEN ========== */
             let stripDragging = false, stripStartX = 0, stripLastX = 0;
             let stripVelocity = 0;
             let stripTimeDrag = 0;
