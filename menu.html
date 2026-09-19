@@ -397,7 +397,7 @@
                 });
             }
 
-            /* ========== MULTI-QUACK SHUFFLE SYSTEM (1-4) & COLLAPSE LOGIK ========== */
+            /* ========== MULTI-QUACK SHUFFLE SYSTEM (QUACK/ ORDNER) & COLLAPSE LOGIK ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
@@ -405,9 +405,9 @@
             const quackAudio = document.getElementById('quackAudio');
             let isCollapsed = false;
 
-            // Liste der 4 Quack-Dateien im Root-Verzeichnis
+            // Liste der Quack-Dateien im Unterordner "quack"
             const quackFiles = [
-                'quack01.mp3', 'quack02.mp3', 'quack03.mp3', 'quack04.mp3'
+                'quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3', 'quack/quack04.mp3'
             ];
             let quackQueue = [];
 
