@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vienna-based artist Vedran Lukic.">
+    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
 
     <style>
@@ -299,7 +299,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== METALLTÜR & GRID LOGIK (ZENTRIERT & VOLLSTÄNDIG) ========== */
+        /* ========== METALLTÜR & GRID LOGIK (EXAKT 32 TILES DESKTOP / 8 TILES MOBILE, ZENTRIERT) ========== */
         #door-overlay { 
             position: fixed; 
             inset: 0; 
@@ -313,21 +313,21 @@
         
         #door-overlay .door-panel { 
             position: absolute; 
-            inset: -30px; /* Ausreichender Puffer, damit beim Schieben/Öffnen nichts abgeschnitten wird */
+            inset: -30px; /* Puffer für flüssige Animationen ohne Blitzer */
             transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
             will-change: transform; 
             backface-visibility: hidden; 
             background-color: var(--door-bg); 
             background-image: url('pixelart/pixelart_vedran.png'); 
             background-repeat: repeat; 
-            background-position: 30px 30px; /* Offset exakt passend zum inset: -30px, damit das Muster an den echten Rändern ohne Schnittkanten beginnt */
-            background-size: 12.5vw 25vh; 
+            background-position: center center; /* Exakt zentriert */
+            background-size: 12.5vw 25vh; /* Desktop: 100/8 = 12.5vw Breite (8 Spalten), 100/4 = 25vh Höhe (4 Reihen) = exakt 32 Kacheln */
         }
         
         @media (max-width: 768px) {
             #door-overlay .door-panel {
-                background-size: 25vw 25vw;
-                background-position: 30px 30px; /* Auch auf Mobilgeräten exakt ausgerichtet */
+                background-size: 50vw 25vh; /* Handy: 100/2 = 50vw Breite (2 Spalten), 100/4 = 25vh Höhe (4 Reihen) = exakt 8 Kacheln */
+                background-position: center center;
             }
         }
 
