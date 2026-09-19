@@ -7,7 +7,7 @@
 <body>
     <main>
         <!-- Spezifisches CSS optimiert für Desktop & Mobile -->
-    <style>
+        <style>
             /* VHS-Stil Variablen für Dots und Akzente */
             :root {
                 --dot: #d5d0ca;
@@ -21,7 +21,7 @@
             html[data-theme="mono-green"] { --dot: #1b5e20; --dot-active: #69f0ae; --accent-red: #39ff14; --accent-blue: #b6ffb6; }
             html[data-theme="crt"] { --dot: #2a4a2a; --dot-active: #99ff99; --accent-red: #ff9999; --accent-blue: #99ccff; }
 
-            /* SECTION WRAPPER FÜR DESKTOP (Verhindert das Auseinanderziehen) */
+            /* SECTION WRAPPER FÜR DESKTOP */
             section#PROJECTS {
                 width: 100%;
                 max-width: 900px;
@@ -102,7 +102,7 @@
                 letter-spacing: 0.05em;
             }
 
-            /* CAROUSEL WRAPPER (Desktop-optimiert & zentriert) */
+            /* CAROUSEL WRAPPER */
             .carousel-wrapper {
                 position: relative;
                 width: 100%;
@@ -112,16 +112,13 @@
                 border-radius: 8px;
                 box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
                 background: var(--card-bg);
-                display: flex;
-                align-items: center;
                 box-sizing: border-box;
                 border: 2px solid var(--border-soft);
             }
 
             .carousel-stage {
                 position: relative;
-                flex: 1;
-                min-width: 0;
+                width: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -184,45 +181,19 @@
                 transform: scale(1.15) rotate(10deg);
                 background: var(--strip-active); border-color: #111;
             }
-
-            /* NAVIGATIONS-PFEILE */
-            .carousel-btn {
-                flex-shrink: 0;
-                width: 36px;
-                height: 36px;
-                border: none;
-                border-radius: 50%;
-                background: var(--dot);
-                color: var(--text);
-                font-size: 16px;
-                cursor: pointer;
-                -webkit-tap-highlight-color: transparent;
-                transition: background 0.2s, transform 0.15s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0 6px;
-                z-index: 10;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            }
-            .carousel-btn:hover, .carousel-btn:active {
-                background: var(--dot-active);
-                color: #111;
-                transform: scale(1.15);
-            }
             
-            /* PUNKTE (DOTS) */
+            /* PUNKTE (DOTS) - DOPPELT SO GROSS */
             .carousel-dots { 
                 display: flex; 
                 justify-content: center; 
-                gap: 8px; 
+                gap: 12px; 
                 flex-wrap: wrap; 
-                margin: 8px 0 4px 0; 
+                margin: 12px 0 6px 0; 
                 padding: 4px 0; 
             }
             .carousel-dot { 
-                width: 10px; 
-                height: 10px; 
+                width: 20px; 
+                height: 20px; 
                 border-radius: 50%; 
                 background: var(--dot); 
                 cursor: pointer; 
@@ -230,8 +201,12 @@
                 -webkit-tap-highlight-color: transparent; 
                 border: none;
             }
-            .carousel-dot:hover, .carousel-dot:active { transform: scale(1.4); }
-            .carousel-dot.active { background: var(--dot-active); transform: scale(1.3); }
+            .carousel-dot:hover, .carousel-dot:active { transform: scale(1.3); }
+            .carousel-dot.active { background: var(--dot-active); transform: scale(1.25); }
+
+            @media (max-width: 480px) {
+                .carousel-dot { width: 24px; height: 24px; }
+            }
 
             @media (min-width: 769px) {
                 .carousel-wrapper { max-width: 580px; }
@@ -404,16 +379,9 @@
                         const inner = document.createElement('div');
                         inner.className = 'prod-body-inner';
 
-                        // Carussell-Wrapper
+                        // Karussell-Wrapper (ohne Pfeile)
                         const wrapper = document.createElement('div');
                         wrapper.className = 'carousel-wrapper';
-
-                        const prevBtn = document.createElement('button');
-                        prevBtn.className = 'carousel-btn prev-btn';
-                        prevBtn.type = 'button';
-                        prevBtn.innerHTML = '&#9664;';
-                        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, -1); });
-                        wrapper.appendChild(prevBtn);
 
                         const stage = document.createElement('div');
                         stage.className = 'carousel-stage';
@@ -435,17 +403,9 @@
                             stage.appendChild(slide);
                         });
                         wrapper.appendChild(stage);
-
-                        const nextBtn = document.createElement('button');
-                        nextBtn.className = 'carousel-btn next-btn';
-                        nextBtn.type = 'button';
-                        nextBtn.innerHTML = '&#9654;';
-                        nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navigate(thisGIdx, 1); });
-                        wrapper.appendChild(nextBtn);
-
                         inner.appendChild(wrapper);
 
-                        // Dots
+                        // Dots (vergrößert)
                         const dots = document.createElement('div');
                         dots.className = 'carousel-dots';
                         dots.id = 'dots-' + gIdx;
@@ -499,13 +459,6 @@
                     el.parentElement.querySelectorAll('.prod-item').forEach(p => p.classList.remove('open'));
                     if (!isOpen) el.classList.add('open');
                     updateStageManager();
-                }
-
-                function navigate(gi, dir) {
-                    const s = state[gi];
-                    if (!s) return;
-                    s.idx = (s.idx + dir + s.total) % s.total;
-                    renderSlide(gi);
                 }
 
                 function goToSlide(gi, i) {
