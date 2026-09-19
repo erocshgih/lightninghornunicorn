@@ -459,7 +459,12 @@
                                 const fetchedMain = doc.querySelector('main') || doc.body;
                                 
                                 if (fetchedMain) {
-                                    mainContent.innerHTML = fetchedMain.innerHTML;
+                                    mainContent.innerHTML = fetchedMain.innerHTML; // Sprache sofort nach dem Laden der neuen Sektion updaten
+const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
+mainContent.querySelectorAll('[data-lang-en]').forEach(el => {
+    const text = el.getAttribute(`data-lang-${lang}`);
+    if (text) el.innerHTML = text;
+});
                                 } else {
                                     mainContent.innerHTML = `<p>Inhalt konnte nicht geladen werden.</p>`;
                                 }

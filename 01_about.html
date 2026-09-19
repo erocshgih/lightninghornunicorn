@@ -2,97 +2,10 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>About - LHU Content</title>
-    
-    <!-- Die Schriftart muss geladen werden, falls sie per iFrame eingebunden wird -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ========== STRICT MOBILE REINFORCEMENTS ========== */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        /* Verhindert horizontales Scrollen/Abhacken rigoros */
-        html, body {
-            width: 100vw;
-            max-width: 100%;
-            overflow-x: hidden; 
-            background: transparent;
-            font-family: 'Press Start 2P', cursive;
-            color: #111111;
-            text-align: center;
-            -webkit-font-smoothing: none;
-        }
-
-        /* Dynamische Schriftgrößen, die auf dem Handy gut lesbar sind */
-        :root {
-            --fs-sm: clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
-            --fs-base: clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
-            --fs-md: clamp(0.62rem, 2.0vw + 0.28rem, 0.85rem);
-            --fs-lg: clamp(0.72rem, 2.6vw + 0.3rem, 1.1rem);
-            --radius: 10px;
-            --border-soft: #e0ddd8;
-        }
-
-        /* Automatischer Dark-Mode Support für den Inhalt */
-        @media (prefers-color-scheme: dark) {
-            html, body { color: #eae6e1; }
-            :root { --border-soft: #333028; }
-        }
-
-        /* Der Hauptcontainer hält alles in der Mitte */
-        main {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            overflow-x: hidden;
-        }
-
-        section {
-            width: 100%;
-            max-width: 800px;
-            padding: 15px; /* Sicherer Abstand zum Handy-Rand */
-            box-sizing: border-box;
-        }
-
-        /* ========== TEXT-OVERFLOW VERHINDERN ========== */
-        section h2, section h3, section p {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            max-width: 100%;
-        }
-
-        section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); line-height: 1.4; }
-        section h3 { font-size: var(--fs-md); margin: 1.5em 0 0.8em; line-height: 1.4; }
-        section p { font-size: var(--fs-sm); margin: 15px auto; text-align: left; line-height: 2.4; }
-
-        /* ========== BILD-OVERFLOW VERHINDERN ========== */
-        section img {
-            display: block;
-            width: 100%; /* Zwingt das Bild, sich an den Container anzupassen */
-            max-width: 100%; /* Verhindert, dass es breiter als der Handy-Screen wird */
-            height: auto; /* Behält die Proportionen bei */
-            margin: 20px auto;
-            border-radius: var(--radius);
-            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1);
-            object-fit: contain;
-        }
-
-        hr { border: 0; height: 1px; background: var(--border-soft); margin: 30px auto; width: 100%; }
-
-        /* Desktop Anpassungen (Falls es an einem großen PC-Monitor geladen wird) */
-        @media (min-width: 768px) {
-            section { padding: 40px; }
-            section p { font-size: var(--fs-base); line-height: 2.2; }
-            section img { max-width: 85%; }
-        }
-    </style>
+    <!-- Kein eigenes CSS nötig: Die menu.html übernimmt das perfekte Styling für alles, was hier geladen wird! -->
 </head>
 <body>
-
     <main>
         <section id="ABOUT">
             <h2 data-lang-en="LIGHTNING HORN UNICORN" data-lang-de="LIGHTNING HORN UNICORN">LIGHTNING HORN UNICORN</h2>
@@ -167,16 +80,5 @@
             </p>
         </section>
     </main>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            /* Sprachsteuerung aktivieren */
-            const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
-            document.querySelectorAll('[data-lang-en]').forEach(el => {
-                const text = el.getAttribute(`data-lang-${lang}`);
-                if (text) el.innerHTML = text;
-            });
-        });
-    </script>
 </body>
 </html>
