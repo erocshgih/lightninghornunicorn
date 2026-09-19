@@ -93,7 +93,6 @@
             transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        /* Eingeklappt: Rahmen unsichtbar, nur die Ente rechts bleibt als Anker */
         .strip-wrapper.collapsed {
             max-width: clamp(48px, 9vw, 64px) !important;
             margin-left: auto !important;
@@ -119,7 +118,6 @@
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
 
-        /* Der Verengungsbutton mit duck.png */
         .collapse-btn { 
             flex: 0 0 auto; 
             width: clamp(40px, 8vw, 56px); 
@@ -135,12 +133,11 @@
         }
         .collapse-btn:hover { background: var(--strip-active); }
         
-        /* Die Ente im Button */
         .collapse-btn img {
             width: 75%;
             height: 75%;
             object-fit: contain;
-            image-rendering: pixelated; /* Erhält den sauberen Pixel-Art Look */
+            image-rendering: pixelated;
             transition: transform 0.2s ease;
         }
         .collapse-btn:hover img {
@@ -274,7 +271,6 @@
             <div id="catStrip" class="cat-strip">
                 <div id="catTrack" class="cat-track"></div>
             </div>
-            <!-- Der Ente-Button rechts -->
             <button id="collapseToggle" class="collapse-btn" type="button" title="Menü öffnen/schließen">
                 <img src="duck.png" alt="Duck Menu">
             </button>
@@ -438,26 +434,18 @@
                 }
             }
 
-            /* ========== ARCADE SLIDER & DIREKTES GREIFEN (FREIWILLIGER REGELBRUCH) ========== */
+            /* ========== SYNCHRONES DIREKTES GREIFEN (OBEN & UNTEN) ========== */
             let dragging = false, startX = 0, lastX = 0;
             let velocity = 0; 
             let lastTimeDrag = 0;
-            let dragMode = 1; 
 
             function down(e) { 
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle') || e.target.closest('.cat-item')) return; 
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return; 
                 dragging = true; 
                 velocity = 0;
                 startX = e.touches ? e.touches[0].clientX : e.clientX; 
                 lastX = startX;
                 lastTimeDrag = performance.now();
-
-                // Wenn man direkt in das Kategorien-Band greift, zieht man jetzt direkt die Kategorien mit der Maus/dem Finger!
-                if(e.target.closest('#catStrip')) {
-                    dragMode = 1;  // Direktes Ziehen
-                } else {
-                    dragMode = 1;  
-                }
             }
 
             function move(e) { 
@@ -469,8 +457,8 @@
                 let delta = currentX - lastX; 
                 if (dt > 0) velocity = delta / dt; 
 
-                // Wenn man direkt im Band zieht, bewegen sich die Kategorien 1:1 mit dem Finger/Maus!
-                pos += (delta * dragMode);
+                // Unabhängig ob oben im Strip oder unten im Slider gegriffen: 1:1 direkte Steuerung
+                pos += delta; 
                 wrap(); 
 
                 lastX = currentX;
@@ -480,11 +468,11 @@
 
             function up() { 
                 dragging = false; 
-                if(velocity > 2) velocity = 2; 
-                if(velocity < -2) velocity = -2;
+                if(velocity > 2.5) velocity = 2.5; 
+                if(velocity < -2.5) velocity = -2.5;
             }
 
-            // Sowohl der Strip als auch der Slider erlauben jetzt das direkte Greifen
+            // Bindet das direkte Greifen an BEIDE Elemente (oben und unten)
             const dragSurfaces = [strip, sliderTrackEl];
             dragSurfaces.forEach(surface => {
                 surface.addEventListener('mousedown', down); 
@@ -506,11 +494,11 @@
 
                 if (!dragging) {
                     if (Math.abs(velocity) > 0.03) {
-                        pos += velocity * dt * 0.5; // Schwung nach Loslassen
+                        pos += velocity * dt * 0.6; // Wurf-Momentum nach dem Loslassen
                         velocity *= 0.92; 
                     } else {
                         velocity = 0;
-                        pos -= 0.015 * dt; // Gemütliches Auto-Gleiten
+                        pos -= 0.015 * dt; // Sanftes Auto-Gleiten
                     }
                 }
 
