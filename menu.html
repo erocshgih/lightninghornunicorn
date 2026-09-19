@@ -10,6 +10,8 @@
     <link rel="icon" href="lhu_favicon.png" type="image/png">
     
     <link rel="preload" href="pixelart/pixelart_vedran.png" as="image">
+    <link rel="preload" href="duck.png" as="image">
+    
     <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
     <meta name="theme-color" content="#04050a">
 
@@ -91,8 +93,9 @@
             transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
+        /* Eingeklappt: Rahmen unsichtbar, nur die Ente rechts bleibt als Anker */
         .strip-wrapper.collapsed {
-            max-width: clamp(40px, 8vw, 56px) !important;
+            max-width: clamp(48px, 9vw, 64px) !important;
             margin-left: auto !important;
             margin-right: 0 !important;
             border-color: transparent !important;
@@ -116,29 +119,38 @@
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
 
-        /* Der Collapse-Button rechts */
-        .collapse-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-left: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center; }
-        .collapse-btn:hover { background: var(--strip-active); color: #111; }
+        /* Der Verengungsbutton mit duck.png */
+        .collapse-btn { 
+            flex: 0 0 auto; 
+            width: clamp(40px, 8vw, 56px); 
+            border: none; 
+            border-left: 2px solid var(--border-soft); 
+            background: var(--card-bg); 
+            cursor: pointer; 
+            z-index: 3; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s; 
+        }
+        .collapse-btn:hover { background: var(--strip-active); }
+        
+        /* Die Ente im Button */
+        .collapse-btn img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            image-rendering: pixelated; /* Erhält den sauberen Pixel-Art Look */
+            transition: transform 0.2s ease;
+        }
+        .collapse-btn:hover img {
+            transform: scale(1.1);
+        }
 
         .strip-wrapper.collapsed .collapse-btn {
-            border-left: 2px solid #111111;
-            border-radius: 6px;
-            box-shadow: 0 4px 0 var(--border-soft);
-        }
-
-        /* DIE SONNEN-SCHERBE: Ein 50% großer runder Kreis, wenn eingeklappt */
-        .collapse-btn .sun-icon {
-            display: inline-block;
-            width: 50%;
-            height: 50%;
-            background-color: transparent;
-            border-radius: 50%;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .strip-wrapper.collapsed .collapse-btn .sun-icon {
-            background-color: var(--strip-active); /* Die leuchtende Sonne */
-            transform: scale(1.1);
-            box-shadow: 0 0 8px var(--strip-active);
+            border-left: 2px solid transparent;
+            background: transparent;
+            box-shadow: none;
         }
 
         .cat-strip { flex: 1 1 auto; overflow: hidden; position: relative; contain: paint; cursor: grab; transition: opacity 0.3s ease, flex 0.5s ease; }
@@ -262,9 +274,9 @@
             <div id="catStrip" class="cat-strip">
                 <div id="catTrack" class="cat-track"></div>
             </div>
-            <!-- Der Button rechts mit der Sonnen-Scherbe -->
-            <button id="collapseToggle" class="collapse-btn" type="button" title="Menü verengen/ausfahren">
-                <span class="sun-icon"></span>
+            <!-- Der Ente-Button rechts -->
+            <button id="collapseToggle" class="collapse-btn" type="button" title="Menü öffnen/schließen">
+                <img src="duck.png" alt="Duck Menu">
             </button>
         </div>
         
@@ -309,7 +321,7 @@
                 });
             }
 
-            /* ========== COLLAPSE / SONNEN-BUTTON LOGIK ========== */
+            /* ========== COLLAPSE / ENTE-BUTTON LOGIK ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
@@ -426,22 +438,26 @@
                 }
             }
 
-            /* ========== DIREKTES ZIEHEN IM MENÜ + SLIDER & MOMENTUM ========== */
+            /* ========== ARCADE SLIDER & DIREKTES GREIFEN (FREIWILLIGER REGELBRUCH) ========== */
             let dragging = false, startX = 0, lastX = 0;
             let velocity = 0; 
             let lastTimeDrag = 0;
             let dragMode = 1; 
 
             function down(e) { 
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return; 
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle') || e.target.closest('.cat-item')) return; 
                 dragging = true; 
                 velocity = 0;
                 startX = e.touches ? e.touches[0].clientX : e.clientX; 
                 lastX = startX;
                 lastTimeDrag = performance.now();
 
-                // Egal ob man direkt auf den Kategorien-Streifen oder den Slider greift – man zieht das Menü!
-                dragMode = -1;  
+                // Wenn man direkt in das Kategorien-Band greift, zieht man jetzt direkt die Kategorien mit der Maus/dem Finger!
+                if(e.target.closest('#catStrip')) {
+                    dragMode = 1;  // Direktes Ziehen
+                } else {
+                    dragMode = 1;  
+                }
             }
 
             function move(e) { 
@@ -453,8 +469,8 @@
                 let delta = currentX - lastX; 
                 if (dt > 0) velocity = delta / dt; 
 
-                let sensitivity = 1.2; // Direkte und flüssige Mitnahme beim Ziehen mit der Maus/Finger
-                pos += (delta * sensitivity);
+                // Wenn man direkt im Band zieht, bewegen sich die Kategorien 1:1 mit dem Finger/Maus!
+                pos += (delta * dragMode);
                 wrap(); 
 
                 lastX = currentX;
@@ -468,7 +484,7 @@
                 if(velocity < -2) velocity = -2;
             }
 
-            // Sowohl der Menü-Streifen als auch der Slider-Track sind jetzt direkte Drag-Flächen
+            // Sowohl der Strip als auch der Slider erlauben jetzt das direkte Greifen
             const dragSurfaces = [strip, sliderTrackEl];
             dragSurfaces.forEach(surface => {
                 surface.addEventListener('mousedown', down); 
@@ -490,17 +506,18 @@
 
                 if (!dragging) {
                     if (Math.abs(velocity) > 0.03) {
-                        pos += velocity * dt * 0.8;
+                        pos += velocity * dt * 0.5; // Schwung nach Loslassen
                         velocity *= 0.92; 
                     } else {
                         velocity = 0;
-                        pos -= 0.015 * dt; // Gemütliches Auto-Gleiten nach rechts
+                        pos -= 0.015 * dt; // Gemütliches Auto-Gleiten
                     }
                 }
 
                 wrap();
                 track.style.transform = `translateX(${pos}px)`;
 
+                // Slider-Thumb synchronisieren
                 if (setW > 0 && sliderW > 0) {
                     let progress = Math.abs(pos) / setW; 
                     let maxThumbX = sliderW - thumbW;
