@@ -392,6 +392,35 @@
   import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
 
   // =========================================================================
+  // 🌐 SPRACH- & ÜBERSETZUNGS-LOGIK (DE / EN)
+  // =========================================================================
+  const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
+  
+  const translations = {
+    en: {
+      playMusic: "Play Music",
+      stopMusic: "Stop Music",
+      mainPage: "Main Page",
+      introHint: "Press a button to enter",
+      loading: "loading"
+    },
+    de: {
+      playMusic: "Musik abspielen",
+      stopMusic: "Musik stoppen",
+      mainPage: "Hauptseite",
+      introHint: "Drücke einen Knopf zum Eintreten",
+      loading: "lädt"
+    }
+  };
+  const t = isGerman ? translations.de : translations.en;
+
+  // UI-Texte beim Start zuweisen
+  document.getElementById("music-toggle").textContent = t.playMusic;
+  document.getElementById("navigate-to-main").textContent = t.mainPage;
+  document.getElementById("lhu-intro-hint").textContent = t.introHint;
+  document.querySelector(".loading-text").textContent = t.loading;
+
+  // =========================================================================
   // 🔮 DAILY WISDOM (CURATED)
   // =========================================================================
   const dailyWisdom = {
@@ -442,7 +471,6 @@
     en: "These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity."
   };
 
-  const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
   document.getElementById("disclaimer-text").textContent = isGerman ? disclaimerTexts.de : disclaimerTexts.en;
 
   document.getElementById("disclaimer-btn").onclick = () => { document.getElementById("disclaimer-modal").style.display = "block"; };
@@ -547,7 +575,11 @@
   const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
 
   let musicOn = false; const music = document.getElementById("background-music");
-  document.getElementById("music-toggle").onclick = () => { musicOn = !musicOn; musicOn ? music.play().catch(()=>{}) : music.pause(); document.getElementById("music-toggle").textContent = musicOn ? "Stop Music" : "Play Music"; };
+  document.getElementById("music-toggle").onclick = () => { 
+    musicOn = !musicOn; 
+    musicOn ? music.play().catch(()=>{}) : music.pause(); 
+    document.getElementById("music-toggle").textContent = musicOn ? t.stopMusic : t.playMusic; 
+  };
   document.getElementById("navigate-to-main").onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html"; };
 
   let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
@@ -566,7 +598,7 @@
   }
 
   document.getElementById("heart-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
     gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
     const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
@@ -582,7 +614,7 @@
   }
 
   document.getElementById("rainbow-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
     rainbowActive = true; rainbowStart = performance.now(); 
     rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone(); rainbowBaseScale = object.scale.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
@@ -611,7 +643,7 @@
     if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
     if (typewriterInterval) clearInterval(typewriterInterval);
     
-    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = "Play Music";
+    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
     wisdomActive = true;
     
     document.getElementById("matrix-bg").style.opacity = "0.2";
