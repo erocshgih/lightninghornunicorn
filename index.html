@@ -213,7 +213,7 @@
         <button class="lhu-pill lhu-pill-yellow" data-intro="yellow" type="button"></button>
         <button class="lhu-pill lhu-pill-blue" data-intro="blue" type="button"></button>
       </div>
-      <div id="lhu-intro-hint">Press a button to enter</div>
+      <div id="lhu-intro-hint">Drücke einen Knopf</div>
       <!-- UNSICHTBARER SKIP-BUTTON (3-MAL KLICKEN) -->
       <button id="lhu-secret-skip-area" type="button" aria-label="Secret Skip"></button>
     </div>
@@ -253,10 +253,10 @@
 
   <p class="sr-only">Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.</p>
 
-  <div id="loading"><div class="spinner"></div><span class="loading-text">loading</span></div>
+  <div id="loading"><div class="spinner"></div><span class="loading-text">lädt</span></div>
   <div id="ui-wrapper">
-    <button id="music-toggle" class="btn glass">Play Music</button>
-    <button id="navigate-to-main" class="btn glass">Main Page</button>
+    <button id="music-toggle" class="btn glass">Musik abspielen</button>
+    <button id="navigate-to-main" class="btn glass">Hauptseite</button>
   </div>
   
   <div id="effect-buttons">
@@ -272,7 +272,7 @@
 
   <div id="disclaimer-modal">
     <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
-    <p id="disclaimer-text">These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity.</p>
+    <p id="disclaimer-text">Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.</p>
     <button id="close-disclaimer" class="btn glass">OK</button>
   </div>
 
@@ -402,14 +402,14 @@
       playMusic: "Play Music",
       stopMusic: "Stop Music",
       mainPage: "Main Page",
-      introHint: "Press a button to enter",
+      introHint: "Press a button",
       loading: "loading"
     },
     de: {
       playMusic: "Musik abspielen",
       stopMusic: "Musik stoppen",
       mainPage: "Hauptseite",
-      introHint: "Drücke einen Knopf zum Eintreten",
+      introHint: "Drücke einen Knopf",
       loading: "lädt"
     }
   };
@@ -515,6 +515,7 @@
   const hitRim = new THREE.DirectionalLight(0xffffff, 2.2); hitRim.position.set(0, 3, -5); hitEnterScene.add(hitRim);
   
   let hitEnterObject = null, hitEnterMixer = null;
+  let hitEnterEmissiveMats = [];
 
   function fitHitEnterModel(model) {
     const box = new THREE.Box3().setFromObject(model); const center = box.getCenter(new THREE.Vector3()); const size = box.getSize(new THREE.Vector3()); const maxSize = Math.max(size.x, size.y, size.z, 0.001);
@@ -528,7 +529,15 @@
     hitEnterObject.traverse((child) => {
       if (!child.isMesh || !child.material) return;
       const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((mat) => { if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5; if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58; if ("emissive" in mat) { mat.emissive.setRGB(0.055, 0.055, 0.055); mat.emissiveIntensity = 0.35; } });
+      materials.forEach((mat) => { 
+        if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5; 
+        if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58; 
+        if ("emissive" in mat) { 
+          mat.emissive.setRGB(0.055, 0.055, 0.055); 
+          mat.emissiveIntensity = 0.35; 
+          hitEnterEmissiveMats.push({ mat, origCol: mat.emissive.clone(), origInt: mat.emissiveIntensity });
+        } 
+      });
     });
     hitEnterScene.add(hitEnterObject); fitHitEnterModel(hitEnterObject);
     if (g.animations.length) { hitEnterMixer = new THREE.AnimationMixer(hitEnterObject); g.animations.forEach(clip => hitEnterMixer.clipAction(clip).play()); }
@@ -817,7 +826,7 @@
     }
     
     function animateIntro(now) {
-      if (!document.body.contains(intro)) return; // Stoppen, falls das Intro entfernt wurde
+      if (!document.body.contains(intro)) return;
       const timeOffset = (now - introStart) / 1000;
       const t = timeOffset / 2;
       
@@ -886,11 +895,35 @@
     }
     
     resizeIntro(); window.addEventListener("resize", resizeIntro);
+    
     document.querySelectorAll(".lhu-pill").forEach(btn => {
       btn.addEventListener("click", () => {
-        introVariant = btn.dataset.intro; document.getElementById("lhu-enter-panel").classList.add("hidden");
-        if (audio) { audio.src = `lhu${btn.dataset.intro}.mp3`; audio.play().catch(()=>{}); }
-        introStart = performance.now(); requestAnimationFrame(animateIntro);
+        introVariant = btn.dataset.intro; 
+        
+        // --- LICHTFLACKERN / AUFLEUCHTEN IM ENTER-SLOT ---
+        const flashColorMap = {
+          red: new THREE.Color(0xff3333),
+          yellow: new THREE.Color(0xffd400),
+          blue: new THREE.Color(0x33bbff)
+        };
+        const targetColor = flashColorMap[introVariant] || new THREE.Color(0xffffff);
+
+        hitEnterEmissiveMats.forEach(item => {
+          item.mat.emissive.copy(targetColor);
+          item.mat.emissiveIntensity = 4.5;
+        });
+
+        document.getElementById("lhu-enter-panel").classList.add("hidden");
+
+        if (audio) { audio.src = `lhu${introVariant}.mp3`; }
+        
+        // Nach einer kurzen Verzögerung (Flackereffekt) startet das Audio und Intro
+        setTimeout(() => {
+          if (audio) audio.play().catch(()=>{});
+          introStart = performance.now();
+          requestAnimationFrame(animateIntro);
+        }, 320);
+
       }, { once: true });
     });
   })();
