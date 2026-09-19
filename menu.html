@@ -69,7 +69,7 @@
         html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
         body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
 
-        /* ========== HEADER & MENÜ (JETZT KOMPLETT TRANSPARENT IM EINGEKLAPPTEN ZUSTAND) ========== */
+        /* ========== HEADER & MENÜ ========== */
         .header { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             padding: 10px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); 
@@ -77,7 +77,6 @@
             transition: background 0.5s ease, box-shadow 0.5s ease;
         }
 
-        /* Wenn Header eingeklappt ist, wird auch der Header-Hintergrund unsichtbar */
         .header.collapsed {
             background: transparent !important;
             box-shadow: none !important;
@@ -92,7 +91,6 @@
             transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        /* Eingeklappt: Leert den Raum komplett auf */
         .strip-wrapper.collapsed {
             max-width: clamp(40px, 8vw, 56px) !important;
             margin-left: auto !important;
@@ -118,13 +116,29 @@
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
 
-        .collapse-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-left: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; }
+        /* Der Collapse-Button rechts */
+        .collapse-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-left: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: background 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center; }
         .collapse-btn:hover { background: var(--strip-active); color: #111; }
 
         .strip-wrapper.collapsed .collapse-btn {
             border-left: 2px solid #111111;
             border-radius: 6px;
             box-shadow: 0 4px 0 var(--border-soft);
+        }
+
+        /* DIE SONNEN-SCHERBE: Ein 50% großer runder Kreis, wenn eingeklappt */
+        .collapse-btn .sun-icon {
+            display: inline-block;
+            width: 50%;
+            height: 50%;
+            background-color: transparent;
+            border-radius: 50%;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .strip-wrapper.collapsed .collapse-btn .sun-icon {
+            background-color: var(--strip-active); /* Die leuchtende Sonne */
+            transform: scale(1.1);
+            box-shadow: 0 0 8px var(--strip-active);
         }
 
         .cat-strip { flex: 1 1 auto; overflow: hidden; position: relative; contain: paint; cursor: grab; transition: opacity 0.3s ease, flex 0.5s ease; }
@@ -223,7 +237,6 @@
             background-image: url('pixelart/pixelart_vedran.png'); 
             background-repeat: repeat; 
             background-position: top left;
-            
             background-size: 12.5vw 25vh; 
         }
         
@@ -249,7 +262,10 @@
             <div id="catStrip" class="cat-strip">
                 <div id="catTrack" class="cat-track"></div>
             </div>
-            <button id="collapseToggle" class="collapse-btn" type="button" title="Menü verengen/ausfahren">◀</button>
+            <!-- Der Button rechts mit der Sonnen-Scherbe -->
+            <button id="collapseToggle" class="collapse-btn" type="button" title="Menü verengen/ausfahren">
+                <span class="sun-icon"></span>
+            </button>
         </div>
         
         <div class="slider-container-wrap" id="sliderWrap">
@@ -293,7 +309,7 @@
                 });
             }
 
-            /* ========== COLLAPSE / TRANSPARENZ-BUTTON LOGIK ========== */
+            /* ========== COLLAPSE / SONNEN-BUTTON LOGIK ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
@@ -306,12 +322,10 @@
                     headerEl.classList.add('collapsed');
                     stripWrapper.classList.add('collapsed');
                     sliderWrap.classList.add('collapsed');
-                    collapseBtn.textContent = '▶';
                 } else {
                     headerEl.classList.remove('collapsed');
                     stripWrapper.classList.remove('collapsed');
                     sliderWrap.classList.remove('collapsed');
-                    collapseBtn.textContent = '◀';
                 }
             });
 
@@ -412,25 +426,22 @@
                 }
             }
 
-            /* ========== ARCADE SLIDER & GEDROSSELTE AUTO-SCROLL LOGIK ========== */
+            /* ========== DIREKTES ZIEHEN IM MENÜ + SLIDER & MOMENTUM ========== */
             let dragging = false, startX = 0, lastX = 0;
             let velocity = 0; 
             let lastTimeDrag = 0;
             let dragMode = 1; 
 
             function down(e) { 
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle') || e.target.closest('.cat-item')) return; 
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return; 
                 dragging = true; 
                 velocity = 0;
                 startX = e.touches ? e.touches[0].clientX : e.clientX; 
                 lastX = startX;
                 lastTimeDrag = performance.now();
 
-                if(e.target.closest('#catStrip')) {
-                    dragMode = -1; 
-                } else {
-                    dragMode = 1;  
-                }
+                // Egal ob man direkt auf den Kategorien-Streifen oder den Slider greift – man zieht das Menü!
+                dragMode = -1;  
             }
 
             function move(e) { 
@@ -442,8 +453,8 @@
                 let delta = currentX - lastX; 
                 if (dt > 0) velocity = delta / dt; 
 
-                let sensitivity = (setW / Math.max(100, sliderW)); 
-                pos -= (delta * sensitivity * dragMode);
+                let sensitivity = 1.2; // Direkte und flüssige Mitnahme beim Ziehen mit der Maus/Finger
+                pos += (delta * sensitivity);
                 wrap(); 
 
                 lastX = currentX;
@@ -457,6 +468,7 @@
                 if(velocity < -2) velocity = -2;
             }
 
+            // Sowohl der Menü-Streifen als auch der Slider-Track sind jetzt direkte Drag-Flächen
             const dragSurfaces = [strip, sliderTrackEl];
             dragSurfaces.forEach(surface => {
                 surface.addEventListener('mousedown', down); 
@@ -478,11 +490,11 @@
 
                 if (!dragging) {
                     if (Math.abs(velocity) > 0.03) {
-                        pos -= velocity * dt * (setW / Math.max(100, sliderW)) * dragMode;
+                        pos += velocity * dt * 0.8;
                         velocity *= 0.92; 
                     } else {
                         velocity = 0;
-                        pos -= 0.015 * dt; 
+                        pos -= 0.015 * dt; // Gemütliches Auto-Gleiten nach rechts
                     }
                 }
 
