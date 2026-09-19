@@ -5,271 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Lightning Horn Unicorn - About</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="lhu_favicon.png" type="image/png">
-    
-    <link rel="preload" href="pixelart/pixelart_vedran.png" as="image">
-    <link rel="preload" href="duck.png" as="image">
-
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
-    <meta name="theme-color" content="#04050a">
-
     <style>
-        /* ========== DESIGN TOKENS ========== */
+        /* ========== DESIGN TOKENS FÜR DEN INHALT ========== */
         :root {
-            --bg:             transparent;
-            --bg-solid:       #f5f3f0;
-            --text:           #111111;
-            --text-muted:     #555555;
-            --text-soft:      #888888;
-            --header-bg:      #f5f3f0;
-            --header-shadow:  0 1px 6px rgba(0, 0, 0, 0.04);
-            --strip-text:     #4a2c00;
-            --strip-active:   #ff7a00;
-            --strip-fade:     rgba(245, 243, 240, 1);
-            --strip-fade-end: rgba(245, 243, 240, 0);
-            --border-soft:    #e0ddd8;
-            --card-bg:        #ffffff;
-            --door-bg:        #f5f3f0;
-
-            --fs-xs:          clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
             --fs-sm:          clamp(0.48rem, 1.5vw + 0.22rem, 0.65rem);
-            --fs-base:        clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
             --fs-md:          clamp(0.62rem, 2.0vw + 0.28rem, 0.85rem);
+            --fs-base:        clamp(0.52rem, 1.7vw + 0.25rem, 0.72rem);
             --fs-lg:          clamp(0.72rem, 2.6vw + 0.3rem, 1.1rem);
             --fs-xl:          clamp(0.8rem,  3.0vw + 0.35rem, 1.5rem);
-            
-            --space-section:  clamp(16px, 4.5vw, 40px);
+            --space-section:  clamp(12px, 3.5vw, 30px);
             --radius:         10px;
         }
 
-        /* ========== THEME MODES ========== */
-        @media (prefers-color-scheme: dark) { html:not([data-theme]) { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; } }
-        html[data-theme="dark"]       { --bg: #0e0e0e; --text: #eae6e1; --header-bg: #1a1a1a; --strip-text: #d4b48a; --strip-active: #ff9a3c; --strip-fade: rgba(26, 26, 26, 1); --strip-fade-end: rgba(26, 26, 26, 0); --border-soft: #333028; --card-bg: #1c1c1c; --door-bg: #141414; }
-        html[data-theme="mono-gray"]  { --bg: #121212; --text: #e0e0e0; --header-bg: #1c1c1c; --strip-text: #bbbbbb; --strip-active: #ffffff; --strip-fade: rgba(28, 28, 28, 1); --strip-fade-end: rgba(28, 28, 28, 0); --card-bg: #222222; --door-bg: #1a1a1a; }
-        html[data-theme="mono-green"] { --bg: #020f02; --text: #7cff7c; --header-bg: #031a03; --strip-text: #5cdb5c; --strip-active: #b6ffb6; --strip-fade: rgba(3, 26, 3, 1); --strip-fade-end: rgba(3, 26, 3, 0); --card-bg: #0a1f0a; --door-bg: #041504; }
-        html[data-theme="crt"]        { --bg: #0a0c0a; --text: #c8e6c8; --header-bg: #0c100c; --strip-text: #9ccc9c; --strip-active: #d4ffd4; --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0); --card-bg: #121812; --door-bg: #0e120e; }
-
-        html[data-theme="dark"] section img { box-shadow: 0 3px 18px rgba(0, 0, 0, 0.35); }
-        html[data-theme="mono-gray"] main { filter: grayscale(1); }
-        html[data-theme="mono-green"] main { filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9); }
-        
-        html[data-theme="crt"] main { animation: crtGlitch 5s infinite steps(1, end), crtJitter 3s ease-in-out infinite; }
-        html[data-theme="crt"]::after {
-            content: ""; position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.55;
-            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 4px), url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-repeat: repeat; mix-blend-mode: overlay; background-size: 100% 4px, 180px 180px;
-        }
-
-        @keyframes crtGlitch { 0%, 94%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; } 95% { transform: translate(2px, -1px) skewX(0.4deg); filter: hue-rotate(8deg); } 96% { transform: translate(-2px, 1px) skewX(-0.3deg); filter: hue-rotate(-6deg); } 97% { transform: translate(1px, 0) skewX(0.2deg); filter: none; } }
-        @keyframes crtJitter { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(0.3px, 0.2px); } 60% { transform: translate(0.1px, 0.3px); } }
-
-        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
-
-        /* ========== BASE STYLES ========== */
+        /* ========== BASIS & MOBILE SICHERHEIT ========== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-        body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); overflow-x: hidden; -webkit-font-smoothing: none; }
+        html, body { width: 100%; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+        body { background: transparent; font-family: 'Press Start 2P', cursive; color: inherit; text-align: center; }
 
-        /* ========== HEADER & MENÜ (VOLLSTÄNDIG & MOBIL OPTIMIERT) ========== */
-        .header { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 8px 12px; background: var(--header-bg); box-shadow: var(--header-shadow); 
-            position: sticky; top: 0; z-index: 1000; width: 100%;
-            transition: background 0.5s ease, box-shadow 0.5s ease;
+        /* ========== MAIN & SEKTIONEN (FÜR HANDY RUNDUM OPTIMIERT) ========== */
+        main { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            width: 100%; 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 10px 12px; 
+            box-sizing: border-box; 
+            overflow-x: hidden;
         }
 
-        .header.collapsed {
-            background: transparent !important;
-            box-shadow: none !important;
+        section { 
+            padding: var(--space-section); 
+            width: 100%; 
+            max-width: min(92vw, 800px); 
+            box-sizing: border-box; 
+            margin: 0 auto; 
+            overflow-x: hidden; 
         }
         
-        .strip-wrapper { 
-            display: flex; align-items: stretch; width: 100%; max-width: 1600px; margin: 0 auto; 
-            border: 3px solid #111111; 
-            border-radius: 10px; 
-            overflow: hidden;
-            height: clamp(52px, 8vw, 75px); background: var(--header-bg); box-sizing: border-box; 
-            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        section h2 { 
+            font-size: var(--fs-lg); 
+            margin: 0 auto 1.2em; 
+            word-break: break-word; 
+            overflow-wrap: break-word;
+            text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(255, 255, 255, 0.45); 
         }
 
-        .strip-wrapper.collapsed {
-            max-width: clamp(44px, 8vw, 60px) !important;
-            margin-left: auto !important;
-            margin-right: 0 !important;
-            border-color: transparent !important;
-            background: transparent !important;
-            box-shadow: none !important;
+        section h3 { 
+            font-size: var(--fs-md); 
+            margin: 1em 0 0.6em; 
+            word-break: break-word; 
+            overflow-wrap: break-word;
         }
 
-        .strip-wrapper.collapsed .theme-btn {
-            opacity: 0;
-            pointer-events: none;
-            width: 0px;
-            border: none;
+        section p { 
+            font-size: var(--fs-sm); 
+            margin: 18px auto; 
+            text-align: left; 
+            line-height: 2.6; 
+            word-break: break-word; 
+            overflow-wrap: break-word; 
+            max-width: 100%;
         }
 
-        .strip-wrapper.collapsed .cat-strip {
-            opacity: 0;
-            pointer-events: none;
-            flex: 0 0 0px;
+        section img { 
+            display: block; 
+            width: 100%; 
+            max-width: 100%; 
+            height: auto; 
+            margin: 20px auto; 
+            border-radius: var(--radius); 
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.15); 
+            object-fit: contain; 
+            box-sizing: border-box; 
         }
 
-        .theme-btn { flex: 0 0 auto; width: clamp(38px, 7vw, 54px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.85rem, 2.2vw, 1.1rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
-        .theme-btn:hover { background: var(--strip-active); color: #111; }
-
-        .collapse-btn { 
-            flex: 0 0 auto; 
-            width: clamp(38px, 7vw, 54px); 
-            border: none; 
-            border-left: 2px solid var(--border-soft); 
-            background: var(--card-bg); 
-            cursor: pointer; 
-            z-index: 3; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s; 
+        hr { 
+            border: 0; 
+            height: 1px; 
+            background: rgba(128, 128, 128, 0.3); 
+            margin: 24px auto; 
+            width: 100%; 
         }
-        .collapse-btn:hover { background: var(--strip-active); }
-        
-        .collapse-btn img {
-            width: 75%;
-            height: 75%;
-            object-fit: contain;
-            image-rendering: pixelated;
-            transition: transform 0.2s ease;
-        }
-        .collapse-btn:hover img {
-            transform: scale(1.1);
-        }
-
-        .strip-wrapper.collapsed .collapse-btn {
-            border-left: 2px solid transparent;
-            background: transparent;
-            box-shadow: none;
-        }
-
-        .cat-strip { flex: 1 1 auto; overflow: hidden; position: relative; contain: paint; cursor: grab; transition: opacity 0.3s ease, flex 0.5s ease; }
-        .cat-strip:active { cursor: grabbing; }
-        .cat-strip::before, .cat-strip::after { content: ""; position: absolute; top: 0; bottom: 0; width: 25px; z-index: 2; pointer-events: none; }
-        .cat-strip::before { left: 0; background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end)); }
-        .cat-strip::after { right: 0; background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end)); }
-        
-        .cat-track { display: inline-flex; align-items: center; white-space: nowrap; height: 100%; will-change: transform; backface-visibility: hidden; font-size: var(--fs-sm); letter-spacing: 0.08em; }
-        .cat-item { display: flex; align-items: center; justify-content: center; padding: 0 clamp(6px, 1.2vw, 14px); cursor: pointer; user-select: none; }
-        .cat-item span { display: inline-block; padding: 7px 14px; background: var(--card-bg); color: var(--text); border: 2px solid var(--border-soft); border-radius: 6px; box-shadow: 0 4px 0 var(--border-soft); transition: all 0.1s ease-in-out; line-height: 1.2; }
-        .cat-item:hover span { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-soft); }
-        .cat-item.active span { background: var(--strip-active); color: #111; border-color: #111; box-shadow: 0 0 0 transparent; transform: translateY(4px); }
-
-        .cat-item[data-cat="ABOUT"].active span { background: #ffd080; }
-        .cat-item[data-cat="VHS MULTIVERSE"].active span { background: #80eaf8; }
-        .cat-item[data-cat="HUMANART"].active span { background: #f080d0; }
-        .cat-item[data-cat="PROJECTS"].active span { background: #ff9a3c; }
-        .cat-item[data-cat="STORYTIME"].active span { background: #80f0a8; }
-        .cat-item[data-cat="MUSIC"].active span { background: #b898f0; }
-        .cat-item[data-cat="CONTACT"].active span { background: #80b0f8; }
-        .cat-item[data-cat="DONATE"].active span { background: #f08080; }
-
-        /* ========== ARCADE SLIDER ========== */
-        .slider-container-wrap {
-            width: 100%;
-            max-width: 1600px;
-            margin: 5px auto 0;
-            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            overflow: hidden;
-            padding: 0 2px;
-        }
-        .slider-container-wrap.collapsed {
-            opacity: 0;
-            max-height: 0px;
-            margin-top: 0px;
-            pointer-events: none;
-        }
-
-        .slider-track {
-            width: 100%;
-            height: 13px;
-            background: var(--border-soft);
-            border: 2px solid var(--text-muted);
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            cursor: grab;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .slider-track:active {
-            cursor: grabbing;
-        }
-        .slider-thumb {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: clamp(45px, 14vw, 85px); 
-            border-radius: 4px;
-            border: 2px solid var(--text);
-            pointer-events: none;
-            will-change: transform, background-color;
-            background-color: #ff0000;
-        }
-
-        /* ========== INHALT & SEKTIONEN (SICHERE PADDING-WERTE GEGEN ABHACKEN) ========== */
-        main { display: flex; flex-direction: column; align-items: center; width: 100%; margin: 20px auto; z-index: 1; box-sizing: border-box; }
-        section { padding: var(--space-section); width: 100%; max-width: min(92vw, 600px); box-sizing: border-box; margin: 0 auto; overflow-x: hidden; }
-        
-        section h2 { font-size: var(--fs-lg); margin: 0 auto 1.2em; word-break: break-word; text-shadow: 1px 0 rgba(255, 0, 0, 0.45), -1px 0 rgba(0, 255, 255, 0.45); filter: contrast(1.06); }
-        section h3 { font-size: var(--fs-md); margin: 1em 0 0.6em; word-break: break-word; }
-        section p { font-size: var(--fs-sm); margin: 18px auto; text-align: left; line-height: 2.6; word-break: break-word; overflow-wrap: break-word; }
-        section img { display: block; width: 100%; max-width: 100%; height: auto; margin: 28px auto; border-radius: var(--radius); box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1); object-fit: contain; box-sizing: border-box; }
-        hr { border: 0; height: 1px; background: var(--border-soft); margin: 28px auto; width: 100%; }
 
         @media (min-width: 769px) {
-            section { max-width: min(85vw, 1000px); padding: 60px; }
+            section { max-width: min(85vw, 1000px); padding: 40px; }
             section h2 { font-size: var(--fs-xl); }
             section p { font-size: var(--fs-base); line-height: 2.2; max-width: 800px; margin-left: auto; margin-right: auto; }
             section img { max-width: 75%; max-height: 60vh; }
         }
-
-        /* ========== METALLTÜR ========== */
-        #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
-        #door-overlay .door-panel { position: absolute; inset: -10%; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); will-change: transform; backface-visibility: hidden; background-color: var(--door-bg); background-image: url('pixelart/pixelart_vedran.png'); background-repeat: repeat; background-size: 12.5vw 25vh; }
-        
-        @media (max-width: 768px) {
-            #door-overlay .door-panel { background-size: 25vw 25vw; }
-        }
-
-        #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); pointer-events: all; }
-        #door-overlay.open .door-panel   { transform: translate3d(0, 120%, 0); pointer-events: none; }
     </style>
 </head>
 <body>
-    
-    <div id="door-overlay" class="closed">
-        <div class="door-panel"></div>
-    </div>
-
-    <!-- HEADER / MENÜ -->
-    <header class="header" id="headerEl">
-        <div class="strip-wrapper" id="stripWrapper">
-            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus">☀</button>
-            
-            <div id="catStrip" class="cat-strip">
-                <div id="catTrack" class="cat-track"></div>
-            </div>
-            
-            <button id="collapseToggle" class="collapse-btn" type="button" title="Menü öffnen/schließen">
-                <img src="duck.png" alt="Duck Menu">
-            </button>
-        </div>
-        
-        <div class="slider-container-wrap" id="sliderWrap">
-            <div class="slider-track" id="sliderTrack">
-                <div class="slider-thumb" id="sliderThumb"></div>
-            </div>
-        </div>
-    </header>
 
     <main>
         <section id="ABOUT">
@@ -341,285 +169,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
-            const CURRENT_PAGE = 'ABOUT'; 
-
-            /* ========== THEME ENGINE ========== */
-            const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
-            const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
-            const themeBtn = document.getElementById('themeToggle');
-
-            function applyTheme(theme) {
-                document.documentElement.setAttribute('data-theme', theme);
-                try { localStorage.setItem('lhu-theme', theme); } catch(e) {}
-                if (themeBtn) themeBtn.textContent = THEME_ICONS[theme] || '☀';
-            }
-
-            let currentTheme = 'light';
-            try { currentTheme = localStorage.getItem('lhu-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch(e){}
-            if (!THEMES.includes(currentTheme)) currentTheme = 'light';
-            applyTheme(currentTheme);
-
-            if (themeBtn) {
-                themeBtn.addEventListener('click', () => {
-                    const idx = THEMES.indexOf(currentTheme);
-                    currentTheme = THEMES[(idx + 1) % THEMES.length];
-                    applyTheme(currentTheme);
-                });
-            }
-
-            /* ========== COLLAPSE / ENTE-BUTTON LOGIK ========== */
-            const collapseBtn = document.getElementById('collapseToggle');
-            const stripWrapper = document.getElementById('stripWrapper');
-            const sliderWrap = document.getElementById('sliderWrap');
-            const headerEl = document.getElementById('headerEl');
-            let isCollapsed = false;
-
-            collapseBtn.addEventListener('click', () => {
-                isCollapsed = !isCollapsed;
-                if (isCollapsed) {
-                    headerEl.classList.add('collapsed');
-                    stripWrapper.classList.add('collapsed');
-                    sliderWrap.classList.add('collapsed');
-                } else {
-                    headerEl.classList.remove('collapsed');
-                    stripWrapper.classList.remove('collapsed');
-                    sliderWrap.classList.remove('collapsed');
-                }
-            });
-
-            /* ========== NAVIGATION & TÜR ENGINE ========== */
-            const FILE_MAP = {
-                'ABOUT': '01_about.html',
-                'VHS MULTIVERSE': '02_vhsmultiverse.html',
-                'HUMANART': '03_humanart.html',
-                'PROJECTS': '04_projects.html',
-                'STORYTIME': '05_storytime.html',
-                'MUSIC': '06_music.html',
-                'CONTACT': '07_contact.html',
-                'DONATE': '08_donate.html'
-            };
-
-            function navigateTo(cat) {
-                if (cat === CURRENT_PAGE) return;
-                const url = FILE_MAP[cat];
-                if (!url) return;
-
-                const door = document.getElementById('door-overlay');
-                door.classList.remove('open');
-                door.classList.add('closed');
-
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 1200);
-            }
-
-            /* ========== MENÜ ERSTELLEN ========== */
-            const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
-            const strip = document.getElementById('catStrip');
-            const track = document.getElementById('catTrack');
-            
-            for (let r = 0; r < 6; r++) {
-                CATS.forEach((cat) => {
-                    const el = document.createElement('div');
-                    el.className = 'cat-item';
-                    if (cat === CURRENT_PAGE) el.classList.add('active');
-                    el.innerHTML = `<span>${cat}</span>`;
-                    el.addEventListener('click', () => navigateTo(cat));
-                    track.appendChild(el);
-                });
-            }
-
-            let setW = 0, pos = 0;
-            const sliderTrackEl = document.getElementById('sliderTrack');
-            const sliderThumbEl = document.getElementById('sliderThumb');
-            let sliderW = 0, thumbW = 0;
-
-            function measure() { 
-                setW = track.scrollWidth / 6; 
-                if(sliderTrackEl) {
-                    sliderW = sliderTrackEl.clientWidth;
-                    thumbW = sliderThumbEl.clientWidth;
-                }
-            }
-
-            function wrap() {
-                if (setW > 0) {
-                    while (pos <= -setW) pos += setW;
-                    while (pos > 0) pos -= setW;
-                }
-            }
-
-            /* ========== STABILE JS-BASIERTE RGB-LAMPE ========== */
-            const rgbColors = [
-                {r: 255, g: 0, b: 0},     
-                {r: 255, g: 255, b: 0},   
-                {r: 0, g: 255, b: 0},     
-                {r: 0, g: 255, b: 255},   
-                {r: 0, g: 0, b: 255},     
-                {r: 255, g: 0, b: 255}    
-            ];
-            let rgbProgress = 0;
-
-            function updateRgbLamp(dt) {
-                rgbProgress += dt * 0.0004; 
-                if (rgbProgress >= rgbColors.length) rgbProgress = 0;
-
-                let index = Math.floor(rgbProgress);
-                let nextIndex = (index + 1) % rgbColors.length;
-                let factor = rgbProgress - index;
-
-                let c1 = rgbColors[index];
-                let c2 = rgbColors[nextIndex];
-
-                let r = Math.round(c1.r + (c2.r - c1.r) * factor);
-                let g = Math.round(c1.g + (c2.g - c1.g) * factor);
-                let b = Math.round(c1.b + (c2.b - c1.b) * factor);
-
-                if (sliderThumbEl) {
-                    sliderThumbEl.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-                }
-            }
-
-            /* ========== DRAG TO SCROLL (OBEN & UNTEN) ========== */
-            let dragging = false, startX = 0, lastX = 0;
-            let velocity = 0;
-            let timeDrag = 0;
-
-            function down(e) {
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
-                dragging = true;
-                velocity = 0;
-                startX = e.touches ? e.touches[0].clientX : e.clientX;
-                lastX = startX;
-                timeDrag = performance.now();
-            }
-
-            function move(e) {
-                if (!dragging) return;
-                let currentX = e.touches ? e.touches[0].clientX : e.clientX;
-                let now = performance.now();
-                let dt = now - timeDrag;
-
-                let delta = currentX - lastX;
-                if (dt > 0) velocity = delta / dt;
-
-                pos += delta;
-                wrap();
-
-                lastX = currentX;
-                timeDrag = now;
-                if (e.cancelable) e.preventDefault();
-            }
-
-            function up() {
-                if (dragging) {
-                    dragging = false;
-                    if (velocity > 2.5) velocity = 2.5;
-                    if (velocity < -2.5) velocity = -2.5;
-                }
-            }
-
-            strip.addEventListener('mousedown', down);
-            window.addEventListener('mousemove', move);
-            window.addEventListener('mouseup', up);
-            strip.addEventListener('touchstart', down, { passive: false });
-            window.addEventListener('touchmove', move, { passive: false });
-            window.addEventListener('touchend', up);
-
-            if (sliderTrackEl) {
-                sliderTrackEl.addEventListener('mousedown', (e) => {
-                    dragging = true;
-                    updateSliderPos(e.clientX);
-                });
-                window.addEventListener('mousemove', (e) => {
-                    if (!dragging) return;
-                    updateSliderPos(e.clientX);
-                });
-                sliderTrackEl.addEventListener('touchstart', (e) => {
-                    dragging = true;
-                    updateSliderPos(e.touches[0].clientX);
-                }, { passive: false });
-                window.addEventListener('touchmove', (e) => {
-                    if (!dragging) return;
-                    updateSliderPos(e.touches[0].clientX);
-                    if (e.cancelable) e.preventDefault();
-                }, { passive: false });
-            }
-
-            function updateSliderPos(clientX) {
-                if (sliderW <= 0 || setW <= 0) return;
-                let rect = sliderTrackEl.getBoundingClientRect();
-                let offsetX = clientX - rect.left - (thumbW / 2);
-                let maxThumbX = sliderW - thumbW;
-                
-                if (offsetX < 0) offsetX = 0;
-                if (offsetX > maxThumbX) offsetX = maxThumbX;
-
-                let progress = maxThumbX > 0 ? (offsetX / maxThumbX) : 0;
-                pos = -progress * setW;
-                wrap();
-            }
-
-            let lastTime = performance.now();
-            function loop(time) {
-                const dt = time - lastTime;
-                lastTime = time;
-                
-                updateRgbLamp(dt);
-
-                if (!dragging) {
-                    if (Math.abs(velocity) > 0.03) {
-                        pos += velocity * dt * 0.6;
-                        velocity *= 0.92; 
-                    } else {
-                        velocity = 0;
-                        pos -= 0.015 * dt; 
-                    }
-                }
-
-                wrap();
-                track.style.transform = `translateX(${pos}px)`;
-
-                if (setW > 0 && sliderW > 0 && !dragging) {
-                    let progress = Math.abs(pos) / setW; 
-                    let maxThumbX = sliderW - thumbW;
-                    sliderThumbEl.style.transform = `translateX(${progress * maxThumbX}px)`;
-                }
-
-                requestAnimationFrame(loop);
-            }
-
-            window.addEventListener('resize', measure);
-            if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
-            requestAnimationFrame(loop);
-
-            /* Sprachsteuerung */
             const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
             document.querySelectorAll('[data-lang-en]').forEach(el => {
                 const text = el.getAttribute(`data-lang-${lang}`);
                 if (text) el.innerHTML = text;
             });
-
-            /* Tür öffnen beim Laden */
-            setTimeout(() => { 
-                const door = document.getElementById('door-overlay');
-                if (door) {
-                    door.classList.remove('closed');
-                    door.classList.add('open');
-                }
-            }, 400); 
-        });
-
-        /* Back-Button Fix (BFCache) */
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted) {
-                const door = document.getElementById('door-overlay');
-                if (door) {
-                    door.classList.remove('closed');
-                    door.classList.add('open');
-                }
-            }
         });
     </script>
 </body>
