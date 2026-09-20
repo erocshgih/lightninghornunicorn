@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -16,8 +16,9 @@
                 margin: 20px auto 40px auto;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.05);
                 text-align: left;
-                font-size: var(--fs-sm);
-                line-height: 2.4;
+                /* Schriftgröße dynamisch angepasst, damit es auf dem Handy nicht zu klein ist! */
+                font-size: clamp(1rem, 3.5vw, 1.4rem);
+                line-height: 2.2;
             }
 
             .wobble-glitch-container {
@@ -48,7 +49,7 @@
             }
 
             @media (min-width: 769px) {
-                .script-box { padding: 40px; font-size: 1rem; max-width: 650px; }
+                .script-box { padding: 40px; font-size: 1.2rem; max-width: 650px; }
                 .invisible-paypal-submit-btn { width: 300px !important; }
                 .invisible-paypal-submit-btn .wobble-glitch-container { width: 300px !important; }
                 .paypal-img { width: 300px !important; }
@@ -59,8 +60,8 @@
             <h2 data-lang-en="SUPPORT ART" data-lang-de="SUPPORT ART">SUPPORT ART</h2>
 
             <div class="script-box" 
-                 data-lang-en="Let's skip the emotional begging. You've made it this far into the universe, so you already know the deal. Creating art requires time, obsession, and electricity. I provide the first two. You can help with the third.<br><br>This is Mrrrphadora van Donatia. A highly advanced tactical plush unit. Press her belly button to fund the next 3D prototype, the next album, or just my next coffee.<br><br>No pressure. But she is watching."
-                 data-lang-de="Lass uns das emotionale Betteln überspringen. Du bist so weit in dieses Universum vorgedrungen, also kennst du den Deal. Kunst erfordert Zeit, Obsession und Strom. Ich liefere die ersten beiden. Du kannst beim dritten helfen.<br><br>Das ist Mrrrphadora van Donatia. Eine hochgradig taktische Plüscheinheit. Drück ihren Bauchknopf, um den nächsten 3D-Prototypen, das nächste Album oder einfach meinen nächsten Kaffee zu finanzieren.<br><br>Kein Druck. Aber sie beobachtet dich."
+                 data-lang-en="You have ventured this far into this website and want to support the art of tomorrow.<br><br>Creating art requires time and a ridiculously large amount of coffee. If you like what is being created here, you can help directly with a donation.<br><br>This is Mrrrphadora van Donatia. Simply press the sticker to support me. Thank you."
+                 data-lang-de="Du bist so weit in diese Website vorgedrungen und möchtest die Kunst von morgen fördern.<br><br>Kunst zu erschaffen erfordert Zeit und eine lächerlich große Menge an Kaffee. Wenn dir gefällt, was hier entsteht, kannst du direkt mithelfen mit einer Spende.<br><br>Das hier ist Mrrrphadora van Donatia. Drücke einfach das Sticker, um mich zu supporten. Danke."
             ></div>
 
             <form action="https://www.paypal.com/donate/?hosted_button_id=KXHUZ6BNZAY84&source=qr" method="post" target="_blank" style="text-align: center; margin: 30px auto 10px auto; width: 100%;">
