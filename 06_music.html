@@ -6,9 +6,8 @@
 </head>
 <body>
     <main>
-        <!-- Spezifisches CSS nur für diese Unterseite -->
+        <!-- Spezifisches CSS passend zum globalen Design -->
         <style>
-            /* Manifesto Styles */
             .music-manifesto {
                 background: var(--card-bg);
                 border: 2px solid var(--border-soft);
@@ -27,12 +26,12 @@
 
             .music-manifesto p {
                 color: var(--text-muted);
-                margin: 0 auto 20px auto;
+                margin: 15px auto;
                 text-align: left;
                 line-height: 2.2;
                 max-width: 650px;
                 font-family: 'VT323', monospace;
-                font-size: 40px; /* Verdoppelt auf 40px */
+                font-size: clamp(1.2rem, 3.5vw, 1.8rem);
             }
 
             .music-manifesto p strong {
@@ -63,7 +62,7 @@
 
             @media (min-width: 769px) {
                 .music-manifesto { padding: 50px; }
-                .music-manifesto p { font-size: 44px; line-height: 2.0; } /* Auf großen Bildschirmen ebenfalls verdoppelt */
+                .music-manifesto p { font-size: 32px; line-height: 2.0; }
             }
         </style>
 
@@ -440,16 +439,6 @@
                 <img src="music_Laserette.webp" alt="Laserette" class="tape-image">
             </a>
         </section>
-
-        <script>
-            (function initMusic() {
-                const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
-                document.querySelectorAll('[data-lang-en]').forEach(el => {
-                    const text = el.getAttribute(`data-lang-${lang}`);
-                    if (text) el.innerHTML = text;
-                });
-            })();
-        </script>
     </main>
 </body>
 </html>
