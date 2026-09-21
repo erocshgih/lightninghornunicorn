@@ -799,6 +799,23 @@ function unlockSecret() {
     return all;
   }
 
+  // NEU: Hilfsfunktion, um ALLE Dateien inklusive sämtlicher Alternate-Versionen zu holen
+  function getAllFilesIncludingVersions() {
+    var files = [];
+    genres.forEach(function(g) {
+      g.songs.forEach(function(s) {
+        if (s.versions && s.versions.length > 0) {
+          s.versions.forEach(function(v) {
+            files.push({ title: s.title + ' (' + v.label + ')', file: v.file });
+          });
+        } else {
+          files.push({ title: s.title, file: s.file });
+        }
+      });
+    });
+    return files;
+  }
+
   function renderPlaylist(genreId) {
     currentGenre = genreId;
     var songs, title, icon, desc;
@@ -907,11 +924,11 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
-    // Download All Songs Button Event-Listener
+    // Download All Songs Button Event-Listener (nutzt jetzt alle Versionen)
     var downloadAllBtn = document.getElementById('downloadAllBtn');
     if (downloadAllBtn) {
       downloadAllBtn.addEventListener('click', function() {
-        var allTracks = getAllSongs();
+        var allTracks = getAllFilesIncludingVersions();
         allTracks.forEach(function(track, idx) {
           setTimeout(function() {
             var a = document.createElement('a');
@@ -920,7 +937,7 @@ Vedran Lukic & Aether Veylan`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-          }, idx * 400); // 400ms Abstand, damit der Browser/das Handy mitkommt
+          }, idx * 400); // 400ms Abstand pro Datei
         });
       });
     }
