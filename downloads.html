@@ -67,10 +67,8 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* ========== LAYOUT ========== */
     .app { display: flex; height: 100vh; width: 100vw; }
 
-    /* ========== SIDEBAR ========== */
     .sidebar {
       width: 260px;
       background: var(--bg-sidebar);
@@ -92,7 +90,6 @@
     .sidebar-playlist.active { background: var(--bg-active); color: var(--text-main); font-weight: bold; }
     .sidebar-playlist .pl-cover { width: 32px; height: 32px; border-radius: 6px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-    /* ========== MAIN CONTENT ========== */
     .main {
       flex: 1;
       position: relative;
@@ -107,7 +104,6 @@
     .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 3px solid var(--bg-main); }
     .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
-    /* ========== DOWNLOAD ALL SONGS BUTTON ========== */
     .download-all-container {
       display: flex;
       justify-content: center;
@@ -143,7 +139,6 @@
       box-shadow: 0px 0px 0px var(--text-main);
     }
 
-    /* ========== PLAYLIST HEADER ========== */
     .playlist-header { 
       display: flex; 
       flex-direction: column; 
@@ -297,7 +292,6 @@
     .playlist-title { font-size: clamp(24px, 3.5vw, 42px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; text-align: center; } 
 
-    /* ========== SONG LIST ========== */
     .song-list-container { padding: 0 40px; }
     .song-list-header { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
     .song-list-header span:nth-child(3), .song-list-header span:nth-child(4) { text-align: right; }
@@ -335,7 +329,6 @@
     .dl-btn svg { display: none; } 
     .dl-btn::after { content: '💾'; } 
 
-    /* ========== NOW PLAYING BAR ========== */
     .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 3px solid var(--text-main); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
     .np-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
     .np-cover { width: 56px; height: 56px; border-radius: 4px; background: linear-gradient(135deg, var(--yellow), var(--orange)); border: 2px solid var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
@@ -384,7 +377,6 @@
     .np-dl-btn svg { display: none; }
     .np-dl-btn::after { content: '💾'; }
 
-    /* ========== INTRO ========== */
     #intro { position: fixed; inset: 0; z-index: 9999; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.6s, visibility 0.6s; }
     #intro.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .intro-logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; }
@@ -394,13 +386,11 @@
     .intro-bar { position: absolute; bottom: 80px; width: 240px; height: 8px; background: var(--border); border: 2px solid var(--text-main); overflow: hidden; opacity: 0; animation: fadeIn 0.4s ease forwards; }
     .intro-bar-fill { height: 100%; width: 0%; background: var(--orange); border-right: 2px solid var(--text-main); transition: width 0.1s linear; }
 
-    /* ========== BACKGROUND DUCKS ========== */
     #duckFlock { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.35; } 
     .duck { position: absolute; left: -10%; filter: none; } 
     .duck img { width: 32px; animation: duckBob 2.4s ease-in-out infinite alternate; }
     #duck3D { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; } 
 
-    /* ========== RESPONSIVE (MOBILE) ========== */
     @media (max-width: 900px) {
       .app { flex-direction: column; }
       .sidebar { display: none; }
@@ -465,7 +455,6 @@
 
   <main class="main" id="main-content"></main>
 
-  <!-- NOW PLAYING BAR -->
   <div class="now-playing">
     <div class="np-left">
       <div class="np-cover" id="np-cover">🦆</div>
@@ -512,7 +501,7 @@
 
 <script>
 var isLimitUnlocked = false;
-var limitCharge = 0; // 0 bis 14 Klicks
+var limitCharge = 0;
 var limitAudioCtx = null;
 
 function initLimitAudio() {
@@ -680,7 +669,7 @@ function unlockSecret() {
     {
       id: 'calm', name: 'Calm Chillout Lofi', icon: '🌊',
       songs: [
-        { title: '1.17', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1.17.mp3' },
+        { title: '1.17', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1_17.mp3' },
         { title: 'Another Ps1 Dream I Had', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_ANOTHER_PS1_DREAM_I_HAD.mp3' },
         { title: 'Loading Screens', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_LOADING_SCREENS.mp3' },
         { title: 'The Chosen Ones', file: 'downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_THE_CHOSEN_ONES.mp3' }
@@ -799,7 +788,6 @@ function unlockSecret() {
     return all;
   }
 
-  // NEU: Hilfsfunktion, um ALLE Dateien inklusive sämtlicher Alternate-Versionen zu holen
   function getAllFilesIncludingVersions() {
     var files = [];
     genres.forEach(function(g) {
@@ -854,7 +842,6 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     
-    // DOWNLOAD ALL SONGS BUTTON
     html += '<div class="download-all-container">';
     html += '  <button class="download-all-btn" id="downloadAllBtn">📥 DOWNLOAD ALL SONGS</button>';
     html += '</div>';
@@ -924,7 +911,6 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
-    // Download All Songs Button Event-Listener (nutzt jetzt alle Versionen)
     var downloadAllBtn = document.getElementById('downloadAllBtn');
     if (downloadAllBtn) {
       downloadAllBtn.addEventListener('click', function() {
@@ -937,7 +923,7 @@ Vedran Lukic & Aether Veylan`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-          }, idx * 400); // 400ms Abstand pro Datei
+          }, idx * 400);
         });
       });
     }
@@ -1072,7 +1058,6 @@ Vedran Lukic & Aether Veylan`;
     });
   }
 
-  // ========== PLAYER CORE ==========
   var npTitleText = document.querySelector('.np-title-text');
   var npArtist = document.getElementById('np-artist');
   var npPlay = document.getElementById('np-play');
@@ -1237,7 +1222,6 @@ Vedran Lukic & Aether Veylan`;
     });
   }
 
-  // ========== BACKGROUND DUCKS ==========
   var flock = document.getElementById('duckFlock');
   if (flock) {
     for (var k = 0; k < 15; k++) {
