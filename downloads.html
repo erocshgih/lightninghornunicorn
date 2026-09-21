@@ -107,13 +107,50 @@
     .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 3px solid var(--bg-main); }
     .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
+    /* ========== DOWNLOAD ALL ZIP BUTTON ========== */
+    .download-all-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 40px 10px 40px;
+    }
+
+    .download-all-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--text-main);
+      background-color: var(--yellow);
+      border: 2px solid var(--text-main);
+      padding: 14px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      box-shadow: 2px 2px 0px var(--text-main);
+      transition: all 0.1s;
+      outline: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: inline-block;
+    }
+
+    .download-all-btn:hover {
+      background-color: var(--orange);
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px var(--text-main);
+    }
+
+    .download-all-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--text-main);
+    }
+
     /* ========== PLAYLIST HEADER ========== */
     .playlist-header { 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       text-align: center; 
-      padding: 40px 40px 30px; 
+      padding: 40px 40px 20px; 
       background: linear-gradient(180deg, #fff3cd 0%, var(--bg-main) 100%); 
       gap: 16px; 
     }
@@ -800,6 +837,12 @@ Vedran Lukic & Aether Veylan`;
     }
 
     var html = '';
+    
+    // DOWNLOAD ALL ZIP BUTTON (verlinkt auf die ZIP-Datei im Root-Downloads-Ordner)
+    html += '<div class="download-all-container">';
+    html += '  <a href="downloads/all songs.zip" class="download-all-btn" download>📦 ALL SONGS ZIP FILE</a>';
+    html += '</div>';
+
     html += '<div class="playlist-header">';
     
     html += '  <div class="playlist-cover-wrapper" id="limit-btn">';
