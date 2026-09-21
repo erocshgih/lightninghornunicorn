@@ -107,7 +107,7 @@
     .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 3px solid var(--bg-main); }
     .main::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
 
-    /* ========== DOWNLOAD ALL ZIP BUTTON ========== */
+    /* ========== DOWNLOAD ALL SONGS BUTTON ========== */
     .download-all-container {
       display: flex;
       justify-content: center;
@@ -130,7 +130,6 @@
       outline: none;
       text-transform: uppercase;
       letter-spacing: 1px;
-      display: inline-block;
     }
 
     .download-all-btn:hover {
@@ -838,9 +837,9 @@ Vedran Lukic & Aether Veylan`;
 
     var html = '';
     
-    // DOWNLOAD ALL ZIP BUTTON (verlinkt auf die ZIP-Datei im Root-Downloads-Ordner)
+    // DOWNLOAD ALL SONGS BUTTON
     html += '<div class="download-all-container">';
-    html += '  <a href="downloads/all songs.zip" class="download-all-btn" download>📦 ALL SONGS ZIP FILE</a>';
+    html += '  <button class="download-all-btn" id="downloadAllBtn">📥 DOWNLOAD ALL SONGS</button>';
     html += '</div>';
 
     html += '<div class="playlist-header">';
@@ -908,6 +907,24 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
+    // Download All Songs Button Event-Listener
+    var downloadAllBtn = document.getElementById('downloadAllBtn');
+    if (downloadAllBtn) {
+      downloadAllBtn.addEventListener('click', function() {
+        var allTracks = getAllSongs();
+        allTracks.forEach(function(track, idx) {
+          setTimeout(function() {
+            var a = document.createElement('a');
+            a.href = track.file;
+            a.download = track.title;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }, idx * 400); // 400ms Abstand, damit der Browser/das Handy mitkommt
+        });
+      });
+    }
+
     var initialSign = document.getElementById('button-sign');
     if (!isLimitUnlocked && limitCharge > 0 && initialSign) {
         if (limitCharge <= 3) initialSign.textContent = "FASTER";
