@@ -6,7 +6,7 @@
 </head>
 <body>
     <main>
-        <!-- Nur noch das Nötigste für den VHS-Player und die Galerie-Logik -->
+        <!-- Karussell-Struktur und lokale Farbvariablen für Dots (Text und Grundbildgrößen steuert menu.html) -->
         <style>
             :root {
                 --dot: #d5d0ca;
@@ -22,10 +22,10 @@
 
             html[data-theme="dark"] #vhs-preview-wrap { background: #1a1a1a; box-shadow: 0 2px 24px rgba(0, 0, 0, 0.4); }
 
-            /* VHS GALERIE STYLES - Angepasst auf die neuen kompakten 300px */
+            /* VHS GALERIE WRAPPER */
             #vhs-preview-wrap {
                 width: 100%; 
-                max-width: 320px; /* Perfekter Rahmen für max 300px Bilder */
+                max-width: 320px; 
                 margin: 0 auto 16px auto; 
                 overflow: hidden; 
                 border-radius: 8px;
@@ -47,12 +47,21 @@
             .vhs-nav-btn:hover, .vhs-nav-btn:active { background: var(--dot-active); transform: scale(1.15); }
 
             #vhs-preview-img { 
-                display: block; width: 100%; max-width: 300px; height: auto; opacity: 0; transition: opacity 0.4s ease; 
-                flex: 1; min-width: 0; object-fit: contain; margin: 0 auto;
+                display: block; 
+                width: 100%; 
+                max-width: 300px; 
+                max-height: 300px; 
+                height: auto; 
+                opacity: 0; 
+                transition: opacity 0.4s ease; 
+                flex: 1; 
+                min-width: 0; 
+                object-fit: contain; 
+                margin: 0 auto;
             }
             #vhs-preview-img.visible { opacity: 1; }
 
-            /* MANUELLER ZOOM BUTTON (Nur für VHS Galerie) */
+            /* MANUELLER ZOOM BUTTON FÜR DIE GALERIE */
             .zoom-btn {
                 position: absolute; bottom: 12px; right: 12px; width: 36px; height: 36px;
                 background: var(--card-bg); border: 2px solid var(--border-soft); border-radius: 50%;
@@ -80,7 +89,7 @@
 
             <div id="vhs-preview-wrap">
                 <button class="vhs-nav-btn" id="vhs-prev" type="button" aria-label="Previous cover">&#9664;</button>
-                <!-- WICHTIG: "transparent-sticker" verhindert, dass menu.html noch eine zweite Lupe drüberlegt! -->
+                <!-- transparent-sticker verhindert, dass menu.html eine doppelte Standard-Lupe drüberlegt -->
                 <img id="vhs-preview-img" class="transparent-sticker" src="" alt="" title="Cover Ansicht">
                 <a href="#" target="_blank" class="zoom-btn" id="vhs-zoom-btn" title="Bild in neuem Tab öffnen & zoomen">🔍</a>
                 <button class="vhs-nav-btn" id="vhs-next" type="button" aria-label="Next cover">&#9654;</button>
@@ -97,7 +106,6 @@
         </section>
 
         <script>
-            // Skript für die VHS Galerie
             (function initVHS() {
                 const vhsData = [
                     { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/buffzart.webp", title: "BUFFZART" },
