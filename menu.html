@@ -60,7 +60,7 @@
         
         html[data-theme="crt"] main { animation: crtGlitch 5s infinite steps(1, end), crtJitter 3s ease-in-out infinite; }
         html[data-theme="crt"]::after {
-            content: ""; position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.55;
+            content: ""; position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.3; /* Transparenz auf 30% reduziert */
             background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 4px), url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             background-repeat: repeat; mix-blend-mode: overlay; background-size: 100% 4px, 180px 180px;
         }
@@ -74,6 +74,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
         body { background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text); text-align: center; line-height: 2.4; font-size: var(--fs-base); -webkit-font-smoothing: none; overflow-x: hidden; }
+
+        /* ========== SCROLLBAR FIX FÜR GELADENE INHALTE ========== */
+        /* Versteckt hässliche Scrollbars in verschachtelten Containern aus z.B. projects.html */
+        main#mainContent * { scrollbar-width: none; }
+        main#mainContent *::-webkit-scrollbar { display: none; }
 
         /* ========== HEADER & MENÜ ========== */
         .header { 
@@ -141,7 +146,6 @@
         }
         .audio-btn:hover { background: var(--strip-active); }
 
-        /* RGB Animation für die Audio-Ente */
         @keyframes rgbDuck {
             0%   { filter: hue-rotate(0deg) saturate(2); }
             50%  { filter: hue-rotate(180deg) saturate(2); }
@@ -153,14 +157,13 @@
             height: 75%;
             object-fit: contain;
             image-rendering: pixelated;
-            animation: rgbDuck 4s linear infinite; /* RGB Pulsieren wenn Sound an */
+            animation: rgbDuck 20s linear infinite; /* Auf langsame 20s gesetzt */
             transition: transform 0.2s ease, filter 0.3s ease;
         }
         .audio-btn:hover img {
             transform: scale(1.1);
         }
 
-        /* Monochrom-Filter wenn Mute aktiv ist */
         .audio-btn.muted img {
             animation: none;
             filter: grayscale(100%) opacity(0.4) brightness(0.8);
@@ -291,16 +294,38 @@
         main#mainContent h3 { font-size: var(--fs-md); margin: 1.5em 0 0.8em; }
         main#mainContent p { font-size: var(--fs-sm); margin: 15px auto; line-height: 2.6; text-align: left; }
 
+        /* JEDES BILD IST JETZT MAXIMAL 768px BREIT */
         main#mainContent img {
             display: block;
             width: 100% !important;
-            max-width: 100% !important;
+            max-width: 768px !important;
             height: auto !important;
-            max-height: 55vh !important;
             margin: 20px auto;
             box-sizing: border-box;
             object-fit: contain;
             border-radius: var(--radius);
+        }
+
+        /* ========== STICKER / DONATE BUTTON FIX ========== */
+        main#mainContent a.sticker-link {
+            display: inline-block;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            text-decoration: none;
+            padding: 0;
+            transition: transform 0.2s ease;
+        }
+        main#mainContent a.sticker-link:hover {
+            transform: scale(1.05);
+        }
+        main#mainContent a.sticker-link img.transparent-sticker {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            max-width: 350px !important; /* Etwas kompakter für Buttons */
+            margin: 0 auto;
         }
 
         main#mainContent hr { border: 0; height: 1px; background: var(--border-soft); margin: 28px auto; width: 100%; }
@@ -309,17 +334,6 @@
             main#mainContent section { max-width: 1000px; padding: 20px 40px; }
             main#mainContent h2 { font-size: var(--fs-xl); }
             main#mainContent p { font-size: var(--fs-base); line-height: 2.2; }
-            
-            main#mainContent img {
-                max-height: calc(100vh - 280px) !important;
-                width: auto !important;
-            }
-
-            main#mainContent section#ABOUT img { 
-                max-width: 80% !important; 
-                max-height: 75vh !important; 
-                width: auto !important;
-            }
         }
 
         .maintenance-card {
@@ -341,7 +355,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== METALLTÜR & EXAKTES TILE-GRID (32 TILES DESKTOP / 8 TILES MOBILE) ========== */
+        /* ========== METALLTÜR & EXAKTES TILE-GRID ========== */
         #door-overlay { 
             position: fixed; 
             inset: 0; 
@@ -409,8 +423,8 @@
                 <div id="catTrack" class="cat-track"></div>
             </div>
             
-            <!-- NEU: DER AUDIO MUTE/UNMUTE BUTTON -->
-            <button id="audioToggle" class="audio-btn" type="button" title="Quack Sound An/Aus">
+            <!-- DER AUDIO MUTE/UNMUTE BUTTON -->
+            <button id="audioToggle" class="audio-btn" type="button" title="Audio Sound An/Aus">
                 <img src="duck.png" alt="Audio Toggle">
             </button>
             
@@ -436,7 +450,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            /* ========== TÜR-KACHELN (GRID) DYNAMISCH GENERIEREN ========== */
+            /* ========== TÜR-KACHELN GENERIEREN ========== */
             const doorPanel = document.querySelector('.door-panel');
             if (doorPanel) {
                 for (let i = 0; i < 32; i++) {
@@ -470,27 +484,51 @@
                 });
             }
 
-            /* ========== AUDIO LOGIK (MUTE/UNMUTE) ========== */
+            /* ========== AUDIO LOGIK (GLOBALER MUTE MIT LOCALSTORAGE) ========== */
             const audioBtn = document.getElementById('audioToggle');
+            const quackAudio = document.getElementById('quackAudio');
+            
+            // Lade den letzten Zustand aus dem Browser-Speicher
             let isMuted = false;
+            try { isMuted = localStorage.getItem('lhu-muted') === 'true'; } catch(e){}
 
+            // Wende den visuellen Zustand direkt an
+            if (isMuted) {
+                audioBtn.classList.add('muted');
+                audioBtn.setAttribute('title', 'Global Audio ist AUS');
+            }
+
+            // Funktion um ALLE Audios und Videos auf der Seite stummzuschalten
+            function applyGlobalMute() {
+                if(quackAudio) quackAudio.muted = isMuted;
+                document.querySelectorAll('audio, video').forEach(media => {
+                    media.muted = isMuted;
+                });
+            }
+
+            // Klick-Event für den Mute-Button
             audioBtn.addEventListener('click', () => {
                 isMuted = !isMuted;
+                try { localStorage.setItem('lhu-muted', isMuted); } catch(e){}
+                
                 if (isMuted) {
                     audioBtn.classList.add('muted');
-                    audioBtn.setAttribute('title', 'Quack Sound ist AUS');
+                    audioBtn.setAttribute('title', 'Global Audio ist AUS');
                 } else {
                     audioBtn.classList.remove('muted');
-                    audioBtn.setAttribute('title', 'Quack Sound ist AN');
+                    audioBtn.setAttribute('title', 'Global Audio ist AN');
                 }
+                applyGlobalMute();
             });
 
-            /* ========== MULTI-QUACK SHUFFLE SYSTEM & COLLAPSE LOGIK ========== */
+            // Setze Mute-Status direkt beim ersten Laden
+            applyGlobalMute();
+
+            /* ========== MULTI-QUACK SHUFFLE & COLLAPSE ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
             const headerEl = document.getElementById('headerEl');
-            const quackAudio = document.getElementById('quackAudio');
             let isCollapsed = false;
 
             const quackFiles = [
@@ -510,7 +548,6 @@
             }
 
             collapseBtn.addEventListener('click', () => {
-                // SOUND WIRD NUR ABGESPIELT WENN NICHT GEMUTED
                 if (quackAudio && !isMuted) {
                     const nextQuack = getNextQuackFile();
                     quackAudio.src = nextQuack;
@@ -589,6 +626,9 @@
                                         newScript.text = oldScript.text;
                                         oldScript.parentNode.replaceChild(newScript, oldScript);
                                     });
+
+                                    // NEU: Wende globalen Mute sofort auf neu geladene Inhalte an!
+                                    applyGlobalMute();
 
                                 } else {
                                     mainContent.innerHTML = `<p>Inhalt konnte nicht geladen werden.</p>`;
@@ -689,13 +729,12 @@
                 }
             }
 
-            /* ========== OBERER BEREICH: DRAG & DROP ========== */
+            /* ========== DRAG & DROP & SLIDER ... ========== */
             let stripDragging = false, stripStartX = 0, stripLastX = 0;
             let stripVelocity = 0;
             let stripTimeDrag = 0;
 
             strip.addEventListener('mousedown', (e) => {
-                // Audio und Collapse Buttons vom Draggen ausschließen!
                 if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle') || e.target.closest('#audioToggle')) return;
                 stripDragging = true;
                 stripVelocity = 0;
@@ -709,13 +748,10 @@
                 let currentX = e.clientX;
                 let now = performance.now();
                 let dt = now - stripTimeDrag;
-
                 let delta = currentX - stripLastX;
                 if (dt > 0) stripVelocity = delta / dt;
-
                 pos += delta;
                 wrap();
-
                 stripLastX = currentX;
                 stripTimeDrag = now;
                 if (e.cancelable) e.preventDefault();
@@ -744,79 +780,45 @@
                 let currentX = e.touches[0].clientX;
                 let now = performance.now();
                 let dt = now - stripTimeDrag;
-
                 let delta = currentX - stripLastX;
                 if (dt > 0) stripVelocity = delta / dt;
-
                 pos += delta;
                 wrap();
-
                 stripLastX = currentX;
                 stripTimeDrag = now;
                 if (e.cancelable) e.preventDefault();
             }, { passive: false });
 
             window.addEventListener('touchend', () => {
-                if (stripDragging) {
-                    stripDragging = false;
-                }
+                if (stripDragging) stripDragging = false;
             });
 
-            /* ========== UNTERER BEREICH: SLIDER ========== */
             let sliderDragging = false;
-
-            sliderTrackEl.addEventListener('mousedown', (e) => {
-                sliderDragging = true;
-                updateSliderPos(e.clientX);
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (!sliderDragging) return;
-                updateSliderPos(e.clientX);
-            });
-
-            window.addEventListener('mouseup', () => {
-                sliderDragging = false;
-            });
+            sliderTrackEl.addEventListener('mousedown', (e) => { sliderDragging = true; updateSliderPos(e.clientX); });
+            window.addEventListener('mousemove', (e) => { if (!sliderDragging) return; updateSliderPos(e.clientX); });
+            window.addEventListener('mouseup', () => sliderDragging = false);
             window.addEventListener('mouseleave', () => sliderDragging = false);
-
-            sliderTrackEl.addEventListener('touchstart', (e) => {
-                sliderDragging = true;
-                updateSliderPos(e.touches[0].clientX);
-            }, { passive: false });
-
-            window.addEventListener('touchmove', (e) => {
-                if (!sliderDragging) return;
-                updateSliderPos(e.touches[0].clientX);
-                if (e.cancelable) e.preventDefault();
-            }, { passive: false });
-
-            window.addEventListener('touchend', () => {
-                sliderDragging = false;
-            });
+            sliderTrackEl.addEventListener('touchstart', (e) => { sliderDragging = true; updateSliderPos(e.touches[0].clientX); }, { passive: false });
+            window.addEventListener('touchmove', (e) => { if (!sliderDragging) return; updateSliderPos(e.touches[0].clientX); if (e.cancelable) e.preventDefault(); }, { passive: false });
+            window.addEventListener('touchend', () => sliderDragging = false);
 
             function updateSliderPos(clientX) {
                 if (sliderW <= 0 || setW <= 0) return;
                 let rect = sliderTrackEl.getBoundingClientRect();
                 let offsetX = clientX - rect.left - (thumbW / 2);
                 let maxThumbX = sliderW - thumbW;
-                
                 if (offsetX < 0) offsetX = 0;
                 if (offsetX > maxThumbX) offsetX = maxThumbX;
-
                 let progress = maxThumbX > 0 ? (offsetX / maxThumbX) : 0;
                 pos = -progress * setW;
                 wrap();
             }
 
-            /* ========== ANIMATIONS-LOOP ========== */
             let lastTime = performance.now();
-            
             function loop(time) {
                 if (!time) time = performance.now();
                 let dt = time - lastTime;
                 lastTime = time;
-                
                 if (dt > 100) dt = 16;
                 if (dt < 0) dt = 0;
                 
@@ -840,7 +842,6 @@
                     let maxThumbX = sliderW - thumbW;
                     sliderThumbEl.style.transform = `translateX(${progress * maxThumbX}px)`;
                 }
-
                 requestAnimationFrame(loop);
             }
 
@@ -848,13 +849,11 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            /* Tür beim Laden schließen und ABOUT laden */
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
                     door.classList.remove('closed');
                     door.classList.add('open');
-                    
                     triggerCategoryChange('ABOUT');
                 }
             }, 100); 
