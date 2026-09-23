@@ -6,15 +6,15 @@
 </head>
 <body>
     <main>
-        <!-- Nur noch strukturelles CSS für Karussell und Akkordeon, keine globalen Text/Bild-Overrides mehr! -->
+        <!-- Nur noch strukturelles CSS für Karussell, Akkordeon und lokale Dots-Variablen -->
         <style>
-            /* VHS-Stil Variablen für Dots und Akzente */
             :root {
                 --dot: #d5d0ca;
                 --dot-active: #b33;
                 --accent-red: #e02424;
                 --accent-blue: #1a73e8;
             }
+
             html[data-theme="dark"] { --dot: #4a4540; --dot-active: #e05555; }
             html[data-theme="mono-gray"] { --dot: #555555; --dot-active: #dddddd; }
             html[data-theme="mono-green"] { --dot: #1b5e20; --dot-active: #69f0ae; }
@@ -48,8 +48,6 @@
                 -webkit-tap-highlight-color: transparent; transition: background 0.2s;
             }
             .cat-header:hover { background: rgba(255, 154, 60, 0.04); }
-            
-            /* Text erbt jetzt global aus menu.html */
             .cat-header .cat-label { font-size: var(--fs-xs); color: var(--strip-active); letter-spacing: 0.1em; }
             .cat-header .arrow { font-size: 14px; color: var(--strip-active); transition: transform 0.3s ease; margin-left: 10px; }
             .cat-group.open > .cat-header .arrow { transform: rotate(90deg); }
@@ -65,7 +63,6 @@
                 -webkit-tap-highlight-color: transparent; transition: background 0.2s;
             }
             .prod-header:hover { background: rgba(255, 154, 60, 0.03); }
-            
             .prod-header .prod-name { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.05em; }
             .prod-header .prod-arrow { font-size: 12px; color: var(--strip-active); transition: transform 0.3s ease; margin-left: 10px; }
             .prod-item.open > .prod-header .prod-arrow { transform: rotate(90deg); }
@@ -91,11 +88,11 @@
                 margin-bottom: 8px;
             }
 
-            /* CAROUSEL WRAPPER - Kompakt für die neuen 300x300 Bilder */
+            /* CAROUSEL WRAPPER */
             .carousel-wrapper {
                 position: relative;
                 width: 100%;
-                max-width: 320px; /* Perfekte Größe für 300px Bilder */
+                max-width: 320px;
                 margin: 15px auto 10px auto;
                 overflow: hidden;
                 border-radius: 8px;
@@ -444,7 +441,6 @@ Es gibt kein Spiel, aber wir haben das T-Shirt dazu.`
                             <span class="prod-name">${prod.name}</span>
                             <span class="prod-arrow">&#9654;</span>
                         `;
-                        const thisGIdx = gIdx;
                         prodHeader.addEventListener('click', () => toggleProd(prodEl));
                         prodEl.appendChild(prodHeader);
 
@@ -469,7 +465,7 @@ Es gibt kein Spiel, aber wir haben das T-Shirt dazu.`
                                 slide.setAttribute('data-model', item.model);
                                 slide.classList.add('is-model');
                             } else {
-                                // Nur noch das pure Bild! Den Zoom (Lupe & Link) fügt die menu.html automatisch hinzu!
+                                // Reines Bild; menu.html kümmert sich automatisch um die Lupe & Verlinkung!
                                 slide.innerHTML = `<img src="${item.src}" loading="lazy" alt="">`;
                             }
                             stage.appendChild(slide);
