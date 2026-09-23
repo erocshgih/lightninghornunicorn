@@ -36,10 +36,7 @@
             --border-soft:     #e0ddd8;
             --card-bg:         #ffffff;
             
-            /* NEU: Die Tür ist jetzt standardmäßig reines Weiß */
             --door-bg:         #ffffff; 
-            
-            /* NEU: Globale Farb-Variable für die Audio-Ente, gesteuert durch JS */
             --dynamic-hue:     0deg;
 
             --fs-xs:           clamp(0.42rem, 1.3vw + 0.2rem, 0.55rem);
@@ -121,7 +118,6 @@
             transition: transform 0.2s ease, filter 0.1s linear;
         }
         
-        /* NEU: Exakt synchronisiert mit dem unteren Slider über die JS-Variable --dynamic-hue */
         .audio-btn:not(.muted) img {
             filter: hue-rotate(var(--dynamic-hue)) saturate(2);
         }
@@ -176,16 +172,14 @@
         main#mainContent h3 { font-size: var(--fs-md); margin: 1.5em 0 0.8em; }
         main#mainContent p { font-size: var(--fs-sm); margin: 15px auto; line-height: 2.6; text-align: left; }
 
-        /* ========== 300x300 BILDER LIMITIERUNG ========== */
+        /* ========== MAX-WIDTH 300px (OHNE QUADRAT-ZWANG) ========== */
         main#mainContent img {
             display: block;
-            max-width: min(100%, 300px) !important; /* Niemals breiter als 300px, außer Bildschirm ist winzig */
-            max-height: 300px !important;           /* Niemals höher als 300px */
-            width: auto !important;                 /* Natürliche Breite beibehalten */
-            height: auto !important;                /* Natürliche Höhe beibehalten */
+            width: 100% !important;
+            max-width: 300px !important;  /* Maximale Breite 300px */
+            height: auto !important;       /* Natürliche Proportionen (Aspect Ratio) beibehalten */
             margin: 20px auto;
             box-sizing: border-box;
-            object-fit: contain;                    /* Verhindert jegliche Verzerrung */
             border-radius: var(--radius);
         }
 
@@ -203,7 +197,7 @@
             transform: scale(1.02);
         }
         main#mainContent a.zoom-wrapper img {
-            margin: 0 !important; /* Wrapper kümmert sich um den Abstand */
+            margin: 0 !important;
         }
         main#mainContent a.zoom-wrapper::after {
             content: '🔍';
@@ -272,7 +266,6 @@
 </head>
 <body>
     
-    <!-- AUDIO-ELEMENT FÜR DIE QUACK-VARIATIONEN -->
     <audio id="quackAudio" preload="auto"></audio>
 
     <div id="door-overlay" class="closed">
@@ -312,7 +305,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            /* ========== TÜR-KACHELN GENERIEREN ========== */
             const doorPanel = document.querySelector('.door-panel');
             if (doorPanel) {
                 for (let i = 0; i < 32; i++) {
@@ -322,7 +314,6 @@
                 }
             }
 
-            /* ========== THEME ENGINE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
             const themeBtn = document.getElementById('themeToggle');
@@ -346,7 +337,6 @@
                 });
             }
 
-            /* ========== AUDIO LOGIK (GLOBALER MUTE MIT LOCALSTORAGE) ========== */
             const audioBtn = document.getElementById('audioToggle');
             const quackAudio = document.getElementById('quackAudio');
             
@@ -381,7 +371,6 @@
 
             applyGlobalMute();
 
-            /* ========== MULTI-QUACK SHUFFLE & COLLAPSE ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
@@ -424,7 +413,6 @@
                 }
             });
 
-            /* ========== DATEI ZUORDNUNG ========== */
             const categoryPages = {
                 'ABOUT': '01_about.html',
                 'VHS MULTIVERSE': '02_vhsmultiverse.html',
@@ -486,24 +474,18 @@
 
                                     applyGlobalMute();
 
-                                    // ==========================================
-                                    // NEU: AUTOMATISCHE LUPE & BILD-VERLINKUNG
-                                    // ==========================================
                                     const noZoomCats = ['HUMANART', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
                                     if (!noZoomCats.includes(cat)) {
-                                        // Alle Bilder suchen, die KEINE Sticker sind
                                         mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
-                                            // Prüfen ob das Bild schon in einem Link <a> steckt
                                             if (img.parentElement.tagName !== 'A') {
                                                 const wrapper = document.createElement('a');
-                                                wrapper.href = img.src;           // Setzt den Link auf das Bild selbst
-                                                wrapper.target = '_blank';        // Öffnet in neuem Tab
-                                                wrapper.className = 'zoom-wrapper'; // Fügt die CSS-Klasse mit der Lupe hinzu
+                                                wrapper.href = img.src;           
+                                                wrapper.target = '_blank';        
+                                                wrapper.className = 'zoom-wrapper'; 
                                                 
                                                 img.parentNode.insertBefore(wrapper, img);
                                                 wrapper.appendChild(img);
                                             } else {
-                                                // Falls es schon ein Link ist, geben wir ihm einfach das Lupe-Styling
                                                 img.parentElement.classList.add('zoom-wrapper');
                                                 if(!img.parentElement.target) img.parentElement.target = "_blank";
                                             }
@@ -532,7 +514,6 @@
                 }, 1200);
             }
 
-            /* ========== MENÜ ERSTELLEN ========== */
             const CATS = ['ABOUT', 'VHS MULTIVERSE', 'HUMANART', 'PROJECTS', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
             const strip = document.getElementById('catStrip');
             const track = document.getElementById('catTrack');
@@ -573,7 +554,6 @@
                 }
             }
 
-            /* ========== RGB-LAMPE & ENTE SYNCHRONISIERUNG ========== */
             const rgbColors = [
                 {r: 255, g: 0, b: 0},   
                 {r: 255, g: 255, b: 0},  
@@ -590,7 +570,6 @@
                 rgbProgress += dt * 0.0004; 
                 rgbProgress = rgbProgress % rgbColors.length; 
 
-                // --- 1. Farben für den Slider berechnen ---
                 let index = Math.floor(rgbProgress);
                 if (index < 0) index = 0; 
                 let nextIndex = (index + 1) % rgbColors.length;
@@ -609,13 +588,10 @@
                     }
                 }
 
-                // --- 2. Exakten Farbwert an die CSS-Variable der Ente senden ---
-                // Da rgbProgress von 0 bis 6 läuft, entspricht das exakt 0 bis 360 Grad im Farbkreis (6 * 60 = 360)
                 let hueDegree = rgbProgress * 60; 
                 document.documentElement.style.setProperty('--dynamic-hue', `${hueDegree}deg`);
             }
 
-            /* ========== DRAG & DROP & SLIDER ... ========== */
             let stripDragging = false, stripStartX = 0, stripLastX = 0, stripVelocity = 0, stripTimeDrag = 0;
 
             strip.addEventListener('mousedown', (e) => {
