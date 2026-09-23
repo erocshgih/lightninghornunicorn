@@ -108,7 +108,8 @@
             box-shadow: none !important;
         }
 
-        .strip-wrapper.collapsed .theme-btn {
+        .strip-wrapper.collapsed .theme-btn,
+        .strip-wrapper.collapsed .audio-btn {
             opacity: 0;
             pointer-events: none;
             width: 0px;
@@ -124,6 +125,48 @@
         .theme-btn { flex: 0 0 auto; width: clamp(40px, 8vw, 56px); border: none; border-right: 2px solid var(--border-soft); background: var(--card-bg); color: var(--text); font-family: inherit; font-size: clamp(0.9rem, 2.5vw, 1.15rem); cursor: pointer; z-index: 3; transition: all 0.3s ease; }
         .theme-btn:hover { background: var(--strip-active); color: #111; }
 
+        /* ========== AUDIO TOGGLE BUTTON ========== */
+        .audio-btn {
+            flex: 0 0 auto; 
+            width: clamp(40px, 8vw, 56px); 
+            border: none; 
+            border-left: 2px solid var(--border-soft); 
+            background: var(--card-bg); 
+            cursor: pointer; 
+            z-index: 3; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease; 
+        }
+        .audio-btn:hover { background: var(--strip-active); }
+
+        /* RGB Animation für die Audio-Ente */
+        @keyframes rgbDuck {
+            0%   { filter: hue-rotate(0deg) saturate(2); }
+            50%  { filter: hue-rotate(180deg) saturate(2); }
+            100% { filter: hue-rotate(360deg) saturate(2); }
+        }
+
+        .audio-btn img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            image-rendering: pixelated;
+            animation: rgbDuck 4s linear infinite; /* RGB Pulsieren wenn Sound an */
+            transition: transform 0.2s ease, filter 0.3s ease;
+        }
+        .audio-btn:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Monochrom-Filter wenn Mute aktiv ist */
+        .audio-btn.muted img {
+            animation: none;
+            filter: grayscale(100%) opacity(0.4) brightness(0.8);
+        }
+
+        /* ========== COLLAPSE BUTTON ========== */
         .collapse-btn { 
             flex: 0 0 auto; 
             width: clamp(40px, 8vw, 56px); 
@@ -312,31 +355,28 @@
         
         #door-overlay .door-panel { 
             position: absolute; 
-            inset: 0; /* Exakt passend am Bildschirmrand, verhindert Abschneiden im Verborgenen */
+            inset: 0; 
             transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
             will-change: transform; 
             backface-visibility: hidden; 
             background-color: var(--door-bg); 
             
-            /* CSS Grid für mathematisch perfekte Aufteilung */
             display: grid;
             grid-template-columns: repeat(8, 1fr);
             grid-template-rows: repeat(4, 1fr);
-            padding: 2vw; /* Sorgt für einen eleganten Rahmen, Bilder kleben nicht am Rand */
-            gap: 1.5vw;   /* Abstand zwischen den Bildern (Verteilung wie auf der Skizze) */
+            padding: 2vw; 
+            gap: 1.5vw;   
         }
 
-        /* Das Styling für jede einzelne Bild-Kachel */
         .door-tile {
             background-image: url('pixelart/pixelart_vedran.png');
-            background-size: contain; /* WICHTIG: PNG behält IMMER 100% exakt sein Aspect-Ratio */
+            background-size: contain;
             background-position: center center;
             background-repeat: no-repeat;
             width: 100%;
             height: 100%;
         }
         
-        /* Handy-Ansicht: Exakt 2 Spalten & 4 Reihen (8 Tiles gesamt) */
         @media (max-width: 768px) {
             #door-overlay .door-panel {
                 grid-template-columns: repeat(2, 1fr);
@@ -344,7 +384,6 @@
                 padding: 4vw;
                 gap: 3vw;
             }
-            /* Verstecke alle Kacheln ab der 9. Position auf mobilen Geräten */
             .door-tile:nth-child(n+9) {
                 display: none;
             }
@@ -360,7 +399,6 @@
     <audio id="quackAudio" preload="auto"></audio>
 
     <div id="door-overlay" class="closed">
-        <!-- Die inneren Bildkacheln (.door-tile) werden jetzt dynamisch von JS generiert, um den Code schlank zu halten -->
         <div class="door-panel"></div>
     </div>
 
@@ -370,6 +408,12 @@
             <div id="catStrip" class="cat-strip">
                 <div id="catTrack" class="cat-track"></div>
             </div>
+            
+            <!-- NEU: DER AUDIO MUTE/UNMUTE BUTTON -->
+            <button id="audioToggle" class="audio-btn" type="button" title="Quack Sound An/Aus">
+                <img src="duck.png" alt="Audio Toggle">
+            </button>
+            
             <button id="collapseToggle" class="collapse-btn" type="button" title="Menü öffnen/schließen">
                 <img src="duck.png" alt="Duck Menu">
             </button>
@@ -395,8 +439,6 @@
             /* ========== TÜR-KACHELN (GRID) DYNAMISCH GENERIEREN ========== */
             const doorPanel = document.querySelector('.door-panel');
             if (doorPanel) {
-                // Wir generieren genau 32 Kacheln für den Desktop (8x4). 
-                // Auf Handys (2x4) werden die überzähligen 24 durch CSS automatisch ausgeblendet.
                 for (let i = 0; i < 32; i++) {
                     const tile = document.createElement('div');
                     tile.className = 'door-tile';
@@ -428,7 +470,22 @@
                 });
             }
 
-            /* ========== MULTI-QUACK SHUFFLE SYSTEM (QUACK/ ORDNER) & COLLAPSE LOGIK ========== */
+            /* ========== AUDIO LOGIK (MUTE/UNMUTE) ========== */
+            const audioBtn = document.getElementById('audioToggle');
+            let isMuted = false;
+
+            audioBtn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    audioBtn.classList.add('muted');
+                    audioBtn.setAttribute('title', 'Quack Sound ist AUS');
+                } else {
+                    audioBtn.classList.remove('muted');
+                    audioBtn.setAttribute('title', 'Quack Sound ist AN');
+                }
+            });
+
+            /* ========== MULTI-QUACK SHUFFLE SYSTEM & COLLAPSE LOGIK ========== */
             const collapseBtn = document.getElementById('collapseToggle');
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
@@ -436,13 +493,11 @@
             const quackAudio = document.getElementById('quackAudio');
             let isCollapsed = false;
 
-            // Liste der Quack-Dateien im Unterordner "quack"
             const quackFiles = [
                 'quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3', 'quack/quack04.mp3'
             ];
             let quackQueue = [];
 
-            // Funktion, die immer eine zufällige Datei ausgibt, aber alle durchgeht, bevor sie wiederholt
             function getNextQuackFile() {
                 if (quackQueue.length === 0) {
                     quackQueue = [...quackFiles];
@@ -455,7 +510,8 @@
             }
 
             collapseBtn.addEventListener('click', () => {
-                if (quackAudio) {
+                // SOUND WIRD NUR ABGESPIELT WENN NICHT GEMUTED
+                if (quackAudio && !isMuted) {
                     const nextQuack = getNextQuackFile();
                     quackAudio.src = nextQuack;
                     quackAudio.currentTime = 0;
@@ -496,7 +552,6 @@
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
 
-                // 1. TÜR SCHLIESSEN
                 door.classList.remove('open');
                 door.classList.add('closed');
 
@@ -508,7 +563,6 @@
                     }
                 });
 
-                // 2. WARTEN BIS TÜR KOMPLETT ZU IST (1200ms), DANN INHALT LADEN
                 setTimeout(async () => {
                     const targetPage = categoryPages[cat];
                     if (targetPage) {
@@ -549,7 +603,6 @@
 
                     window.scrollTo(0, 0);
 
-                    // 3. TÜR WIEDER ÖFFNEN
                     setTimeout(() => {
                         measure();
                         door.classList.remove('closed');
@@ -642,7 +695,8 @@
             let stripTimeDrag = 0;
 
             strip.addEventListener('mousedown', (e) => {
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
+                // Audio und Collapse Buttons vom Draggen ausschließen!
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle') || e.target.closest('#audioToggle')) return;
                 stripDragging = true;
                 stripVelocity = 0;
                 stripStartX = e.clientX;
@@ -677,7 +731,7 @@
             window.addEventListener('mouseleave', () => stripDragging = false);
 
             strip.addEventListener('touchstart', (e) => {
-                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle')) return;
+                if(e.target.closest('#themeToggle') || e.target.closest('#collapseToggle') || e.target.closest('#audioToggle')) return;
                 stripDragging = true;
                 stripVelocity = 0;
                 stripStartX = e.touches[0].clientX;
