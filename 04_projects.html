@@ -6,7 +6,7 @@
 </head>
 <body>
     <main>
-        <!-- Spezifisches CSS optimiert für Desktop & Mobile -->
+        <!-- Nur noch strukturelles CSS für Karussell und Akkordeon, keine globalen Text/Bild-Overrides mehr! -->
         <style>
             /* VHS-Stil Variablen für Dots und Akzente */
             :root {
@@ -15,22 +15,18 @@
                 --accent-red: #e02424;
                 --accent-blue: #1a73e8;
             }
+            html[data-theme="dark"] { --dot: #4a4540; --dot-active: #e05555; }
+            html[data-theme="mono-gray"] { --dot: #555555; --dot-active: #dddddd; }
+            html[data-theme="mono-green"] { --dot: #1b5e20; --dot-active: #69f0ae; }
+            html[data-theme="crt"] { --dot: #2a4a2a; --dot-active: #99ff99; }
 
-            html[data-theme="dark"] { --dot: #4a4540; --dot-active: #e05555; --accent-red: #ff4d4d; --accent-blue: #3b82f6; }
-            html[data-theme="mono-gray"] { --dot: #555555; --dot-active: #dddddd; --accent-red: #aaaaaa; --accent-blue: #cccccc; }
-            html[data-theme="mono-green"] { --dot: #1b5e20; --dot-active: #69f0ae; --accent-red: #39ff14; --accent-blue: #b6ffb6; }
-            html[data-theme="crt"] { --dot: #2a4a2a; --dot-active: #99ff99; --accent-red: #ff9999; --accent-blue: #99ccff; }
-
-            /* SECTION WRAPPER FÜR DESKTOP */
+            /* SECTION WRAPPER */
             section#PROJECTS {
                 width: 100%;
                 max-width: 900px;
                 margin: 0 auto;
                 box-sizing: border-box;
-                padding: 0 10px;
             }
-
-            .subtitle { text-align: center; color: var(--text-soft); font-size: var(--fs-sm); margin-bottom: 30px; line-height: 2.4; }
 
             /* CATEGORY ACCORDION */
             .cat-group {
@@ -42,20 +38,19 @@
                 transition: border-color 0.3s, box-shadow 0.3s;
                 width: 100%;
             }
-
             .cat-group.open {
                 border-color: var(--strip-active);
                 box-shadow: 0 0 12px rgba(255, 154, 60, 0.2);
             }
-
             .cat-header {
                 display: flex; align-items: center; justify-content: space-between;
                 padding: 16px 20px; cursor: pointer; user-select: none;
                 -webkit-tap-highlight-color: transparent; transition: background 0.2s;
             }
-
             .cat-header:hover { background: rgba(255, 154, 60, 0.04); }
-            .cat-header .cat-label { font-family: 'Press Start 2P', cursive; font-size: var(--fs-xs); color: var(--strip-active); letter-spacing: 0.1em; }
+            
+            /* Text erbt jetzt global aus menu.html */
+            .cat-header .cat-label { font-size: var(--fs-xs); color: var(--strip-active); letter-spacing: 0.1em; }
             .cat-header .arrow { font-size: 14px; color: var(--strip-active); transition: transform 0.3s ease; margin-left: 10px; }
             .cat-group.open > .cat-header .arrow { transform: rotate(90deg); }
 
@@ -69,9 +64,9 @@
                 padding: 14px 20px; cursor: pointer; user-select: none;
                 -webkit-tap-highlight-color: transparent; transition: background 0.2s;
             }
-
             .prod-header:hover { background: rgba(255, 154, 60, 0.03); }
-            .prod-header .prod-name { font-family: 'Press Start 2P', cursive; font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.05em; }
+            
+            .prod-header .prod-name { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.05em; }
             .prod-header .prod-arrow { font-size: 12px; color: var(--strip-active); transition: transform 0.3s ease; margin-left: 10px; }
             .prod-item.open > .prod-header .prod-arrow { transform: rotate(90deg); }
 
@@ -81,10 +76,8 @@
 
             /* PRODUCT DESCRIPTION */
             .prod-desc {
-                font-family: 'VT323', monospace;
-                font-size: 18px;
                 color: var(--text-muted);
-                line-height: 1.8;
+                line-height: 2.2;
                 margin-top: 20px;
                 margin-bottom: 16px;
                 text-align: left;
@@ -92,21 +85,17 @@
                 width: 100%;
                 max-width: 650px;
             }
-
             .prod-desc strong {
                 color: var(--text);
-                font-family: 'Press Start 2P', cursive;
-                font-size: var(--fs-xs);
                 display: block;
                 margin-bottom: 8px;
-                letter-spacing: 0.05em;
             }
 
-            /* CAROUSEL WRAPPER */
+            /* CAROUSEL WRAPPER - Kompakt für die neuen 300x300 Bilder */
             .carousel-wrapper {
                 position: relative;
                 width: 100%;
-                max-width: 550px;
+                max-width: 320px; /* Perfekte Größe für 300px Bilder */
                 margin: 15px auto 10px auto;
                 overflow: hidden;
                 border-radius: 8px;
@@ -115,7 +104,6 @@
                 box-sizing: border-box;
                 border: 2px solid var(--border-soft);
             }
-
             .carousel-stage {
                 position: relative;
                 width: 100%;
@@ -124,7 +112,6 @@
                 justify-content: center;
                 background: var(--bg-solid);
             }
-
             .carousel-slide {
                 position: absolute;
                 inset: 0;
@@ -141,19 +128,14 @@
                 position: relative;
             }
 
-            .carousel-slide img {
-                width: 100%;
-                height: auto;
-                max-height: 65vh;
-                object-fit: contain;
-                display: block;
-            }
-
+            /* 3D MODEL ANPASSUNG */
             .carousel-slide.is-model {
                 aspect-ratio: 1;
                 width: 100%;
+                max-width: 300px;
+                max-height: 300px;
+                margin: 0 auto;
             }
-
             .carousel-slide model-viewer {
                 width: 100%; height: 100%; background: transparent; --poster-color: transparent; display: block;
             }
@@ -168,38 +150,14 @@
             }
             .model-loading .label { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft, #aaa); }
             @keyframes modelSpin { to { transform: rotate(360deg); } }
-
-            /* ZOOM BUTTON */
-            .zoom-btn {
-                position: absolute; bottom: 12px; right: 12px; width: 36px; height: 36px;
-                background: var(--card-bg); border: 2px solid var(--border-soft); border-radius: 50%;
-                display: flex; align-items: center; justify-content: center; text-decoration: none;
-                font-size: 16px; color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-                transition: all 0.2s ease; z-index: 5; -webkit-tap-highlight-color: transparent;
-            }
-            .zoom-btn:hover {
-                transform: scale(1.15) rotate(10deg);
-                background: var(--strip-active); border-color: #111;
-            }
             
-            /* PUNKTE (DOTS) - DOPPELT SO GROSS */
+            /* PUNKTE (DOTS) */
             .carousel-dots { 
-                display: flex; 
-                justify-content: center; 
-                gap: 12px; 
-                flex-wrap: wrap; 
-                margin: 12px 0 6px 0; 
-                padding: 4px 0; 
+                display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 6px 0; padding: 4px 0; 
             }
             .carousel-dot { 
-                width: 20px; 
-                height: 20px; 
-                border-radius: 50%; 
-                background: var(--dot); 
-                cursor: pointer; 
-                transition: background 0.25s, transform 0.25s; 
-                -webkit-tap-highlight-color: transparent; 
-                border: none;
+                width: 20px; height: 20px; border-radius: 50%; background: var(--dot); cursor: pointer; 
+                transition: background 0.25s, transform 0.25s; -webkit-tap-highlight-color: transparent; border: none;
             }
             .carousel-dot:hover, .carousel-dot:active { transform: scale(1.3); }
             .carousel-dot.active { background: var(--dot-active); transform: scale(1.25); }
@@ -207,17 +165,11 @@
             @media (max-width: 480px) {
                 .carousel-dot { width: 24px; height: 24px; }
             }
-
-            @media (min-width: 769px) {
-                .carousel-wrapper { max-width: 580px; }
-                .prod-desc { font-size: 20px; }
-                .subtitle { font-size: var(--fs-base); }
-            }
         </style>
 
         <section id="PROJECTS">
             <h2 data-lang-en="PROJECTS" data-lang-de="PROJECTS">PROJECTS</h2>
-            <p class="subtitle" data-lang-en="Mechanical prototypes, 3D designs & physical concepts" data-lang-de="Mechanische Prototypen, 3D Designs & physische Konzepte">Mechanical prototypes, 3D designs &amp; physical concepts</p>
+            <p data-lang-en="Mechanical prototypes, 3D designs & physical concepts" data-lang-de="Mechanische Prototypen, 3D Designs & physische Konzepte">Mechanical prototypes, 3D designs &amp; physical concepts</p>
 
             <div id="projects-accordion"></div>
         </section>
@@ -502,7 +454,6 @@ Es gibt kein Spiel, aber wir haben das T-Shirt dazu.`
                         const inner = document.createElement('div');
                         inner.className = 'prod-body-inner';
 
-                        // Karussell-Wrapper (ohne Pfeile)
                         const wrapper = document.createElement('div');
                         wrapper.className = 'carousel-wrapper';
 
@@ -518,17 +469,14 @@ Es gibt kein Spiel, aber wir haben das T-Shirt dazu.`
                                 slide.setAttribute('data-model', item.model);
                                 slide.classList.add('is-model');
                             } else {
-                                slide.innerHTML = `
-                                    <img src="${item.src}" loading="lazy" alt="">
-                                    <a href="${item.src}" target="_blank" class="zoom-btn" title="Bild in neuem Tab öffnen & zoomen">🔍</a>
-                                `;
+                                // Nur noch das pure Bild! Den Zoom (Lupe & Link) fügt die menu.html automatisch hinzu!
+                                slide.innerHTML = `<img src="${item.src}" loading="lazy" alt="">`;
                             }
                             stage.appendChild(slide);
                         });
                         wrapper.appendChild(stage);
                         inner.appendChild(wrapper);
 
-                        // Dots (vergrößert)
                         const dots = document.createElement('div');
                         dots.className = 'carousel-dots';
                         dots.id = 'dots-' + gIdx;
