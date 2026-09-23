@@ -300,22 +300,26 @@
             animation: wobbleProjects 0.25s infinite steps(5);
         }
 
-        /* 4. STORYTIME: Buchseiten-Strech & Bounce */
+        /* 4. STORYTIME (NEU): Sanftes Blättern & schwebendes Wellen-Drehen */
         @keyframes wobbleStorytime {
-            0%, 100% { transform: scaleY(1) scaleX(1); }
-            50% { transform: scaleY(1.2) scaleX(0.9) translateY(-6px); }
+            0%, 100% { transform: translateY(0) rotate(0deg) skewX(0deg); }
+            25% { transform: translateY(-5px) rotate(-4deg) skewX(6deg); }
+            75% { transform: translateY(5px) rotate(4deg) skewX(-6deg); }
         }
         #door-overlay[data-category="STORYTIME"] .door-tile {
-            animation: wobbleStorytime 0.45s infinite ease-in-out;
+            animation: wobbleStorytime 0.6s infinite ease-in-out;
         }
 
-        /* 5. MUSIC: Equalizer Puls / Helligkeits-Glitch */
+        /* 5. MUSIC (NEU): Fetter Subwoofer-Bass-Thump (Pulsieren zum Beat) */
         @keyframes wobbleMusic {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.12); filter: brightness(1.6) drop-shadow(0 0 8px var(--strip-active)); }
+            0%, 100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 0px rgba(255,122,0,0)); }
+            15% { transform: scale(1.22, 0.82) translateY(5px); filter: drop-shadow(0 0 10px var(--strip-active)); }
+            30% { transform: scale(0.85, 1.18) translateY(-8px); }
+            45% { transform: scale(1.12, 0.92) translateY(2px); }
+            60% { transform: scale(0.96, 1.04) translateY(-3px); }
         }
         #door-overlay[data-category="MUSIC"] .door-tile {
-            animation: wobbleMusic 0.3s infinite ease-in-out;
+            animation: wobbleMusic 0.38s infinite ease-in-out;
         }
 
         /* 6. CONTACT: Schnelles Vibrieren (Anruf-Modus) */
@@ -511,7 +515,6 @@
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
 
-                // Hier setzen wir die Kategorie als Attribut für den jeweiligen Wobble-Effekt
                 door.setAttribute('data-category', cat);
 
                 door.classList.remove('open');
