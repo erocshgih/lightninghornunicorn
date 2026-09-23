@@ -176,8 +176,8 @@
         main#mainContent img {
             display: block;
             width: 100% !important;
-            max-width: 300px !important;  /* Maximale Breite 300px */
-            height: auto !important;       /* Natürliche Proportionen (Aspect Ratio) beibehalten */
+            max-width: 300px !important;  
+            height: auto !important;       
             margin: 20px auto;
             box-sizing: border-box;
             border-radius: var(--radius);
@@ -241,7 +241,7 @@
         .maintenance-card p { font-size: var(--fs-sm); line-height: 2.6; color: var(--text-muted); margin-bottom: 10px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========== METALLTÜR & EXAKTES TILE-GRID ========== */
+        /* ========== METALLTÜR & KACHELN ========== */
         #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
         #door-overlay.closed { pointer-events: all; }
         
@@ -262,13 +262,90 @@
 
         #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
         #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
+
+
+        /* ========== EINZIGARTIGE KATEGORIE-WOBBLE EFFEKTE FÜR DIE TÜR ========== */
+        
+        /* 1. VHS MULTIVERSE: VHS-Tracking Glitch & Skew */
+        @keyframes wobbleVHS {
+            0%, 100% { transform: skewX(0deg) scale(1); }
+            20% { transform: skewX(-18deg) scale(1.05, 0.92); filter: hue-rotate(120deg); }
+            40% { transform: skewX(12deg) scale(0.95, 1.08); }
+            60% { transform: skewX(-8deg); filter: contrast(150%); }
+            80% { transform: skewX(6deg) scale(1.02); }
+        }
+        #door-overlay[data-category="VHS MULTIVERSE"] .door-tile {
+            animation: wobbleVHS 0.35s infinite steps(4);
+        }
+
+        /* 2. HUMANART: Künstlerisches Pulsieren & Drehen */
+        @keyframes wobbleHumanart {
+            0%, 100% { transform: rotate(0deg) scale(1); border-radius: 0%; }
+            33% { transform: rotate(8deg) scale(1.1) skew(5deg); }
+            66% { transform: rotate(-8deg) scale(0.9) skew(-5deg); filter: saturate(2); }
+        }
+        #door-overlay[data-category="HUMANART"] .door-tile {
+            animation: wobbleHumanart 0.6s infinite ease-in-out;
+        }
+
+        /* 3. PROJECTS: Mechanischer Ruckel- & Jitter-Effekt */
+        @keyframes wobbleProjects {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            20% { transform: translate(-4px, 3px) rotate(-3deg); }
+            40% { transform: translate(4px, -3px) rotate(3deg); }
+            60% { transform: translate(-3px, -2px) scale(1.05); }
+            80% { transform: translate(3px, 2px); }
+        }
+        #door-overlay[data-category="PROJECTS"] .door-tile {
+            animation: wobbleProjects 0.25s infinite steps(5);
+        }
+
+        /* 4. STORYTIME: Buchseiten-Strech & Bounce */
+        @keyframes wobbleStorytime {
+            0%, 100% { transform: scaleY(1) scaleX(1); }
+            50% { transform: scaleY(1.2) scaleX(0.9) translateY(-6px); }
+        }
+        #door-overlay[data-category="STORYTIME"] .door-tile {
+            animation: wobbleStorytime 0.45s infinite ease-in-out;
+        }
+
+        /* 5. MUSIC: Equalizer Puls / Helligkeits-Glitch */
+        @keyframes wobbleMusic {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.12); filter: brightness(1.6) drop-shadow(0 0 8px var(--strip-active)); }
+        }
+        #door-overlay[data-category="MUSIC"] .door-tile {
+            animation: wobbleMusic 0.3s infinite ease-in-out;
+        }
+
+        /* 6. CONTACT: Schnelles Vibrieren (Anruf-Modus) */
+        @keyframes wobbleContact {
+            0%, 100% { transform: rotate(0deg) translate(0, 0); }
+            20% { transform: rotate(-6deg) translate(-2px, 1px); }
+            40% { transform: rotate(6deg) translate(2px, -1px); }
+            60% { transform: rotate(-4deg) translate(-1px, -2px); }
+            80% { transform: rotate(4deg) translate(1px, 2px); }
+        }
+        #door-overlay[data-category="CONTACT"] .door-tile {
+            animation: wobbleContact 0.25s infinite steps(4);
+        }
+
+        /* 7. DONATE: Münz-Hüpf-Effekt (Squash & Stretch) */
+        @keyframes wobbleDonate {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            40% { transform: translateY(-12px) scale(0.92, 1.12); }
+            80% { transform: translateY(3px) scale(1.08, 0.92); }
+        }
+        #door-overlay[data-category="DONATE"] .door-tile {
+            animation: wobbleDonate 0.4s infinite ease-in-out;
+        }
     </style>
 </head>
 <body>
     
     <audio id="quackAudio" preload="auto"></audio>
 
-    <div id="door-overlay" class="closed">
+    <div id="door-overlay" class="closed" data-category="ABOUT">
         <div class="door-panel"></div>
     </div>
 
@@ -433,6 +510,9 @@
 
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
+
+                // Hier setzen wir die Kategorie als Attribut für den jeweiligen Wobble-Effekt
+                door.setAttribute('data-category', cat);
 
                 door.classList.remove('open');
                 door.classList.add('closed');
