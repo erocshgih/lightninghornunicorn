@@ -118,7 +118,7 @@
     transition: all 0.2s ease;
     backdrop-filter: blur(4px);
     width: 280px;
-    min-height: 55px; /* Fett und Touch-freundlich */
+    min-height: 55px;
   }
   .intro-skip-btn:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -161,7 +161,7 @@
 
   #head-menu { position: fixed; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 10; width: min(92vw, 460px); display: flex; flex-direction: column; align-items: center; gap: 8px; }
   
-  #effect-buttons { position: fixed; bottom: max(110px, calc(env(safe-area-inset-bottom) + 95px)); left: 50%; transform: translateX(-50%); z-index: 11; display: flex; gap: 10px; }
+  #effect-buttons { position: fixed; bottom: max(145px, calc(env(safe-area-inset-bottom) + 130px)); left: 50%; transform: translateX(-50%); z-index: 11; display: flex; gap: 10px; }
 
   #container3D canvas { display: block; width: 100% !important; height: 100% !important; }
 
@@ -203,7 +203,7 @@
   #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
   @media (max-width: 600px) { 
-    #effect-buttons { bottom: max(100px, calc(env(safe-area-inset-bottom) + 85px)); }
+    #effect-buttons { bottom: max(140px, calc(env(safe-area-inset-bottom) + 125px)); }
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
     #bg-next { right: 0; border-radius: 8px 0 0 8px; width: 35px; height: 60px; font-size: 20px;} 
     .btn { padding: 10px 15px; font-size: 13px; min-height: 44px; }
@@ -468,7 +468,7 @@
   let availableWisdomIndices = [];
   let currentWisdomLang = '';
   
-  let isTyping = false; // Wird für das Kopfnicken verwendet
+  let isTyping = false; 
 
   const disclaimerTexts = {
     de: "Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.",
@@ -992,16 +992,12 @@
         if (tt >= 2.45) endRainbow();
       } 
       else if (wisdomActive) {
-        // HIER IST DAS NEUE SCHREIBMASCHINEN-KOPFNICKEN
         let targetRotX = 0;
         
         if (isTyping) {
             const headIdx = document.getElementById("head-select").selectedIndex;
-            // Die Rate (Geschwindigkeit) des ausgewählten Profils bestimmt das Rattern
             const rates = [0.85, 1.15, 0.70, 1.05, 1.10]; 
             const currentRate = rates[headIdx % rates.length];
-            
-            // "Rattern" basierend auf der Zeit und der Sprech-Rate (wie eine Schreibmaschine)
             targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25; 
         }
 
