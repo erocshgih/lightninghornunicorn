@@ -312,23 +312,41 @@
         
         #door-overlay .door-panel { 
             position: absolute; 
-            inset: -40px; /* Puffer, damit bei CSS-Transforms keine Kanten aufblitzen */
+            inset: 0; /* Exakt passend am Bildschirmrand, verhindert Abschneiden im Verborgenen */
             transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; 
             will-change: transform; 
             backface-visibility: hidden; 
             background-color: var(--door-bg); 
-            background-image: url('pixelart/pixelart_vedran.png'); 
-            background-repeat: repeat; 
-            /* Desktop-Standard: Exakt 8 Spalten & 4 Reihen (32 Tiles gesamt) */
-            background-size: 12.5vw 25vh; 
-            background-position: center center; 
+            
+            /* CSS Grid für mathematisch perfekte Aufteilung */
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            padding: 2vw; /* Sorgt für einen eleganten Rahmen, Bilder kleben nicht am Rand */
+            gap: 1.5vw;   /* Abstand zwischen den Bildern (Verteilung wie auf der Skizze) */
+        }
+
+        /* Das Styling für jede einzelne Bild-Kachel */
+        .door-tile {
+            background-image: url('pixelart/pixelart_vedran.png');
+            background-size: contain; /* WICHTIG: PNG behält IMMER 100% exakt sein Aspect-Ratio */
+            background-position: center center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
         }
         
         /* Handy-Ansicht: Exakt 2 Spalten & 4 Reihen (8 Tiles gesamt) */
         @media (max-width: 768px) {
             #door-overlay .door-panel {
-                background-size: 50vw 25vh;
-                background-position: center center; 
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+                padding: 4vw;
+                gap: 3vw;
+            }
+            /* Verstecke alle Kacheln ab der 9. Position auf mobilen Geräten */
+            .door-tile:nth-child(n+9) {
+                display: none;
             }
         }
 
@@ -342,6 +360,7 @@
     <audio id="quackAudio" preload="auto"></audio>
 
     <div id="door-overlay" class="closed">
+        <!-- Die inneren Bildkacheln (.door-tile) werden jetzt dynamisch von JS generiert, um den Code schlank zu halten -->
         <div class="door-panel"></div>
     </div>
 
@@ -373,6 +392,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
+            /* ========== TÜR-KACHELN (GRID) DYNAMISCH GENERIEREN ========== */
+            const doorPanel = document.querySelector('.door-panel');
+            if (doorPanel) {
+                // Wir generieren genau 32 Kacheln für den Desktop (8x4). 
+                // Auf Handys (2x4) werden die überzähligen 24 durch CSS automatisch ausgeblendet.
+                for (let i = 0; i < 32; i++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'door-tile';
+                    doorPanel.appendChild(tile);
+                }
+            }
+
             /* ========== THEME ENGINE ========== */
             const THEMES = ['light', 'dark', 'mono-gray', 'mono-green', 'crt'];
             const THEME_ICONS = { 'light': '☀', 'dark': '☾', 'mono-gray': '░', 'mono-green': '▓', 'crt': '▤' };
@@ -407,7 +438,7 @@
 
             // Liste der Quack-Dateien im Unterordner "quack"
             const quackFiles = [
-                'quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3'
+                'quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3', 'quack/quack04.mp3'
             ];
             let quackQueue = [];
 
