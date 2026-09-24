@@ -265,82 +265,82 @@
 
 
         /* ========== EINZIGARTIGE KATEGORIE-WOBBLE EFFEKTE FÜR DIE TÜR ========== */
+        /* ANPASSUNG: Längere Dauer und weichere Übergänge für Desktop-Monitore */
         
         /* 1. VHS MULTIVERSE: VHS-Tracking Glitch & Skew */
         @keyframes wobbleVHS {
             0%, 100% { transform: skewX(0deg) scale(1); }
-            20% { transform: skewX(-18deg) scale(1.05, 0.92); filter: hue-rotate(120deg); }
-            40% { transform: skewX(12deg) scale(0.95, 1.08); }
-            60% { transform: skewX(-8deg); filter: contrast(150%); }
-            80% { transform: skewX(6deg) scale(1.02); }
+            25% { transform: skewX(-12deg) scale(1.03, 0.95); filter: hue-rotate(120deg); }
+            50% { transform: skewX(8deg) scale(0.97, 1.05); }
+            75% { transform: skewX(-5deg); filter: contrast(130%); }
         }
         #door-overlay[data-category="VHS MULTIVERSE"] .door-tile {
-            animation: wobbleVHS 0.35s infinite steps(4);
+            animation: wobbleVHS 0.6s infinite ease-in-out;
         }
 
         /* 2. HUMANART: Künstlerisches Pulsieren & Drehen */
         @keyframes wobbleHumanart {
             0%, 100% { transform: rotate(0deg) scale(1); border-radius: 0%; }
-            33% { transform: rotate(8deg) scale(1.1) skew(5deg); }
-            66% { transform: rotate(-8deg) scale(0.9) skew(-5deg); filter: saturate(2); }
+            33% { transform: rotate(5deg) scale(1.05) skew(3deg); }
+            66% { transform: rotate(-5deg) scale(0.95) skew(-3deg); filter: saturate(1.5); }
         }
         #door-overlay[data-category="HUMANART"] .door-tile {
-            animation: wobbleHumanart 0.6s infinite ease-in-out;
+            animation: wobbleHumanart 1.2s infinite ease-in-out;
         }
 
         /* 3. PROJECTS: Mechanischer Ruckel- & Jitter-Effekt */
         @keyframes wobbleProjects {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            20% { transform: translate(-4px, 3px) rotate(-3deg); }
-            40% { transform: translate(4px, -3px) rotate(3deg); }
-            60% { transform: translate(-3px, -2px) scale(1.05); }
-            80% { transform: translate(3px, 2px); }
+            20% { transform: translate(-3px, 2px) rotate(-2deg); }
+            40% { transform: translate(3px, -2px) rotate(2deg); }
+            60% { transform: translate(-2px, -1px) scale(1.03); }
+            80% { transform: translate(2px, 1px); }
         }
         #door-overlay[data-category="PROJECTS"] .door-tile {
-            animation: wobbleProjects 0.25s infinite steps(5);
+            animation: wobbleProjects 0.8s infinite ease-in-out;
         }
 
         /* 4. STORYTIME: Sanftes Blättern & schwebendes Wellen-Drehen */
         @keyframes wobbleStorytime {
             0%, 100% { transform: translateY(0) rotate(0deg) skewX(0deg); }
-            25% { transform: translateY(-5px) rotate(-4deg) skewX(6deg); }
-            75% { transform: translateY(5px) rotate(4deg) skewX(-6deg); }
+            25% { transform: translateY(-4px) rotate(-3deg) skewX(4deg); }
+            75% { transform: translateY(4px) rotate(3deg) skewX(-4deg); }
         }
         #door-overlay[data-category="STORYTIME"] .door-tile {
-            animation: wobbleStorytime 0.6s infinite ease-in-out;
+            animation: wobbleStorytime 1.5s infinite ease-in-out;
         }
 
-        /* 5. MUSIC (NEU): Horizontales Umschauen (Nach links und rechts schauen) */
+        /* 5. MUSIC: Horizontales Umschauen (Nach links und rechts schauen) */
         @keyframes wobbleMusic {
             0%, 100% { transform: perspective(400px) rotateY(0deg) translateX(0); }
-            25% { transform: perspective(400px) rotateY(-24deg) translateX(-4px); }
+            25% { transform: perspective(400px) rotateY(-18deg) translateX(-3px); }
             50% { transform: perspective(400px) rotateY(0deg) translateX(0); }
-            75% { transform: perspective(400px) rotateY(24deg) translateX(4px); }
+            75% { transform: perspective(400px) rotateY(18deg) translateX(3px); }
         }
         #door-overlay[data-category="MUSIC"] .door-tile {
-            animation: wobbleMusic 0.8s infinite ease-in-out;
+            animation: wobbleMusic 1.2s infinite ease-in-out;
         }
 
         /* 6. CONTACT: Schnelles Vibrieren (Anruf-Modus) */
         @keyframes wobbleContact {
             0%, 100% { transform: rotate(0deg) translate(0, 0); }
-            20% { transform: rotate(-6deg) translate(-2px, 1px); }
-            40% { transform: rotate(6deg) translate(2px, -1px); }
-            60% { transform: rotate(-4deg) translate(-1px, -2px); }
-            80% { transform: rotate(4deg) translate(1px, 2px); }
+            20% { transform: rotate(-3deg) translate(-1px, 1px); }
+            40% { transform: rotate(3deg) translate(1px, -1px); }
+            60% { transform: rotate(-2deg) translate(-1px, -1px); }
+            80% { transform: rotate(2deg) translate(1px, 1px); }
         }
         #door-overlay[data-category="CONTACT"] .door-tile {
-            animation: wobbleContact 0.25s infinite steps(4);
+            animation: wobbleContact 0.5s infinite ease-in-out;
         }
 
         /* 7. DONATE: Münz-Hüpf-Effekt (Squash & Stretch) */
         @keyframes wobbleDonate {
             0%, 100% { transform: translateY(0) scale(1, 1); }
-            40% { transform: translateY(-12px) scale(0.92, 1.12); }
-            80% { transform: translateY(3px) scale(1.08, 0.92); }
+            40% { transform: translateY(-8px) scale(0.95, 1.05); }
+            80% { transform: translateY(2px) scale(1.05, 0.95); }
         }
         #door-overlay[data-category="DONATE"] .door-tile {
-            animation: wobbleDonate 0.4s infinite ease-in-out;
+            animation: wobbleDonate 0.8s infinite ease-in-out;
         }
     </style>
 </head>
@@ -561,7 +561,7 @@
                                         mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
                                             if (img.parentElement.tagName !== 'A') {
                                                 const wrapper = document.createElement('a');
-                                                wrapper.href = img.src;           
+                                                wrapper.href = img.src;            
                                                 wrapper.target = '_blank';        
                                                 wrapper.className = 'zoom-wrapper'; 
                                                 
