@@ -35,21 +35,14 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* 
-     GELÖSCHT: image-rendering: pixelated; 
-     Ohne den Filter wirken die WebGL-Elemente durch setPixelRatio(0.6)
-     schön weich und "matschig" wie bei echten PS2 Spielen.
-  */
-
   /* --- INTRO --- */
   #lhu-intro {
     position: fixed; inset: 0; z-index: 100000; 
-    overflow-y: auto; overflow-x: hidden; /* Erlaubt Scrollen, falls der Desktop-Monitor sehr niedrig ist */
+    overflow-y: auto; overflow-x: hidden; 
     display: flex; align-items: center; justify-content: center;
     background: #000; opacity: 1; transition: opacity .22s ease; pointer-events: auto;
   }
   
-  /* Hintergrund und Effekte auf "fixed" gesetzt, damit sie beim eventuellen Scrollen stehen bleiben */
   #lhu-intro-canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
   #lhu-intro-vignette {
     position: fixed; inset: -10%; pointer-events: none;
@@ -57,14 +50,12 @@
     mix-blend-mode: multiply;
   }
   
-  /* Panel positioniert sich nun relativ zum Flex-Container und passt sich an */
   #lhu-enter-panel {
     position: relative; z-index: 5; width: min(82vw, 420px); 
     display: flex; flex-direction: column; align-items: center; 
     gap: clamp(10px, 2vh, 20px); padding: 20px 0; margin: auto;
   }
   
-  /* Das 3D-Vorschaufenster passt sich nun auch der Höhe (vh) an! */
   #lhu-image-slot { width: min(68vw, 300px, 35vh); aspect-ratio: 1 / 1; position: relative; overflow: hidden; }
   #lhu-image-slot canvas { display: block; width: 100%; height: 100%; }
   
@@ -95,7 +86,6 @@
   
   #lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap: clamp(10px, 3vw, 22px); width:min(88vw,420px); margin-bottom: 5px; }
   
-  /* Buttons passen sich der Höhe an, damit sie auf Landscape-Monitoren nicht riesig sind */
   .lhu-pill { 
     width: clamp(60px, 12vh, 94px); height: clamp(60px, 12vh, 94px); 
     border-radius:50%; border:3px solid rgba(210,210,210,.65); cursor:pointer; 
@@ -111,7 +101,6 @@
   #lhu-intro.lhu-intro-yellow #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94)); }
   #lhu-intro.lhu-intro-blue #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94)); }
 
-  /* GROSSE, KLOBIGE SKIP BUTTONS */
   #intro-skip-buttons {
     display: flex;
     flex-direction: column;
@@ -136,14 +125,8 @@
     width: min(280px, 80vw);
     min-height: clamp(45px, 6vh, 55px);
   }
-  .intro-skip-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.03);
-  }
-  .intro-skip-btn:active {
-    transform: scale(0.95);
-  }
+  .intro-skip-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.6); transform: scale(1.03); }
+  .intro-skip-btn:active { transform: scale(0.95); }
 
   /* --- Z-INDEX THEATER --- */
   #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -218,6 +201,43 @@
   #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
   #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
+  /* =========================================================================
+     NEU: FISHEYE CRT OVERLAY STYLES 
+     ========================================================================= */
+  #crt-fisheye-overlay {
+    position: fixed; inset: 0; 
+    z-index: 9999; /* Direkt unter den Buttons, über der 3D Szene */
+    pointer-events: none; 
+    display: none;
+    /* Horizontale Scanlines + Vertikale RGB-Maske + Starke Vignette für Linsen-Effekt */
+    background: 
+      linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+      linear-gradient(90deg, rgba(255,0,0,0.04), rgba(0,255,0,0.02), rgba(0,0,255,0.04)),
+      radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.85) 75%, #000 110%);
+    background-size: 100% 4px, 3px 100%, 100% 100%;
+  }
+  #crt-fisheye-overlay.active { 
+    display: block; 
+    animation: crtFlicker 0.12s infinite;
+  }
+  @keyframes crtFlicker {
+    0% { opacity: 0.95; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.92; }
+  }
+
+  /* Klassen für die Elemente, die sich verzerren sollen */
+  .fisheye-active {
+    transform: scale(1.25) !important;
+    filter: contrast(1.4) saturate(1.5) sepia(0.2) hue-rotate(-5deg);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.6s;
+  }
+  .fisheye-inactive {
+    transform: scale(1) !important;
+    filter: contrast(1) saturate(1) sepia(0) hue-rotate(0deg);
+    transition: transform 0.5s ease-out, filter 0.5s;
+  }
+
   @media (max-width: 600px) { 
     #effect-buttons { bottom: max(140px, calc(env(safe-area-inset-bottom) + 125px)); }
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
@@ -250,7 +270,6 @@
       </div>
       <div id="lhu-intro-hint">Drücke einen Knopf</div>
       
-      <!-- FETTE SICHTBARE SKIP BUTTONS -->
       <div id="intro-skip-buttons">
         <button id="btn-skip-heads" class="intro-skip-btn">Skip to 3D Heads</button>
         <button id="btn-skip-main" class="intro-skip-btn">Skip to Main Page</button>
@@ -266,6 +285,9 @@
 
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
+  
+  <!-- NEU: Das Fisheye Overlay (liegt direkt über dem Hintergrund und der 3D Szene) -->
+  <div id="crt-fisheye-overlay"></div>
   
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
@@ -301,6 +323,8 @@
     <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
     <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">📖</button>
+    <!-- NEU: Der Fisheye Button -->
+    <button id="fish-btn" class="btn glass effect-btn" title="Fisheye CRT Mode">🐟</button>
   </div>
   
   <div id="head-menu">
@@ -512,7 +536,7 @@
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
   
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); 
-  renderer.setPixelRatio(0.6); // <--- HÄLT DIE AUFLÖSUNG NIEDRIG FÜR PS2 LOOK!
+  renderer.setPixelRatio(0.6); 
   renderer.setSize(innerWidth, innerHeight); 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.getElementById("container3D").appendChild(renderer.domElement);
@@ -531,7 +555,7 @@
   
   // INTRO RENDERER PS2-STYLE
   const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
-  hitEnterRenderer.setPixelRatio(0.6); // <--- HÄLT DIE AUFLÖSUNG NIEDRIG FÜR PS2 LOOK!
+  hitEnterRenderer.setPixelRatio(0.6); 
   hitEnterRenderer.setClearColor(0x000000, 0); 
   hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
   hitEnterSlot.appendChild(hitEnterRenderer.domElement);
@@ -709,14 +733,14 @@
     
     let charIndex = 0; const typingSpeed = 65; const totalTypeTime = phrase.length * typingSpeed;
     
-    isTyping = true; // Aktiviert das Schreibmaschinen-Nicken
+    isTyping = true; 
     
     typewriterInterval = setInterval(() => {
         textEl.textContent += phrase.charAt(charIndex);
         charIndex++;
         if(charIndex >= phrase.length) {
             clearInterval(typewriterInterval);
-            isTyping = false; // Stoppt das Nicken, wenn Text fertig
+            isTyping = false; 
         }
     }, typingSpeed);
 
@@ -751,12 +775,44 @@
           utterance.voice = langVoices[headIdx % langVoices.length];
       }
       
-      utterance.onend = () => { isTyping = false; }; // Stellt sicher, dass das Nicken auch mit dem Ton endet
+      utterance.onend = () => { isTyping = false; }; 
 
       synth.speak(utterance);
     }
     
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
+  };
+
+  /* =========================================================================
+     NEU: FISHEYE CRT LOGIK
+     ========================================================================= */
+  const fishBtn = document.getElementById("fish-btn");
+  const crtOverlay = document.getElementById("crt-fisheye-overlay");
+  const matrixCanvas = document.getElementById("matrix-bg");
+  const threeDContainer = document.getElementById("container3D");
+  let isFisheye = false;
+
+  fishBtn.onclick = () => {
+    isFisheye = !isFisheye;
+    if (isFisheye) {
+      fishBtn.textContent = "🦅";
+      crtOverlay.classList.add("active");
+      
+      // CSS Klassen hinzufügen für den gewölbten, verzerrten Look
+      matrixCanvas.classList.add("fisheye-active");
+      matrixCanvas.classList.remove("fisheye-inactive");
+      threeDContainer.classList.add("fisheye-active");
+      threeDContainer.classList.remove("fisheye-inactive");
+    } else {
+      fishBtn.textContent = "🐟";
+      crtOverlay.classList.remove("active");
+      
+      // CSS Klassen zurücksetzen
+      matrixCanvas.classList.remove("fisheye-active");
+      matrixCanvas.classList.add("fisheye-inactive");
+      threeDContainer.classList.remove("fisheye-active");
+      threeDContainer.classList.add("fisheye-inactive");
+    }
   };
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
