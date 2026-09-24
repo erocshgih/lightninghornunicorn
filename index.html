@@ -386,7 +386,7 @@
   <div id="effect-buttons">
     <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
-    <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">📖</button>
+    <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">🗿</button>
     <button id="fish-btn" class="btn glass effect-btn" title="Fisheye CRT Mode">🐟</button>
   </div>
   
@@ -546,7 +546,9 @@
       "Doctor said: You did not forget your password. That's dehydration from explosive diarrhea.",
       "If you can't sleep, read your local hobo a good night story while you invite them to a pyjama party.",
       "One apple a day keeps the doctor away if you throw it fast enough at him...",
-      "You look like you don't have it all together is what you say to me huh Very interesting You seem like someone who could be nice to other people but you are not. Looks can be deceiving"
+      "You look like you don't have it all together is what you say to me huh Very interesting You seem like someone who could be nice to other people but you are not. Looks can be deceiving",
+      "If man today can borrow flora, woman tomorrow will not him give choira."
+      "If a man says viruses are not your Friends is this man the antivirus."
     ],
     de: [
       "Der frühe Vogel fängt den Wurm. Weil der Wurm kein grundlegendes Radarsystem hat.",
@@ -563,7 +565,9 @@
       "Doktor sagt: Du hast dein Passwort nicht vergessen. Das ist Dehydrierung durch explosiven Durchfall.",
       "Wenn du nicht schlafen kannst, lies dem örtlichen Landstreicher eine Gute-Nacht-Geschichte vor, während du ihn zu einer Pyjamaparty einlädst.",
       "Ein Apfel am Tag hält den Arzt fern, wenn du ihn schnell genug auf ihn wirfst...",
-      "Du siehst aus, als hättest du dein Leben nicht im Griff, sagst du also zu mir, huh Sehr interessant Du wirkst wie jemand, der nett zu anderen Menschen sein könnte, aber du bist es nicht. Der Schein kann trügen"
+      "Du siehst aus, als hättest du dein Leben nicht im Griff, sagst du also zu mir, huh Sehr interessant Du wirkst wie jemand, der nett zu anderen Menschen sein könnte, aber du bist es nicht. Der Schein kann trügen",
+      "Wenn du heute kann Blumen borgen, dann Frau morgen nicht dein Pipi entsorgen."
+      "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..."
     ]
   };
   
@@ -591,6 +595,40 @@
   const loadingEl = document.getElementById("loading");
   function startLoading() { loadingEl.classList.add("show"); }
   function stopLoading() { loadingEl.classList.remove("show"); }
+
+  // WEB AUDIO API FÜR DEN KULTIGEN MARIO 64 WOBBLE/BOING SOUND
+  let audioCtx = null;
+  function playMarioWobbleSound() {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'sawtooth';
+      const now = audioCtx.currentTime;
+      
+      // Pitch-Modulation für den typischen "Boing-Boing-Dehn"-Effekt à la Mario 64
+      osc.frequency.setValueAtTime(120, now);
+      osc.frequency.exponentialRampToValueAtTime(380, now + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.18);
+      
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start(now);
+      osc.stop(now + 0.2);
+    } catch(e) {
+      // Fallback falls Audio blockiert ist
+    }
+  }
 
   // PS2 WISHY-WASHY PIXEL LOOK RENDERER
   const scene = new THREE.Scene();
@@ -843,7 +881,7 @@
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
   };
 
-  /* FISHEYE CRT LOGIK + RUNDER MARIO 64 BUBBLE-DRAG HACK */
+  /* FISHEYE CRT LOGIK + BUBBLE-DRAG + MARIO WOBBLE SOUND */
   const fishBtn = document.getElementById("fish-btn");
   const crtOverlay = document.getElementById("crt-fisheye-overlay");
   const matrixCanvas = document.getElementById("matrix-bg");
@@ -861,7 +899,6 @@
       threeDContainer.classList.add("fisheye-active");
       threeDContainer.classList.remove("fisheye-inactive");
 
-      // Rotation bleibt aktiv! (controls.enabled bleibt wie es ist)
       const hint = document.createElement("div");
       hint.id = "mario-hint";
       hint.textContent = "ZIEH AN DER HAUT!";
@@ -880,7 +917,7 @@
   };
 
   /* =========================================================================
-     MARIO 64 BUBBLE-DRAG ENGINE (SICHER VOR INNEN-ENTHÜLLUNG)
+     MARIO 64 BUBBLE-DRAG ENGINE + WOBBLE SOUND 
      ========================================================================= */
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -914,6 +951,9 @@
               dragPoint: hit.point.clone(),
               plane: new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), hit.point)
           };
+
+          // Spiele den kultigen Mario-Wobble-Sound beim Greifen ab!
+          playMarioWobbleSound();
       }
   });
 
@@ -936,18 +976,16 @@
       
       if(!dragInfo.mesh.geometry.boundingBox) dragInfo.mesh.geometry.computeBoundingBox();
       const size = dragInfo.mesh.geometry.boundingBox.getSize(new THREE.Vector3()).length();
-      const radius = size * 0.35; // Schöner, runder Einflussbereich
+      const radius = size * 0.35; 
       
-      // Sanfte Blasen-Verzerrung (schützt das innere Objekt vor dem Durchschlagen)
       for(let i=0; i<pos.count; i++) {
           let origV = new THREE.Vector3(orig.getX(i), orig.getY(i), orig.getZ(i));
           let dist = origV.distanceTo(dragInfo.localHit);
           
           if(dist < radius) {
               let t = 1.0 - (dist / radius);
-              let weight = t * t * (3.0 - 2.0 * t); // Smoother Hermite / Gaussian-artiger Falloff
+              let weight = t * t * (3.0 - 2.0 * t); 
               
-              // Verschiebung kombiniert mit Normalen für sauberes "Aufblähen"
               let nx = normals ? normals.getX(i) : 0;
               let ny = normals ? normals.getY(i) : 0;
               let nz = normals ? normals.getZ(i) : 0;
@@ -955,7 +993,7 @@
               
               let newPos = origV.clone()
                   .add(dragDelta.clone().multiplyScalar(weight * 0.7))
-                  .add(normalVec.multiplyScalar(dragDelta.length() * weight * 0.4)); // Bläht sich prall auf
+                  .add(normalVec.multiplyScalar(dragDelta.length() * weight * 0.4));
               
               pos.setXYZ(i, newPos.x, newPos.y, newPos.z);
           } else {
@@ -964,7 +1002,6 @@
       }
       pos.needsUpdate = true;
       
-      // Funken sprühen beim Ziehen
       if(Math.random() > 0.2) {
           const spark = document.createElement('div');
           spark.className = 'drag-spark';
