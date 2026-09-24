@@ -298,7 +298,7 @@
   @keyframes popHint {
     0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
     10% { opacity: 1; transform: translateX(-50%) scale(1.2); }
-    20% { transform: translateX(-50%) scale(1); }
+    20% { opacity: 1; transform: translateX(-50%) scale(1); }
     80% { opacity: 1; transform: translateX(-50%) scale(1); }
     100% { opacity: 0; transform: translateX(-50%) scale(1.5); }
   }
@@ -547,7 +547,7 @@
       "If you can't sleep, read your local hobo a good night story while you invite them to a pyjama party.",
       "One apple a day keeps the doctor away if you throw it fast enough at him...",
       "You look like you don't have it all together is what you say to me huh Very interesting You seem like someone who could be nice to other people but you are not. Looks can be deceiving",
-      "If man today can borrow flora, woman tomorrow will not him give choira."
+      "If man today can borrow flora, woman tomorrow will not him give choira.",
       "If a man says viruses are not your Friends is this man the antivirus."
     ],
     de: [
@@ -566,7 +566,7 @@
       "Wenn du nicht schlafen kannst, lies dem örtlichen Landstreicher eine Gute-Nacht-Geschichte vor, während du ihn zu einer Pyjamaparty einlädst.",
       "Ein Apfel am Tag hält den Arzt fern, wenn du ihn schnell genug auf ihn wirfst...",
       "Du siehst aus, als hättest du dein Leben nicht im Griff, sagst du also zu mir, huh Sehr interessant Du wirkst wie jemand, der nett zu anderen Menschen sein könnte, aber du bist es nicht. Der Schein kann trügen",
-      "Wenn du heute kann Blumen borgen, dann Frau morgen nicht dein Pipi entsorgen."
+      "Wenn du heute kann Blumen borgen, dann Frau morgen nicht dein Pipi entsorgen.",
       "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..."
     ]
   };
@@ -612,7 +612,6 @@
       osc.type = 'sawtooth';
       const now = audioCtx.currentTime;
       
-      // Pitch-Modulation für den typischen "Boing-Boing-Dehn"-Effekt à la Mario 64
       osc.frequency.setValueAtTime(120, now);
       osc.frequency.exponentialRampToValueAtTime(380, now + 0.08);
       osc.frequency.exponentialRampToValueAtTime(150, now + 0.18);
@@ -625,9 +624,7 @@
       
       osc.start(now);
       osc.stop(now + 0.2);
-    } catch(e) {
-      // Fallback falls Audio blockiert ist
-    }
+    } catch(e) {}
   }
 
   // PS2 WISHY-WASHY PIXEL LOOK RENDERER
@@ -952,7 +949,6 @@
               plane: new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), hit.point)
           };
 
-          // Spiele den kultigen Mario-Wobble-Sound beim Greifen ab!
           playMarioWobbleSound();
       }
   });
