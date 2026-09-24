@@ -843,7 +843,7 @@
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
   };
 
-  /* FISHEYE CRT LOGIK + MARIO 64 DRAG HACK */
+  /* FISHEYE CRT LOGIK + RUNDER MARIO 64 BUBBLE-DRAG HACK */
   const fishBtn = document.getElementById("fish-btn");
   const crtOverlay = document.getElementById("crt-fisheye-overlay");
   const matrixCanvas = document.getElementById("matrix-bg");
@@ -861,14 +861,10 @@
       threeDContainer.classList.add("fisheye-active");
       threeDContainer.classList.remove("fisheye-inactive");
 
-      // Freeze Controls für Mario 64 Modus
-      controls.enabled = false;
-      controls.autoRotate = false;
-
-      // Kleiner Retro Hinweis
+      // Rotation bleibt aktiv! (controls.enabled bleibt wie es ist)
       const hint = document.createElement("div");
       hint.id = "mario-hint";
-      hint.textContent = "ZIEH AM GESICHT!";
+      hint.textContent = "ZIEH AN DER HAUT!";
       document.body.appendChild(hint);
       setTimeout(() => hint.remove(), 2500);
 
@@ -880,15 +876,11 @@
       matrixCanvas.classList.add("fisheye-inactive");
       threeDContainer.classList.remove("fisheye-active");
       threeDContainer.classList.add("fisheye-inactive");
-
-      // Controls wieder an
-      controls.enabled = true;
-      controls.autoRotate = true;
     }
   };
 
   /* =========================================================================
-     MARIO 64 DRAG ENGINE 
+     MARIO 64 BUBBLE-DRAG ENGINE (SICHER VOR INNEN-ENTHÜLLUNG)
      ========================================================================= */
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -909,9 +901,11 @@
           const mesh = hit.object;
           if(!mesh.isMesh || !mesh.geometry.attributes.position) return;
           
-          // Speichere die originalen Vertices für den Snapback
           if(!mesh.geometry.userData.origPos) {
               mesh.geometry.userData.origPos = mesh.geometry.attributes.position.clone();
+          }
+          if(!mesh.geometry.attributes.normal) {
+              mesh.geometry.computeVertexNormals();
           }
           
           dragInfo = {
@@ -934,39 +928,50 @@
       raycaster.ray.intersectPlane(dragInfo.plane, dragInfo.dragPoint);
       
       const localDrag = dragInfo.mesh.worldToLocal(dragInfo.dragPoint.clone());
-      const offset = localDrag.clone().sub(dragInfo.localHit);
+      const dragDelta = localDrag.clone().sub(dragInfo.localHit);
       
       const pos = dragInfo.mesh.geometry.attributes.position;
       const orig = dragInfo.mesh.geometry.userData.origPos;
+      const normals = dragInfo.mesh.geometry.attributes.normal;
       
-      // Radius anhand der Mesh-Größe dynamisch machen
       if(!dragInfo.mesh.geometry.boundingBox) dragInfo.mesh.geometry.computeBoundingBox();
-      const bbox = dragInfo.mesh.geometry.boundingBox;
-      const size = bbox.getSize(new THREE.Vector3()).length();
-      const radius = size * 0.25; 
+      const size = dragInfo.mesh.geometry.boundingBox.getSize(new THREE.Vector3()).length();
+      const radius = size * 0.35; // Schöner, runder Einflussbereich
       
-      // Verzerre die Vertices!
+      // Sanfte Blasen-Verzerrung (schützt das innere Objekt vor dem Durchschlagen)
       for(let i=0; i<pos.count; i++) {
-          let v = new THREE.Vector3(orig.getX(i), orig.getY(i), orig.getZ(i));
-          let dist = v.distanceTo(dragInfo.localHit);
+          let origV = new THREE.Vector3(orig.getX(i), orig.getY(i), orig.getZ(i));
+          let dist = origV.distanceTo(dragInfo.localHit);
           
           if(dist < radius) {
-              let falloff = 1.0 - (dist / radius);
-              falloff = Math.pow(falloff, 1.5); 
-              v.add(offset.clone().multiplyScalar(falloff * 1.8)); // Extra starker Pull
+              let t = 1.0 - (dist / radius);
+              let weight = t * t * (3.0 - 2.0 * t); // Smoother Hermite / Gaussian-artiger Falloff
+              
+              // Verschiebung kombiniert mit Normalen für sauberes "Aufblähen"
+              let nx = normals ? normals.getX(i) : 0;
+              let ny = normals ? normals.getY(i) : 0;
+              let nz = normals ? normals.getZ(i) : 0;
+              let normalVec = new THREE.Vector3(nx, ny, nz);
+              
+              let newPos = origV.clone()
+                  .add(dragDelta.clone().multiplyScalar(weight * 0.7))
+                  .add(normalVec.multiplyScalar(dragDelta.length() * weight * 0.4)); // Bläht sich prall auf
+              
+              pos.setXYZ(i, newPos.x, newPos.y, newPos.z);
+          } else {
+              pos.setXYZ(i, origV.x, origV.y, origV.z);
           }
-          pos.setXYZ(i, v.x, v.y, v.z);
       }
       pos.needsUpdate = true;
       
-      // FUNKEN EFFEKT (Sparks)
-      if(Math.random() > 0.25) {
+      // Funken sprühen beim Ziehen
+      if(Math.random() > 0.2) {
           const spark = document.createElement('div');
           spark.className = 'drag-spark';
           spark.style.left = e.clientX + 'px';
           spark.style.top = e.clientY + 'px';
-          spark.style.setProperty('--dx', (Math.random()-0.5)*180 + 'px');
-          spark.style.setProperty('--dy', (Math.random()-0.5)*180 + 'px');
+          spark.style.setProperty('--dx', (Math.random()-0.5)*160 + 'px');
+          spark.style.setProperty('--dy', (Math.random()-0.5)*160 + 'px');
           document.body.appendChild(spark);
           setTimeout(() => spark.remove(), 500);
       }
@@ -976,7 +981,6 @@
       if(dragInfo) {
           const pos = dragInfo.mesh.geometry.attributes.position;
           const orig = dragInfo.mesh.geometry.userData.origPos;
-          // Sofortiger Mario 64 Snapback!
           for(let i=0; i<pos.count; i++) {
               pos.setXYZ(i, orig.getX(i), orig.getY(i), orig.getZ(i));
           }
@@ -1204,13 +1208,7 @@
     } else controls.update();
     
     if (object) {
-      if (isFisheye) {
-         // Starre dich an wie Mario 64, warte auf den Pinch!
-         object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
-         object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
-         object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
-      }
-      else if (gagActive) {
+      if (gagActive) {
         const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
         object.position.x = gagBase.x + Math.sin(tt * 5) * amp; 
         object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6; 
