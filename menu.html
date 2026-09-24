@@ -265,7 +265,7 @@
 
 
         /* ========== EINZIGARTIGE KATEGORIE-WOBBLE EFFEKTE FÜR DIE TÜR ========== */
-        /* ANPASSUNG: Längere Dauer und weichere Übergänge für Desktop-Monitore */
+        /* FIX: Alle Animationen nutzen nun 'steps()' um die Framerate auf PC und Handy festzunageln! */
         
         /* 1. VHS MULTIVERSE: VHS-Tracking Glitch & Skew */
         @keyframes wobbleVHS {
@@ -275,7 +275,7 @@
             75% { transform: skewX(-5deg); filter: contrast(130%); }
         }
         #door-overlay[data-category="VHS MULTIVERSE"] .door-tile {
-            animation: wobbleVHS 0.6s infinite ease-in-out;
+            animation: wobbleVHS 0.6s infinite steps(4);
         }
 
         /* 2. HUMANART: Künstlerisches Pulsieren & Drehen */
@@ -285,7 +285,7 @@
             66% { transform: rotate(-5deg) scale(0.95) skew(-3deg); filter: saturate(1.5); }
         }
         #door-overlay[data-category="HUMANART"] .door-tile {
-            animation: wobbleHumanart 1.2s infinite ease-in-out;
+            animation: wobbleHumanart 1.2s infinite steps(6);
         }
 
         /* 3. PROJECTS: Mechanischer Ruckel- & Jitter-Effekt */
@@ -297,7 +297,7 @@
             80% { transform: translate(2px, 1px); }
         }
         #door-overlay[data-category="PROJECTS"] .door-tile {
-            animation: wobbleProjects 0.8s infinite ease-in-out;
+            animation: wobbleProjects 0.8s infinite steps(5);
         }
 
         /* 4. STORYTIME: Sanftes Blättern & schwebendes Wellen-Drehen */
@@ -307,7 +307,7 @@
             75% { transform: translateY(4px) rotate(3deg) skewX(-4deg); }
         }
         #door-overlay[data-category="STORYTIME"] .door-tile {
-            animation: wobbleStorytime 1.5s infinite ease-in-out;
+            animation: wobbleStorytime 1.2s infinite steps(8);
         }
 
         /* 5. MUSIC: Horizontales Umschauen (Nach links und rechts schauen) */
@@ -318,7 +318,7 @@
             75% { transform: perspective(400px) rotateY(18deg) translateX(3px); }
         }
         #door-overlay[data-category="MUSIC"] .door-tile {
-            animation: wobbleMusic 1.2s infinite ease-in-out;
+            animation: wobbleMusic 1.0s infinite steps(8);
         }
 
         /* 6. CONTACT: Schnelles Vibrieren (Anruf-Modus) */
@@ -330,7 +330,7 @@
             80% { transform: rotate(2deg) translate(1px, 1px); }
         }
         #door-overlay[data-category="CONTACT"] .door-tile {
-            animation: wobbleContact 0.5s infinite ease-in-out;
+            animation: wobbleContact 0.5s infinite steps(5);
         }
 
         /* 7. DONATE: Münz-Hüpf-Effekt (Squash & Stretch) */
@@ -340,7 +340,7 @@
             80% { transform: translateY(2px) scale(1.05, 0.95); }
         }
         #door-overlay[data-category="DONATE"] .door-tile {
-            animation: wobbleDonate 0.8s infinite ease-in-out;
+            animation: wobbleDonate 0.8s infinite steps(6);
         }
     </style>
 </head>
