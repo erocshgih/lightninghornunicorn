@@ -145,8 +145,32 @@
   #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
   #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
   
-  #ui-wrapper { position: fixed; top: max(54px, calc(env(safe-area-inset-top) + 44px)); left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 10px; width: min(92vw, 460px); justify-content: center;}
+  /* =========================================================================
+     PLATZSPARENDES UI LAYOUT 
+     ========================================================================= */
   
+  #ui-wrapper { 
+    position: fixed; 
+    top: max(12px, env(safe-area-inset-top)); 
+    left: 50%; transform: translateX(-50%); 
+    z-index: 10; display: flex; gap: 10px; width: min(92vw, 460px); justify-content: center;
+  }
+  
+  #head-menu { 
+    position: fixed; 
+    bottom: max(12px, env(safe-area-inset-bottom)); 
+    left: 50%; transform: translateX(-50%); 
+    z-index: 10; width: min(92vw, 460px); 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; 
+  }
+  
+  #effect-buttons { 
+    position: fixed; 
+    bottom: max(100px, calc(env(safe-area-inset-bottom) + 95px)); 
+    left: 50%; transform: translateX(-50%); 
+    z-index: 11; display: flex; gap: 10px; 
+  }
+
   .bg-nav-btn {
     position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
     background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(255, 255, 255, 0.3);
@@ -158,20 +182,33 @@
   #bg-prev { left: 10px; border-radius: 8px; }
   #bg-next { right: 10px; border-radius: 8px; }
 
-  #head-menu { position: fixed; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 10; width: min(92vw, 460px); display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  
-  #effect-buttons { position: fixed; bottom: max(145px, calc(env(safe-area-inset-bottom) + 130px)); left: 50%; transform: translateX(-50%); z-index: 11; display: flex; gap: 10px; }
+  #container3D canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
 
-  #container3D canvas { display: block; width: 100% !important; height: 100% !important; }
-
-  /* FETTE UI BUTTONS */
+  /* FETTE UI BUTTONS - Viewport Height Clamp für Desktop Optimierung */
   .glass { background: rgba(0, 0, 0, 0.8); border: 2px solid rgba(255, 255, 255, 0.3); color: var(--text); border-radius: 6px; }
-  .btn { padding: 12px 20px; font-size: clamp(14px, 3.8vw, 17px); font-weight: 700; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; min-height: 50px; }
+  
+  .btn { 
+    padding: clamp(8px, 1.5vh, 12px) 20px; 
+    font-size: clamp(13px, 3.5vw, 16px); 
+    font-weight: 700; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; 
+    min-height: clamp(38px, 7vh, 50px); 
+  }
   .btn:hover { background: rgba(255, 255, 255, 0.2); }
   
-  #head-select { width: 100%; padding: 15px 20px; font-size: clamp(15px, 4vw, 18px); text-align: center; text-align-last: center; cursor: pointer; appearance: none; font-weight: bold; min-height: 55px; }
+  #head-select { 
+    width: 100%; 
+    padding: clamp(8px, 1.5vh, 12px) 20px; 
+    font-size: clamp(14px, 4vw, 17px); text-align: center; text-align-last: center; 
+    cursor: pointer; appearance: none; font-weight: bold; 
+    min-height: clamp(40px, 8vh, 55px); 
+  }
   #head-select option { color: #111; }
-  .effect-btn { min-width: 65px; height: 55px; font-size: 26px; line-height: 1; }
+  
+  .effect-btn { 
+    min-width: clamp(50px, 9vh, 65px); height: clamp(45px, 8vh, 55px); 
+    font-size: clamp(20px, 4vh, 26px); line-height: 1; 
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
 
   #loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; }
   #loading.show { display: flex; }
@@ -196,20 +233,22 @@
   .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
   @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
 
-  #disclaimer-btn { background: none; border: none; font-size: 22px; cursor: pointer; opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; padding: 5px 10px; filter: grayscale(100%); }
+  #disclaimer-btn { 
+    background: none; border: none; font-size: 22px; cursor: pointer; 
+    opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
+    padding: 5px 10px; filter: grayscale(100%); 
+  }
   #disclaimer-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
+  
   #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
   #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
-  /* =========================================================================
-     NEU: FISHEYE CRT OVERLAY STYLES 
-     ========================================================================= */
+  /* FISHEYE CRT OVERLAY STYLES */
   #crt-fisheye-overlay {
     position: fixed; inset: 0; 
-    z-index: 9999; /* Direkt unter den Buttons, über der 3D Szene */
+    z-index: 9999; 
     pointer-events: none; 
     display: none;
-    /* Horizontale Scanlines + Vertikale RGB-Maske + Starke Vignette für Linsen-Effekt */
     background: 
       linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
       linear-gradient(90deg, rgba(255,0,0,0.04), rgba(0,255,0,0.02), rgba(0,0,255,0.04)),
@@ -226,7 +265,6 @@
     100% { opacity: 0.92; }
   }
 
-  /* Klassen für die Elemente, die sich verzerren sollen */
   .fisheye-active {
     transform: scale(1.25) !important;
     filter: contrast(1.4) saturate(1.5) sepia(0.2) hue-rotate(-5deg);
@@ -238,11 +276,36 @@
     transition: transform 0.5s ease-out, filter 0.5s;
   }
 
+  /* MARIO 64 DRAG SPARKS */
+  .drag-spark {
+    position: fixed; width: clamp(4px, 1vw, 8px); height: clamp(4px, 1vw, 8px);
+    background: #ffaa00; border-radius: 50%;
+    pointer-events: none; z-index: 100005;
+    box-shadow: 0 0 10px #ff0000, 0 0 5px #ffff00;
+    animation: sparkFly 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+  @keyframes sparkFly {
+    0% { transform: translate(0,0) scale(1.5); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+  }
+
+  #mario-hint {
+    position: fixed; top: 25%; left: 50%; transform: translateX(-50%);
+    color: #ffaa00; font-family: "Impact", monospace; font-size: clamp(20px, 4vw, 36px);
+    z-index: 100000; text-shadow: 0 0 10px #ff0000, 2px 2px 0px #000;
+    pointer-events: none; animation: popHint 2.5s ease-in-out forwards;
+  }
+  @keyframes popHint {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+    10% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+    20% { transform: translateX(-50%) scale(1); }
+    80% { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(1.5); }
+  }
+
   @media (max-width: 600px) { 
-    #effect-buttons { bottom: max(140px, calc(env(safe-area-inset-bottom) + 125px)); }
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
     #bg-next { right: 0; border-radius: 8px 0 0 8px; width: 35px; height: 60px; font-size: 20px;} 
-    .btn { padding: 10px 15px; font-size: 13px; min-height: 44px; }
   }
 </style>
 </head>
@@ -286,7 +349,6 @@
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
   
-  <!-- NEU: Das Fisheye Overlay (liegt direkt über dem Hintergrund und der 3D Szene) -->
   <div id="crt-fisheye-overlay"></div>
   
   <div id="heart-emojis"></div>
@@ -314,6 +376,8 @@
   <p class="sr-only">Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.</p>
 
   <div id="loading"><div class="spinner"></div><span class="loading-text">lädt</span></div>
+  
+  <!-- UI WRAPPER -->
   <div id="ui-wrapper">
     <button id="music-toggle" class="btn glass">Musik abspielen</button>
     <button id="navigate-to-main" class="btn glass">Hauptseite</button>
@@ -323,7 +387,6 @@
     <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
     <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">📖</button>
-    <!-- NEU: Der Fisheye Button -->
     <button id="fish-btn" class="btn glass effect-btn" title="Fisheye CRT Mode">🐟</button>
   </div>
   
@@ -529,9 +592,7 @@
   function startLoading() { loadingEl.classList.add("show"); }
   function stopLoading() { loadingEl.classList.remove("show"); }
 
-  // =========================================================================
   // PS2 WISHY-WASHY PIXEL LOOK RENDERER
-  // =========================================================================
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
   
@@ -553,7 +614,6 @@
   const hitEnterScene = new THREE.Scene();
   const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
   
-  // INTRO RENDERER PS2-STYLE
   const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
   hitEnterRenderer.setPixelRatio(0.6); 
   hitEnterRenderer.setClearColor(0x000000, 0); 
@@ -783,9 +843,7 @@
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
   };
 
-  /* =========================================================================
-     NEU: FISHEYE CRT LOGIK
-     ========================================================================= */
+  /* FISHEYE CRT LOGIK + MARIO 64 DRAG HACK */
   const fishBtn = document.getElementById("fish-btn");
   const crtOverlay = document.getElementById("crt-fisheye-overlay");
   const matrixCanvas = document.getElementById("matrix-bg");
@@ -798,22 +856,138 @@
       fishBtn.textContent = "🦅";
       crtOverlay.classList.add("active");
       
-      // CSS Klassen hinzufügen für den gewölbten, verzerrten Look
       matrixCanvas.classList.add("fisheye-active");
       matrixCanvas.classList.remove("fisheye-inactive");
       threeDContainer.classList.add("fisheye-active");
       threeDContainer.classList.remove("fisheye-inactive");
+
+      // Freeze Controls für Mario 64 Modus
+      controls.enabled = false;
+      controls.autoRotate = false;
+
+      // Kleiner Retro Hinweis
+      const hint = document.createElement("div");
+      hint.id = "mario-hint";
+      hint.textContent = "ZIEH AM GESICHT!";
+      document.body.appendChild(hint);
+      setTimeout(() => hint.remove(), 2500);
+
     } else {
       fishBtn.textContent = "🐟";
       crtOverlay.classList.remove("active");
       
-      // CSS Klassen zurücksetzen
       matrixCanvas.classList.remove("fisheye-active");
       matrixCanvas.classList.add("fisheye-inactive");
       threeDContainer.classList.remove("fisheye-active");
       threeDContainer.classList.add("fisheye-inactive");
+
+      // Controls wieder an
+      controls.enabled = true;
+      controls.autoRotate = true;
     }
   };
+
+  /* =========================================================================
+     MARIO 64 DRAG ENGINE 
+     ========================================================================= */
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let dragInfo = null;
+
+  renderer.domElement.addEventListener('pointerdown', (e) => {
+      if(!isFisheye || !object) return;
+      
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(object, true); 
+      
+      if(intersects.length > 0) {
+          const hit = intersects[0];
+          const mesh = hit.object;
+          if(!mesh.isMesh || !mesh.geometry.attributes.position) return;
+          
+          // Speichere die originalen Vertices für den Snapback
+          if(!mesh.geometry.userData.origPos) {
+              mesh.geometry.userData.origPos = mesh.geometry.attributes.position.clone();
+          }
+          
+          dragInfo = {
+              mesh: mesh,
+              localHit: mesh.worldToLocal(hit.point.clone()),
+              dragPoint: hit.point.clone(),
+              plane: new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), hit.point)
+          };
+      }
+  });
+
+  renderer.domElement.addEventListener('pointermove', (e) => {
+      if(!isFisheye || !dragInfo) return;
+      
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(dragInfo.plane, dragInfo.dragPoint);
+      
+      const localDrag = dragInfo.mesh.worldToLocal(dragInfo.dragPoint.clone());
+      const offset = localDrag.clone().sub(dragInfo.localHit);
+      
+      const pos = dragInfo.mesh.geometry.attributes.position;
+      const orig = dragInfo.mesh.geometry.userData.origPos;
+      
+      // Radius anhand der Mesh-Größe dynamisch machen
+      if(!dragInfo.mesh.geometry.boundingBox) dragInfo.mesh.geometry.computeBoundingBox();
+      const bbox = dragInfo.mesh.geometry.boundingBox;
+      const size = bbox.getSize(new THREE.Vector3()).length();
+      const radius = size * 0.25; 
+      
+      // Verzerre die Vertices!
+      for(let i=0; i<pos.count; i++) {
+          let v = new THREE.Vector3(orig.getX(i), orig.getY(i), orig.getZ(i));
+          let dist = v.distanceTo(dragInfo.localHit);
+          
+          if(dist < radius) {
+              let falloff = 1.0 - (dist / radius);
+              falloff = Math.pow(falloff, 1.5); 
+              v.add(offset.clone().multiplyScalar(falloff * 1.8)); // Extra starker Pull
+          }
+          pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      pos.needsUpdate = true;
+      
+      // FUNKEN EFFEKT (Sparks)
+      if(Math.random() > 0.25) {
+          const spark = document.createElement('div');
+          spark.className = 'drag-spark';
+          spark.style.left = e.clientX + 'px';
+          spark.style.top = e.clientY + 'px';
+          spark.style.setProperty('--dx', (Math.random()-0.5)*180 + 'px');
+          spark.style.setProperty('--dy', (Math.random()-0.5)*180 + 'px');
+          document.body.appendChild(spark);
+          setTimeout(() => spark.remove(), 500);
+      }
+  });
+
+  const endDrag = () => {
+      if(dragInfo) {
+          const pos = dragInfo.mesh.geometry.attributes.position;
+          const orig = dragInfo.mesh.geometry.userData.origPos;
+          // Sofortiger Mario 64 Snapback!
+          for(let i=0; i<pos.count; i++) {
+              pos.setXYZ(i, orig.getX(i), orig.getY(i), orig.getZ(i));
+          }
+          pos.needsUpdate = true;
+          dragInfo = null;
+      }
+  };
+
+  renderer.domElement.addEventListener('pointerup', endDrag);
+  renderer.domElement.addEventListener('pointerleave', endDrag);
+
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
     const container = document.getElementById(containerId);
@@ -828,13 +1002,12 @@
   selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
   loadHead(MODELS[0].url);
 
-  /* 3. DYNAMISCHE INTRO LOGIK (MIT WEBGL LIGHTNING & SKIP BUTTONS) */
+  /* 3. DYNAMISCHE INTRO LOGIK */
   (() => {
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
     const canvas = document.getElementById("lhu-intro-canvas");
     
-    // Skip-Buttons anbinden
     const btnSkipHeads = document.getElementById("btn-skip-heads");
     const btnSkipMain = document.getElementById("btn-skip-main");
     
@@ -1031,7 +1204,13 @@
     } else controls.update();
     
     if (object) {
-      if (gagActive) {
+      if (isFisheye) {
+         // Starre dich an wie Mario 64, warte auf den Pinch!
+         object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
+         object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
+         object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
+      }
+      else if (gagActive) {
         const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
         object.position.x = gagBase.x + Math.sin(tt * 5) * amp; 
         object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6; 
