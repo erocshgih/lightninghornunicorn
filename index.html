@@ -276,17 +276,20 @@
     transition: transform 0.5s ease-out, filter 0.5s;
   }
 
-  /* MARIO 64 DRAG SPARKS */
-  .drag-spark {
-    position: fixed; width: clamp(4px, 1vw, 8px); height: clamp(4px, 1vw, 8px);
-    background: #ffaa00; border-radius: 50%;
+  /* BOTOX RAPIDFIRE SPARKS STYLING */
+  .botox-spark {
+    position: fixed; 
+    font-family: "Impact", monospace;
+    font-size: clamp(14px, 2.5vw, 22px);
+    font-weight: 900;
+    color: #40ff70;
+    text-shadow: 0 0 8px #00ff00, 0 0 3px #000;
     pointer-events: none; z-index: 100005;
-    box-shadow: 0 0 10px #ff0000, 0 0 5px #ffff00;
-    animation: sparkFly 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    animation: botoxFly 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
   }
-  @keyframes sparkFly {
-    0% { transform: translate(0,0) scale(1.5); opacity: 1; }
-    100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+  @keyframes botoxFly {
+    0% { transform: translate(0,0) scale(1.4) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.6) rotate(var(--rot)); opacity: 0; }
   }
 
   @media (max-width: 600px) { 
@@ -582,14 +585,14 @@
   function startLoading() { loadingEl.classList.add("show"); }
   function stopLoading() { loadingEl.classList.remove("show"); }
 
-  // WEB AUDIO API: DAUERNDES "BOINGOROINGOBONGOLONGODONGORONG" BEIM HALTEN
+  // WEB AUDIO API: LANGSAMER, TIEFER GAMMA-STRAHLUNGS-WOBBLE BEIM HALTEN
   let audioCtx = null;
   let wobbleOsc = null;
   let wobbleGain = null;
   let wobbleLFO = null;
   let wobbleLFOGain = null;
 
-  function startMarioWobbleStream() {
+  function startGammaWobbleStream() {
     try {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -597,7 +600,7 @@
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
-      if (wobbleOsc) return; // Läuft schon
+      if (wobbleOsc) return; // Läuft bereits
 
       const now = audioCtx.currentTime;
       wobbleOsc = audioCtx.createOscillator();
@@ -606,18 +609,18 @@
       wobbleLFOGain = audioCtx.createGain();
 
       wobbleOsc.type = 'sawtooth';
-      wobbleOsc.frequency.setValueAtTime(220, now);
+      wobbleOsc.frequency.setValueAtTime(85, now); // Deutlich tieferer Grundton
 
-      // LFO für den fortlaufenden Boing-Boing-Wobble-Effekt (boingoroingobongolongodongorong)
+      // Sehr langsamer, wuchtiger Gammastrahlen-Wobble
       wobbleLFO.type = 'sine';
-      wobbleLFO.frequency.setValueAtTime(6.5, now); // Schnelligkeit des Loops
-      wobbleLFOGain.gain.setValueAtTime(140, now); // Modulationstiefe
+      wobbleLFO.frequency.setValueAtTime(2.2, now); // Langsamere Frequenz für den Gamma-Effekt
+      wobbleLFOGain.gain.setValueAtTime(60, now); // Breite Modulation
 
       wobbleLFO.connect(wobbleLFOGain);
       wobbleLFOGain.connect(wobbleOsc.frequency);
 
       wobbleGain.gain.setValueAtTime(0.001, now);
-      wobbleGain.gain.linearRampToValueAtTime(0.18, now + 0.08); // Sanftes Einblenden
+      wobbleGain.gain.linearRampToValueAtTime(0.22, now + 0.15); // Sanftes, schweres Anschwellen
 
       wobbleOsc.connect(wobbleGain);
       wobbleGain.connect(audioCtx.destination);
@@ -627,11 +630,11 @@
     } catch(e) {}
   }
 
-  function stopMarioWobbleStream() {
+  function stopGammaWobbleStream() {
     try {
       if (!wobbleOsc || !audioCtx) return;
       const now = audioCtx.currentTime;
-      wobbleGain.gain.linearRampToValueAtTime(0.001, now + 0.1);
+      wobbleGain.gain.linearRampToValueAtTime(0.001, now + 0.15);
       setTimeout(() => {
         if (wobbleOsc) {
           wobbleOsc.stop();
@@ -643,7 +646,7 @@
           wobbleLFO.disconnect();
           wobbleLFO = null;
         }
-      }, 120);
+      }, 160);
     } catch(e) {
       wobbleOsc = null;
       wobbleLFO = null;
@@ -901,7 +904,7 @@
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
   };
 
-  /* FISHEYE CRT LOGIK + BUBBLE-DRAG + DAUER-WOBBLE */
+  /* FISHEYE CRT LOGIK + BUBBLE-DRAG + GAMMA-WOBBLE + BOTOX RAPIDFIRE */
   const fishBtn = document.getElementById("fish-btn");
   const crtOverlay = document.getElementById("crt-fisheye-overlay");
   const matrixCanvas = document.getElementById("matrix-bg");
@@ -927,12 +930,12 @@
       threeDContainer.classList.remove("fisheye-active");
       threeDContainer.classList.add("fisheye-inactive");
 
-      stopMarioWobbleStream();
+      stopGammaWobbleStream();
     }
   };
 
   /* =========================================================================
-     MARIO 64 BUBBLE-DRAG ENGINE + LOOPING WOBBLE SOUND 
+     MARIO 64 BUBBLE-DRAG ENGINE + GAMMA SOUND + BOTOX RAPIDFIRE 
      ========================================================================= */
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -967,7 +970,7 @@
               plane: new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), hit.point)
           };
 
-          startMarioWobbleStream();
+          startGammaWobbleStream();
       }
   });
 
@@ -1016,15 +1019,18 @@
       }
       pos.needsUpdate = true;
       
-      if(Math.random() > 0.2) {
+      // BOTOX RAPIDFIRE AN DER ZIEHSTELLE
+      if(Math.random() > 0.15) {
           const spark = document.createElement('div');
-          spark.className = 'drag-spark';
-          spark.style.left = e.clientX + 'px';
-          spark.style.top = e.clientY + 'px';
-          spark.style.setProperty('--dx', (Math.random()-0.5)*160 + 'px');
-          spark.style.setProperty('--dy', (Math.random()-0.5)*160 + 'px');
+          spark.className = 'botox-spark';
+          spark.textContent = "BOTOX";
+          spark.style.left = e.clientX + (Math.random() - 0.5) * 30 + 'px';
+          spark.style.top = e.clientY + (Math.random() - 0.5) * 30 + 'px';
+          spark.style.setProperty('--dx', (Math.random() - 0.5) * 200 + 'px');
+          spark.style.setProperty('--dy', (Math.random() - 0.5) * 200 + 'px');
+          spark.style.setProperty('--rot', (Math.random() - 0.5) * 90 + 'deg');
           document.body.appendChild(spark);
-          setTimeout(() => spark.remove(), 500);
+          setTimeout(() => spark.remove(), 600);
       }
   });
 
@@ -1037,7 +1043,7 @@
           }
           pos.needsUpdate = true;
           dragInfo = null;
-          stopMarioWobbleStream();
+          stopGammaWobbleStream();
       }
   };
 
