@@ -13,6 +13,8 @@
                 --dot-active: #b33;
                 --accent-red: #e02424;
                 --accent-blue: #1a73e8;
+                --card-bg: transparent;
+                --text: #f3f4f8;
             }
 
             html[data-theme="dark"] { --dot: #4a4540; --dot-active: #e05555; --accent-red: #ff4d4d; --accent-blue: #3b82f6; }
@@ -22,7 +24,7 @@
 
             html[data-theme="dark"] #vhs-preview-wrap { background: #1a1a1a; box-shadow: 0 2px 24px rgba(0, 0, 0, 0.4); }
 
-            /* VHS GALERIE WRAPPER - Wieder auf ordentliche Größe (500px) angehoben */
+            /* VHS GALERIE WRAPPER */
             #vhs-preview-wrap {
                 width: 100%; 
                 max-width: 500px; 
@@ -35,16 +37,16 @@
                 display: flex; 
                 align-items: center; 
                 box-sizing: border-box;
-                border: 2px solid var(--border-soft);
+                border: 2px solid var(--border-soft, #444);
             }
 
             .vhs-nav-btn {
                 flex-shrink: 0; width: 36px; height: 36px; border: none; border-radius: 50%;
-                background: var(--dot); color: var(--text); font-size: 18px; cursor: pointer;
+                background: var(--dot); color: #111; font-size: 18px; cursor: pointer;
                 -webkit-tap-highlight-color: transparent; transition: background 0.2s, transform 0.15s;
                 display: flex; align-items: center; justify-content: center; margin: 0 6px; z-index: 5;
             }
-            .vhs-nav-btn:hover, .vhs-nav-btn:active { background: var(--dot-active); transform: scale(1.15); }
+            .vhs-nav-btn:hover, .vhs-nav-btn:active { background: var(--dot-active); transform: scale(1.15); color: #fff; }
 
             #vhs-preview-img { 
                 display: block; 
@@ -62,14 +64,54 @@
             /* MANUELLER ZOOM BUTTON FÜR DIE GALERIE */
             .zoom-btn {
                 position: absolute; bottom: 12px; right: 12px; width: 36px; height: 36px;
-                background: var(--card-bg); border: 2px solid var(--border-soft); border-radius: 50%;
+                background: var(--card-bg); border: 2px solid var(--border-soft, #444); border-radius: 50%;
                 display: flex; align-items: center; justify-content: center; text-decoration: none;
                 font-size: 16px; color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
                 transition: all 0.2s ease; z-index: 5; -webkit-tap-highlight-color: transparent;
             }
-            .zoom-btn:hover { transform: scale(1.15) rotate(10deg); background: var(--strip-active); border-color: #111; }
+            .zoom-btn:hover { transform: scale(1.15) rotate(10deg); background: var(--dot-active); border-color: #111; }
 
-            #vhs-dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 2px 0 14px 0; padding: 4px 0; }
+            /* NEUES BUTTON-SYSTEM FÜR FRONT / BACK / SCENES */
+            #vhs-view-toggles {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                margin: 0 auto 16px auto;
+                max-width: 500px;
+            }
+            
+            .view-btn {
+                padding: 6px 14px;
+                font-size: 13px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                background: transparent;
+                color: var(--text);
+                border: 2px solid var(--dot);
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .view-btn:hover:not(:disabled) {
+                border-color: var(--dot-active);
+            }
+            
+            .view-btn.active {
+                background: var(--dot-active);
+                border-color: var(--dot-active);
+                color: #fff;
+            }
+            
+            .view-btn:disabled {
+                opacity: 0.25;
+                cursor: not-allowed;
+                border-color: var(--dot);
+            }
+
+            #vhs-dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 2px auto 14px auto; padding: 4px 0; max-width: 500px; }
             #vhs-dots .vhs-dot {
                 width: 10px; height: 10px; border-radius: 50%; background: var(--dot); cursor: pointer;
                 transition: background 0.25s, transform 0.25s; -webkit-tap-highlight-color: transparent;
@@ -87,10 +129,16 @@
 
             <div id="vhs-preview-wrap">
                 <button class="vhs-nav-btn" id="vhs-prev" type="button" aria-label="Previous cover">&#9664;</button>
-                <!-- transparent-sticker verhindert, dass menu.html eine doppelte Standard-Lupe drüberlegt -->
                 <img id="vhs-preview-img" class="transparent-sticker" src="" alt="" title="Cover Ansicht">
                 <a href="#" target="_blank" class="zoom-btn" id="vhs-zoom-btn" title="Bild in neuem Tab öffnen & zoomen">🔍</a>
                 <button class="vhs-nav-btn" id="vhs-next" type="button" aria-label="Next cover">&#9654;</button>
+            </div>
+
+            <!-- DIE NEUEN VIEW BUTTONS -->
+            <div id="vhs-view-toggles">
+                <button class="view-btn" data-view="front">FRONT</button>
+                <button class="view-btn" data-view="back">BACK</button>
+                <button class="view-btn" data-view="scenes">SCENES</button>
             </div>
 
             <div id="vhs-dots"></div>
@@ -105,47 +153,96 @@
 
         <script>
             (function initVHS() {
+                // Dynamische Basis-URL
+                const baseUrl = "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/";
+                
+                // Neue saubere Datenstruktur mit den verfügbaren Views pro Film
                 const vhsData = [
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/buffzart.webp", title: "BUFFZART" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/toiletsamurai.webp", title: "TOILET SAMURAI" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/heatesalad.webp", title: "HE ATE SALAD" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/kittyhorncommander.webp", title: "KITTY HORN COMMANDER" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/bananaphone.webp", title: "BANANAPHONE" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/genghiskhanintraffic.webp", title: "GENGHIS KHAN IN TRAFFIC" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/amangoes.webp", title: "A MANGOES" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/unicornwatch.webp", title: "UNICORN WATCH" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/snoutchordz.webp", title: "SNOUTCHORDZ" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/wobblepaws.webp", title: "WOBBLE PAWS" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/capitalismisnowaresident.webp", title: "CAPITALISM IS NOW A RESIDENT" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/cityoffathers.webp", title: "CITY OF FATHERS" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/kateplush.webp", title: "KATE PLUSH" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/thisisnotahorsemovie.webp", title: "THIS IS NOT A HORSE MOVIE" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/panatipercaso.webp", title: "PANATI PER CASO" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/masochisticconscienceboxingbag.webp", title: "MASOCHISTIC CONSCIENCE BOXING BAG" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/untilthediscoballs.webp", title: "UNTIL THE DISCO BALLS" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/babayagassealofapproval.webp", title: "BABA YAGA’S SEAL OF APPROVAL" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/somedays.webp", title: "SOME DAYS" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/pepperoniofthedead.webp", title: "PEPPERONI OF THE DEAD" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/thisisahorsemovie.webp", title: "THIS IS A HORSE MOVIE" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/soundfume.webp", title: "SOUNDFUME" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/getoutofinstaglam.webp", title: "GET OUT OF INSTAGLAM" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/concretecake.webp", title: "CONCRETE CAKE" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/nothing.webp", title: "NOTHING" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/theflowerandthefist.webp", title: "THE FLOWER AND THE FIST" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/shampooagainstdepression.webp", title: "SHAMPOO AGAINST DEPRESSION" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/footpilot.webp", title: "FOOT PILOT" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/crossingofthedead.webp", title: "CROSSING OF THE DEAD" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/taurusganzfeld.webp", title: "TAURUS GANZFELD" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/refrigeratorcop.webp", title: "REFRIGERATOR COP" },
-                    { url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/vhsmultiverse/rainforestbodyguard.webp", title: "RAINFOREST BODYGUARD" }
+                    { id: "1989howtorideahorseofsteel", title: "1989 HOW TO RIDE A HORSE OF STEEL", views: ["front"] },
+                    { id: "amangoes", title: "A MANGOES", views: ["front", "back"] },
+                    { id: "bakeryheist", title: "BAKERY HEIST", views: ["front"] },
+                    { id: "bakeryheist2", title: "BAKERY HEIST 2", views: ["front"] },
+                    { id: "bananaphone", title: "BANANA PHONE", views: ["front", "back"] },
+                    { id: "buffzart", title: "BUFFZART", views: ["front", "back", "scenes"] },
+                    { id: "crossingofthedead", title: "CROSSING OF THE DEAD", views: ["front", "scenes"] },
+                    { id: "cyberpiercing2077", title: "CYBERPIERCING 2077", views: ["front", "back"] },
+                    { id: "genghiskhanintraffic", title: "GENGHIS KHAN IN TRAFFIC", views: ["front", "back"] },
+                    { id: "gsaucegoespink", title: "G-SAUCE GOES PINK", views: ["front"] },
+                    { id: "heatesalad", title: "HE ATE SALAD", views: ["front", "scenes"] },
+                    { id: "imagineallthepeopledrivinginamonstertruck", title: "IMAGINE ALL THE PEOPLE DRIVING IN A MONSTER TRUCK", views: ["front"] },
+                    { id: "inaworldfilledwithunicornsbetheduck", title: "IN A WORLD FILLED WITH UNICORNS BE THE DUCK", views: ["front"] },
+                    { id: "irubbedalamp", title: "I RUBBED A LAMP", views: ["front"] },
+                    { id: "kateplush", title: "KATE PLUSH", views: ["front", "back"] },
+                    { id: "kittyhorncommander", title: "KITTY HORN COMMANDER", views: ["front", "back", "scenes"] },
+                    { id: "masochisticconscienceboxingbag", title: "MASOCHISTIC CONSCIENCE BOXING BAG", views: ["front", "back", "scenes"] },
+                    { id: "metalandmeow", title: "METAL AND MEOW", views: ["front"] },
+                    { id: "nevermindthebatniipples", title: "NEVERMIND THE BAT NIPPLES", views: ["front"] },
+                    { id: "noears", title: "NO EARS", views: ["front"] },
+                    { id: "nothing", title: "NOTHING", views: ["front", "back"] },
+                    { id: "rainforestbodyguard", title: "RAINFOREST BODYGUARD", views: ["front", "scenes"] },
+                    { id: "refrigeratorcop", title: "REFRIGERATOR COP", views: ["front", "scenes"] },
+                    { id: "shampooagainstdepression", title: "SHAMPOO AGAINST DEPRESSION", views: ["front", "back"] },
+                    { id: "snoutchordz", title: "SNOUTCHORDZ", views: ["front", "back"] },
+                    { id: "snoutrider", title: "SNOUT RIDER", views: ["front"] },
+                    { id: "surprisemarriage", title: "SURPRISE MARRIAGE", views: ["front"] },
+                    { id: "taurusredlighttherapy", title: "TAURUS RED LIGHT THERAPY", views: ["front", "back"] },
+                    { id: "toiletsamurai", title: "TOILET SAMURAI", views: ["front", "back"] },
+                    { id: "trafficconedrummer", title: "TRAFFIC CONE DRUMMER", views: ["front"] },
+                    { id: "unicornwatch", title: "UNICORN WATCH", views: ["front", "back"] },
+                    { id: "untilthediscoballstookcontrol", title: "UNTIL THE DISCO BALLS TOOK CONTROL", views: ["front", "back"] },
+                    { id: "vrpriest", title: "VR PRIEST", views: ["front"] },
+                    { id: "wobblepaws", title: "WOBBLE PAWS", views: ["front", "back"] }
                 ];
 
                 const preview = document.getElementById('vhs-preview-img');
                 const zoomBtn = document.getElementById('vhs-zoom-btn');
+                const dots = document.getElementById('vhs-dots');
+                const viewBtns = document.querySelectorAll('.view-btn');
+                
                 if (!preview) return;
 
                 let activeIdx = -1;
-                const dots = document.getElementById('vhs-dots');
+                let currentView = 'front';
+
+                function renderImage(idx, view) {
+                    const item = vhsData[idx];
+                    
+                    // Button Status aktualisieren (verfügbar oder ausgegraut)
+                    viewBtns.forEach(btn => {
+                        const v = btn.dataset.view;
+                        if (item.views.includes(v)) {
+                            btn.disabled = false;
+                            btn.classList.toggle('active', v === view);
+                        } else {
+                            btn.disabled = true;
+                            btn.classList.remove('active');
+                        }
+                    });
+
+                    // Falls der View nicht existiert (z.B. Fallback-Schutz), lade 'front'
+                    const safeView = item.views.includes(view) ? view : 'front';
+                    
+                    const fileName = `vhsmultiverse_${item.id}_${safeView}.webp`;
+                    const url = baseUrl + fileName;
+                    
+                    preview.onload = () => { preview.classList.add('visible'); };
+                    preview.classList.remove('visible');
+                    preview.src = url;
+                    preview.alt = `${item.title} - ${safeView}`;
+                    
+                    if (zoomBtn) {
+                        zoomBtn.href = url;
+                    }
+                }
+
+                // Klick-Logik für die neuen View Buttons
+                viewBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (btn.disabled) return;
+                        currentView = btn.dataset.view;
+                        renderImage(activeIdx, currentView);
+                    });
+                });
 
                 function showCover(idx) {
                     if (idx < 0 || idx >= vhsData.length) return;
@@ -156,14 +253,10 @@
                     if (dots.children[idx]) {
                         dots.children[idx].classList.add('active');
                     }
-                    preview.onload = () => { preview.classList.add('visible'); };
-                    preview.classList.remove('visible');
-                    preview.src = vhsData[idx].url;
-                    preview.alt = vhsData[idx].title || '';
                     
-                    if (zoomBtn) {
-                        zoomBtn.href = vhsData[idx].url;
-                    }
+                    // Beim Filmwechsel springen wir standardmäßig immer zurück auf Front
+                    currentView = 'front';
+                    renderImage(activeIdx, currentView);
                 }
 
                 vhsData.forEach((item, idx) => {
@@ -171,6 +264,7 @@
                     dot.className = 'vhs-dot';
                     dot.setAttribute('role', 'button');
                     dot.setAttribute('aria-label', item.title || ('Cover ' + (idx + 1)));
+                    dot.title = item.title;
                     dot.addEventListener('click', () => showCover(idx));
                     dots.appendChild(dot);
                 });
