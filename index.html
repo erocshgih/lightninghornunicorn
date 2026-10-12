@@ -243,55 +243,6 @@
   #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
   #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
-  /* FISHEYE CRT OVERLAY STYLES */
-  #crt-fisheye-overlay {
-    position: fixed; inset: 0; 
-    z-index: 9999; 
-    pointer-events: none; 
-    display: none;
-    background: 
-      linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
-      linear-gradient(90deg, rgba(255,0,0,0.04), rgba(0,255,0,0.02), rgba(0,0,255,0.04)),
-      radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.85) 75%, #000 110%);
-    background-size: 100% 4px, 3px 100%, 100% 100%;
-  }
-  #crt-fisheye-overlay.active { 
-    display: block; 
-    animation: crtFlicker 0.12s infinite;
-  }
-  @keyframes crtFlicker {
-    0% { opacity: 0.95; }
-    50% { opacity: 1.0; }
-    100% { opacity: 0.92; }
-  }
-
-  .fisheye-active {
-    transform: scale(1.25) !important;
-    filter: contrast(1.4) saturate(1.5) sepia(0.2) hue-rotate(-5deg);
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.6s;
-  }
-  .fisheye-inactive {
-    transform: scale(1) !important;
-    filter: contrast(1) saturate(1) sepia(0) hue-rotate(0deg);
-    transition: transform 0.5s ease-out, filter 0.5s;
-  }
-
-  /* BOTOX RAPIDFIRE SPARKS STYLING */
-  .botox-spark {
-    position: fixed; 
-    font-family: "Impact", monospace;
-    font-size: clamp(14px, 2.5vw, 22px);
-    font-weight: 900;
-    color: #40ff70;
-    text-shadow: 0 0 8px #00ff00, 0 0 3px #000;
-    pointer-events: none; z-index: 100005;
-    animation: botoxFly 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-  }
-  @keyframes botoxFly {
-    0% { transform: translate(0,0) scale(1.4) rotate(0deg); opacity: 1; }
-    100% { transform: translate(var(--dx), var(--dy)) scale(0.6) rotate(var(--rot)); opacity: 0; }
-  }
-
   @media (max-width: 600px) { 
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
     #bg-next { right: 0; border-radius: 8px 0 0 8px; width: 35px; height: 60px; font-size: 20px;} 
@@ -338,8 +289,6 @@
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
   
-  <div id="crt-fisheye-overlay"></div>
-  
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
   
@@ -376,7 +325,6 @@
     <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
     <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">🗿</button>
-    <button id="fish-btn" class="btn glass effect-btn" title="Fisheye CRT Mode">🐟</button>
   </div>
   
   <div id="head-menu">
@@ -584,74 +532,6 @@
   const loadingEl = document.getElementById("loading");
   function startLoading() { loadingEl.classList.add("show"); }
   function stopLoading() { loadingEl.classList.remove("show"); }
-
-  // WEB AUDIO API: LANGSAMER, TIEFER GAMMA-STRAHLUNGS-WOBBLE BEIM HALTEN
-  let audioCtx = null;
-  let wobbleOsc = null;
-  let wobbleGain = null;
-  let wobbleLFO = null;
-  let wobbleLFOGain = null;
-
-  function startGammaWobbleStream() {
-    try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      if (wobbleOsc) return; // Läuft bereits
-
-      const now = audioCtx.currentTime;
-      wobbleOsc = audioCtx.createOscillator();
-      wobbleGain = audioCtx.createGain();
-      wobbleLFO = audioCtx.createOscillator();
-      wobbleLFOGain = audioCtx.createGain();
-
-      wobbleOsc.type = 'sawtooth';
-      wobbleOsc.frequency.setValueAtTime(85, now); // Deutlich tieferer Grundton
-
-      // Sehr langsamer, wuchtiger Gammastrahlen-Wobble
-      wobbleLFO.type = 'sine';
-      wobbleLFO.frequency.setValueAtTime(2.2, now); // Langsamere Frequenz für den Gamma-Effekt
-      wobbleLFOGain.gain.setValueAtTime(60, now); // Breite Modulation
-
-      wobbleLFO.connect(wobbleLFOGain);
-      wobbleLFOGain.connect(wobbleOsc.frequency);
-
-      wobbleGain.gain.setValueAtTime(0.001, now);
-      wobbleGain.gain.linearRampToValueAtTime(0.22, now + 0.15); // Sanftes, schweres Anschwellen
-
-      wobbleOsc.connect(wobbleGain);
-      wobbleGain.connect(audioCtx.destination);
-
-      wobbleLFO.start(now);
-      wobbleOsc.start(now);
-    } catch(e) {}
-  }
-
-  function stopGammaWobbleStream() {
-    try {
-      if (!wobbleOsc || !audioCtx) return;
-      const now = audioCtx.currentTime;
-      wobbleGain.gain.linearRampToValueAtTime(0.001, now + 0.15);
-      setTimeout(() => {
-        if (wobbleOsc) {
-          wobbleOsc.stop();
-          wobbleOsc.disconnect();
-          wobbleOsc = null;
-        }
-        if (wobbleLFO) {
-          wobbleLFO.stop();
-          wobbleLFO.disconnect();
-          wobbleLFO = null;
-        }
-      }, 160);
-    } catch(e) {
-      wobbleOsc = null;
-      wobbleLFO = null;
-    }
-  }
 
   // PS2 WISHY-WASHY PIXEL LOOK RENDERER
   const scene = new THREE.Scene();
@@ -903,153 +783,6 @@
     
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
   };
-
-  /* FISHEYE CRT LOGIK + BUBBLE-DRAG + GAMMA-WOBBLE + BOTOX RAPIDFIRE */
-  const fishBtn = document.getElementById("fish-btn");
-  const crtOverlay = document.getElementById("crt-fisheye-overlay");
-  const matrixCanvas = document.getElementById("matrix-bg");
-  const threeDContainer = document.getElementById("container3D");
-  let isFisheye = false;
-
-  fishBtn.onclick = () => {
-    isFisheye = !isFisheye;
-    if (isFisheye) {
-      fishBtn.textContent = "🦅";
-      crtOverlay.classList.add("active");
-      
-      matrixCanvas.classList.add("fisheye-active");
-      matrixCanvas.classList.remove("fisheye-inactive");
-      threeDContainer.classList.add("fisheye-active");
-      threeDContainer.classList.remove("fisheye-inactive");
-    } else {
-      fishBtn.textContent = "🐟";
-      crtOverlay.classList.remove("active");
-      
-      matrixCanvas.classList.remove("fisheye-active");
-      matrixCanvas.classList.add("fisheye-inactive");
-      threeDContainer.classList.remove("fisheye-active");
-      threeDContainer.classList.add("fisheye-inactive");
-
-      stopGammaWobbleStream();
-    }
-  };
-
-  /* =========================================================================
-     MARIO 64 BUBBLE-DRAG ENGINE + GAMMA SOUND + BOTOX RAPIDFIRE 
-     ========================================================================= */
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-  let dragInfo = null;
-
-  renderer.domElement.addEventListener('pointerdown', (e) => {
-      if(!isFisheye || !object) return;
-      
-      const rect = renderer.domElement.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(object, true); 
-      
-      if(intersects.length > 0) {
-          const hit = intersects[0];
-          const mesh = hit.object;
-          if(!mesh.isMesh || !mesh.geometry.attributes.position) return;
-          
-          if(!mesh.geometry.userData.origPos) {
-              mesh.geometry.userData.origPos = mesh.geometry.attributes.position.clone();
-          }
-          if(!mesh.geometry.attributes.normal) {
-              mesh.geometry.computeVertexNormals();
-          }
-          
-          dragInfo = {
-              mesh: mesh,
-              localHit: mesh.worldToLocal(hit.point.clone()),
-              dragPoint: hit.point.clone(),
-              plane: new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), hit.point)
-          };
-
-          startGammaWobbleStream();
-      }
-  });
-
-  renderer.domElement.addEventListener('pointermove', (e) => {
-      if(!isFisheye || !dragInfo) return;
-      
-      const rect = renderer.domElement.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      
-      raycaster.setFromCamera(mouse, camera);
-      raycaster.ray.intersectPlane(dragInfo.plane, dragInfo.dragPoint);
-      
-      const localDrag = dragInfo.mesh.worldToLocal(dragInfo.dragPoint.clone());
-      const dragDelta = localDrag.clone().sub(dragInfo.localHit);
-      
-      const pos = dragInfo.mesh.geometry.attributes.position;
-      const orig = dragInfo.mesh.geometry.userData.origPos;
-      const normals = dragInfo.mesh.geometry.attributes.normal;
-      
-      if(!dragInfo.mesh.geometry.boundingBox) dragInfo.mesh.geometry.computeBoundingBox();
-      const size = dragInfo.mesh.geometry.boundingBox.getSize(new THREE.Vector3()).length();
-      const radius = size * 0.35; 
-      
-      for(let i=0; i<pos.count; i++) {
-          let origV = new THREE.Vector3(orig.getX(i), orig.getY(i), orig.getZ(i));
-          let dist = origV.distanceTo(dragInfo.localHit);
-          
-          if(dist < radius) {
-              let t = 1.0 - (dist / radius);
-              let weight = t * t * (3.0 - 2.0 * t); 
-              
-              let nx = normals ? normals.getX(i) : 0;
-              let ny = normals ? normals.getY(i) : 0;
-              let nz = normals ? normals.getZ(i) : 0;
-              let normalVec = new THREE.Vector3(nx, ny, nz);
-              
-              let newPos = origV.clone()
-                  .add(dragDelta.clone().multiplyScalar(weight * 0.7))
-                  .add(normalVec.multiplyScalar(dragDelta.length() * weight * 0.4));
-              
-              pos.setXYZ(i, newPos.x, newPos.y, newPos.z);
-          } else {
-              pos.setXYZ(i, origV.x, origV.y, origV.z);
-          }
-      }
-      pos.needsUpdate = true;
-      
-      // BOTOX RAPIDFIRE AN DER ZIEHSTELLE
-      if(Math.random() > 0.15) {
-          const spark = document.createElement('div');
-          spark.className = 'botox-spark';
-          spark.textContent = "BOTOX";
-          spark.style.left = e.clientX + (Math.random() - 0.5) * 30 + 'px';
-          spark.style.top = e.clientY + (Math.random() - 0.5) * 30 + 'px';
-          spark.style.setProperty('--dx', (Math.random() - 0.5) * 200 + 'px');
-          spark.style.setProperty('--dy', (Math.random() - 0.5) * 200 + 'px');
-          spark.style.setProperty('--rot', (Math.random() - 0.5) * 90 + 'deg');
-          document.body.appendChild(spark);
-          setTimeout(() => spark.remove(), 600);
-      }
-  });
-
-  const endDrag = () => {
-      if(dragInfo) {
-          const pos = dragInfo.mesh.geometry.attributes.position;
-          const orig = dragInfo.mesh.geometry.userData.origPos;
-          for(let i=0; i<pos.count; i++) {
-              pos.setXYZ(i, orig.getX(i), orig.getY(i), orig.getZ(i));
-          }
-          pos.needsUpdate = true;
-          dragInfo = null;
-          stopGammaWobbleStream();
-      }
-  };
-
-  renderer.domElement.addEventListener('pointerup', endDrag);
-  renderer.domElement.addEventListener('pointerleave', endDrag);
-
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
     const container = document.getElementById(containerId);
