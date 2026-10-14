@@ -705,10 +705,13 @@
   }
 
   document.getElementById("wisdom-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return;
+    if (!object || gagActive || rainbowActive) return;
     
+    // Stoppe vorherige Instanzen (TextSchreiben, Sprachausgabe, Fallback-Timer)
     if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
     if (typewriterInterval) clearInterval(typewriterInterval);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    isTyping = false;
     
     music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
     wisdomActive = true;
@@ -737,7 +740,9 @@
     textEl.textContent = ""; 
     textEl.classList.add("wisdom-active");
     
-    let charIndex = 0; const typingSpeed = 65; const totalTypeTime = phrase.length * typingSpeed;
+    let charIndex = 0; 
+    const typingSpeed = 15; // Sehr schnelles Tippen
+    const totalTypeTime = phrase.length * typingSpeed;
     
     isTyping = true; 
     
@@ -756,19 +761,21 @@
     };
 
     if ('speechSynthesis' in window) {
-      const synth = window.speechSynthesis; synth.cancel(); 
+      const synth = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(phrase);
       window._lhuUtterance = utterance; 
       utterance.lang = isGerman ? 'de-DE' : 'en-US'; 
       
       const headIdx = document.getElementById("head-select").selectedIndex;
+      
+      // Mittelmäßig schnelle Sprachausgabe (rate zwischen 1.25 und 1.45)
       const profiles = [
-        { p: 0.1, r: 0.85 },
-        { p: 1.8, r: 1.15 },
-        { p: 0.4, r: 0.70 },
-        { p: 0.8, r: 1.05 },
-        { p: 1.5, r: 1.10 },
-        { p: 1.2, r: 0.95 }
+        { p: 0.1, r: 1.35 },
+        { p: 1.8, r: 1.45 },
+        { p: 0.4, r: 1.25 },
+        { p: 0.8, r: 1.35 },
+        { p: 1.5, r: 1.40 },
+        { p: 1.2, r: 1.30 }
       ];
       
       const prof = profiles[headIdx % profiles.length];
@@ -787,7 +794,8 @@
       synth.speak(utterance);
     }
     
-    wisdomFallbackTimeout = setTimeout(cleanupWisdom, totalTypeTime + 3500);
+    const speechEstTime = phrase.length * 80;
+    wisdomFallbackTimeout = setTimeout(cleanupWisdom, Math.max(totalTypeTime + 3000, speechEstTime + 2000));
   };
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
