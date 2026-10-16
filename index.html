@@ -554,7 +554,7 @@
   const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 5); scene.add(fill);
   const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(-3, 5, -5); scene.add(rim);
 
-  const dracoLoader = new DRACOLoader(); dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+  const dracoLoader = new DRACOLoader(); dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
   const loader = new GLTFLoader(); loader.setDRACOLoader(dracoLoader);
 
   const hitEnterSlot = document.getElementById("lhu-image-slot");
@@ -614,7 +614,9 @@
     if (object) { scene.remove(object); object = null; } 
     if (mixer) { mixer.stopAllAction(); mixer = null; }
     
-    loader.load(url, (g) => { 
+    loader.load(
+      url, 
+      (g) => { 
         object = g.scene; 
         scene.add(object); 
         
@@ -637,7 +639,14 @@
             g.animations.forEach(clip => mixer.clipAction(clip).play()); 
         } 
         stopLoading(); 
-    });
+      },
+      undefined,
+      (error) => {
+        console.error("Fehler beim Laden von " + url + ":", error);
+        stopLoading();
+        alert("Fehler beim Laden des 3D-Modells. Bitte drücke F12 und prüfe die Konsole.");
+      }
+    );
   }
 
   const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
