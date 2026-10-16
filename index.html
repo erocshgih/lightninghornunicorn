@@ -531,7 +531,8 @@
     { label: "duckybulbywaterhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/duckybulbywaterhorn.glb" },
     { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/obesewarrior.glb" },
     { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" },
-    { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" }
+    { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" },
+    { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" }
   ];
 
   const loadingEl = document.getElementById("loading");
@@ -775,7 +776,8 @@
         { p: 0.4, r: 1.25 },
         { p: 0.8, r: 1.35 },
         { p: 1.5, r: 1.40 },
-        { p: 1.2, r: 1.30 }
+        { p: 1.2, r: 1.30 },
+        { p: 0.9, r: 1.35 }
       ];
       
       const prof = profiles[headIdx % profiles.length];
@@ -1049,7 +1051,7 @@
         
         if (isTyping) {
             const headIdx = document.getElementById("head-select").selectedIndex;
-            const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95]; 
+            const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00]; 
             const currentRate = rates[headIdx % rates.length];
             targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25; 
         }
