@@ -216,7 +216,7 @@
     width: 65px; height: 65px; border-radius: 50%;
     border: 3px solid transparent; 
     border-top-color: var(--accent); 
-    border-bottom-color: var(--accent); /* Nur Hellblau */
+    border-bottom-color: var(--accent); 
     animation: spinLoader 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite, glowPulse 2s linear infinite;
     box-shadow: 0 0 20px rgba(143, 217, 251, 0.4), inset 0 0 20px rgba(143, 217, 251, 0.4);
   }
@@ -267,8 +267,8 @@
   <audio id="snd-rizz" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rizz-sound-effect.mp3"></audio>
   <audio id="snd-rainbow" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow.mp3"></audio>
 
-  <!-- INTRO LAYER -->
-  <div id="lhu-intro" aria-hidden="true">
+  <!-- INTRO LAYER (aria-hidden entfernt wegen Fehler in Bild 1) -->
+  <div id="lhu-intro">
     <canvas id="lhu-intro-canvas"></canvas>
     <div id="lhu-intro-vignette"></div>
     <div id="lhu-enter-panel">
@@ -344,11 +344,12 @@
     <button id="close-disclaimer" class="btn glass" style="width: 100%;">Verstanden</button>
   </div>
 
+<!-- Import von unpkg.com, nicht esm.sh! Behebt externe Script-Fehler -->
 <script type="module">
-  import * as THREE from "https://esm.sh/three@0.160.0";
-  import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-  import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
-  import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
+  import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+  import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+  import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+  import { DRACOLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
 
   /* =========================================================================
      1. CENTRAL STATE & CONFIG
@@ -357,7 +358,7 @@
     currentBgIndex: 0,
     isTrafficConePhase: false,
     musicOn: false,
-    activeEffect: null, // 'rizz', 'rainbow', 'wisdom', null
+    activeEffect: null, 
     isTyping: false,
     isIntroActive: true
   };
@@ -509,13 +510,13 @@
   document.getElementById("bg-next").addEventListener("click", () => BgEngine.setTheme((AppState.currentBgIndex + 1) % 3));
 
   /* =========================================================================
-     3. THREE.JS ENGINE & AGGRESSIVE MEMORY MANAGEMENT (Fix für Crash)
+     3. THREE.JS ENGINE & AGGRESSIVE NUKLEAR MEMORY SWEEP (Mobile VRAM Fix)
      ========================================================================= */
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); 
   camera.position.set(2.6, 0, 2.6);
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); 
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "high-performance" }); 
   renderer.setPixelRatio(0.6); 
   renderer.setSize(innerWidth, innerHeight); 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -530,33 +531,60 @@
   const loader = new GLTFLoader(); loader.setDRACOLoader(dracoLoader);
 
   let mainObject = null, mainMixer = null; 
+  let rainbowMatStates = []; 
   const clock = new THREE.Clock();
   const controls = new OrbitControls(camera, renderer.domElement); 
   controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
 
-  // VERHINDERT "TOTES GESICHT" (Zerstört alle Texturen beim Modellwechsel)
+  // DIE NUKLEARE SPEICHER-LÖSCHUNG (Für schwache Handys)
   function disposeHierarchy(node) {
-    for (let i = node.children.length - 1; i >= 0; i--) disposeHierarchy(node.children[i]);
-    if (node.isMesh) {
-      if (node.geometry) node.geometry.dispose();
-      if (node.material) {
-        const mats = Array.isArray(node.material) ? node.material : [node.material];
-        mats.forEach(m => {
-          m.dispose();
-          for (const key in m) { if (m[key] && m[key].isTexture) m[key].dispose(); }
-        });
+    if (!node) return;
+    node.traverse((child) => {
+      if (child.isMesh || child.isSkinnedMesh) {
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) {
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          mats.forEach(m => {
+            // Explizit jede verdammte Textur suchen und aus dem VRAM löschen
+            for (const prop of ['map', 'lightMap', 'bumpMap', 'normalMap', 'specularMap', 'envMap', 'alphaMap', 'aoMap', 'displacementMap', 'emissiveMap', 'gradientMap', 'metalnessMap', 'roughnessMap']) {
+              if (m[prop]) m[prop].dispose();
+            }
+            m.dispose();
+          });
+        }
       }
-    }
+    });
+    if (node.parent) node.parent.remove(node);
   }
 
   function loadHead(url) {
     setLoader(true); 
+    
+    // Globale Variablen leeren 
+    rainbowMatStates = [];
+    AppState.activeEffect = null;
+    dom.rainbowAura.classList.remove("active");
+    dom.rainbowEmojis.classList.remove("active");
+    dom.shmupContainer.style.display = "none";
+
+    // AnimationCache explizit löschen!
+    if (mainMixer) { 
+        mainMixer.stopAllAction(); 
+        mainMixer.uncacheRoot(mainMixer.getRoot());
+        mainMixer = null; 
+    }
+
+    // Modell und alle Texturen komplett aus VRAM brennen
     if (mainObject) { 
       disposeHierarchy(mainObject);
       scene.remove(mainObject); 
       mainObject = null; 
     } 
-    if (mainMixer) { mainMixer.stopAllAction(); mainMixer = null; }
+
+    // Three.js internen Cache und GPU Listen entleeren
+    THREE.Cache.clear();
+    renderer.renderLists.dispose();
+    renderer.clear();
 
     loader.load(url, (g) => { 
         mainObject = g.scene; 
@@ -679,13 +707,13 @@
   };
   function endGag() {
     if (AppState.activeEffect !== 'rizz') return;
-    if (gagBase) mainObject.position.copy(gagBase); mainObject.rotation.set(0,0,0); 
+    if (gagBase && mainObject) mainObject.position.copy(gagBase); if(mainObject) mainObject.rotation.set(0,0,0); 
     AppState.activeEffect = null; dom.heartEmojis.classList.remove("active"); dom.matrixBg.style.opacity = "1"; 
     tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => { controls.autoRotate = true; controls.enabled = true; });
   }
 
   // --- RAINBOW EFFECT ---
-  let rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null, rainbowMatStates = [];
+  let rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null;
   document.getElementById("rainbow-btn").onclick = () => {
     if (!mainObject || (AppState.activeEffect && AppState.activeEffect !== 'rainbow')) return; 
     AppState.activeEffect = 'rainbow'; resetAudio();
@@ -703,8 +731,9 @@
     controls.enabled = false; controls.autoRotate = false;
   };
   function endRainbow() {
+    if (AppState.activeEffect !== 'rainbow') return;
     AppState.activeEffect = null; 
-    if (rainbowBaseRot) mainObject.rotation.copy(rainbowBaseRot); if (rainbowBasePos) mainObject.position.copy(rainbowBasePos); if (rainbowBaseScale) mainObject.scale.copy(rainbowBaseScale); 
+    if (rainbowBaseRot && mainObject) mainObject.rotation.copy(rainbowBaseRot); if (rainbowBasePos && mainObject) mainObject.position.copy(rainbowBasePos); if (rainbowBaseScale && mainObject) mainObject.scale.copy(rainbowBaseScale); 
     rainbowBasePos = null; 
     rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); if (s.int !== undefined) s.mat.emissiveIntensity = s.int; }); 
     dom.rainbowAura.classList.remove("active"); dom.rainbowEmojis.classList.remove("active"); dom.shmupContainer.style.display = "none"; dom.matrixBg.style.opacity = "1"; 
@@ -712,14 +741,13 @@
     tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
-  // --- WISDOM EFFECT (FIX: Jetzt wieder skippbar) ---
+  // --- WISDOM EFFECT (Skip-Funktion aktiv) ---
   const dailyWisdom = { 
     en: [ "The early bird catches the worm. Because the worm has no basic radar system.", "Blood is thicker than water so vampires must be obese.", "get more comfortable... become furniture", "your bones called... they are calcium", "What doesn't kill you makes you stronger. That's a lie invented by bears so you fight them unarmed.", "dont move: now your shadow is unemployed", "Give your meat a good old slap if you are not a robot", "Forgive me I learn daily... that you massage dead cows with salt and fire, just to turn them into poop later", "but who is gay... but who asked first", "Your problem has a solution. They are divorced.", "I walk with God, but he usually takes the bus. How else would the bus exist except through God's love only (and human craftsmanship obviously)...", "Doctor said: You did not forget your password. That's dehydration from explosive diarrhea.", "If you can't sleep, read your local hobo a good night story while you invite them to a pyjama party.", "One apple a day keeps the doctor away if you throw it fast enough at him...", "You look like you don't have it all together is what you say to me huh Very interesting You seem like someone who could be nice to other people but you are not. Looks can be deceiving", "If man today can borrow flora, woman tomorrow will not him give choira.", "Ra, ra, Rasputin, unstoppable goon machine, his pp drinks gasoline,burns now limp and mean. Canceled...", "Please support living artists. Vienna markets dead legends while living artists struggle for attention. Mozart, Zombie Falco, and Manner wafers: Is that the full extent of your cultural imagination?", "If a man says viruses are not your Friends is this man the antivirus." ],
     de: [ "Der frühe Vogel fängt den Wurm. Weil der Wurm kein grundlegendes Radarsystem hat.", "Blut ist dicker als Wasser, also müssen Vampire fettleibig sein.", "mach es dir bequemer... werde zu möbeln", "deine knochen haben angerufen... sie sind kalzium", "Was dich nicht umbringt, macht dich stärker. Das ist eine Lüge, die von Bären erfunden wurde, damit du unbewaffnet gegen sie antrittst.", "beweg dich nicht: jetzt ist dein schatten arbeitslos", "gib deinem fleisch einen guten alten klaps, wenn du kein roboter bist", "vergib mir, ich lerne täglich... dass ihr tote kühe mit salz und feuer massiert, nur um sie später in kacke zu verwandeln", "aber wer ist gay... aber wer hat zuerst gefragt", "Dein Problem hat eine Lösung. Sie sind geschieden.", "Ich gehe mit Gott, aber er nimmt meistens den Bus. Wie sonst würde der Bus existieren, außer allein durch Gottes Liebe (und menschliche Handwerkskunst offensichtlich)...", "Doktor sagt: Du hast dein Passwort nicht vergessen. Das ist Dehydrierung durch explosiven Durchfall.", "Wenn du nicht schlafen kannst, lies dem örtlichen Landstreicher eine Gute-Nacht-Geschichte vor, während du ihn zu einer Pyjamaparty einlädst.", "Ein Apfel am Tag hält den Arzt fern, wenn du ihn schnell genug auf ihn wirfst...", "Du siehst aus, als hättest du dein Leben nicht im Griff, sagst du also zu mir, huh Sehr interessant Du wirkst wie jemand, der nett zu anderen Menschen sein könnte, aber du bist es nicht. Der Schein kann trügen", "Wenn du heute kann Blumen borgen, dann Frau morgen nicht dein Pipi entsorgen.", "Ra, ra, Rasputin, unbändige Lust-machine, sein Bart hat mehr erlebt als die Kantine hat gebebt.", "Bitte unterstützt lebende Künstler. Wien vermarktet tote Legenden, während lebende Künstler um Aufmerksamkeit kämpfen. Mozart, Zombie-Falco und Mannerschnitten: Ist das eure ganze kulturelle Fantasie?", "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..." ]
   };
   let availableWisdomIndices = [], currentWisdomLang = '', typewriterInterval = null, wisdomFallbackTimeout = null;
   document.getElementById("wisdom-btn").onclick = () => {
-    // Erlaubt das Klicken, WENN gerade Wisdom aktiv ist (überspringen!)
     if (!mainObject || (AppState.activeEffect && AppState.activeEffect !== 'wisdom')) return;
     
     if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout); 
@@ -728,7 +756,7 @@
     
     AppState.activeEffect = 'wisdom'; AppState.isTyping = false; resetAudio();
     dom.matrixBg.style.opacity = "0.2";
-    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 400, () => { controls.autoRotate = false; mainObject.rotation.set(0,0,0); });
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 400, () => { controls.autoRotate = false; if(mainObject) mainObject.rotation.set(0,0,0); });
 
     const targetLang = Config.isGerman ? 'de' : 'en'; const activeWisdom = Config.isGerman ? dailyWisdom.de : dailyWisdom.en;
     if (currentWisdomLang !== targetLang || availableWisdomIndices.length === 0) { currentWisdomLang = targetLang; availableWisdomIndices = activeWisdom.map((_, i) => i); }
@@ -746,6 +774,7 @@
     }, typingSpeed);
 
     const cleanupWisdom = () => {
+        if (AppState.activeEffect !== 'wisdom') return;
         AppState.activeEffect = null; AppState.isTyping = false; textEl.classList.remove("wisdom-active"); textEl.textContent = "";
         dom.matrixBg.style.opacity = "1"; controls.autoRotate = true; controls.enabled = true;
     };
@@ -775,7 +804,7 @@
   spawnEmojis("heart-emojis", "❤️", 30, 60, 40); spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
 
   /* =========================================================================
-     5. INTRO LOGIC (WebGL & DOM - Fix Text Mobile & Crash)
+     5. INTRO LOGIC (WebGL & DOM - Mit sanftem Audio-Sync)
      ========================================================================= */
   (() => {
     const intro = document.getElementById("lhu-intro");
@@ -790,10 +819,9 @@
       if (intro) intro.remove();
       AppState.isIntroActive = false;
       
-      // Fix für abgehacktes Audio: Nur bei Klick pausieren, ansonsten ausklingen lassen
       if (isManualSkip && audio) { audio.pause(); audio.currentTime = 0; }
       
-      // Fix für WebGL Crash: Lösche den zweiten Renderer restlos aus dem Speicher!
+      // Befreie das VRAM sofort vom Intro Renderer
       if (hitEnterRenderer) {
           if (hitObject) disposeHierarchy(hitObject);
           hitEnterRenderer.dispose();
@@ -853,7 +881,6 @@
           const reveal = Math.min(1, textT * 2.2); const collapse = Math.max(0, Math.min(1, (textT - .55) / .45)); const easeIn = collapse * collapse * (3 - 2 * collapse);
           let x = 0, y = 0, z = 0, rotY = 0, rotZ = 0, scale = 1, opac = 1;
           
-          // FIX: Komplexe Original-Mathematik wiederhergestellt für alle Handys
           if (introVariant === "red") { 
             const slam = Math.pow(easeIn, 7); const shakeX = (1 - slam) * (Math.random() - 0.5) * 120; const shakeY = (1 - slam) * (Math.random() - 0.5) * 120;
             x = (Math.random() - 0.5) * 600 * (1 - slam) + shakeX; y = -800 * (1 - slam) + shakeY; z = 400 * (1 - slam);
@@ -899,12 +926,14 @@
         word.appendChild(stack);
       } else { word.style.opacity = "0"; }
 
-      if (t >= 2.625) { skipIntro(false); return; }
+      // Audio Puffer: Animation pausiert visuell, gibt dem Audio Zeit
+      if (t >= 2.8) { skipIntro(false); return; }
       introRAF = requestAnimationFrame(animateIntro);
     }
 
     document.querySelectorAll(".lhu-pill").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.target.blur(); // WICHTIG: Entfernt Fokus und behebt den ARIA Fehler
         introVariant = btn.dataset.intro; 
         const targetColor = new THREE.Color(variantColors[introVariant].color);
         hitEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 4.5; });
