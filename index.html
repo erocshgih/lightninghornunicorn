@@ -42,23 +42,23 @@
     display: flex; align-items: center; justify-content: center;
     background: #000; opacity: 1; transition: opacity .22s ease; pointer-events: auto;
   }
-  
+
   #lhu-intro-canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
   #lhu-intro-vignette {
     position: fixed; inset: -10%; pointer-events: none;
     background: radial-gradient(circle at 50% 50%, transparent 0 27%, rgba(0,0,0,.28) 55%, rgba(0,0,0,.96) 100%);
     mix-blend-mode: multiply;
   }
-  
+
   #lhu-enter-panel {
     position: relative; z-index: 5; width: min(82vw, 420px); 
     display: flex; flex-direction: column; align-items: center; 
     gap: clamp(10px, 2vh, 20px); padding: 20px 0; margin: auto;
   }
-  
+
   #lhu-image-slot { width: min(68vw, 300px, 35vh); aspect-ratio: 1 / 1; position: relative; overflow: hidden; }
   #lhu-image-slot canvas { display: block; width: 100%; height: 100%; }
-  
+
   #lhu-intro-hint {
     font-size: 13px; font-weight: 600; letter-spacing: 0.25em;
     color: rgba(255,255,255,0.7); text-transform: uppercase; margin-top: -5px;
@@ -71,21 +71,21 @@
   }
 
   #lhu-enter-panel.hidden { opacity: 0; pointer-events: none; transition: opacity .15s ease; }
-  
+
   #lhu-intro-word {
     position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; perspective: 900px; font-family: Impact, sans-serif; font-weight: 900; letter-spacing: .12em;
     color: white; text-shadow: 0 0 8px rgba(255,255,255,.95), 0 0 25px rgba(80,210,255,.8), 0 0 55px rgba(170,60,255,.65); 
     opacity: 0; pointer-events: none;
   }
-  
+
   #lhu-intro-word > span { display: block; line-height: .82; transform-style: preserve-3d; will-change: transform, opacity, letter-spacing, filter; }
   #lhu-intro-word > span:nth-child(1) { font-size: clamp(32px, 8vw, 110px); }
   #lhu-intro-word > span:nth-child(2) { font-size: clamp(26px, 6vw, 82px); }
   #lhu-intro-word > span:nth-child(3) { font-size: clamp(34px, 9vw, 120px); }
-  
+
   #lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap: clamp(10px, 3vw, 22px); width:min(88vw,420px); margin-bottom: 5px; }
-  
+
   .lhu-pill { 
     width: clamp(60px, 12vh, 94px); height: clamp(60px, 12vh, 94px); 
     border-radius:50%; border:3px solid rgba(210,210,210,.65); cursor:pointer; 
@@ -96,7 +96,7 @@
   .lhu-pill-red { background:radial-gradient(circle at 34% 27%,#ff9b9b 0 7%,#e33131 28%,#8d0909 72%,#390000 100%); }
   .lhu-pill-yellow { background:radial-gradient(circle at 34% 27%,#fff4a0 0 7%,#f0c51f 28%,#9c7800 72%,#3e3000 100%); }
   .lhu-pill-blue { background:radial-gradient(circle at 34% 27%,#9edcff 0 7%,#2587db 28%,#0c397c 72%,#00162f 100%); }
-  
+
   #lhu-intro.lhu-intro-red #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,20,20,.14),rgba(90,0,0,.56) 68%,rgba(0,0,0,.94)); }
   #lhu-intro.lhu-intro-yellow #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94)); }
   #lhu-intro.lhu-intro-blue #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94)); }
@@ -130,9 +130,9 @@
 
   /* --- Z-INDEX THEATER --- */
   #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; }
-  
+
   #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
-  
+
   #wisdom-display { 
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 1000px;
     font-family: "Impact", monospace; font-size: clamp(20px, 4vw, 55px); line-height: 1.2; font-style: italic; text-align: center;
@@ -144,18 +144,18 @@
   #shmup-container { position: fixed; inset: 0; pointer-events: none; z-index: 3; display: none; }
   #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
   #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
-  
+
   /* =========================================================================
-     VERTIKALMODUS-SICHERES, FLEXibles UI LAYOUT (KEIN ÜBERLAPPEN MEHR)
+     VERTIKALMODUS-SICHERES, FLEXIBLES UI LAYOUT
      ========================================================================= */
-  
+
   #ui-wrapper { 
     position: fixed; 
     top: max(10px, env(safe-area-inset-top)); 
     left: 50%; transform: translateX(-50%); 
     z-index: 10; display: flex; gap: 8px; width: min(94vw, 440px); justify-content: center;
   }
-  
+
   #effect-buttons { 
     position: fixed; 
     top: max(60px, calc(env(safe-area-inset-top) + 52px)); 
@@ -186,7 +186,7 @@
   #container3D canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
 
   .glass { background: rgba(0, 0, 0, 0.85); border: 2px solid rgba(255, 255, 255, 0.3); color: var(--text); border-radius: 6px; }
-  
+
   .btn { 
     padding: clamp(6px, 1.2vh, 10px) 16px; 
     font-size: clamp(12px, 3.2vw, 15px); 
@@ -194,7 +194,7 @@
     min-height: clamp(36px, 6vh, 46px); 
   }
   .btn:hover { background: rgba(255, 255, 255, 0.2); }
-  
+
   #head-select { 
     width: 100%; 
     padding: clamp(6px, 1.2vh, 10px) 16px; 
@@ -203,7 +203,7 @@
     min-height: clamp(38px, 7vh, 48px); 
   }
   #head-select option { color: #111; }
-  
+
   .effect-btn { 
     min-width: clamp(48px, 10vw, 60px); height: clamp(40px, 7vh, 50px); 
     font-size: clamp(18px, 3.8vh, 24px); line-height: 1; 
@@ -239,7 +239,7 @@
     padding: 2px 8px; filter: grayscale(100%); 
   }
   #disclaimer-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
-  
+
   #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
   #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
@@ -272,12 +272,12 @@
         <button class="lhu-pill lhu-pill-blue" data-intro="blue" type="button"></button>
       </div>
       <div id="lhu-intro-hint">Drücke einen Knopf</div>
-      
+
       <div id="intro-skip-buttons">
         <button id="btn-skip-heads" class="intro-skip-btn">Skip to 3D Heads</button>
         <button id="btn-skip-main" class="intro-skip-btn">Skip to Main Page</button>
       </div>
-      
+
     </div>
     <div id="lhu-intro-word">
       <span>LIGHTNING</span>
@@ -288,15 +288,15 @@
 
   <!-- MAIN APP LAYER -->
   <canvas id="matrix-bg"></canvas>
-  
+
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
-  
+
   <button id="bg-prev" class="bg-nav-btn" aria-label="Previous Background">◄</button>
   <button id="bg-next" class="bg-nav-btn" aria-label="Next Background">►</button>
-  
+
   <div id="wisdom-display"></div>
-  
+
   <div id="shmup-container">
     <div class="shmup-center">
       <div class="shmup-beam right" style="--angle: 0deg; --speed: 0.25s; --delay: 0s;"></div>
@@ -307,14 +307,14 @@
       <div class="shmup-beam left" style="--angle: 18deg; --speed: 0.25s; --delay: 0.08s;"></div>
     </div>
   </div>
-  
+
   <div id="rainbow-aura"></div>
   <div id="container3D"></div>
 
   <p class="sr-only">Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.</p>
 
   <div id="loading"><div class="spinner"></div><span class="loading-text">lädt</span></div>
-  
+
   <!-- UI WRAPPER -->
   <div id="ui-wrapper">
     <button id="music-toggle" class="btn glass">Musik abspielen</button>
@@ -326,7 +326,7 @@
     <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
     <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">🗿</button>
   </div>
-  
+
   <div id="head-menu">
     <select id="head-select" class="glass"></select>
     <button id="disclaimer-btn" aria-label="Legal Disclaimer" title="Legal Disclaimer">⚠️</button>
@@ -342,15 +342,15 @@
   /* 1. ULTRA-PERFORMANCE 3-THEME ENGINE + OVERRIDE */
   const mcanvas = document.getElementById("matrix-bg");
   const mctx = mcanvas.getContext("2d");
-  
+
   const DOWNSCALE = 0.5;
   let W, H, cx, cy;
   let currentBgIndex = 0;
-  
+
   window.isTrafficConePhase = false;
-  
+
   let stars = [];
-  
+
   const LHU_WORDS = ["AETHER", "VEDRAN", "DNA 🧬", "BLITZ ⚡", "INTELLIGENCE", "ART", "SOUND", "PERSONA", "SCIENCE", "UNICORN", "ROBOT", "IMAGINATION", "AESTHETICS"];
   let currentWordIdx = 0;
   let wordTimer = 0;
@@ -374,20 +374,20 @@
   cctx.textAlign = 'center';
   cctx.textBaseline = 'middle';
   cctx.fillText('🚧', 32, 32);
-  
+
   let conesArr = [];
 
   function initTheme() {
     W = mcanvas.width = Math.floor(innerWidth * DOWNSCALE);
     H = mcanvas.height = Math.floor(innerHeight * DOWNSCALE);
     cx = W / 2; cy = H / 2;
-    
+
     stars = [];
     for(let i=0; i<35; i++) stars.push({ x: (Math.random()-0.5)*W*2, y: (Math.random()-0.5)*H*2, z: Math.random()*1000 + 1, s: Math.random()*3+2 });
-    
+
     balls = [];
     for(let i=0; i<18; i++) balls.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*3, vy: (Math.random()-0.5)*3, s: Math.random()*35 + 20, img: ballCanvases[Math.floor(Math.random()*ballCanvases.length)] });
-      
+
     conesArr = [];
     for(let i=0; i<25; i++) conesArr.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*30 + 30, speed: Math.random()*3 + 2 });
   }
@@ -399,7 +399,7 @@
   function drawBg() {
     mctx.fillStyle = "#04050a";
     mctx.fillRect(0, 0, W, H);
-    
+
     if (window.isTrafficConePhase) {
       for (let c of conesArr) {
         c.y += c.speed;
@@ -442,7 +442,7 @@
     }
     requestAnimationFrame(drawBg);
   }
-  
+
   initTheme(); drawBg();
   window.addEventListener("resize", initTheme);
 </script>
@@ -454,18 +454,37 @@
   import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
   import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
 
+  // DOM Cache
+  const dom = {
+    matrixBg: document.getElementById("matrix-bg"),
+    wisdomDisplay: document.getElementById("wisdom-display"),
+    musicToggle: document.getElementById("music-toggle"),
+    navigateToMain: document.getElementById("navigate-to-main"),
+    lhuIntroHint: document.getElementById("lhu-intro-hint"),
+    loadingText: document.querySelector(".loading-text"),
+    disclaimerText: document.getElementById("disclaimer-text"),
+    disclaimerBtn: document.getElementById("disclaimer-btn"),
+    disclaimerModal: document.getElementById("disclaimer-modal"),
+    closeDisclaimer: document.getElementById("close-disclaimer"),
+    heartEmojis: document.getElementById("heart-emojis"),
+    rainbowEmojis: document.getElementById("rainbow-emojis"),
+    rainbowAura: document.getElementById("rainbow-aura"),
+    shmupContainer: document.getElementById("shmup-container"),
+    headSelect: document.getElementById("head-select")
+  };
+
   const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
-  
+
   const translations = {
     en: { playMusic: "Play Music", stopMusic: "Stop Music", mainPage: "Main Page", introHint: "Press a button", loading: "loading" },
     de: { playMusic: "Musik abspielen", stopMusic: "Musik stoppen", mainPage: "Hauptseite", introHint: "Drücke einen Knopf", loading: "lädt" }
   };
   const t = isGerman ? translations.de : translations.en;
 
-  document.getElementById("music-toggle").textContent = t.playMusic;
-  document.getElementById("navigate-to-main").textContent = t.mainPage;
-  document.getElementById("lhu-intro-hint").textContent = t.introHint;
-  document.querySelector(".loading-text").textContent = t.loading;
+  dom.musicToggle.textContent = t.playMusic;
+  dom.navigateToMain.textContent = t.mainPage;
+  dom.lhuIntroHint.textContent = t.introHint;
+  dom.loadingText.textContent = t.loading;
 
   const dailyWisdom = {
     en: [
@@ -511,19 +530,18 @@
       "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..."
     ]
   };
-  
+
   let availableWisdomIndices = [];
   let currentWisdomLang = '';
-  
   let isTyping = false; 
 
   const disclaimerTexts = {
     de: "Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.",
     en: "These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity."
   };
-  document.getElementById("disclaimer-text").textContent = isGerman ? disclaimerTexts.de : disclaimerTexts.en;
-  document.getElementById("disclaimer-btn").onclick = () => { document.getElementById("disclaimer-modal").style.display = "block"; };
-  document.getElementById("close-disclaimer").onclick = () => { document.getElementById("disclaimer-modal").style.display = "none"; };
+  dom.disclaimerText.textContent = isGerman ? disclaimerTexts.de : disclaimerTexts.en;
+  dom.disclaimerBtn.onclick = () => { dom.disclaimerModal.style.display = "block"; };
+  dom.closeDisclaimer.onclick = () => { dom.disclaimerModal.style.display = "none"; };
 
   const MODELS = [
     { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
@@ -542,7 +560,7 @@
   // PS2 WISHY-WASHY PIXEL LOOK RENDERER
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
-  
+
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); 
   renderer.setPixelRatio(0.6); 
   renderer.setSize(innerWidth, innerHeight); 
@@ -560,18 +578,18 @@
   const hitEnterSlot = document.getElementById("lhu-image-slot");
   const hitEnterScene = new THREE.Scene();
   const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
-  
+
   const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
   hitEnterRenderer.setPixelRatio(0.6); 
   hitEnterRenderer.setClearColor(0x000000, 0); 
   hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
   hitEnterSlot.appendChild(hitEnterRenderer.domElement);
-  
+
   hitEnterScene.add(new THREE.AmbientLight(0xffffff, 2.0)); hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.8));
   const hitKey = new THREE.DirectionalLight(0xffffff, 3.0); hitKey.position.set(3, 5, 6); hitEnterScene.add(hitKey);
   const hitFill = new THREE.DirectionalLight(0xaac8ff, 1.8); hitFill.position.set(-5, 2, 4); hitEnterScene.add(hitFill);
   const hitRim = new THREE.DirectionalLight(0xffffff, 2.2); hitRim.position.set(0, 3, -5); hitEnterScene.add(hitRim);
-  
+
   let hitEnterObject = null, hitEnterMixer = null;
   let hitEnterEmissiveMats = [];
 
@@ -613,13 +631,13 @@
     startLoading(); 
     if (object) { scene.remove(object); object = null; } 
     if (mixer) { mixer.stopAllAction(); mixer = null; }
-    
+
     loader.load(
       url, 
       (g) => { 
         object = g.scene; 
         scene.add(object); 
-        
+
         object.userData.emissiveMats = [];
         object.traverse((child) => {
             if (child.isMesh && child.material) {
@@ -633,7 +651,7 @@
                 });
             }
         });
-        
+
         if (g.animations.length) { 
             mixer = new THREE.AnimationMixer(object); 
             g.animations.forEach(clip => mixer.clipAction(clip).play()); 
@@ -652,22 +670,26 @@
   const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
 
   let musicOn = false; const music = document.getElementById("background-music");
-  document.getElementById("music-toggle").onclick = () => { 
+  dom.musicToggle.onclick = () => { 
     musicOn = !musicOn; 
-    musicOn ? music.play().catch(()=>{}) : music.pause(); 
-    document.getElementById("music-toggle").textContent = musicOn ? t.stopMusic : t.playMusic; 
+    if (musicOn) {
+      music.play().catch(err => console.warn("Autoplay blockiert:", err));
+    } else {
+      music.pause();
+    }
+    dom.musicToggle.textContent = musicOn ? t.stopMusic : t.playMusic; 
   };
-  document.getElementById("navigate-to-main").onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html"; };
+  dom.navigateToMain.onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html"; };
 
   let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
   let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null; 
   let rainbowMatStates = [];
-  
+
   let wisdomActive = false; 
   let typewriterInterval = null;
   let wisdomFallbackTimeout = null;
   let musicPlayTime = 0, musicPhase = 0;
-  
+
   let wasInPhase7 = false;
 
   function tweenCamera(toPos, toTarget, dur, onDone) {
@@ -675,33 +697,33 @@
   }
 
   document.getElementById("heart-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
+    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; dom.musicToggle.textContent = t.playMusic;
     gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
-    document.getElementById("matrix-bg").style.opacity = "0";
+    dom.matrixBg.style.opacity = "0";
     const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
     const eye = new THREE.Vector3(center.x, box.max.y - gagSize.y * 0.12, center.z + gagSize.z * 0.1);
     const closePos = eye.clone().add(new THREE.Vector3(gagSize.x * 0.25, gagSize.y * 0.02, gagSize.z * 0.55 + gagSize.length() * 0.35));
     tweenCamera(closePos, eye, 650);
-    document.getElementById("heart-emojis").classList.add("active");
+    dom.heartEmojis.classList.add("active");
     const sndWolf = document.getElementById("snd-wolf"); const sndRizz = document.getElementById("snd-rizz"); sndWolf.currentTime = 0; sndWolf.play().catch(()=>{}); sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; }; setTimeout(endGag, 9000);
   };
 
   function endGag() {
-    if (gagBase) object.position.copy(gagBase); object.rotation.set(0,0,0); gagActive = false; document.getElementById("heart-emojis").classList.remove("active"); document.getElementById("matrix-bg").style.opacity = "1"; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    if (gagBase) object.position.copy(gagBase); object.rotation.set(0,0,0); gagActive = false; dom.heartEmojis.classList.remove("active"); dom.matrixBg.style.opacity = "1"; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
   document.getElementById("rainbow-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
+    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; dom.musicToggle.textContent = t.playMusic;
     rainbowActive = true; rainbowStart = performance.now(); 
     rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone(); rainbowBaseScale = object.scale.clone();
-    document.getElementById("matrix-bg").style.opacity = "0";
+    dom.matrixBg.style.opacity = "0";
     rainbowMatStates = []; 
     if(object.userData.emissiveMats) {
         object.userData.emissiveMats.forEach(m => {
             rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity });
         });
     }
-    document.getElementById("rainbow-aura").classList.add("active"); document.getElementById("rainbow-emojis").classList.add("active");
+    dom.rainbowAura.classList.add("active"); dom.rainbowEmojis.classList.add("active");
     const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
     const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{}); controls.enabled = false; controls.autoRotate = false;
   };
@@ -709,53 +731,52 @@
   function endRainbow() {
     rainbowActive = false; if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); if (rainbowBasePos) object.position.copy(rainbowBasePos); if (rainbowBaseScale) object.scale.copy(rainbowBaseScale); rainbowBasePos = null; 
     rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); if (s.int !== undefined) s.mat.emissiveIntensity = s.int; }); 
-    document.getElementById("rainbow-aura").classList.remove("active"); document.getElementById("rainbow-emojis").classList.remove("active"); document.getElementById("shmup-container").style.display = "none"; document.getElementById("matrix-bg").style.opacity = "1"; 
+    dom.rainbowAura.classList.remove("active"); dom.rainbowEmojis.classList.remove("active"); dom.shmupContainer.style.display = "none"; dom.matrixBg.style.opacity = "1"; 
     const centerPoint = document.querySelector(".shmup-center"); if(centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
     controls.enabled = true; controls.autoRotate = true; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
   document.getElementById("wisdom-btn").onclick = () => {
     if (!object || gagActive || rainbowActive) return;
-    
-    // Stoppe vorherige Instanzen (TextSchreiben, Sprachausgabe, Fallback-Timer)
+
     if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
     if (typewriterInterval) clearInterval(typewriterInterval);
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     isTyping = false;
-    
-    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
+
+    music.pause(); musicOn = false; dom.musicToggle.textContent = t.playMusic;
     wisdomActive = true;
-    
-    document.getElementById("matrix-bg").style.opacity = "0.2";
-    
+
+    dom.matrixBg.style.opacity = "0.2";
+
     tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 400, () => {
         controls.autoRotate = false; object.rotation.set(0,0,0);
     });
 
     const targetLang = isGerman ? 'de' : 'en';
     const activeWisdom = isGerman ? dailyWisdom.de : dailyWisdom.en;
-    
+
     if (currentWisdomLang !== targetLang || availableWisdomIndices.length === 0) {
       currentWisdomLang = targetLang;
       availableWisdomIndices = activeWisdom.map((_, index) => index);
     }
-    
+
     const randomIndexWithinAvailable = Math.floor(Math.random() * availableWisdomIndices.length);
     const selectedQuoteIndex = availableWisdomIndices[randomIndexWithinAvailable];
     availableWisdomIndices.splice(randomIndexWithinAvailable, 1);
-    
+
     const phrase = activeWisdom[selectedQuoteIndex];
-    const textEl = document.getElementById("wisdom-display");
-    
+    const textEl = dom.wisdomDisplay;
+
     textEl.textContent = ""; 
     textEl.classList.add("wisdom-active");
-    
+
     let charIndex = 0; 
-    const typingSpeed = 15; // Sehr schnelles Tippen
+    const typingSpeed = 15; 
     const totalTypeTime = phrase.length * typingSpeed;
-    
+
     isTyping = true; 
-    
+
     typewriterInterval = setInterval(() => {
         textEl.textContent += phrase.charAt(charIndex);
         charIndex++;
@@ -767,7 +788,7 @@
 
     const cleanupWisdom = () => {
         wisdomActive = false; isTyping = false; textEl.classList.remove("wisdom-active"); textEl.textContent = "";
-        document.getElementById("matrix-bg").style.opacity = "1"; controls.autoRotate = true;
+        dom.matrixBg.style.opacity = "1"; controls.autoRotate = true;
     };
 
     if ('speechSynthesis' in window) {
@@ -775,10 +796,9 @@
       const utterance = new SpeechSynthesisUtterance(phrase);
       window._lhuUtterance = utterance; 
       utterance.lang = isGerman ? 'de-DE' : 'en-US'; 
-      
-      const headIdx = document.getElementById("head-select").selectedIndex;
-      
-      // Mittelmäßig schnelle Sprachausgabe (rate zwischen 1.25 und 1.45)
+
+      const headIdx = dom.headSelect.selectedIndex;
+
       const profiles = [
         { p: 0.1, r: 1.35 },
         { p: 1.8, r: 1.45 },
@@ -788,23 +808,23 @@
         { p: 1.2, r: 1.30 },
         { p: 0.9, r: 1.35 }
       ];
-      
+
       const prof = profiles[headIdx % profiles.length];
       utterance.pitch = prof.p;
       utterance.rate = prof.r;
 
       const voices = synth.getVoices();
       const langVoices = voices.filter(v => v.lang.startsWith(isGerman ? "de" : "en"));
-      
+
       if (langVoices.length > 0) {
           utterance.voice = langVoices[headIdx % langVoices.length];
       }
-      
+
       utterance.onend = () => { isTyping = false; }; 
 
       synth.speak(utterance);
     }
-    
+
     const speechEstTime = phrase.length * 80;
     wisdomFallbackTimeout = setTimeout(cleanupWisdom, Math.max(totalTypeTime + 3000, speechEstTime + 2000));
   };
@@ -817,9 +837,8 @@
   }
   spawnEmojis("heart-emojis", "❤️", 30, 60, 40); spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
 
-  const selectEl = document.getElementById("head-select");
-  MODELS.forEach(m => { const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; selectEl.appendChild(opt); });
-  selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
+  MODELS.forEach(m => { const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; dom.headSelect.appendChild(opt); });
+  dom.headSelect.addEventListener("change", (e) => { loadHead(e.target.value); }); 
   loadHead(MODELS[0].url);
 
   /* 3. DYNAMISCHE INTRO LOGIK */
@@ -827,27 +846,27 @@
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
     const canvas = document.getElementById("lhu-intro-canvas");
-    
+
     const btnSkipHeads = document.getElementById("btn-skip-heads");
     const btnSkipMain = document.getElementById("btn-skip-main");
-    
+
     if(btnSkipHeads) {
       btnSkipHeads.addEventListener("click", () => {
         if (intro) intro.remove();
       });
     }
-    
+
     if(btnSkipMain) {
       btnSkipMain.addEventListener("click", () => {
         location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html";
       });
     }
-    
+
     const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-    
+
     const word = document.getElementById("lhu-intro-word");
     const lines = [...word.querySelectorAll("span")];
-    
+
     let W = 0, H = 0, introStart = 0; let introVariant = "yellow"; 
 
     const variantColors = {
@@ -860,7 +879,7 @@
     const fsSource = `
       precision mediump float;
       uniform vec2 r; uniform float t; uniform float h;
-      
+
       vec3 hsv2rgb(vec3 c) {
           vec3 rgb = clamp(abs(mod(c.x*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.);
           return c.z * mix(vec3(1.), rgb, c.y);
@@ -886,33 +905,33 @@
           gl_FragColor = vec4(col, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));
       }
     `;
-    
+
     let rLoc, tLoc, hLoc;
     if (gl) {
         const vs = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vs, vsSource); gl.compileShader(vs);
         const fs = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fs, fsSource); gl.compileShader(fs);
         const prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.useProgram(prog);
-        
+
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); 
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
         const aLoc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
-        
+
         rLoc = gl.getUniformLocation(prog, "r");
         tLoc = gl.getUniformLocation(prog, "t");
         hLoc = gl.getUniformLocation(prog, "h");
     }
-    
+
     function resizeIntro() { 
       W = innerWidth; H = innerHeight; 
       canvas.width = W; canvas.height = H; 
       if(gl) gl.viewport(0, 0, W, H); 
     }
-    
+
     function animateIntro(now) {
       if (!document.body.contains(intro)) return;
       const timeOffset = (now - introStart) / 1000;
       const t = timeOffset / 2;
-      
+
       if(gl) {
          gl.uniform2f(rLoc, W, H);
          gl.uniform1f(tLoc, timeOffset);
@@ -947,20 +966,20 @@
           el.style.transform = `translate3d(${x}px,${y}px,${z}px) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`; el.style.opacity = String(opac);
         });
       }
-      
+
       const seqT = t - 0.625;
       if (seqT >= 0 && seqT < 1.905) {
         const index = Math.min(2, Math.floor(seqT / 0.635)); const local = seqT - index * 0.635;
         word.innerHTML = ""; word.style.opacity = "1";
-        
+
         const stack = document.createElement("span");
         stack.style.display = "flex"; stack.style.flexDirection = "column"; stack.style.alignItems = "center"; stack.style.fontFamily = "Impact, sans-serif"; stack.style.fontSize = "clamp(42px, 8vh, 88px)";
         const vColor = variantColors[introVariant] || variantColors.yellow; stack.style.color = vColor.color; stack.style.textShadow = `0 0 3px ${vColor.shadow}`;
-        
+
         for (const ch of ["LIGHTNING", "HORN", "UNICORN"][index]) {
           const letter = document.createElement("span"); letter.textContent = ch; letter.style.display = "block"; letter.style.lineHeight = "0.88"; letter.style.fontSize = "1em"; letter.style.color = vColor.color; letter.style.fontFamily = "inherit"; letter.style.fontWeight = "900"; letter.style.backgroundImage = vColor.bg; letter.style.webkitBackgroundClip = "text"; letter.style.backgroundClip = "text"; letter.style.webkitTextFillColor = "transparent"; stack.appendChild(letter);
         }
-        
+
         if (introVariant === "red") {
           const g = Math.random() * 4; const jitterX = (Math.random() - 0.5) * 10; stack.style.transform = `translateX(${jitterX}px)`; stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.9), -${g*2}px 0 0 rgba(255,0,180,.9)`;
         } else if (introVariant === "blue") {
@@ -972,17 +991,17 @@
         }
         word.appendChild(stack);
       } else { word.style.opacity = "0"; }
-      
+
       if (t >= 2.625) { intro.remove(); return; }
       requestAnimationFrame(animateIntro);
     }
-    
+
     resizeIntro(); window.addEventListener("resize", resizeIntro);
-    
+
     document.querySelectorAll(".lhu-pill").forEach(btn => {
       btn.addEventListener("click", () => {
         introVariant = btn.dataset.intro; 
-        
+
         const flashColorMap = {
           red: new THREE.Color(0xff3333),
           yellow: new THREE.Color(0xffd400),
@@ -998,7 +1017,7 @@
         document.getElementById("lhu-enter-panel").classList.add("hidden");
 
         if (audio) { audio.src = `lhu${introVariant}.mp3`; }
-        
+
         setTimeout(() => {
           if (audio) audio.play().catch(()=>{});
           introStart = performance.now();
@@ -1013,7 +1032,7 @@
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta);
-    
+
     if (camTween) {
       const k = Math.min(1, (performance.now() - camTween.start) / camTween.dur);
       const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
@@ -1022,7 +1041,7 @@
       camera.lookAt(controls.target);
       if (k >= 1) { if(camTween.onDone) camTween.onDone(); camTween = null; controls.enabled = true; }
     } else controls.update();
-    
+
     if (object) {
       if (gagActive) {
         const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
@@ -1049,17 +1068,17 @@
                 });
             }
             const screenPos = object.position.clone().project(camera); const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth; const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
-            const crossfire = document.getElementById("shmup-container"); const centerPoint = crossfire.querySelector(".shmup-center");
+            const centerPoint = dom.shmupContainer.querySelector(".shmup-center");
             if (centerPoint) { centerPoint.style.left = screenX + "px"; centerPoint.style.top = screenY + "px"; }
-            if (tt >= 0.7 && tt < 2.2) { crossfire.style.display = "block"; } else { crossfire.style.display = "none"; }
+            if (tt >= 0.7 && tt < 2.2) { dom.shmupContainer.style.display = "block"; } else { dom.shmupContainer.style.display = "none"; }
         }
         if (tt >= 2.45) endRainbow();
       } 
       else if (wisdomActive) {
         let targetRotX = 0;
-        
+
         if (isTyping) {
-            const headIdx = document.getElementById("head-select").selectedIndex;
+            const headIdx = dom.headSelect.selectedIndex;
             const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00]; 
             const currentRate = rates[headIdx % rates.length];
             targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25; 
@@ -1073,14 +1092,14 @@
         musicPlayTime += delta; 
         const loopTime = musicPlayTime % 70; 
         const baseFreq = Math.PI / (60 / 138 * 0.5); 
-        
+
         let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
         let targetPosX = 0, targetPosY = 0;
-        
+
         let phase4Active = false;
         let phase6Active = false;
         let phase7Active = false;
-        
+
         if (loopTime < 30 || loopTime >= 40) {
             window.isTrafficConePhase = false;
         }
@@ -1136,7 +1155,7 @@
         if (phase4Active) {
             const blink = Math.floor(loopTime * 4) % 2 === 0; 
             let targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
-            
+
             if(object.userData.emissiveMats) {
                 object.userData.emissiveMats.forEach(m => {
                     m.emissive.copy(targetColor);
@@ -1169,18 +1188,18 @@
         }
       } else { 
         window.isTrafficConePhase = false;
-        
+
         if (wasInPhase7) {
             object.rotation.x = object.rotation.x % (Math.PI * 2);
             wasInPhase7 = false;
         }
-        
+
         object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
         object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
         object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
         object.position.x += (0 - object.position.x) * (delta * 8);
         object.position.y += (0 - object.position.y) * (delta * 8);
-        
+
         if(object.userData.emissiveMats) {
             object.userData.emissiveMats.forEach(m => {
                 m.emissive.lerp(m.userData.origE, delta * 5);
