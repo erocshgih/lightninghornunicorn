@@ -180,7 +180,7 @@
     display: flex; align-items: center; justify-content: center; padding: 0; flex: 1; max-width: 75px;
   }
 
-  /* Moderner Loading Spinner */
+  /* Loading Spinner */
   #loading {
     position: fixed; inset: 0; z-index: 100001;
     display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
@@ -462,7 +462,7 @@
   ];
 
   const dailyWisdom = {
-    en: [ /* ... gleiche Liste wie vorher ... */ 
+    en: [
       "The early bird catches the worm. Because the worm has no basic radar system.",
       "Blood is thicker than water so vampires must be obese.",
       "get more comfortable... become furniture",
@@ -506,13 +506,13 @@
     ]
   };
 
-  // ========== THREE.JS SETUP (einfach & stabil) ==========
+  // ========== THREE.JS SETUP ==========
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
   camera.position.set(2.6, 0, 2.6);
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // nicht zu niedrig
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.getElementById("container3D").appendChild(renderer.domElement);
@@ -559,47 +559,74 @@
     }
   }
 
+  // ========== KORRIGIERTE LOAD-FUNKTION MIT TIMEOUT ==========
   function loadHead(url) {
     setLoader(true, t.loading);
 
-    // Einfaches Cleanup (nicht zu aggressiv)
-    if (mixer) { mixer.stopAllAction(); mixer = null; }
+    if (mixer) {
+      mixer.stopAllAction();
+      mixer = null;
+    }
     if (object) {
       scene.remove(object);
       object = null;
     }
 
-    loader.load(url, (gltf) => {
-      object = gltf.scene;
-      scene.add(object);
+    let finished = false;
 
-      object.userData.emissiveMats = [];
-      object.traverse((child) => {
-        if (child.isMesh && child.material) {
-          const mats = Array.isArray(child.material) ? child.material : [child.material];
-          mats.forEach(m => {
-            if (m.emissive) {
-              m.userData.origE = m.emissive.clone();
-              m.userData.origI = m.emissiveIntensity !== undefined ? m.emissiveIntensity : 1;
-              object.userData.emissiveMats.push(m);
-            }
-          });
-        }
-      });
-
-      if (gltf.animations && gltf.animations.length) {
-        mixer = new THREE.AnimationMixer(object);
-        gltf.animations.forEach(clip => mixer.clipAction(clip).play());
+    const timeoutId = setTimeout(() => {
+      if (!finished) {
+        finished = true;
+        console.warn("GLB load timeout");
+        setLoader(true, t.loadError);
+        setTimeout(() => setLoader(false), 2500);
       }
-      setLoader(false);
-    }, undefined, (err) => {
-      console.error("GLB load error:", err);
-      setLoader(true, t.loadError);
-      setTimeout(() => setLoader(false), 3000);
-    });
+    }, 12000);
+
+    loader.load(
+      url,
+      (gltf) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutId);
+
+        object = gltf.scene;
+        scene.add(object);
+
+        object.userData.emissiveMats = [];
+        object.traverse((child) => {
+          if (child.isMesh && child.material) {
+            const mats = Array.isArray(child.material) ? child.material : [child.material];
+            mats.forEach(m => {
+              if (m.emissive) {
+                m.userData.origE = m.emissive.clone();
+                m.userData.origI = m.emissiveIntensity !== undefined ? m.emissiveIntensity : 1;
+                object.userData.emissiveMats.push(m);
+              }
+            });
+          }
+        });
+
+        if (gltf.animations && gltf.animations.length) {
+          mixer = new THREE.AnimationMixer(object);
+          gltf.animations.forEach(clip => mixer.clipAction(clip).play());
+        }
+
+        setLoader(false);
+      },
+      undefined,
+      (err) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutId);
+        console.error("GLB load error:", err);
+        setLoader(true, t.loadError);
+        setTimeout(() => setLoader(false), 2500);
+      }
+    );
   }
 
-  // Select befüllen
+  // Select befüllen + Initial Load
   const selectEl = document.getElementById("head-select");
   MODELS.forEach(m => {
     const opt = document.createElement("option");
@@ -675,7 +702,7 @@
   });
   hitResizeOb.observe(hitEnterSlot);
 
-  // ========== EFFECTS (unverändert zur stabilen Version) ==========
+  // ========== EFFECTS ==========
   function tweenCamera(toPos, toTarget, dur, onDone) {
     camTween = {
       fromPos: camera.position.clone(), toPos: toPos.clone(),
@@ -1063,7 +1090,6 @@
     document.getElementById("disclaimer-modal").style.display = "none";
   };
 
-  // Visibility pause (leicht)
   document.addEventListener("visibilitychange", () => {
     if (document.hidden && musicOn) music.pause();
     else if (!document.hidden && musicOn) music.play().catch(()=>{});
