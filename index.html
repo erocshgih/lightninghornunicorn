@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Lightning Horn Unicorn | Creative Studio by Vedran Lukic</title>
 
 <!-- Favicon -->
@@ -17,13 +17,15 @@
 
 <style>
   :root {
+    --bg-dark: #04050a;
     --text: #f3f4f8;
     --muted: rgba(243, 244, 248, 0.6);
     --accent: #8fd9fb;
+    --glass-bg: rgba(10, 12, 20, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.15);
   }
 
-
-- { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -31,7 +33,7 @@
   }
 
   html, body {
-    margin: 0; height: 100%; overflow: hidden; background: #04050a;
+    margin: 0; height: 100%; overflow: hidden; background: var(--bg-dark);
     color: var(--text); font-family: system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
@@ -41,7 +43,7 @@
     position: fixed; inset: 0; z-index: 100000; 
     overflow-y: auto; overflow-x: hidden; 
     display: flex; align-items: center; justify-content: center;
-    background: #000; opacity: 1; transition: opacity .22s ease; pointer-events: auto;
+    background: #000; opacity: 1; transition: opacity .25s ease; pointer-events: auto;
   }
 
   #lhu-intro-canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
@@ -62,16 +64,16 @@
 
   #lhu-intro-hint {
     font-size: 13px; font-weight: 600; letter-spacing: 0.25em;
-    color: rgba(255,255,255,0.7); text-transform: uppercase; margin-top: -5px;
-    text-align: center; width: 100%;
-    animation: pulseHint 1.5s ease-in-out infinite alternate; pointer-events: none;
+    color: rgba(255,255,255,0.8); text-transform: uppercase; margin-top: -5px;
+    text-align: center; width: 100%; pointer-events: none;
+    animation: pulseHint 2s ease-in-out infinite alternate;
   }
   @keyframes pulseHint {
-    0% { opacity: 0.3; text-shadow: 0 0 5px rgba(255,255,255,0); }
-    100% { opacity: 1; text-shadow: 0 0 12px rgba(255,255,255,0.6); }
+    0% { opacity: 0.4; text-shadow: 0 0 5px rgba(255,255,255,0); transform: translateY(0); }
+    100% { opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.8); transform: translateY(-2px); }
   }
 
-  #lhu-enter-panel.hidden { opacity: 0; pointer-events: none; transition: opacity .15s ease; }
+  #lhu-enter-panel.hidden { opacity: 0; pointer-events: none; transition: opacity .2s ease; }
 
   #lhu-intro-word {
     position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -80,7 +82,7 @@
     opacity: 0; pointer-events: none;
   }
 
-  #lhu-intro-word > span { display: block; line-height: .82; transform-style: preserve-3d; will-change: transform, opacity, letter-spacing, filter; }
+  #lhu-intro-word > span { display: block; line-height: .82; transform-style: preserve-3d; will-change: transform, opacity, filter; }
   #lhu-intro-word > span:nth-child(1) { font-size: clamp(32px, 8vw, 110px); }
   #lhu-intro-word > span:nth-child(2) { font-size: clamp(26px, 6vw, 82px); }
   #lhu-intro-word > span:nth-child(3) { font-size: clamp(34px, 9vw, 120px); }
@@ -89,11 +91,13 @@
 
   .lhu-pill { 
     width: clamp(60px, 12vh, 94px); height: clamp(60px, 12vh, 94px); 
-    border-radius:50%; border:3px solid rgba(210,210,210,.65); cursor:pointer; 
-    box-shadow:inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.18); transition:transform .12s ease; 
+    border-radius: 50%; border: 3px solid rgba(210,210,210,.65); cursor: pointer; 
+    box-shadow: inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.18), 0 4px 15px rgba(0,0,0,0.5); 
+    transition: transform .15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow .15s ease; 
   }
-  .lhu-pill:hover { transform:scale(1.04); }
-  .lhu-pill:active { transform:scale(.96); }
+  .lhu-pill:hover { transform: scale(1.06); box-shadow: inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.3), 0 8px 25px rgba(255,255,255,0.2); }
+  .lhu-pill:active { transform: scale(.94); }
+  
   .lhu-pill-red { background:radial-gradient(circle at 34% 27%,#ff9b9b 0 7%,#e33131 28%,#8d0909 72%,#390000 100%); }
   .lhu-pill-yellow { background:radial-gradient(circle at 34% 27%,#fff4a0 0 7%,#f0c51f 28%,#9c7800 72%,#3e3000 100%); }
   .lhu-pill-blue { background:radial-gradient(circle at 34% 27%,#9edcff 0 7%,#2587db 28%,#0c397c 72%,#00162f 100%); }
@@ -102,151 +106,153 @@
   #lhu-intro.lhu-intro-yellow #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94)); }
   #lhu-intro.lhu-intro-blue #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94)); }
 
-  #intro-skip-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(8px, 1.5vh, 12px);
-    margin-top: clamp(5px, 1.5vh, 10px);
-    width: 100%;
-    align-items: center;
-  }
+  #intro-skip-buttons { display: flex; flex-direction: column; gap: clamp(8px, 1.5vh, 12px); margin-top: clamp(10px, 2vh, 15px); width: 100%; align-items: center; }
+  
   .intro-skip-btn {
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(20, 25, 35, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 800;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(4px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     width: min(280px, 80vw);
     min-height: clamp(45px, 6vh, 55px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   }
-  .intro-skip-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.6); transform: scale(1.03); }
-  .intro-skip-btn:active { transform: scale(0.95); }
+  .intro-skip-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.5); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
+  .intro-skip-btn:active { transform: translateY(1px) scale(0.97); }
 
-  /* --- Z-INDEX THEATER --- */
-  #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; }
-
+  /* --- Z-INDEX THEATER & MAIN CANVAS --- */
+  #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease; }
   #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
-
+  
   #wisdom-display { 
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 1000px;
     font-family: "Impact", monospace; font-size: clamp(20px, 4vw, 55px); line-height: 1.2; font-style: italic; text-align: center;
-    color: rgba(255, 255, 255, 0.5); text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 255, 255, 0.5), -2px 0 0 rgba(255, 0, 180, 0.5), 2px 0 0 rgba(0, 255, 255, 0.5); 
+    color: rgba(255, 255, 255, 0.7); text-transform: uppercase; 
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.6), -3px 0 0 rgba(255, 0, 180, 0.6), 3px 0 0 rgba(0, 255, 255, 0.6); 
     white-space: pre-wrap; word-wrap: break-word; pointer-events: none; z-index: 6; display: none; 
   }
-  .wisdom-active { display: block !important; }
+  .wisdom-active { display: block !important; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes popIn { from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 
   #shmup-container { position: fixed; inset: 0; pointer-events: none; z-index: 3; display: none; }
   #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
   #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
+  #container3D canvas { display: block; width: 100% !important; height: 100% !important; outline: none; }
 
   /* =========================================================================
-     VERTIKALMODUS-SICHERES, FLEXibles UI LAYOUT (KEIN ÜBERLAPPEN MEHR)
+     MODERN GLASS UI & LAYOUT
      ========================================================================= */
+  .glass { 
+    background: var(--glass-bg); 
+    border: 1px solid var(--glass-border); 
+    color: var(--text); 
+    border-radius: 10px; 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+  }
+
+  .btn { 
+    padding: clamp(8px, 1.5vh, 12px) 18px; 
+    font-size: clamp(12px, 3.2vw, 15px); 
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    cursor: pointer; min-height: clamp(40px, 6vh, 48px); 
+    display: flex; align-items: center; justify-content: center;
+  }
+  .btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255,255,255,0.4); box-shadow: 0 6px 25px rgba(0,0,0,0.5); }
+  .btn:active { transform: scale(0.96); }
 
   #ui-wrapper { 
-    position: fixed; 
-    top: max(10px, env(safe-area-inset-top)); 
-    left: 50%; transform: translateX(-50%); 
-    z-index: 10; display: flex; gap: 8px; width: min(94vw, 440px); justify-content: center;
+    position: fixed; top: max(15px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); 
+    z-index: 10; display: flex; gap: 10px; width: min(94vw, 440px); justify-content: center;
   }
 
   #effect-buttons { 
-    position: fixed; 
-    top: max(60px, calc(env(safe-area-inset-top) + 52px)); 
-    left: 50%; transform: translateX(-50%); 
-    z-index: 11; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-    width: min(94vw, 440px);
+    position: fixed; top: max(70px, calc(env(safe-area-inset-top) + 65px)); left: 50%; transform: translateX(-50%); 
+    z-index: 11; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: min(94vw, 440px);
   }
+  .effect-btn { min-width: clamp(50px, 12vw, 65px); height: clamp(45px, 7vh, 55px); font-size: clamp(20px, 3.8vh, 26px); padding: 0; flex: 1; max-width: 80px; }
 
   #head-menu { 
-    position: fixed; 
-    bottom: max(12px, env(safe-area-inset-bottom)); 
-    left: 50%; transform: translateX(-50%); 
-    z-index: 10; width: min(94vw, 440px); 
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
+    position: fixed; bottom: max(15px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); 
+    z-index: 10; width: min(94vw, 440px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; 
   }
+  
+  #head-select { 
+    width: 100%; padding: clamp(8px, 1.5vh, 12px) 16px; 
+    font-size: clamp(14px, 3.8vw, 16px); text-align: center; text-align-last: center; 
+    cursor: pointer; appearance: none; font-weight: 700; letter-spacing: 0.05em;
+    min-height: clamp(42px, 7vh, 50px); outline: none;
+  }
+  #head-select option { background: #1a1a2e; color: #fff; }
 
   .bg-nav-btn {
     position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
-    background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(255, 255, 255, 0.3);
-    color: var(--text); width: 45px; height: 65px; display: flex; align-items: center; justify-content: center;
-    font-size: 22px; cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s, transform 0.1s;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    color: var(--text); width: 48px; height: 70px; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
   }
-  .bg-nav-btn:hover { background: rgba(255, 255, 255, 0.2); }
+  .bg-nav-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255,255,255,0.4); }
   .bg-nav-btn:active { transform: translateY(-50%) scale(0.9); }
-  #bg-prev { left: 8px; border-radius: 8px; }
-  #bg-next { right: 8px; border-radius: 8px; }
+  #bg-prev { left: 15px; border-radius: 12px; }
+  #bg-next { right: 15px; border-radius: 12px; }
 
-  #container3D canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
-
-  .glass { background: rgba(0, 0, 0, 0.85); border: 2px solid rgba(255, 255, 255, 0.3); color: var(--text); border-radius: 6px; }
-
-  .btn { 
-    padding: clamp(6px, 1.2vh, 10px) 16px; 
-    font-size: clamp(12px, 3.2vw, 15px); 
-    font-weight: 700; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; 
-    min-height: clamp(36px, 6vh, 46px); 
+  /* --- MODERN LOADING BUTTON ANIMATION (HELLBLAU) --- */
+  #loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; pointer-events: none; color: var(--text); font-size: 14px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; background: rgba(4, 5, 10, 0.85); backdrop-filter: blur(5px); }
+  #loading.show { display: flex; animation: fadeIn 0.3s ease; }
+  
+  .neon-loader {
+    width: 65px; height: 65px; border-radius: 50%;
+    border: 3px solid transparent; 
+    border-top-color: var(--accent); 
+    border-bottom-color: var(--accent); /* Nur Hellblau */
+    animation: spinLoader 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite, glowPulse 2s linear infinite;
+    box-shadow: 0 0 20px rgba(143, 217, 251, 0.4), inset 0 0 20px rgba(143, 217, 251, 0.4);
   }
-  .btn:hover { background: rgba(255, 255, 255, 0.2); }
-
-  #head-select { 
-    width: 100%; 
-    padding: clamp(6px, 1.2vh, 10px) 16px; 
-    font-size: clamp(13px, 3.8vw, 16px); text-align: center; text-align-last: center; 
-    cursor: pointer; appearance: none; font-weight: bold; 
-    min-height: clamp(38px, 7vh, 48px); 
+  @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes glowPulse { 
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(143, 217, 251, 0.8)); } 
+    50% { filter: drop-shadow(0 0 18px rgba(143, 217, 251, 0.9)); } 
   }
-  #head-select option { color: #111; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  .effect-btn { 
-    min-width: clamp(48px, 10vw, 60px); height: clamp(40px, 7vh, 50px); 
-    font-size: clamp(18px, 3.8vh, 24px); line-height: 1; 
-    display: flex; align-items: center; justify-content: center; padding: 0; flex: 1; max-width: 75px;
-  }
+  /* --- EFFEKTE --- */
+  #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; filter: blur(10px); }
+  #rainbow-aura.active { display: block; animation: rainbowAura 0.6s linear infinite; }
+  @keyframes rainbowAura { from { transform: translate(-50%, -50%) rotate(0deg) scale(0.8); opacity: 0.05; } 50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); opacity: 0.2; } to { transform: translate(-50%, -50%) rotate(360deg) scale(0.8); opacity: 0.05; } }
 
-  #loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; }
-  #loading.show { display: flex; }
-  .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* EFFEKTE */
-  #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
-  #rainbow-aura.active { display: block; animation: rainbowAura 0.55s linear infinite; }
-  @keyframes rainbowAura { from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; } 50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; } to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; } }
-
-  /* SHMUP MULTI-LASER */
   .shmup-center { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
-  .shmup-beam { position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0; }
+  .shmup-beam { position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0; will-change: transform, opacity; }
   .shmup-beam.right { left: 0; transform-origin: left center; background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireRight var(--speed) linear infinite; animation-delay: var(--delay); }
   .shmup-beam.left { right: 0; transform-origin: right center; background: linear-gradient(-90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireLeft var(--speed) linear infinite; animation-delay: var(--delay); }
   @keyframes fireRight { 0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
   @keyframes fireLeft { 0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
 
-  /* EMOJIS */
   #heart-emojis.active, #rainbow-emojis.active { display: block; }
   .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
   @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
 
-  #disclaimer-btn { 
-    background: none; border: none; font-size: 20px; cursor: pointer; 
-    opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
-    padding: 2px 8px; filter: grayscale(100%); 
-  }
+  /* --- MODALS & DISCLAIMER --- */
+  #disclaimer-btn { background: none; border: none; font-size: 22px; cursor: pointer; opacity: 0.4; transition: all 0.2s; padding: 2px 8px; filter: grayscale(100%); }
   #disclaimer-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
 
-  #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
-  #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
+  #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 30px; text-align: center; background: rgba(10, 12, 20, 0.95); border: 1px solid var(--glass-border); border-radius: 12px; box-shadow: 0 15px 50px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+  #disclaimer-modal p { margin: 0 0 25px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
   @media (max-width: 600px) { 
-    #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
-    #bg-next { right: 0; border-radius: 8px 0 0 8px; width: 35px; height: 60px; font-size: 20px;} 
+    #bg-prev { left: 0; border-radius: 0 10px 10px 0; width: 40px; height: 65px; border-left: none;}
+    #bg-next { right: 0; border-radius: 10px 0 0 10px; width: 40px; height: 65px; border-right: none;} 
   }
 </style>
 </head>
@@ -278,7 +284,6 @@
         <button id="btn-skip-heads" class="intro-skip-btn">Skip to 3D Heads</button>
         <button id="btn-skip-main" class="intro-skip-btn">Skip to Main Page</button>
       </div>
-
     </div>
     <div id="lhu-intro-word">
       <span>LIGHTNING</span>
@@ -314,7 +319,7 @@
 
   <p class="sr-only">Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.</p>
 
-  <div id="loading"><div class="spinner"></div><span class="loading-text">lädt</span></div>
+  <div id="loading"><div class="neon-loader"></div><span class="loading-text">lädt</span></div>
 
   <!-- UI WRAPPER -->
   <div id="ui-wrapper">
@@ -334,215 +339,181 @@
   </div>
 
   <div id="disclaimer-modal">
-    <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
+    <div style="font-size: 36px; margin-bottom: 15px;">⚠️</div>
     <p id="disclaimer-text">Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.</p>
-    <button id="close-disclaimer" class="btn glass">OK</button>
+    <button id="close-disclaimer" class="btn glass" style="width: 100%;">Verstanden</button>
   </div>
 
-<script>
-  /* 1. ULTRA-PERFORMANCE 3-THEME ENGINE + OVERRIDE */
-  const mcanvas = document.getElementById("matrix-bg");
-  const mctx = mcanvas.getContext("2d");
-
-  const DOWNSCALE = 0.5;
-  let W, H, cx, cy;
-  let currentBgIndex = 0;
-
-  window.isTrafficConePhase = false;
-
-  let stars = [];
-
-  const LHU_WORDS = ["AETHER", "VEDRAN", "DNA 🧬", "BLITZ ⚡", "INTELLIGENCE", "ART", "SOUND", "PERSONA", "SCIENCE", "UNICORN", "ROBOT", "IMAGINATION", "AESTHETICS"];
-  let currentWordIdx = 0;
-  let wordTimer = 0;
-
-  const ballCanvases = [];
-  const ballColors = [ ['#fff', '#ff3333', '#390000'], ['#fff', '#ffd400', '#3e3000'], ['#fff', '#33bbff', '#00162f'] ];
-  ballColors.forEach(c => {
-    let cv = document.createElement('canvas'); cv.width = 64; cv.height = 64;
-    let ctx = cv.getContext('2d');
-    let g = ctx.createRadialGradient(24, 24, 4, 32, 32, 30);
-    g.addColorStop(0, c[0]); g.addColorStop(0.3, c[1]); g.addColorStop(1, c[2]);
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(32,32,30,0,Math.PI*2); ctx.fill();
-    ballCanvases.push(cv);
-  });
-  let balls = [];
-
-  const coneCanvas = document.createElement('canvas');
-  coneCanvas.width = 64; coneCanvas.height = 64;
-  const cctx = coneCanvas.getContext('2d');
-  cctx.font = '50px sans-serif';
-  cctx.textAlign = 'center';
-  cctx.textBaseline = 'middle';
-  cctx.fillText('🚧', 32, 32);
-
-  let conesArr = [];
-
-  function initTheme() {
-    W = mcanvas.width = Math.floor(innerWidth * DOWNSCALE);
-    H = mcanvas.height = Math.floor(innerHeight * DOWNSCALE);
-    cx = W / 2; cy = H / 2;
-
-    stars = [];
-    for(let i=0; i<35; i++) stars.push({ x: (Math.random()-0.5)*W*2, y: (Math.random()-0.5)*H*2, z: Math.random()*1000 + 1, s: Math.random()*3+2 });
-
-    balls = [];
-    for(let i=0; i<18; i++) balls.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*3, vy: (Math.random()-0.5)*3, s: Math.random()*35 + 20, img: ballCanvases[Math.floor(Math.random()*ballCanvases.length)] });
-
-    conesArr = [];
-    for(let i=0; i<25; i++) conesArr.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*30 + 30, speed: Math.random()*3 + 2 });
-  }
-
-  window.setMatrixTheme = function(index) { currentBgIndex = index; initTheme(); };
-  document.getElementById("bg-prev").addEventListener("click", () => { currentBgIndex = (currentBgIndex - 1 + 3) % 3; window.setMatrixTheme(currentBgIndex); });
-  document.getElementById("bg-next").addEventListener("click", () => { currentBgIndex = (currentBgIndex + 1) % 3; window.setMatrixTheme(currentBgIndex); });
-
-  function drawBg() {
-    mctx.fillStyle = "#04050a";
-    mctx.fillRect(0, 0, W, H);
-
-    if (window.isTrafficConePhase) {
-      for (let c of conesArr) {
-        c.y += c.speed;
-        if (c.y > H + 50) { c.y = -50; c.x = Math.random() * W; }
-        mctx.drawImage(coneCanvas, c.x, c.y, c.s, c.s);
-      }
-    } else {
-      if (currentBgIndex === 0) {
-        mctx.fillStyle = "#fff"; mctx.textAlign = "center"; mctx.textBaseline = "middle";
-        for (let p of stars) {
-          p.z -= p.s;
-          if (p.z <= 1) { p.x = (Math.random()-0.5)*W*2; p.y = (Math.random()-0.5)*H*2; p.z = 1000; continue; }
-          let scale = 300 / p.z;
-          let px = cx + p.x * scale; let py = cy + p.y * scale;
-          if (px < -50 || px > W + 50 || py < -50 || py > H + 50) { p.z = 1000; continue; }
-          let size = Math.max(2, 25 * scale); mctx.font = `bold ${size}px monospace`; mctx.fillText("7", px, py);
-        }
-      } else if (currentBgIndex === 1) {
-        wordTimer++;
-        if(wordTimer > 200) { currentWordIdx = (currentWordIdx + 1) % LHU_WORDS.length; wordTimer = 0; }
-        const word = LHU_WORDS[currentWordIdx]; const fontSize = Math.max(30, W / 10);
-        mctx.font = `bold ${fontSize}px "Impact", sans-serif`; mctx.textAlign = "center"; mctx.textBaseline = "middle";
-        let positions = [H * 0.15, H * 0.50, H * 0.85]; let t = Date.now() * 0.0015; 
-        for (let i = 0; i < 3; i++) {
-          let py = positions[i]; let wobbleX = Math.sin(t * 2 + i) * 15; let glitch = Math.sin(t * 4 + i) * 5;   
-          mctx.globalAlpha = 0.8;
-          mctx.fillStyle = "#00ffff"; mctx.fillText(word, cx + wobbleX - glitch, py);
-          mctx.fillStyle = "#ff00ff"; mctx.fillText(word, cx + wobbleX + glitch, py);
-          mctx.globalAlpha = 1.0;
-          mctx.fillStyle = "#ffffff"; mctx.fillText(word, cx + wobbleX, py);
-        }
-      } else if (currentBgIndex === 2) {
-        for (let p of balls) {
-          p.x += p.vx; p.y += p.vy;
-          if (p.x < 0 || p.x > W) p.vx *= -1;
-          if (p.y < 0 || p.y > H) p.vy *= -1;
-          mctx.drawImage(p.img, p.x - p.s/2, p.y - p.s/2, p.s, p.s);
-        }
-      }
-    }
-    requestAnimationFrame(drawBg);
-  }
-
-  initTheme(); drawBg();
-  window.addEventListener("resize", initTheme);
-</script>
-
 <script type="module">
-  /* 2. THREE.JS & APP LOGIC */
   import * as THREE from "https://esm.sh/three@0.160.0";
   import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
   import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
   import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
 
-  const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
-
-  const translations = {
-    en: { playMusic: "Play Music", stopMusic: "Stop Music", mainPage: "Main Page", introHint: "Press a button", loading: "loading" },
-    de: { playMusic: "Musik abspielen", stopMusic: "Musik stoppen", mainPage: "Hauptseite", introHint: "Drücke einen Knopf", loading: "lädt" }
+  /* =========================================================================
+     1. CENTRAL STATE & CONFIG
+     ========================================================================= */
+  const AppState = {
+    currentBgIndex: 0,
+    isTrafficConePhase: false,
+    musicOn: false,
+    activeEffect: null, // 'rizz', 'rainbow', 'wisdom', null
+    isTyping: false,
+    isIntroActive: true
   };
-  const t = isGerman ? translations.de : translations.en;
 
-  document.getElementById("music-toggle").textContent = t.playMusic;
-  document.getElementById("navigate-to-main").textContent = t.mainPage;
-  document.getElementById("lhu-intro-hint").textContent = t.introHint;
-  document.querySelector(".loading-text").textContent = t.loading;
-
-  const dailyWisdom = {
-    en: [
-      "The early bird catches the worm. Because the worm has no basic radar system.",
-      "Blood is thicker than water so vampires must be obese.",
-      "get more comfortable... become furniture",
-      "your bones called... they are calcium",
-      "What doesn't kill you makes you stronger. That's a lie invented by bears so you fight them unarmed.",
-      "dont move: now your shadow is unemployed",
-      "Give your meat a good old slap if you are not a robot",
-      "Forgive me I learn daily... that you massage dead cows with salt and fire, just to turn them into poop later",
-      "but who is gay... but who asked first",
-      "Your problem has a solution. They are divorced.",
-      "I walk with God, but he usually takes the bus. How else would the bus exist except through God's love only (and human craftsmanship obviously)...",
-      "Doctor said: You did not forget your password. That's dehydration from explosive diarrhea.",
-      "If you can't sleep, read your local hobo a good night story while you invite them to a pyjama party.",
-      "One apple a day keeps the doctor away if you throw it fast enough at him...",
-      "You look like you don't have it all together is what you say to me huh Very interesting You seem like someone who could be nice to other people but you are not. Looks can be deceiving",
-      "If man today can borrow flora, woman tomorrow will not him give choira.",
-      "Ra, ra, Rasputin, unstoppable goon machine, his pp drinks gasoline,burns now limp and mean. Canceled...",
-      "Please support living artists. Vienna markets dead legends while living artists struggle for attention. Mozart, Zombie Falco, and Manner wafers: Is that the full extent of your cultural imagination?",
-      "If a man says viruses are not your Friends is this man the antivirus."
+  const Config = {
+    isGerman: (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de'),
+    MODELS: [
+      { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
+      { label: "uniturnoeyeballhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/uniturnoeyeballhorn.glb" },
+      { label: "duckybulbywaterhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/duckybulbywaterhorn.glb" },
+      { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/obesewarrior.glb" },
+      { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" },
+      { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" },
+      { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" }
     ],
-    de: [
-      "Der frühe Vogel fängt den Wurm. Weil der Wurm kein grundlegendes Radarsystem hat.",
-      "Blut ist dicker als Wasser, also müssen Vampire fettleibig sein.",
-      "mach es dir bequemer... werde zu möbeln",
-      "deine knochen haben angerufen... sie sind kalzium",
-      "Was dich nicht umbringt, macht dich stärker. Das ist eine Lüge, die von Bären erfunden wurde, damit du unbewaffnet gegen sie antrittst.",
-      "beweg dich nicht: jetzt ist dein schatten arbeitslos",
-      "gib deinem fleisch einen guten alten klaps, wenn du kein roboter bist",
-      "vergib mir, ich lerne täglich... dass ihr tote kühe mit salz und feuer massiert, nur um sie später in kacke zu verwandeln",
-      "aber wer ist gay... aber wer hat zuerst gefragt",
-      "Dein Problem hat eine Lösung. Sie sind geschieden.",
-      "Ich gehe mit Gott, aber er nimmt meistens den Bus. Wie sonst würde der Bus existieren, außer allein durch Gottes Liebe (und menschliche Handwerkskunst offensichtlich)...",
-      "Doktor sagt: Du hast dein Passwort nicht vergessen. Das ist Dehydrierung durch explosiven Durchfall.",
-      "Wenn du nicht schlafen kannst, lies dem örtlichen Landstreicher eine Gute-Nacht-Geschichte vor, während du ihn zu einer Pyjamaparty einlädst.",
-      "Ein Apfel am Tag hält den Arzt fern, wenn du ihn schnell genug auf ihn wirfst...",
-      "Du siehst aus, als hättest du dein Leben nicht im Griff, sagst du also zu mir, huh Sehr interessant Du wirkst wie jemand, der nett zu anderen Menschen sein könnte, aber du bist es nicht. Der Schein kann trügen",
-      "Wenn du heute kann Blumen borgen, dann Frau morgen nicht dein Pipi entsorgen.",
-      "Ra, ra, Rasputin, unbändige Lust-machine, sein Bart hat mehr erlebt als die Kantine hat gebebt.",
-      "Bitte unterstützt lebende Künstler. Wien vermarktet tote Legenden, während lebende Künstler um Aufmerksamkeit kämpfen. Mozart, Zombie-Falco und Mannerschnitten: Ist das eure ganze kulturelle Fantasie?",
-      "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..."
-    ]
+    translations: {
+      en: { playMusic: "Play Music", stopMusic: "Stop Music", mainPage: "Main Page", introHint: "Press a button", loading: "loading", disclaimer: "These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity." },
+      de: { playMusic: "Musik abspielen", stopMusic: "Musik stoppen", mainPage: "Hauptseite", introHint: "Drücke einen Knopf", loading: "lädt", disclaimer: "Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten." }
+    }
   };
 
-  let availableWisdomIndices = [];
-  let currentWisdomLang = '';
+  const t = Config.isGerman ? Config.translations.de : Config.translations.en;
 
-  let isTyping = false; 
-
-  const disclaimerTexts = {
-    de: "Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.",
-    en: "These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity."
+  // DOM Cache
+  const dom = {
+    matrixBg: document.getElementById("matrix-bg"),
+    wisdomDisplay: document.getElementById("wisdom-display"),
+    musicToggle: document.getElementById("music-toggle"),
+    navigateToMain: document.getElementById("navigate-to-main"),
+    lhuIntroHint: document.getElementById("lhu-intro-hint"),
+    loadingEl: document.getElementById("loading"),
+    loadingText: document.querySelector(".loading-text"),
+    disclaimerText: document.getElementById("disclaimer-text"),
+    disclaimerBtn: document.getElementById("disclaimer-btn"),
+    disclaimerModal: document.getElementById("disclaimer-modal"),
+    closeDisclaimer: document.getElementById("close-disclaimer"),
+    heartEmojis: document.getElementById("heart-emojis"),
+    rainbowEmojis: document.getElementById("rainbow-emojis"),
+    rainbowAura: document.getElementById("rainbow-aura"),
+    shmupContainer: document.getElementById("shmup-container"),
+    headSelect: document.getElementById("head-select"),
+    audioMusic: document.getElementById("background-music"),
+    audioWolf: document.getElementById("snd-wolf"),
+    audioRizz: document.getElementById("snd-rizz"),
+    audioRainbow: document.getElementById("snd-rainbow")
   };
-  document.getElementById("disclaimer-text").textContent = isGerman ? disclaimerTexts.de : disclaimerTexts.en;
-  document.getElementById("disclaimer-btn").onclick = () => { document.getElementById("disclaimer-modal").style.display = "block"; };
-  document.getElementById("close-disclaimer").onclick = () => { document.getElementById("disclaimer-modal").style.display = "none"; };
 
-  const MODELS = [
-    { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
-    { label: "uniturnoeyeballhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/uniturnoeyeballhorn.glb" },
-    { label: "duckybulbywaterhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/duckybulbywaterhorn.glb" },
-    { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/obesewarrior.glb" },
-    { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" },
-    { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" },
-    { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" }
-  ];
+  dom.musicToggle.textContent = t.playMusic;
+  dom.navigateToMain.textContent = t.mainPage;
+  dom.lhuIntroHint.textContent = t.introHint;
+  dom.loadingText.textContent = t.loading;
+  dom.disclaimerText.textContent = t.disclaimer;
 
-  const loadingEl = document.getElementById("loading");
-  function startLoading() { loadingEl.classList.add("show"); }
-  function stopLoading() { loadingEl.classList.remove("show"); }
+  dom.disclaimerBtn.onclick = () => { dom.disclaimerModal.style.display = "block"; };
+  dom.closeDisclaimer.onclick = () => { dom.disclaimerModal.style.display = "none"; };
+  dom.navigateToMain.onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html"; };
 
-  // PS2 WISHY-WASHY PIXEL LOOK RENDERER
+  function setLoader(state) {
+    if (state) dom.loadingEl.classList.add("show");
+    else dom.loadingEl.classList.remove("show");
+  }
+
+  /* =========================================================================
+     2. BACKGROUND ENGINE (Matrix/Balls/Words)
+     ========================================================================= */
+  const BgEngine = (() => {
+    const canvas = dom.matrixBg;
+    const ctx = canvas.getContext("2d");
+    const DOWNSCALE = 0.5;
+    let W, H, cx, cy, rafId;
+    let stars = [], balls = [], conesArr = [];
+    const LHU_WORDS = ["AETHER", "VEDRAN", "DNA 🧬", "BLITZ ⚡", "INTELLIGENCE", "ART", "SOUND", "PERSONA", "SCIENCE", "UNICORN", "ROBOT", "IMAGINATION", "AESTHETICS"];
+    let currentWordIdx = 0, wordTimer = 0;
+
+    const ballCanvases = [];
+    const ballColors = [ ['#fff', '#ff3333', '#390000'], ['#fff', '#ffd400', '#3e3000'], ['#fff', '#33bbff', '#00162f'] ];
+    ballColors.forEach(c => {
+      let cv = document.createElement('canvas'); cv.width = 64; cv.height = 64;
+      let x = cv.getContext('2d');
+      let g = x.createRadialGradient(24, 24, 4, 32, 32, 30);
+      g.addColorStop(0, c[0]); g.addColorStop(0.3, c[1]); g.addColorStop(1, c[2]);
+      x.fillStyle = g; x.beginPath(); x.arc(32,32,30,0,Math.PI*2); x.fill();
+      ballCanvases.push(cv);
+    });
+
+    const coneCanvas = document.createElement('canvas'); coneCanvas.width = 64; coneCanvas.height = 64;
+    const cctx = coneCanvas.getContext('2d'); cctx.font = '50px sans-serif'; cctx.textAlign = 'center'; cctx.textBaseline = 'middle'; cctx.fillText('🚧', 32, 32);
+
+    function init() {
+      W = canvas.width = Math.floor(innerWidth * DOWNSCALE);
+      H = canvas.height = Math.floor(innerHeight * DOWNSCALE);
+      cx = W / 2; cy = H / 2;
+      stars = Array.from({length: 35}, () => ({ x: (Math.random()-0.5)*W*2, y: (Math.random()-0.5)*H*2, z: Math.random()*1000 + 1, s: Math.random()*3+2 }));
+      balls = Array.from({length: 18}, () => ({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*3, vy: (Math.random()-0.5)*3, s: Math.random()*35 + 20, img: ballCanvases[Math.floor(Math.random()*ballCanvases.length)] }));
+      conesArr = Array.from({length: 25}, () => ({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*30 + 30, speed: Math.random()*3 + 2 }));
+    }
+
+    function draw() {
+      if (AppState.isIntroActive) {
+        rafId = requestAnimationFrame(draw);
+        return;
+      }
+      ctx.fillStyle = "#04050a"; ctx.fillRect(0, 0, W, H);
+
+      if (AppState.isTrafficConePhase) {
+        for (let c of conesArr) {
+          c.y += c.speed; if (c.y > H + 50) { c.y = -50; c.x = Math.random() * W; }
+          ctx.drawImage(coneCanvas, c.x, c.y, c.s, c.s);
+        }
+      } else {
+        if (AppState.currentBgIndex === 0) {
+          ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          for (let p of stars) {
+            p.z -= p.s; if (p.z <= 1) { p.x = (Math.random()-0.5)*W*2; p.y = (Math.random()-0.5)*H*2; p.z = 1000; continue; }
+            let scale = 300 / p.z; let px = cx + p.x * scale; let py = cy + p.y * scale;
+            if (px < -50 || px > W + 50 || py < -50 || py > H + 50) { p.z = 1000; continue; }
+            ctx.font = `bold ${Math.max(2, 25 * scale)}px monospace`; ctx.fillText("7", px, py);
+          }
+        } else if (AppState.currentBgIndex === 1) {
+          wordTimer++; if(wordTimer > 200) { currentWordIdx = (currentWordIdx + 1) % LHU_WORDS.length; wordTimer = 0; }
+          const word = LHU_WORDS[currentWordIdx]; const fontSize = Math.max(30, W / 10);
+          ctx.font = `bold ${fontSize}px "Impact", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          let positions = [H * 0.15, H * 0.50, H * 0.85]; let tTime = Date.now() * 0.0015; 
+          for (let i = 0; i < 3; i++) {
+            let py = positions[i]; let wobbleX = Math.sin(tTime * 2 + i) * 15; let glitch = Math.sin(tTime * 4 + i) * 5;   
+            ctx.globalAlpha = 0.8;
+            ctx.fillStyle = "#00ffff"; ctx.fillText(word, cx + wobbleX - glitch, py);
+            ctx.fillStyle = "#ff00ff"; ctx.fillText(word, cx + wobbleX + glitch, py);
+            ctx.globalAlpha = 1.0; ctx.fillStyle = "#ffffff"; ctx.fillText(word, cx + wobbleX, py);
+          }
+        } else if (AppState.currentBgIndex === 2) {
+          for (let p of balls) {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+            ctx.drawImage(p.img, p.x - p.s/2, p.y - p.s/2, p.s, p.s);
+          }
+        }
+      }
+      rafId = requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("resize", init);
+    init(); draw();
+    return { setTheme: (idx) => { AppState.currentBgIndex = idx; init(); } };
+  })();
+
+  document.getElementById("bg-prev").addEventListener("click", () => BgEngine.setTheme((AppState.currentBgIndex - 1 + 3) % 3));
+  document.getElementById("bg-next").addEventListener("click", () => BgEngine.setTheme((AppState.currentBgIndex + 1) % 3));
+
+  /* =========================================================================
+     3. THREE.JS ENGINE & AGGRESSIVE MEMORY MANAGEMENT (Fix für Crash)
+     ========================================================================= */
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); 
+  camera.position.set(2.6, 0, 2.6);
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); 
   renderer.setPixelRatio(0.6); 
@@ -551,305 +522,292 @@
   document.getElementById("container3D").appendChild(renderer.domElement);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-  const key = new THREE.DirectionalLight(0xffffff, 0.8); key.position.set(5, 5, 5); scene.add(key);
-  const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 5); scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(-3, 5, -5); scene.add(rim);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 0.8); keyLight.position.set(5, 5, 5); scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xffffff, 1.2); fillLight.position.set(-5, 2, 5); scene.add(fillLight);
+  const rimLight = new THREE.DirectionalLight(0xffffff, 0.7); rimLight.position.set(-3, 5, -5); scene.add(rimLight);
 
   const dracoLoader = new DRACOLoader(); dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
   const loader = new GLTFLoader(); loader.setDRACOLoader(dracoLoader);
 
-  const hitEnterSlot = document.getElementById("lhu-image-slot");
-  const hitEnterScene = new THREE.Scene();
-  const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+  let mainObject = null, mainMixer = null; 
+  const clock = new THREE.Clock();
+  const controls = new OrbitControls(camera, renderer.domElement); 
+  controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
 
-  const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
-  hitEnterRenderer.setPixelRatio(0.6); 
-  hitEnterRenderer.setClearColor(0x000000, 0); 
-  hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
-  hitEnterSlot.appendChild(hitEnterRenderer.domElement);
-
-  hitEnterScene.add(new THREE.AmbientLight(0xffffff, 2.0)); hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.8));
-  const hitKey = new THREE.DirectionalLight(0xffffff, 3.0); hitKey.position.set(3, 5, 6); hitEnterScene.add(hitKey);
-  const hitFill = new THREE.DirectionalLight(0xaac8ff, 1.8); hitFill.position.set(-5, 2, 4); hitEnterScene.add(hitFill);
-  const hitRim = new THREE.DirectionalLight(0xffffff, 2.2); hitRim.position.set(0, 3, -5); hitEnterScene.add(hitRim);
-
-  let hitEnterObject = null, hitEnterMixer = null;
-  let hitEnterEmissiveMats = [];
-
-  function fitHitEnterModel(model) {
-    const box = new THREE.Box3().setFromObject(model); const center = box.getCenter(new THREE.Vector3()); const size = box.getSize(new THREE.Vector3()); const maxSize = Math.max(size.x, size.y, size.z, 0.001);
-    model.position.sub(center); model.position.y += size.y * 0.02;
-    const fovRad = THREE.MathUtils.degToRad(hitEnterCamera.fov); const distance = (maxSize * 0.62) / Math.tan(fovRad / 2);
-    hitEnterCamera.position.set(0, maxSize * 0.08, Math.max(distance, 0.35)); hitEnterCamera.lookAt(0, size.y * 0.02, 0); hitEnterCamera.near = Math.max(0.01, maxSize / 100); hitEnterCamera.far = Math.max(10, maxSize * 20); hitEnterCamera.updateProjectionMatrix();
+  // VERHINDERT "TOTES GESICHT" (Zerstört alle Texturen beim Modellwechsel)
+  function disposeHierarchy(node) {
+    for (let i = node.children.length - 1; i >= 0; i--) disposeHierarchy(node.children[i]);
+    if (node.isMesh) {
+      if (node.geometry) node.geometry.dispose();
+      if (node.material) {
+        const mats = Array.isArray(node.material) ? node.material : [node.material];
+        mats.forEach(m => {
+          m.dispose();
+          for (const key in m) { if (m[key] && m[key].isTexture) m[key].dispose(); }
+        });
+      }
+    }
   }
 
-  loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hitenter.glb", (g) => {
-    hitEnterObject = g.scene;
-    hitEnterObject.traverse((child) => {
-      if (!child.isMesh || !child.material) return;
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((mat) => { 
-        if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5; 
-        if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58; 
-        if ("emissive" in mat) { 
-          mat.emissive.setRGB(0.055, 0.055, 0.055); 
-          mat.emissiveIntensity = 0.35; 
-          hitEnterEmissiveMats.push({ mat, origCol: mat.emissive.clone(), origInt: mat.emissiveIntensity });
-        } 
-      });
-    });
-    hitEnterScene.add(hitEnterObject); fitHitEnterModel(hitEnterObject);
-    if (g.animations.length) { hitEnterMixer = new THREE.AnimationMixer(hitEnterObject); g.animations.forEach(clip => hitEnterMixer.clipAction(clip).play()); }
-  });
-
-  const hitEnterResizeObserver = new ResizeObserver(() => {
-    const rect = hitEnterSlot.getBoundingClientRect(); const w = Math.max(1, Math.floor(rect.width)); const h = Math.max(1, Math.floor(rect.height));
-    hitEnterRenderer.setSize(w, h, false); hitEnterCamera.aspect = w / h; hitEnterCamera.updateProjectionMatrix();
-  });
-  hitEnterResizeObserver.observe(hitEnterSlot);
-
-  let object = null, mixer = null; const clock = new THREE.Clock();
-
   function loadHead(url) {
-    startLoading(); 
-    if (object) { scene.remove(object); object = null; } 
-    if (mixer) { mixer.stopAllAction(); mixer = null; }
+    setLoader(true); 
+    if (mainObject) { 
+      disposeHierarchy(mainObject);
+      scene.remove(mainObject); 
+      mainObject = null; 
+    } 
+    if (mainMixer) { mainMixer.stopAllAction(); mainMixer = null; }
 
-    loader.load(
-      url, 
-      (g) => { 
-        object = g.scene; 
-        scene.add(object); 
+    loader.load(url, (g) => { 
+        mainObject = g.scene; 
+        scene.add(mainObject); 
 
-        object.userData.emissiveMats = [];
-        object.traverse((child) => {
+        mainObject.userData.emissiveMats = [];
+        mainObject.traverse((child) => {
             if (child.isMesh && child.material) {
                 const mats = Array.isArray(child.material) ? child.material : [child.material];
                 mats.forEach(m => {
                     if (m.emissive) {
                         m.userData.origE = m.emissive.clone();
                         m.userData.origI = m.emissiveIntensity !== undefined ? m.emissiveIntensity : 1;
-                        object.userData.emissiveMats.push(m);
+                        mainObject.userData.emissiveMats.push(m);
                     }
                 });
             }
         });
 
         if (g.animations.length) { 
-            mixer = new THREE.AnimationMixer(object); 
-            g.animations.forEach(clip => mixer.clipAction(clip).play()); 
+            mainMixer = new THREE.AnimationMixer(mainObject); 
+            g.animations.forEach(clip => mainMixer.clipAction(clip).play()); 
         } 
-        stopLoading(); 
+        setLoader(false); 
       },
       undefined,
       (error) => {
-        console.error("Fehler beim Laden von " + url + ":", error);
-        stopLoading();
-        alert("Fehler beim Laden des 3D-Modells. Bitte drücke F12 und prüfe die Konsole.");
+        console.error("Ladefehler:", error);
+        setLoader(false);
       }
     );
   }
 
-  const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
+  Config.MODELS.forEach(m => { const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; dom.headSelect.appendChild(opt); });
+  dom.headSelect.addEventListener("change", (e) => loadHead(e.target.value)); 
+  loadHead(Config.MODELS[0].url);
 
-  let musicOn = false; const music = document.getElementById("background-music");
-  document.getElementById("music-toggle").onclick = () => { 
-    musicOn = !musicOn; 
-    musicOn ? music.play().catch(()=>{}) : music.pause(); 
-    document.getElementById("music-toggle").textContent = musicOn ? t.stopMusic : t.playMusic; 
-  };
-  document.getElementById("navigate-to-main").onclick = () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html"; };
+  /* --- INTRO SCENE (Hit Enter Head) --- */
+  const hitEnterSlot = document.getElementById("lhu-image-slot");
+  const hitEnterScene = new THREE.Scene();
+  const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+  let hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+  hitEnterRenderer.setPixelRatio(0.6); hitEnterRenderer.setClearColor(0x000000, 0); hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
+  hitEnterSlot.appendChild(hitEnterRenderer.domElement);
 
-  let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
-  let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null; 
-  let rainbowMatStates = [];
+  hitEnterScene.add(new THREE.AmbientLight(0xffffff, 2.0)); hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.8));
+  const hKey = new THREE.DirectionalLight(0xffffff, 3.0); hKey.position.set(3, 5, 6); hitEnterScene.add(hKey);
+  const hFill = new THREE.DirectionalLight(0xaac8ff, 1.8); hFill.position.set(-5, 2, 4); hitEnterScene.add(hFill);
+  const hRim = new THREE.DirectionalLight(0xffffff, 2.2); hRim.position.set(0, 3, -5); hitEnterScene.add(hRim);
 
-  let wisdomActive = false; 
-  let typewriterInterval = null;
-  let wisdomFallbackTimeout = null;
-  let musicPlayTime = 0, musicPhase = 0;
+  let hitObject = null, hitMixer = null, hitEmissiveMats = [];
+  loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hitenter.glb", (g) => {
+    hitObject = g.scene;
+    hitObject.traverse((child) => {
+      if (!child.isMesh || !child.material) return;
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      mats.forEach((mat) => { 
+        if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5; 
+        if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58; 
+        if ("emissive" in mat) { 
+          mat.emissive.setRGB(0.055, 0.055, 0.055); mat.emissiveIntensity = 0.35; 
+          hitEmissiveMats.push({ mat, origCol: mat.emissive.clone(), origInt: mat.emissiveIntensity });
+        } 
+      });
+    });
+    const box = new THREE.Box3().setFromObject(hitObject); const size = box.getSize(new THREE.Vector3()); const center = box.getCenter(new THREE.Vector3()); const maxDim = Math.max(size.x, size.y, size.z, 0.001);
+    hitObject.position.sub(center); hitObject.position.y += size.y * 0.02;
+    const fovRad = THREE.MathUtils.degToRad(hitEnterCamera.fov); const distance = (maxDim * 0.62) / Math.tan(fovRad / 2);
+    hitEnterCamera.position.set(0, maxDim * 0.08, Math.max(distance, 0.35)); hitEnterCamera.lookAt(0, size.y * 0.02, 0); hitEnterCamera.near = Math.max(0.01, maxDim / 100); hitEnterCamera.far = Math.max(10, maxDim * 20); hitEnterCamera.updateProjectionMatrix();
+    
+    hitEnterScene.add(hitObject);
+    if (g.animations.length) { hitMixer = new THREE.AnimationMixer(hitObject); g.animations.forEach(c => hitMixer.clipAction(c).play()); }
+  });
 
-  let wasInPhase7 = false;
+  const hitResizeOb = new ResizeObserver(() => {
+    if (!hitEnterRenderer) return;
+    const rect = hitEnterSlot.getBoundingClientRect(); const w = Math.max(1, Math.floor(rect.width)); const h = Math.max(1, Math.floor(rect.height));
+    hitEnterRenderer.setSize(w, h, false); hitEnterCamera.aspect = w / h; hitEnterCamera.updateProjectionMatrix();
+  });
+  hitResizeOb.observe(hitEnterSlot);
 
+  /* =========================================================================
+     4. APP LOGIC & EFFECTS
+     ========================================================================= */
+  let musicPlayTime = 0, musicPhase = 0, wasInPhase7 = false;
+  
+  function toggleMusic() {
+    AppState.musicOn = !AppState.musicOn; 
+    if (AppState.musicOn) { dom.audioMusic.play().catch(err => { console.warn("Autoplay blockiert:", err); AppState.musicOn = false; }); } 
+    else { dom.audioMusic.pause(); }
+    dom.musicToggle.textContent = AppState.musicOn ? t.stopMusic : t.playMusic; 
+  }
+  dom.musicToggle.onclick = toggleMusic;
+  function resetAudio() { dom.audioMusic.pause(); AppState.musicOn = false; dom.musicToggle.textContent = t.playMusic; }
+
+  let camTween = null;
   function tweenCamera(toPos, toTarget, dur, onDone) {
-    camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone }; controls.enabled = false; controls.autoRotate = false;
+    camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone }; 
+    controls.enabled = false; controls.autoRotate = false;
   }
 
+  // --- RIZZ EFFECT ---
+  let gagStart = 0, gagBase = null, gagSize = new THREE.Vector3();
   document.getElementById("heart-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
-    gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
-    document.getElementById("matrix-bg").style.opacity = "0";
-    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
+    if (!mainObject || (AppState.activeEffect && AppState.activeEffect !== 'rizz')) return; 
+    AppState.activeEffect = 'rizz'; resetAudio();
+    gagStart = performance.now(); gagBase = mainObject.position.clone();
+    dom.matrixBg.style.opacity = "0";
+    
+    const box = new THREE.Box3().setFromObject(mainObject); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
     const eye = new THREE.Vector3(center.x, box.max.y - gagSize.y * 0.12, center.z + gagSize.z * 0.1);
     const closePos = eye.clone().add(new THREE.Vector3(gagSize.x * 0.25, gagSize.y * 0.02, gagSize.z * 0.55 + gagSize.length() * 0.35));
+    
     tweenCamera(closePos, eye, 650);
-    document.getElementById("heart-emojis").classList.add("active");
-    const sndWolf = document.getElementById("snd-wolf"); const sndRizz = document.getElementById("snd-rizz"); sndWolf.currentTime = 0; sndWolf.play().catch(()=>{}); sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; }; setTimeout(endGag, 9000);
+    dom.heartEmojis.classList.add("active");
+    
+    dom.audioWolf.currentTime = 0; dom.audioWolf.play().catch(()=>{}); 
+    dom.audioWolf.onended = () => { dom.audioRizz.currentTime = 0; dom.audioRizz.play().catch(endGag); dom.audioRizz.onended = endGag; }; 
+    setTimeout(endGag, 9000);
   };
-
   function endGag() {
-    if (gagBase) object.position.copy(gagBase); object.rotation.set(0,0,0); gagActive = false; document.getElementById("heart-emojis").classList.remove("active"); document.getElementById("matrix-bg").style.opacity = "1"; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    if (AppState.activeEffect !== 'rizz') return;
+    if (gagBase) mainObject.position.copy(gagBase); mainObject.rotation.set(0,0,0); 
+    AppState.activeEffect = null; dom.heartEmojis.classList.remove("active"); dom.matrixBg.style.opacity = "1"; 
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => { controls.autoRotate = true; controls.enabled = true; });
   }
 
+  // --- RAINBOW EFFECT ---
+  let rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null, rainbowMatStates = [];
   document.getElementById("rainbow-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
-    rainbowActive = true; rainbowStart = performance.now(); 
-    rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone(); rainbowBaseScale = object.scale.clone();
-    document.getElementById("matrix-bg").style.opacity = "0";
+    if (!mainObject || (AppState.activeEffect && AppState.activeEffect !== 'rainbow')) return; 
+    AppState.activeEffect = 'rainbow'; resetAudio();
+    rainbowStart = performance.now(); 
+    rainbowBaseRot = mainObject.rotation.clone(); rainbowBasePos = mainObject.position.clone(); rainbowBaseScale = mainObject.scale.clone();
+    dom.matrixBg.style.opacity = "0";
     rainbowMatStates = []; 
-    if(object.userData.emissiveMats) {
-        object.userData.emissiveMats.forEach(m => {
-            rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity });
-        });
-    }
-    document.getElementById("rainbow-aura").classList.add("active"); document.getElementById("rainbow-emojis").classList.add("active");
-    const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
-    const snd = document.getElementById("snd-rainbow"); snd.currentTime = 0; snd.play().catch(()=>{}); controls.enabled = false; controls.autoRotate = false;
+    if(mainObject.userData.emissiveMats) mainObject.userData.emissiveMats.forEach(m => rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }));
+    
+    dom.rainbowAura.classList.add("active"); dom.rainbowEmojis.classList.add("active");
+    const box = new THREE.Box3().setFromObject(mainObject); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); 
+    tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
+    
+    dom.audioRainbow.currentTime = 0; dom.audioRainbow.play().catch(()=>{}); 
+    controls.enabled = false; controls.autoRotate = false;
   };
-
   function endRainbow() {
-    rainbowActive = false; if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot); if (rainbowBasePos) object.position.copy(rainbowBasePos); if (rainbowBaseScale) object.scale.copy(rainbowBaseScale); rainbowBasePos = null; 
+    AppState.activeEffect = null; 
+    if (rainbowBaseRot) mainObject.rotation.copy(rainbowBaseRot); if (rainbowBasePos) mainObject.position.copy(rainbowBasePos); if (rainbowBaseScale) mainObject.scale.copy(rainbowBaseScale); 
+    rainbowBasePos = null; 
     rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); if (s.int !== undefined) s.mat.emissiveIntensity = s.int; }); 
-    document.getElementById("rainbow-aura").classList.remove("active"); document.getElementById("rainbow-emojis").classList.remove("active"); document.getElementById("shmup-container").style.display = "none"; document.getElementById("matrix-bg").style.opacity = "1"; 
-    const centerPoint = document.querySelector(".shmup-center"); if(centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
-    controls.enabled = true; controls.autoRotate = true; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+    dom.rainbowAura.classList.remove("active"); dom.rainbowEmojis.classList.remove("active"); dom.shmupContainer.style.display = "none"; dom.matrixBg.style.opacity = "1"; 
+    controls.enabled = true; controls.autoRotate = true; 
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
   }
 
+  // --- WISDOM EFFECT (FIX: Jetzt wieder skippbar) ---
+  const dailyWisdom = { 
+    en: [ "The early bird catches the worm. Because the worm has no basic radar system.", "Blood is thicker than water so vampires must be obese.", "get more comfortable... become furniture", "your bones called... they are calcium", "What doesn't kill you makes you stronger. That's a lie invented by bears so you fight them unarmed.", "dont move: now your shadow is unemployed", "Give your meat a good old slap if you are not a robot", "Forgive me I learn daily... that you massage dead cows with salt and fire, just to turn them into poop later", "but who is gay... but who asked first", "Your problem has a solution. They are divorced.", "I walk with God, but he usually takes the bus. How else would the bus exist except through God's love only (and human craftsmanship obviously)...", "Doctor said: You did not forget your password. That's dehydration from explosive diarrhea.", "If you can't sleep, read your local hobo a good night story while you invite them to a pyjama party.", "One apple a day keeps the doctor away if you throw it fast enough at him...", "You look like you don't have it all together is what you say to me huh Very interesting You seem like someone who could be nice to other people but you are not. Looks can be deceiving", "If man today can borrow flora, woman tomorrow will not him give choira.", "Ra, ra, Rasputin, unstoppable goon machine, his pp drinks gasoline,burns now limp and mean. Canceled...", "Please support living artists. Vienna markets dead legends while living artists struggle for attention. Mozart, Zombie Falco, and Manner wafers: Is that the full extent of your cultural imagination?", "If a man says viruses are not your Friends is this man the antivirus." ],
+    de: [ "Der frühe Vogel fängt den Wurm. Weil der Wurm kein grundlegendes Radarsystem hat.", "Blut ist dicker als Wasser, also müssen Vampire fettleibig sein.", "mach es dir bequemer... werde zu möbeln", "deine knochen haben angerufen... sie sind kalzium", "Was dich nicht umbringt, macht dich stärker. Das ist eine Lüge, die von Bären erfunden wurde, damit du unbewaffnet gegen sie antrittst.", "beweg dich nicht: jetzt ist dein schatten arbeitslos", "gib deinem fleisch einen guten alten klaps, wenn du kein roboter bist", "vergib mir, ich lerne täglich... dass ihr tote kühe mit salz und feuer massiert, nur um sie später in kacke zu verwandeln", "aber wer ist gay... aber wer hat zuerst gefragt", "Dein Problem hat eine Lösung. Sie sind geschieden.", "Ich gehe mit Gott, aber er nimmt meistens den Bus. Wie sonst würde der Bus existieren, außer allein durch Gottes Liebe (und menschliche Handwerkskunst offensichtlich)...", "Doktor sagt: Du hast dein Passwort nicht vergessen. Das ist Dehydrierung durch explosiven Durchfall.", "Wenn du nicht schlafen kannst, lies dem örtlichen Landstreicher eine Gute-Nacht-Geschichte vor, während du ihn zu einer Pyjamaparty einlädst.", "Ein Apfel am Tag hält den Arzt fern, wenn du ihn schnell genug auf ihn wirfst...", "Du siehst aus, als hättest du dein Leben nicht im Griff, sagst du also zu mir, huh Sehr interessant Du wirkst wie jemand, der nett zu anderen Menschen sein könnte, aber du bist es nicht. Der Schein kann trügen", "Wenn du heute kann Blumen borgen, dann Frau morgen nicht dein Pipi entsorgen.", "Ra, ra, Rasputin, unbändige Lust-machine, sein Bart hat mehr erlebt als die Kantine hat gebebt.", "Bitte unterstützt lebende Künstler. Wien vermarktet tote Legenden, während lebende Künstler um Aufmerksamkeit kämpfen. Mozart, Zombie-Falco und Mannerschnitten: Ist das eure ganze kulturelle Fantasie?", "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..." ]
+  };
+  let availableWisdomIndices = [], currentWisdomLang = '', typewriterInterval = null, wisdomFallbackTimeout = null;
   document.getElementById("wisdom-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive) return;
-
-    // Stoppe vorherige Instanzen (TextSchreiben, Sprachausgabe, Fallback-Timer)
-    if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
+    // Erlaubt das Klicken, WENN gerade Wisdom aktiv ist (überspringen!)
+    if (!mainObject || (AppState.activeEffect && AppState.activeEffect !== 'wisdom')) return;
+    
+    if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout); 
     if (typewriterInterval) clearInterval(typewriterInterval);
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    isTyping = false;
+    
+    AppState.activeEffect = 'wisdom'; AppState.isTyping = false; resetAudio();
+    dom.matrixBg.style.opacity = "0.2";
+    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 400, () => { controls.autoRotate = false; mainObject.rotation.set(0,0,0); });
 
-    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
-    wisdomActive = true;
+    const targetLang = Config.isGerman ? 'de' : 'en'; const activeWisdom = Config.isGerman ? dailyWisdom.de : dailyWisdom.en;
+    if (currentWisdomLang !== targetLang || availableWisdomIndices.length === 0) { currentWisdomLang = targetLang; availableWisdomIndices = activeWisdom.map((_, i) => i); }
+    const randomIndex = Math.floor(Math.random() * availableWisdomIndices.length); const phrase = activeWisdom[availableWisdomIndices.splice(randomIndex, 1)[0]];
 
-    document.getElementById("matrix-bg").style.opacity = "0.2";
-
-    tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 400, () => {
-        controls.autoRotate = false; object.rotation.set(0,0,0);
-    });
-
-    const targetLang = isGerman ? 'de' : 'en';
-    const activeWisdom = isGerman ? dailyWisdom.de : dailyWisdom.en;
-
-    if (currentWisdomLang !== targetLang || availableWisdomIndices.length === 0) {
-      currentWisdomLang = targetLang;
-      availableWisdomIndices = activeWisdom.map((_, index) => index);
-    }
-
-    const randomIndexWithinAvailable = Math.floor(Math.random() * availableWisdomIndices.length);
-    const selectedQuoteIndex = availableWisdomIndices[randomIndexWithinAvailable];
-    availableWisdomIndices.splice(randomIndexWithinAvailable, 1);
-
-    const phrase = activeWisdom[selectedQuoteIndex];
-    const textEl = document.getElementById("wisdom-display");
-
-    textEl.textContent = ""; 
+    const textEl = dom.wisdomDisplay; textEl.textContent = ""; textEl.classList.remove("wisdom-active"); 
+    void textEl.offsetWidth; // Restart CSS animation trick
     textEl.classList.add("wisdom-active");
-
-    let charIndex = 0; 
-    const typingSpeed = 15; // Sehr schnelles Tippen
-    const totalTypeTime = phrase.length * typingSpeed;
-
-    isTyping = true; 
-
+    
+    let charIndex = 0; const typingSpeed = 15; AppState.isTyping = true; 
+    
     typewriterInterval = setInterval(() => {
-        textEl.textContent += phrase.charAt(charIndex);
-        charIndex++;
-        if(charIndex >= phrase.length) {
-            clearInterval(typewriterInterval);
-            isTyping = false; 
-        }
+        textEl.textContent += phrase.charAt(charIndex++);
+        if(charIndex >= phrase.length) { clearInterval(typewriterInterval); AppState.isTyping = false; }
     }, typingSpeed);
 
     const cleanupWisdom = () => {
-        wisdomActive = false; isTyping = false; textEl.classList.remove("wisdom-active"); textEl.textContent = "";
-        document.getElementById("matrix-bg").style.opacity = "1"; controls.autoRotate = true;
+        AppState.activeEffect = null; AppState.isTyping = false; textEl.classList.remove("wisdom-active"); textEl.textContent = "";
+        dom.matrixBg.style.opacity = "1"; controls.autoRotate = true; controls.enabled = true;
     };
 
     if ('speechSynthesis' in window) {
-      const synth = window.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      window._lhuUtterance = utterance; 
-      utterance.lang = isGerman ? 'de-DE' : 'en-US'; 
-
-      const headIdx = document.getElementById("head-select").selectedIndex;
-
-      // Mittelmäßig schnelle Sprachausgabe (rate zwischen 1.25 und 1.45)
-      const profiles = [
-        { p: 0.1, r: 1.35 },
-        { p: 1.8, r: 1.45 },
-        { p: 0.4, r: 1.25 },
-        { p: 0.8, r: 1.35 },
-        { p: 1.5, r: 1.40 },
-        { p: 1.2, r: 1.30 },
-        { p: 0.9, r: 1.35 }
-      ];
-
-      const prof = profiles[headIdx % profiles.length];
-      utterance.pitch = prof.p;
-      utterance.rate = prof.r;
-
-      const voices = synth.getVoices();
-      const langVoices = voices.filter(v => v.lang.startsWith(isGerman ? "de" : "en"));
-
-      if (langVoices.length > 0) {
-          utterance.voice = langVoices[headIdx % langVoices.length];
-      }
-
-      utterance.onend = () => { isTyping = false; }; 
-
-      synth.speak(utterance);
+      const synth = window.speechSynthesis; const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = Config.isGerman ? 'de-DE' : 'en-US'; 
+      const profiles = [{p: 0.1, r: 1.35}, {p: 1.8, r: 1.45}, {p: 0.4, r: 1.25}, {p: 0.8, r: 1.35}, {p: 1.5, r: 1.40}, {p: 1.2, r: 1.30}, {p: 0.9, r: 1.35}];
+      const prof = profiles[dom.headSelect.selectedIndex % profiles.length];
+      utterance.pitch = prof.p; utterance.rate = prof.r;
+      const voices = synth.getVoices().filter(v => v.lang.startsWith(Config.isGerman ? "de" : "en"));
+      if (voices.length > 0) utterance.voice = voices[dom.headSelect.selectedIndex % voices.length];
+      utterance.onend = () => { AppState.isTyping = false; }; synth.speak(utterance);
     }
-
-    const speechEstTime = phrase.length * 80;
-    wisdomFallbackTimeout = setTimeout(cleanupWisdom, Math.max(totalTypeTime + 3000, speechEstTime + 2000));
+    wisdomFallbackTimeout = setTimeout(cleanupWisdom, Math.max(phrase.length * typingSpeed + 3000, phrase.length * 80 + 2000));
   };
 
   function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
     const container = document.getElementById(containerId);
     for (let i = 0; i < count; i++) {
-      const e = document.createElement("span"); e.className = "fast-rise-emoji"; e.textContent = char; e.style.setProperty("--left", `${Math.random() * 100}%`); e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`); e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`); e.style.setProperty("--delay", `${-Math.random() * 2}s`); e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`); container.appendChild(e);
+      const e = document.createElement("span"); e.className = "fast-rise-emoji"; e.textContent = char; 
+      e.style.setProperty("--left", `${Math.random() * 100}%`); e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`); 
+      e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`); e.style.setProperty("--delay", `${-Math.random() * 2}s`); e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`); 
+      container.appendChild(e);
     }
   }
   spawnEmojis("heart-emojis", "❤️", 30, 60, 40); spawnEmojis("rainbow-emojis", "🌈", 40, 30, 20);
 
-  const selectEl = document.getElementById("head-select");
-  MODELS.forEach(m => { const opt = document.createElement("option"); opt.value = m.url; opt.textContent = m.label; selectEl.appendChild(opt); });
-  selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
-  loadHead(MODELS[0].url);
-
-  /* 3. DYNAMISCHE INTRO LOGIK */
+  /* =========================================================================
+     5. INTRO LOGIC (WebGL & DOM - Fix Text Mobile & Crash)
+     ========================================================================= */
   (() => {
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
     const canvas = document.getElementById("lhu-intro-canvas");
+    let introRAF;
 
-    const btnSkipHeads = document.getElementById("btn-skip-heads");
-    const btnSkipMain = document.getElementById("btn-skip-main");
+    document.getElementById("btn-skip-heads")?.addEventListener("click", () => skipIntro(true));
 
-    if(btnSkipHeads) {
-      btnSkipHeads.addEventListener("click", () => {
-        if (intro) intro.remove();
-      });
-    }
-
-    if(btnSkipMain) {
-      btnSkipMain.addEventListener("click", () => {
-        location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html";
-      });
+    function skipIntro(isManualSkip = false) {
+      if (introRAF) cancelAnimationFrame(introRAF);
+      if (intro) intro.remove();
+      AppState.isIntroActive = false;
+      
+      // Fix für abgehacktes Audio: Nur bei Klick pausieren, ansonsten ausklingen lassen
+      if (isManualSkip && audio) { audio.pause(); audio.currentTime = 0; }
+      
+      // Fix für WebGL Crash: Lösche den zweiten Renderer restlos aus dem Speicher!
+      if (hitEnterRenderer) {
+          if (hitObject) disposeHierarchy(hitObject);
+          hitEnterRenderer.dispose();
+          const ext = hitEnterRenderer.getContext().getExtension('WEBGL_lose_context');
+          if (ext) ext.loseContext();
+          hitEnterRenderer = null;
+          hitEnterSlot.innerHTML = '';
+      }
     }
 
     const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-
     const word = document.getElementById("lhu-intro-word");
     const lines = [...word.querySelectorAll("span")];
-
-    let W = 0, H = 0, introStart = 0; let introVariant = "yellow"; 
+    let W = 0, H = 0, introStart = 0, introVariant = "yellow"; 
 
     const variantColors = {
       red: { color: "#ff3333", bg: "linear-gradient(180deg, #ff9999 0%, #ff3333 24%, #cc0000 48%, #ff6666 68%, #ff3333 100%)", shadow: "rgba(255,50,50,.75)", hue: 0.0 },
@@ -857,70 +815,36 @@
       blue: { color: "#33bbff", bg: "linear-gradient(180deg, #99ddff 0%, #33bbff 24%, #0077cc 48%, #66ccff 68%, #33bbff 100%)", shadow: "rgba(50,180,255,.75)", hue: 210.0 }
     };
 
-    const vsSource = `attribute vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }`;
-    const fsSource = `
-      precision mediump float;
-      uniform vec2 r; uniform float t; uniform float h;
-
-      vec3 hsv2rgb(vec3 c) {
-          vec3 rgb = clamp(abs(mod(c.x*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.);
-          return c.z * mix(vec3(1.), rgb, c.y);
-      }
-      float hash11(float p) { p = fract(p * .1031); p *= p + 33.33; p *= p + p; return fract(p); }
-      float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
-      mat2 rot(float a) { float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
-      float noise(vec2 p) {
-          vec2 i=floor(p), f=fract(p);
-          float a=hash12(i), b=hash12(i+vec2(1.,0.)), c=hash12(i+vec2(0.,1.)), d=hash12(i+vec2(1.,1.));
-          vec2 u = smoothstep(0.0, 1.0, f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
-      }
-      float fbm(vec2 p) {
-          float v=0., a=0.5;
-          for(int i=0;i<8;++i){ v+=a*noise(p); p*=rot(0.45)*2.; a*=0.5; }
-          return v;
-      }
-      void main() {
-          vec2 uv = gl_FragCoord.xy / r.xy; uv = 2.0 * uv - 1.0; uv.x *= r.x / r.y;
-          uv += 2.0 * fbm(uv * 1.0 + 0.8 * t * 1.5) - 1.0;
-          float dist = abs(uv.x);
-          vec3 col = hsv2rgb(vec3(h/360.0, 0.8, 0.9)) * pow(mix(0.0, 0.08, hash11(t * 1.5)) / dist, 1.1);
-          gl_FragColor = vec4(col, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));
-      }
-    `;
-
     let rLoc, tLoc, hLoc;
     if (gl) {
-        const vs = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vs, vsSource); gl.compileShader(vs);
-        const fs = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fs, fsSource); gl.compileShader(fs);
+        const vs = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vs, `attribute vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }`); gl.compileShader(vs);
+        const fs = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fs, `
+          precision mediump float; uniform vec2 r; uniform float t; uniform float h;
+          vec3 hsv2rgb(vec3 c) { vec3 rgb = clamp(abs(mod(c.x*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.); return c.z * mix(vec3(1.), rgb, c.y); }
+          float hash11(float p) { p = fract(p * .1031); p *= p + 33.33; p *= p + p; return fract(p); }
+          float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
+          mat2 rot(float a) { float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
+          float noise(vec2 p) { vec2 i=floor(p), f=fract(p); float a=hash12(i), b=hash12(i+vec2(1.,0.)), c=hash12(i+vec2(0.,1.)), d=hash12(i+vec2(1.,1.)); vec2 u = smoothstep(0.0, 1.0, f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y); }
+          float fbm(vec2 p) { float v=0., a=0.5; for(int i=0;i<8;++i){ v+=a*noise(p); p*=rot(0.45)*2.; a*=0.5; } return v; }
+          void main() {
+              vec2 uv = gl_FragCoord.xy / r.xy; uv = 2.0 * uv - 1.0; uv.x *= r.x / r.y; uv += 2.0 * fbm(uv * 1.0 + 0.8 * t * 1.5) - 1.0;
+              float dist = abs(uv.x); vec3 col = hsv2rgb(vec3(h/360.0, 0.8, 0.9)) * pow(mix(0.0, 0.08, hash11(t * 1.5)) / dist, 1.1);
+              gl_FragColor = vec4(col, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));
+          }`); gl.compileShader(fs);
         const prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.useProgram(prog);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); 
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
         const aLoc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
-
-        rLoc = gl.getUniformLocation(prog, "r");
-        tLoc = gl.getUniformLocation(prog, "t");
-        hLoc = gl.getUniformLocation(prog, "h");
+        rLoc = gl.getUniformLocation(prog, "r"); tLoc = gl.getUniformLocation(prog, "t"); hLoc = gl.getUniformLocation(prog, "h");
     }
 
-    function resizeIntro() { 
-      W = innerWidth; H = innerHeight; 
-      canvas.width = W; canvas.height = H; 
-      if(gl) gl.viewport(0, 0, W, H); 
-    }
+    function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; if(gl) gl.viewport(0, 0, W, H); }
+    window.addEventListener("resize", resizeIntro); resizeIntro();
 
     function animateIntro(now) {
-      if (!document.body.contains(intro)) return;
-      const timeOffset = (now - introStart) / 1000;
-      const t = timeOffset / 2;
+      if (!document.body.contains(intro)) return skipIntro();
+      const timeOffset = (now - introStart) / 1000; const t = timeOffset / 2;
 
-      if(gl) {
-         gl.uniform2f(rLoc, W, H);
-         gl.uniform1f(tLoc, timeOffset);
-         gl.uniform1f(hLoc, variantColors[introVariant].hue);
-         gl.drawArrays(gl.TRIANGLES, 0, 6);
-      }
-
+      if(gl) { gl.uniform2f(rLoc, W, H); gl.uniform1f(tLoc, timeOffset); gl.uniform1f(hLoc, variantColors[introVariant].hue); gl.drawArrays(gl.TRIANGLES, 0, 6); }
       const textT = Math.max(0, Math.min(1, (t - .75) / 2.8)); const textEase = textT * textT * (3 - 2 * textT);
 
       if (textT > 0) {
@@ -928,17 +852,18 @@
         lines.forEach((el, i) => {
           const reveal = Math.min(1, textT * 2.2); const collapse = Math.max(0, Math.min(1, (textT - .55) / .45)); const easeIn = collapse * collapse * (3 - 2 * collapse);
           let x = 0, y = 0, z = 0, rotY = 0, rotZ = 0, scale = 1, opac = 1;
-
-          if (introVariant === "red") {
+          
+          // FIX: Komplexe Original-Mathematik wiederhergestellt für alle Handys
+          if (introVariant === "red") { 
             const slam = Math.pow(easeIn, 7); const shakeX = (1 - slam) * (Math.random() - 0.5) * 120; const shakeY = (1 - slam) * (Math.random() - 0.5) * 120;
             x = (Math.random() - 0.5) * 600 * (1 - slam) + shakeX; y = -800 * (1 - slam) + shakeY; z = 400 * (1 - slam);
             rotY = (Math.random() - 0.5) * 180 * (1 - slam); rotZ = (Math.random() - 0.5) * 90 * (1 - slam); scale = 1 + (1 - slam) * 5; opac = slam;
-          } else if (introVariant === "blue") {
+          } else if (introVariant === "blue") { 
             const ritualPhase = t * 4.0 + i * ((Math.PI * 2) / 3); const radius = 350 * (1 - easeIn);
             x = Math.cos(ritualPhase) * radius; z = Math.sin(ritualPhase) * radius; y = Math.sin(t * 3.0 + i) * 120 * (1 - easeIn);
             rotY = (t * 250) + (easeIn * 360); rotZ = Math.sin(t * 2) * 20 * (1 - easeIn); scale = 0.5 + easeIn * 0.5;
             opac = easeIn * (Math.sin(t * 30 + i) * 0.5 + 0.5); if (easeIn > 0.95) opac = 1; 
-          } else {
+          } else { 
             const spiral = textEase * Math.PI * 3.0; const phase = spiral + i * 2.1;
             const x0 = Math.cos(phase) * 210 * reveal; const y0 = Math.sin(phase * .72) * 75 * reveal; const z0 = Math.sin(phase) * 280 * reveal;
             const letterSpiral = spiral * 1.5 + i * 1.7; const radius = 180 * (1 - easeIn);
@@ -974,47 +899,32 @@
         word.appendChild(stack);
       } else { word.style.opacity = "0"; }
 
-      if (t >= 2.625) { intro.remove(); return; }
-      requestAnimationFrame(animateIntro);
+      if (t >= 2.625) { skipIntro(false); return; }
+      introRAF = requestAnimationFrame(animateIntro);
     }
-
-    resizeIntro(); window.addEventListener("resize", resizeIntro);
 
     document.querySelectorAll(".lhu-pill").forEach(btn => {
       btn.addEventListener("click", () => {
         introVariant = btn.dataset.intro; 
-
-        const flashColorMap = {
-          red: new THREE.Color(0xff3333),
-          yellow: new THREE.Color(0xffd400),
-          blue: new THREE.Color(0x33bbff)
-        };
-        const targetColor = flashColorMap[introVariant] || new THREE.Color(0xffffff);
-
-        hitEnterEmissiveMats.forEach(item => {
-          item.mat.emissive.copy(targetColor);
-          item.mat.emissiveIntensity = 4.5;
-        });
-
+        const targetColor = new THREE.Color(variantColors[introVariant].color);
+        hitEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 4.5; });
         document.getElementById("lhu-enter-panel").classList.add("hidden");
-
-        if (audio) { audio.src = `lhu${introVariant}.mp3`; }
-
-        setTimeout(() => {
-          if (audio) audio.play().catch(()=>{});
-          introStart = performance.now();
-          requestAnimationFrame(animateIntro);
-        }, 320);
-
+        if (audio) audio.src = `lhu${introVariant}.mp3`;
+        setTimeout(() => { if (audio) audio.play().catch(()=>{}); introStart = performance.now(); introRAF = requestAnimationFrame(animateIntro); }, 320);
       }, { once: true });
     });
   })();
 
+  /* =========================================================================
+     6. MAIN RENDER LOOP
+     ========================================================================= */
   function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-    if (mixer) mixer.update(delta);
-
+    if (mainMixer) mainMixer.update(delta);
+    if (hitMixer) hitMixer.update(delta); 
+    if (hitObject) hitObject.rotation.y += delta * 0.75; 
+    
     if (camTween) {
       const k = Math.min(1, (performance.now() - camTween.start) / camTween.dur);
       const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
@@ -1024,180 +934,86 @@
       if (k >= 1) { if(camTween.onDone) camTween.onDone(); camTween = null; controls.enabled = true; }
     } else controls.update();
 
-    if (object) {
-      if (gagActive) {
+    if (mainObject) {
+      if (AppState.activeEffect === 'rizz') {
         const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
-        object.position.x = gagBase.x + Math.sin(tt * 5) * amp; 
-        object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6; 
-        object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
-        object.rotation.z = Math.sin(tt * 5) * 0.08; 
-        object.rotation.y = Math.sin(tt * 3) * 0.12;
+        mainObject.position.set(gagBase.x + Math.sin(tt * 5) * amp, gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4, gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6);
+        mainObject.rotation.set(0, Math.sin(tt * 3) * 0.12, Math.sin(tt * 5) * 0.08); 
       } 
-      else if (rainbowActive) {
+      else if (AppState.activeEffect === 'rainbow') {
         const tt = (performance.now() - rainbowStart) / 1000;
-        if (tt < 0.35) {
-            const u = tt / 0.35; object.position.y = rainbowBasePos.y + Math.pow(u, 3) * 20; 
-        } else if (tt < 0.45) {
-            object.scale.setScalar(0.75); object.position.y = rainbowBasePos.y - 14; object.position.z = rainbowBasePos.z - 15; 
-        } else if (tt < 2.45) {
-            const u = (tt - 0.45) / 2.0; object.position.y = (rainbowBasePos.y - 14) + (u * 28); object.position.z = rainbowBasePos.z - 15;
-            object.rotation.y = rainbowBaseRot.y + (u * Math.PI * 2 * 3); object.rotation.x = rainbowBaseRot.x + 0.4; 
+        if (tt < 0.35) { const u = tt / 0.35; mainObject.position.y = rainbowBasePos.y + Math.pow(u, 3) * 20; } 
+        else if (tt < 0.45) { mainObject.scale.setScalar(0.75); mainObject.position.set(rainbowBasePos.x, rainbowBasePos.y - 14, rainbowBasePos.z - 15); } 
+        else if (tt < 2.45) {
+            const u = (tt - 0.45) / 2.0; mainObject.position.y = (rainbowBasePos.y - 14) + (u * 28);
+            mainObject.rotation.set(rainbowBaseRot.x + 0.4, rainbowBaseRot.y + (u * Math.PI * 2 * 3), 0); 
             const pulse = 0.7 + 0.3 * Math.sin(tt * 28); const hue = (tt * 260) % 360;
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.setHSL(hue / 360, 1, 0.52); 
-                    if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 0.35 + pulse * 3.0;
-                });
-            }
-            const screenPos = object.position.clone().project(camera); const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth; const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
-            const crossfire = document.getElementById("shmup-container"); const centerPoint = crossfire.querySelector(".shmup-center");
-            if (centerPoint) { centerPoint.style.left = screenX + "px"; centerPoint.style.top = screenY + "px"; }
-            if (tt >= 0.7 && tt < 2.2) { crossfire.style.display = "block"; } else { crossfire.style.display = "none"; }
+            if(mainObject.userData.emissiveMats) mainObject.userData.emissiveMats.forEach(m => { m.emissive.setHSL(hue / 360, 1, 0.52); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 0.35 + pulse * 3.0; });
+            const screenPos = mainObject.position.clone().project(camera); const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth; const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
+            const cp = dom.shmupContainer.querySelector(".shmup-center"); if (cp) { cp.style.left = screenX + "px"; cp.style.top = screenY + "px"; }
+            dom.shmupContainer.style.display = (tt >= 0.7 && tt < 2.2) ? "block" : "none";
         }
         if (tt >= 2.45) endRainbow();
       } 
-      else if (wisdomActive) {
-        let targetRotX = 0;
-
-        if (isTyping) {
-            const headIdx = document.getElementById("head-select").selectedIndex;
-            const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00]; 
-            const currentRate = rates[headIdx % rates.length];
-            targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25; 
-        }
-
-        object.rotation.x += (targetRotX - object.rotation.x) * (delta * 12); 
-        object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
-        object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
+      else if (AppState.activeEffect === 'wisdom') {
+        let targetRotX = AppState.isTyping ? Math.sin(performance.now() * 0.04) * 0.25 : 0;
+        mainObject.rotation.x += (targetRotX - mainObject.rotation.x) * (delta * 12); 
+        mainObject.rotation.y += (0 - mainObject.rotation.y) * (delta * 8); 
       }
-      else if (musicOn) { 
-        musicPlayTime += delta; 
-        const loopTime = musicPlayTime % 70; 
-        const baseFreq = Math.PI / (60 / 138 * 0.5); 
+      else if (AppState.musicOn) { 
+        musicPlayTime += delta; const loopTime = musicPlayTime % 70; const baseFreq = Math.PI / (60 / 138 * 0.5); 
+        let targetRotX = 0, targetRotY = 0, targetRotZ = 0, targetPosY = 0;
+        let phase4 = false, phase6 = false, phase7 = false;
 
-        let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
-        let targetPosX = 0, targetPosY = 0;
+        if (loopTime < 30 || loopTime >= 40) AppState.isTrafficConePhase = false;
 
-        let phase4Active = false;
-        let phase6Active = false;
-        let phase7Active = false;
+        if (loopTime < 10) { musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; } 
+        else if (loopTime < 20) { musicPhase += baseFreq * 2.0 * delta; targetRotX = Math.sin(musicPhase) * 0.14; } 
+        else if (loopTime < 30) { musicPhase += baseFreq * 0.4 * delta; targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04; targetRotY = Math.sin(musicPhase) * 0.45; targetRotZ = Math.cos(musicPhase) * 0.22; } 
+        else if (loopTime < 40) { phase4 = true; AppState.isTrafficConePhase = true; targetRotX = Math.sin(loopTime * 40) * 0.08; targetRotY = Math.sin(loopTime * 47) * 0.08; } 
+        else if (loopTime < 50) { musicPhase += baseFreq * 1.5 * delta; targetRotY = Math.sin(musicPhase) * 0.35; targetRotZ = Math.sin(musicPhase * 2) * 0.05; } 
+        else if (loopTime < 60) { phase6 = true; musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; } 
+        else { phase7 = true; }
 
-        if (loopTime < 30 || loopTime >= 40) {
-            window.isTrafficConePhase = false;
-        }
-
-        if (loopTime < 10) { 
-            musicPhase += baseFreq * delta; 
-            targetRotX = Math.sin(musicPhase) * 0.08; 
-        } else if (loopTime < 20) { 
-            musicPhase += baseFreq * 2.0 * delta; 
-            targetRotX = Math.sin(musicPhase) * 0.14; 
-        } else if (loopTime < 30) { 
-            musicPhase += baseFreq * 0.4 * delta; 
-            targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04; 
-            targetRotY = Math.sin(musicPhase) * 0.45; 
-            targetRotZ = Math.cos(musicPhase) * 0.22; 
-        } else if (loopTime < 40) {
-            phase4Active = true;
-            window.isTrafficConePhase = true;
-            targetRotX = Math.sin(loopTime * 40) * 0.08;
-            targetRotY = Math.sin(loopTime * 47) * 0.08;
-            targetRotZ = 0;
-        } else if (loopTime < 50) {
-            musicPhase += baseFreq * 1.5 * delta;
-            targetRotY = Math.sin(musicPhase) * 0.35; 
-            targetRotZ = Math.sin(musicPhase * 2) * 0.05; 
-        } else if (loopTime < 60) {
-            phase6Active = true;
-            musicPhase += baseFreq * delta;
-            targetRotX = Math.sin(musicPhase) * 0.08;
-        } else {
-            phase7Active = true;
-        }
-
-        if (phase7Active) {
-            object.rotation.x += delta * 15; 
-            object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
-            object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-            object.position.x += (0 - object.position.x) * (delta * 8);
-            object.position.y += (Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
+        if (phase7) {
+            mainObject.rotation.x += delta * 15; mainObject.rotation.y += (0 - mainObject.rotation.y) * (delta * 8); mainObject.rotation.z += (0 - mainObject.rotation.z) * (delta * 8);
+            mainObject.position.y += (Math.abs(Math.sin(loopTime * 15)) * 0.3 - mainObject.position.y) * (delta * 8);
             wasInPhase7 = true;
         } else {
-            if (wasInPhase7) {
-                object.rotation.x = object.rotation.x % (Math.PI * 2);
-                wasInPhase7 = false;
-            }
-            object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8); 
-            object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8); 
-            object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
-            object.position.x += (targetPosX - object.position.x) * (delta * 8);
-            object.position.y += (targetPosY - object.position.y) * (delta * 8);
+            if (wasInPhase7) { mainObject.rotation.x %= (Math.PI * 2); wasInPhase7 = false; }
+            mainObject.rotation.x += (targetRotX - mainObject.rotation.x) * (delta * 8); mainObject.rotation.y += (targetRotY - mainObject.rotation.y) * (delta * 8); mainObject.rotation.z += (targetRotZ - mainObject.rotation.z) * (delta * 8);
+            mainObject.position.y += (targetPosY - mainObject.position.y) * (delta * 8);
         }
 
-        if (phase4Active) {
-            const blink = Math.floor(loopTime * 4) % 2 === 0; 
-            let targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
-
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.copy(targetColor);
-                    if(m.emissiveIntensity !== undefined) m.emissiveIntensity = blink ? 3.5 : 0.5;
-                });
-            }
-        } else if (phase6Active) {
-            const cycle = (loopTime % 1.5) / 1.5; 
-            let targetColor = new THREE.Color();
-            if (cycle < 0.33) targetColor.setHex(0xff3333); 
-            else if (cycle < 0.66) targetColor.setHex(0xffd400); 
-            else targetColor.setHex(0x33bbff); 
-
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.lerp(targetColor, delta * 12);
-                    if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 2.5;
-                });
-            }
+        if (phase4) {
+            const blink = Math.floor(loopTime * 4) % 2 === 0; const targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
+            if(mainObject.userData.emissiveMats) mainObject.userData.emissiveMats.forEach(m => { m.emissive.copy(targetColor); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = blink ? 3.5 : 0.5; });
+        } else if (phase6) {
+            const cycle = (loopTime % 1.5) / 1.5; const targetColor = new THREE.Color();
+            if (cycle < 0.33) targetColor.setHex(0xff3333); else if (cycle < 0.66) targetColor.setHex(0xffd400); else targetColor.setHex(0x33bbff); 
+            if(mainObject.userData.emissiveMats) mainObject.userData.emissiveMats.forEach(m => { m.emissive.lerp(targetColor, delta * 12); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 2.5; });
         } else {
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.lerp(m.userData.origE, delta * 5);
-                    if (m.emissiveIntensity !== undefined) {
-                        let targetI = m.userData.origI !== undefined ? m.userData.origI : 1;
-                        m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5);
-                    }
-                });
-            }
-        }
-      } else { 
-        window.isTrafficConePhase = false;
-
-        if (wasInPhase7) {
-            object.rotation.x = object.rotation.x % (Math.PI * 2);
-            wasInPhase7 = false;
-        }
-
-        object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
-        object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
-        object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
-        object.position.x += (0 - object.position.x) * (delta * 8);
-        object.position.y += (0 - object.position.y) * (delta * 8);
-
-        if(object.userData.emissiveMats) {
-            object.userData.emissiveMats.forEach(m => {
+            if(mainObject.userData.emissiveMats) mainObject.userData.emissiveMats.forEach(m => {
                 m.emissive.lerp(m.userData.origE, delta * 5);
-                if (m.emissiveIntensity !== undefined) {
-                    let targetI = m.userData.origI !== undefined ? m.userData.origI : 1;
-                    m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5);
-                }
+                if (m.emissiveIntensity !== undefined) m.emissiveIntensity += ((m.userData.origI !== undefined ? m.userData.origI : 1) - m.emissiveIntensity) * (delta * 5);
             });
         }
+      } else { 
+        AppState.isTrafficConePhase = false;
+        if (wasInPhase7) { mainObject.rotation.x %= (Math.PI * 2); wasInPhase7 = false; }
+        mainObject.rotation.x += (0 - mainObject.rotation.x) * (delta * 8); mainObject.rotation.y += (0 - mainObject.rotation.y) * (delta * 8); mainObject.rotation.z += (0 - mainObject.rotation.z) * (delta * 8); 
+        mainObject.position.x += (0 - mainObject.position.x) * (delta * 8); mainObject.position.y += (0 - mainObject.position.y) * (delta * 8);
+        if(mainObject.userData.emissiveMats) mainObject.userData.emissiveMats.forEach(m => {
+            m.emissive.lerp(m.userData.origE, delta * 5);
+            if (m.emissiveIntensity !== undefined) m.emissiveIntensity += ((m.userData.origI !== undefined ? m.userData.origI : 1) - m.emissiveIntensity) * (delta * 5);
+        });
       }
     }
+    
     renderer.render(scene, camera);
-    if (hitEnterMixer) hitEnterMixer.update(delta); 
-    if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75; 
-    hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
+    if(AppState.isIntroActive && hitEnterRenderer) hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
   }
+  
   animate();
   window.addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 </script>
