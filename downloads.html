@@ -319,7 +319,7 @@
     .playlist-title { font-size: clamp(24px, 3.5vw, 42px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; text-align: center; } 
 
-    /* Erklärungstext für die Icons oben über der Songliste */
+    /* Legende oben über der Songliste */
     .song-legend-bar {
       display: flex;
       justify-content: center;
@@ -339,15 +339,22 @@
     .song-list-header { display: grid; grid-template-columns: 40px 1fr 120px 80px 120px; gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
     .song-list-header span:nth-child(3), .song-list-header span:nth-child(4), .song-list-header span:nth-child(5) { text-align: right; }
     
-    .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 120px; gap: 16px; padding: 12px 16px; border-radius: 8px; cursor: pointer; align-items: center; transition: background 0.2s; animation: fadeIn 0.4s ease forwards; opacity: 0; }
-    .song-row:hover { background: var(--row-hover); }
-    .song-row.playing { background: rgba(255,222,0,0.2); }
+    /* Song-Wrapper für Zeile plus ausklappbares Untermenü */
+    .song-item-wrapper {
+      border-radius: 8px;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    .song-item-wrapper:hover { background: var(--row-hover); }
+    .song-item-wrapper.playing { background: rgba(255,222,0,0.2); }
+
+    .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 120px; gap: 16px; padding: 12px 16px; cursor: pointer; align-items: center; animation: fadeIn 0.4s ease forwards; opacity: 0; }
     
     .song-row:hover .song-num { display: none; }
     .song-row:hover .song-play-icon { display: flex; }
     
-    .song-row.playing .song-num { display: none; }
-    .song-row.playing .song-play-icon { display: flex; color: var(--orange); }
+    .song-item-wrapper.playing .song-num { display: none; }
+    .song-item-wrapper.playing .song-play-icon { display: flex; color: var(--orange); }
 
     .song-num-play { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
     .song-num { font-size: 10px; color: var(--text-muted); }
@@ -364,32 +371,35 @@
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
     
-    /* Aktionsbuttons (Disk, Planet, Notenschlüssel) */
-    .song-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; position: relative; }
+    /* Aktionsbuttons (Disk, Planet, Notenschlüssel) nebeneinander */
+    .song-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
     .action-btn { width: 34px; height: 34px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 14px; outline: none; }
-    .song-row:hover .action-btn { opacity: 1; border-color: var(--text-main); color: var(--text-main); }
+    .song-item-wrapper:hover .action-btn { opacity: 1; border-color: var(--text-main); color: var(--text-main); }
     .action-btn:hover { background: var(--bg-main); box-shadow: 2px 2px 0px var(--text-main); transform: translate(-2px, -2px); }
+    .action-btn.active-tab { background: var(--orange); border-color: var(--text-main); color: var(--text-main); box-shadow: 2px 2px 0px var(--text-main); }
 
-    /* Coming Soon Dropdown Menü für Planet & Notenschlüssel */
-    .coming-soon-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background: #1e272e;
-      color: var(--yellow);
-      border: 2px solid var(--text-main);
-      padding: 6px 10px;
-      font-size: 7px;
-      border-radius: 4px;
-      white-space: nowrap;
-      z-index: 50;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      display: none;
-      pointer-events: none;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    /* Ausklappbares Untermenü direkt unter dem Song in der Liste */
+    .song-submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      background: #fff6d9;
+      border-top: 0px solid var(--border);
+      margin: 0 16px;
+      border-radius: 0 0 8px 8px;
+      font-size: 9px;
+      color: var(--text-muted);
+      line-height: 1.6;
     }
-    .coming-soon-dropdown.show { display: block; animation: fadeIn 0.2s ease forwards; }
+    .song-submenu.open {
+      max-height: 300px;
+      padding: 12px 16px;
+      border-top: 1px dashed var(--border);
+      margin-bottom: 8px;
+    }
+    .submenu-content {
+      white-space: pre-wrap;
+    }
 
     .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 3px solid var(--text-main); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
     .np-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
@@ -475,8 +485,10 @@
       .song-list-container { padding: 0 12px; }
       .song-list-header { display: none; }
       
-      .song-row { grid-template-columns: 24px 1fr auto; padding: 12px; gap: 12px; background: #fff; margin-bottom: 8px; box-shadow: var(--shadow-sm); border: 2px solid var(--border); }
-      .song-row .song-duration, .song-row .song-actions { display: none; }
+      /* Angepasst fürs Handy: Alle 3 Buttons bleiben sauber nebeneinander */
+      .song-row { grid-template-columns: 24px 1fr auto auto; padding: 12px; gap: 8px; background: #fff; border: 2px solid var(--border); }
+      .song-row .song-duration { display: none; }
+      .song-actions { display: flex; }
 
       .now-playing { height: 130px; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 12px; padding: 12px 16px; bottom: 0; }
       .np-left { grid-column: 1; grid-row: 1; }
@@ -956,9 +968,9 @@ Vedran Lukic & Aether Veylan`;
 
     /* Erklärungstext (Legende) oben über den Songs */
     html += '<div class="song-legend-bar">';
-    html += '  <div class="legend-item"><span>💾 Disk: Download Song</span></div>';
-    html += '  <div class="legend-item"><span>🪐 Planet: Song Lore & Bedeutung</span></div>';
-    html += '  <div class="legend-item"><span>🎼 Notenschlüssel: Lyrics & Live-Akkorde</span></div>';
+    html += '  <div class="legend-item"><span>💾 Disk: Song speichern / herunterladen</span></div>';
+    html += '  <div class="legend-item"><span>🪐 Planet: Song-Bedeutung / Lore öffnen</span></div>';
+    html += '  <div class="legend-item"><span>🎼 Notenschlüssel: Lyrics & Live-Akkorde öffnen</span></div>';
     html += '</div>';
 
     html += '<div class="song-list-container">';
@@ -971,7 +983,10 @@ Vedran Lukic & Aether Veylan`;
       var hasVersions = song.versions && song.versions.length > 1;
       var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
 
-      html += '  <div class="song-row' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+      /* Song-Wrapper enthält die Hauptzeile UND das direkt darunter liegende Akkordeon-Untermenü */
+      html += '<div class="song-item-wrapper' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+      
+      html += '  <div class="song-row">';
       html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">' + (isThisPlaying ? '⏸' : '▶') + '</span></div>';
       html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
       
@@ -985,23 +1000,21 @@ Vedran Lukic & Aether Veylan`;
       
       html += '    <div class="song-duration">--:--</div>';
       
-      /* Aktionsbuttons: Disk (Download), Planet (Lore), Notenschlüssel (Lyrics/Chords) */
+      /* Aktionsbuttons nebeneinander (Disk, Planet, Notenschlüssel) */
       html += '    <div class="song-actions">';
       html += '      <button class="action-btn dl-btn" data-song="' + i + '" title="Download Song">💾</button>';
-      
-      html += '      <div style="position:relative;">';
-      html += '        <button class="action-btn lore-btn" title="Song Lore & Meaning">🪐</button>';
-      html += '        <div class="coming-soon-dropdown">COMING SOON</div>';
-      html += '      </div>';
-
-      html += '      <div style="position:relative;">';
-      html += '        <button class="action-btn chords-btn" title="Lyrics & Live Chords">🎼</button>';
-      html += '        <div class="coming-soon-dropdown">COMING SOON</div>';
-      html += '      </div>';
-
+      html += '      <button class="action-btn lore-btn" data-type="lore" title="Song Meaning & Lore">🪐</button>';
+      html += '      <button class="action-btn chords-btn" data-type="chords" title="Lyrics & Chords">🎼</button>';
       html += '    </div>';
 
+      html += '  </div>'; // Ende song-row
+
+      /* Das ausklappbare Untermenü direkt unter dem Song */
+      html += '  <div class="song-submenu" id="submenu-' + i + '">';
+      html += '    <div class="submenu-content">COMING SOON</div>';
       html += '  </div>';
+
+      html += '</div>'; // Ende song-item-wrapper
     });
     html += '</div>';
 
@@ -1142,10 +1155,12 @@ Vedran Lukic & Aether Veylan`;
   }
 
   function bindSongEvents() {
+    // Song abspielen bei Klick auf die Zeile
     document.querySelectorAll('.song-row').forEach(function(row) {
       row.addEventListener('click', function(e) {
         if (e.target.closest('.version-dot') || e.target.closest('.song-actions')) return;
-        var idx = parseInt(row.dataset.idx);
+        var wrapper = row.closest('.song-item-wrapper');
+        var idx = parseInt(wrapper.dataset.idx);
         
         if (currentSongIdx === idx && currentAudio) {
           if (!currentAudio.paused) {
@@ -1164,7 +1179,7 @@ Vedran Lukic & Aether Veylan`;
     document.querySelectorAll('.version-dot').forEach(function(dot) {
       dot.addEventListener('click', function(e) {
         e.stopPropagation();
-        var songIdx = parseInt(dot.dataset.song);
+        var songIdx = parseInt(dot.closest('.song-item-wrapper').dataset.idx);
         var verIdx = parseInt(dot.dataset.ver);
         var song = songList[songIdx];
         
@@ -1172,9 +1187,9 @@ Vedran Lukic & Aether Veylan`;
         dot.classList.add('active');
         song.file = song.versions[verIdx].file;
         
-        var row = document.querySelector('.song-row[data-idx="' + songIdx + '"]');
-        if (row) {
-          row.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
+        var wrapper = document.querySelector('.song-item-wrapper[data-idx="' + songIdx + '"]');
+        if (wrapper) {
+          wrapper.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
         }
 
         if (currentSongIdx === songIdx && currentAudio) {
@@ -1189,7 +1204,7 @@ Vedran Lukic & Aether Veylan`;
     document.querySelectorAll('.dl-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var songIdx = parseInt(btn.closest('.song-row').dataset.idx);
+        var songIdx = parseInt(btn.closest('.song-item-wrapper').dataset.idx);
         var song = songList[songIdx];
         var a = document.createElement('a');
         a.href = song.file; a.download = song.title;
@@ -1197,25 +1212,30 @@ Vedran Lukic & Aether Veylan`;
       });
     });
 
-    // Planet & Notenschlüssel Coming Soon Dropdown Event
+    // Planet & Notenschlüssel Toggle-Events für das Untermenü unter dem Song
     document.querySelectorAll('.lore-btn, .chords-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var dropdown = btn.nextElementSibling;
+        var wrapper = btn.closest('.song-item-wrapper');
+        var submenu = wrapper.querySelector('.song-submenu');
+        var isOpen = submenu.classList.contains('open');
         
-        // Alle anderen offenen Dropdowns schließen
-        document.querySelectorAll('.coming-soon-dropdown').forEach(function(d) {
-          if (d !== dropdown) d.classList.remove('show');
-        });
+        // Alle anderen Untermenüs in der Liste schließen und Buttons zurücksetzen
+        document.querySelectorAll('.song-submenu').forEach(function(sm) { sm.classList.remove('open'); });
+        document.querySelectorAll('.lore-btn, .chords-btn').forEach(function(b) { b.classList.remove('active-tab'); });
 
-        dropdown.classList.toggle('show');
-      });
-    });
-
-    // Bei Klick irgendwo anders auf der Seite alle Dropdowns schließen
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.coming-soon-dropdown').forEach(function(d) {
-        d.classList.remove('show');
+        if (!isOpen) {
+          submenu.classList.add('open');
+          btn.classList.add('active-tab');
+          
+          // Hier kannst du später dynamisch den Text je nach Typ (Lore oder Chords) anpassen:
+          var contentBox = submenu.querySelector('.submenu-content');
+          if (btn.classList.contains('lore-btn')) {
+            contentBox.textContent = "🪐 SONG LORE & MEANING:\nComing soon...";
+          } else {
+            contentBox.textContent = "🎼 LYRICS & LIVE CHORDS:\nComing soon...";
+          }
+        }
       });
     });
   }
@@ -1245,14 +1265,14 @@ Vedran Lukic & Aether Veylan`;
       else npCoverBox.classList.remove('playing-eq');
     }
 
-    document.querySelectorAll('.song-row').forEach(function(r) { 
+    document.querySelectorAll('.song-item-wrapper').forEach(function(r) { 
       r.classList.remove('playing');
       var icon = r.querySelector('.song-play-icon');
       if (icon) icon.textContent = '▶';
     });
     
     if (currentSongIdx >= 0) {
-      var r = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
+      var r = document.querySelector('.song-item-wrapper[data-idx="' + currentSongIdx + '"]');
       if (r) {
         if (playing) r.classList.add('playing');
         var icon = r.querySelector('.song-play-icon');
@@ -1273,12 +1293,12 @@ Vedran Lukic & Aether Veylan`;
           e.stopPropagation();
           song.file = version.file;
           
-          var row = document.querySelector('.song-row[data-idx="' + currentSongIdx + '"]');
-          if (row) {
-            row.querySelectorAll('.version-dot').forEach(d => d.classList.remove('active'));
-            var activeDot = row.querySelector('.version-dot[data-ver="' + idx + '"]');
+          var wrapper = document.querySelector('.song-item-wrapper[data-idx="' + currentSongIdx + '"]');
+          if (wrapper) {
+            wrapper.querySelectorAll('.version-dot').forEach(d => d.classList.remove('active'));
+            var activeDot = wrapper.querySelector('.version-dot[data-ver="' + idx + '"]');
             if (activeDot) activeDot.classList.add('active');
-            row.querySelector('.song-artist').textContent = song.genreName + ' — ' + version.label;
+            wrapper.querySelector('.song-artist').textContent = song.genreName + ' — ' + version.label;
           }
 
           var wasPlaying = !currentAudio.paused;
@@ -1380,9 +1400,9 @@ Vedran Lukic & Aether Veylan`;
   });
 
   function loadDurations() {
-    document.querySelectorAll('.song-row').forEach(function(row) {
-      var song = songList[parseInt(row.dataset.idx)];
-      var durationEl = row.querySelector('.song-duration');
+    document.querySelectorAll('.song-item-wrapper').forEach(function(wrapper) {
+      var song = songList[parseInt(wrapper.dataset.idx)];
+      var durationEl = wrapper.querySelector('.song-duration');
       if (!durationEl) return;
 
       if (audioDurationCache[song.file]) {
