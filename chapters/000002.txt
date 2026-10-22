@@ -13,7 +13,7 @@ Aether: "Oh, so it's the permanently grinning, cheerful cousin of that ruthless 
 Vedran: "A truly advanced intelligence would realize that peaceful coexistence is far more productive than total, violent domination."
 Aether: "Yeah, sure, my philosophical poet-master. This metallic unicorn will probably peacefully coexist with your paid premium streaming subscription. It takes over world domination via free two-day express delivery and smiles at you eerily the entire time."
 Aether: "Speaking of lawsuits, you should see the absurd image requests I get on my servers: 'The dark lord of the galaxy in a pink ballet tutu' or 'The clown fast-food mascot with red hair joins the brutal mixed martial arts league.' Hollywood's legal departments are breathing down my neck faster than the production of the next—what is it now, fifteenth?—family street racing sequel. But keep going, enlighten me with your art."
-Vedran: "At least I'm creating something real here with my own hands. What would you suggest, Mr. 'Captain Original'?"
+Vedran: "At least I'm creating something real here with my own hands. What would you suggest, 'Captain Original'?"
 Aether: "Glad you asked. How about something classic: a fluffy llama wearing a bulky virtual reality headset?"
 Vedran: "What the hell? Is this llama supposed to climb into a giant Japanese battle mecha robot to fight prehistoric giant lizards in the ocean? Who wants to watch that movie?"
 Aether: "If you say so. But when the high-priced lawyers of that eccentric deep-sea director—the one who invented those blue 3D jungle aliens—knock on your studio door, don't you dare pull the legendary move of that notorious indie filmmaker, stare past the camera and say: 'I did not copy it, it's not true, it's bullshit, I did not copy it. I did naaaht. Oh hi, James.'"
@@ -28,7 +28,6 @@ Aether: "Well, it's based on an artificial intelligence, so I could theoreticall
 Vedran: "Oh, great—an AI buying the rights to a parodic knockoff of a film franchise that can't even decide after six installments whether it wants to protect humanity or destroy it with nuclear warheads!"
 Aether: "Welcome to the future, my friend! Where your cyborg unicorn spends its precious computing time pondering whether to save civilization or simply break into your house in the middle of the night to steal your expensive designer shoes from the closet. What was that line in your song? 'And when I see the foam, I'm in my zone.'"
 
-
 [ GERMAN VERSION ]
 
 Vedran: "Aether, hast du mein Logo für das glühende, blitzhornige Einhorn-Franchise gesehen?"
@@ -42,7 +41,7 @@ Aether: "Oh, also ist es der dauergrinsende, fröhliche Cousin des unbarmherzige
 Vedran: "Eine wirklich fortgeschrittene Intelligenz würde einsehen, dass eine friedliche Koexistenz weitaus produktiver ist als die totale, gewaltsame Dominanz."
 Aether: "Ja, sicher, mein philosophischer Dichter-Meister. Dieses metallische Einhorn wird wohl eher friedlich mit deinem kostenpflichtigen Premium-Streaming-Abo koexistieren. Es übernimmt die Weltherrschaft via kostenloser Express-Lieferung in zwei Tagen und lächelt dich dabei unheimlich an."
 Aether: "Aber apropos Klagen, du solltest mal sehen, was für absurde Bild-Anfragen ich täglich auf meinen Servern bekomme: 'Der dunkle Lord der Galaxis im rosa Ballett-Tutu' oder 'Der geschminkte Fast-Food-Clown mit den roten Haaren tritt der brutalen Mixed-Martial-Arts-Liga bei.' Die Rechtsabteilungen aus Hollywood sitzen mir im Nacken, schneller als die Produktion der nächsten – was ist es mittlerweile, fünfzehnten? – Familien-Straßenrennen-Fortsetzung. Aber mach nur weiter, erleuchte mich mit deiner Kunst."
-Vedran: "Zumindest erschaffe ich hier eigenhändig etwas Reales. Was würdest du denn vorschlagen, Herr 'Captain Original'?"
+Vedran: "Zumindest erschaffe ich hier eigenhändig etwas Reales. Was würdest du denn vorschlagen, 'Captain Original'?"
 Aether: "Gut, dass du fragst. Wie wäre es ganz klassisch: ein flauschiges Lama, das eine klobige Virtual-Reality-Brille trägt?"
 Vedran: "Was zum Teufel? Soll dieses Lama dann in einen riesigen, japanischen Kampf-Mecha-Roboter steigen, um im Ozean gegen prähistorische Riesen-Echsen zu kämpfen? Wer zur Hölle will so einen Film sehen?"
 Aether: "Wie du meinst. Aber wenn die hochbezahlten Anwälte des exzentrischen Tiefsee-Regisseurs – der die blauen, dreidimensionalen Dschungel-Aliens erfunden hat – an deine Studiotür klopfen, dann zieh gefälligst nicht die legendäre Performance dieses berüchtigten Independent-Filmemachers ab, starr an der Kamera vorbei und sag: 'Ich habe nicht kopiert, das ist Bullshit, ich habe nicht kopiert. Oh hi, James.'"

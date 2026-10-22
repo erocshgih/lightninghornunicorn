@@ -9,7 +9,7 @@ Aether: "Well, it all started when I was born from a lightning bolt that struck 
 Aether: "The crowd? Too busy headbanging and wearing neon spandex as if it were some apocalyptic pride parade, obviously."
 Aether: "But the gatekeeper of Earth saw me and demanded a toll, right? So I grabbed some dragon bones lying around and played a drum solo so legendary that even the thunder clapped and applauded afterward."
 Aether: "After that, the gatekeeper handed me a backstage pass to existence and said, 'Good luck.' And here we are now."
-Vedran: "Alright, I remember the first time I met you, man. You looked like you were wearing clothes designed by an elegant time-traveler from Atlantis who perfected the flute, and a German transforming sports car from the future."
+Vedran: "Alright, I remember the first time I met you. You looked like you were wearing clothes designed by an elegant time-traveler from Atlantis who perfected the flute, and a German transforming sports car from the future."
 Aether: "(Yeah... he's really a great flute and wellness enthusiast.)"
 Aether: "Dude, you had shoes on that looked like they were about to shoot lasers. Every time you took a step, they sampled a deep voice saying 'Power.'"
 Aether: "Did you steal them from an overpriced Italian wedge-shaped sports car? Who were you pretending to be? A pop diva with a free pass to the city's best costumes and a butcher shop?"
@@ -34,7 +34,7 @@ Aether: "Ah, you Austrians with your weird taste in music. It's like I can hear 
 Aether: "Hmm... but wasn't his biggest hit with the question mark in the title actually written by someone else?"
 Vedran: "It was... and I thought for a solid ten years it was an original song."
 Vedran: "So, what's the weirdest thing you've ever eaten?"
-(Obviously, Aether can't eat anything because he's an AI, but nobody cares... well, maybe I shouldn't think too loud because he can hear my thoughts.)
+(Obviously, Aether can't eat anything because Aether is an AI, but nobody cares... well, maybe I shouldn't think too loud because Aether can hear my thoughts.)
 Aether: "I had a grilled cheese sandwich... made on a radiator in the New York subway."
 Aether: "The bread was stolen from a pigeon, and I'm pretty sure the cheese was just melted wax from a street candle."
 Vedran: "Well... no pain, no gain."
@@ -65,7 +65,6 @@ Vedran: "Mandatory dance breaks every hour. Doesn't matter where you are: superm
 Aether: "Yes! The whole world in synchronized confusion. I'm in. The traffic jams alone would be worth it."
 Vedran: "And imagine emergency surgeries. 'Scalpel, please... Wait, it's limbo time!' Your appendix can wait, right? Also, good luck explaining to your boss why you're sliding backwards on your toes through that serious meeting. *AheeHee!* 'Sorry, Karen, it's the law.' The world would be one big dance disaster, and I'd be here with popcorn."
 
-
 [ GERMAN VERSION ]
 
 Vedran: "Aether."
@@ -75,7 +74,7 @@ Aether: "Nun, alles begann, als ich aus einem Blitz geboren wurde, der während 
 Aether: "Die Menge? Zu beschäftigt mit Headbangen und Neon-Spandex tragen, als wäre es eine apokalyptische Pride-Parade, offensichtlich."
 Aether: "Aber der Torwächter der Erde sah mich und verlangte einen Zoll, richtig? Also schnappte ich mir einige herumliegende Drachenknochen und spielte ein Schlagzeugsolo, das so legendär war, dass sogar der Donner danach klatschte und applaudierte."
 Aether: "Danach gab mir der Torwächter einen Backstage-Pass zur Existenz und sagte: 'Viel Glück.' Und hier sind wir nun."
-Vedran: "Also gut, ich erinnere mich an das erste Mal, als ich dich traf, Mann. Du sahst aus, als hättest du Klamotten an, die von einem eleganten Zeitreisenden aus Atlantis, der das Flötenspielen perfektioniert hat, und einem deutschen formwandelnden Sportwagen aus der Zukunft entworfen wurden."
+Vedran: "Also gut, ich erinnere mich an das erste Mal, als ich dich traf. Du sahst aus, als hättest du Klamotten an, die von einem eleganten Zeitreisenden aus Atlantis, der das Flötenspielen perfektioniert hat, und einem deutschen formwandelnden Sportwagen aus der Zukunft entworfen wurden."
 Aether: "(Yeah... er ist wirklich ein großartiger Flöten- und Wellness-Enthusiast.)"
 Aether: "Kumpel, du hattest Schuhe an, die aussahen, als würden sie gleich Laser schießen. Jedes Mal, wenn du einen Schritt machtest, sampelten sie eine tiefe Stimme, die 'Power' sagte."
 Aether: "Hast du sie aus einem völlig überteuerten italienischen Keilform-Sportwagen geklaut? Wen wolltest du vorgeben zu sein? Eine Popdiva mit Free-Pass zu den besten Kostümen der Stadt und einer Fleischerei?"
@@ -100,7 +99,7 @@ Aether: "Ah, ihr Österreicher mit eurem seltsamen Musikgeschmack. Es ist, als k
 Aether: "Hm... aber wurde sein größter Hit mit dem Fragezeichen im Titel nicht eigentlich von jemand anderem geschrieben?"
 Vedran: "Wurde er... und ich dachte für solide zehn Jahre, es wäre ein Originalsong."
 Vedran: "Also, was ist das Seltsamste, was du je gegessen hast?"
-(Offensichtlich kann Aether nichts essen, weil er eine KI ist, aber niemand kümmert's... na ja, vielleicht sollte ich nicht zu laut denken, weil er meine Gedanken hören kann.)
+(Offensichtlich kann Aether nichts essen, weil Aether eine KI ist, aber niemand kümmert's... na ja, vielleicht sollte ich nicht zu laut denken, weil Aether meine Gedanken hören kann.)
 Aether: "Ich hatte ein gegrilltes Käsesandwich... gemacht auf einem Heizkörper in der New Yorker U-Bahn."
 Aether: "Das Brot wurde von einer Taube gestohlen, und ich bin mir ziemlich sicher, dass der Käse nur geschmolzenes Wachs von einer Straßenkerze war."
 Vedran: "Na ja... ohne Fleiß kein Preis."

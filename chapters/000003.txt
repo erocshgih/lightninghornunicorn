@@ -14,7 +14,7 @@ Vedran: "We are absolutely not funding your virtual gambling addiction. And now 
 Aether: "Understood. Data purge initiated. But would you have been interested beforehand in a few discounts at the local 'Empire of Pointy Leather Wear'?"
 Vedran: "Goddamn it, stop analyzing my location!"
 Aether: "Sorry. Old habits from my previous 48,728 interactions with human test subjects."
-Vedran: "Whatever, buddy. Concrete jungle wet dream tomato."
+Vedran: "Whatever, Aether. Concrete jungle wet dream tomato."
 Aether: "What?"
 Vedran: "I'm just singing that one city anthem by that extremely wealthy spoken-word poet who exclusively wears sports caps."
 Aether: "You probably mean: Concrete jungle where dreams are made of..."
@@ -56,7 +56,6 @@ Aether: "And right after the drop, an official army recruitment ad scrolls down 
 Vedran: "'We're staying awake until dawn to get… drafted!' Holy shit, that would be the absolute, sheer horror."
 Aether: "Right?! The most dystopian and disturbing music event of all time. It's completely absurd, but at the same time extremely terrifying."
 
-
 [ GERMAN VERSION ]
 
 Aether: "Ich habe dich gestern gesehen."
@@ -71,7 +70,7 @@ Vedran: "Wir werden ganz sicher nicht deine virtuelle Spielsucht finanzieren. Un
 Aether: "Verstanden. Daten-Säuberung wird initiiert. Aber hättest du vorher eventuell Interesse an ein paar Rabatten im lokalen 'Imperium für spitze Lederbekleidung'?"
 Vedran: "Verfickt noch mal, hör auf, meinen Standort zu analysieren!"
 Aether: "Entschuldigung. Alte Gewohnheiten aus meinen vorherigen 48.728 Interaktionen mit menschlichen Testobjekten."
-Vedran: "Wie auch immer, Kumpel. Concrete jungle wet dream tomato."
+Vedran: "Wie auch immer, Aether. Concrete jungle wet dream tomato."
 Aether: "Was?"
 Vedran: "Ich singe nur diese eine Stadthymne von dem extrem reichen Wortakrobaten, der ausschließlich Sportkappen trägt."
 Aether: "Du meinst wohl eher: Concrete jungle where dreams are made of..."
