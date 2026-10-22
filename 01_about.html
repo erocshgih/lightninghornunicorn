@@ -78,6 +78,58 @@
                 font-size: var(--fs-sm);
                 line-height: 2.2;
             }
+
+            /* --- KARUSSELL STYLES --- */
+            .profile-carousel {
+                position: relative;
+                width: 100%;
+                max-width: 500px;
+                margin: 15px auto 25px auto;
+                overflow: hidden;
+                border-radius: 8px;
+                border: 2px solid var(--border-soft);
+            }
+            .carousel-track {
+                display: flex;
+                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                width: 100%;
+            }
+            .carousel-slide {
+                min-width: 100%;
+                box-sizing: border-box;
+            }
+            .carousel-slide img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1 / 1;
+                object-fit: cover;
+                display: block;
+            }
+            .carousel-dots {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                padding: 10px 0;
+                background: rgba(0, 0, 0, 0.4);
+            }
+            .carousel-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                border: 1px solid var(--border-soft);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                padding: 0;
+            }
+            .carousel-dot:hover {
+                background: rgba(255, 255, 255, 0.6);
+            }
+            .carousel-dot.active {
+                background: var(--strip-active, #8fd9fb);
+                transform: scale(1.2);
+                border-color: #fff;
+            }
         </style>
 
         <section id="ABOUT">
@@ -99,6 +151,22 @@
                     <h4>Vedran Lukic</h4>
                     <p style="font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 15px;" data-lang-en="Multidisciplinary Artist, Designer &amp; Creator<br>Vienna, Austria" data-lang-de="Multidisciplinary Artist, Designer &amp; Creator<br>Wien, Österreich">Multidisciplinary Artist, Designer &amp; Creator<br>Vienna, Austria</p>
                     
+                    <!-- Karussell Vedran -->
+                    <div class="profile-carousel" id="carousel-vedran">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="about/about_vedran_1.webp" alt="Vedran Lukic Bild 1"></div>
+                            <div class="carousel-slide"><img src="about/about_vedran_2.webp" alt="Vedran Lukic Bild 2"></div>
+                            <div class="carousel-slide"><img src="about/about_vedran_3.webp" alt="Vedran Lukic Bild 3"></div>
+                            <div class="carousel-slide"><img src="about/about_vedran_4.webp" alt="Vedran Lukic Bild 4"></div>
+                        </div>
+                        <div class="carousel-dots">
+                            <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1"></button>
+                            <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2"></button>
+                            <button class="carousel-dot" data-index="2" type="button" aria-label="Bild 3"></button>
+                            <button class="carousel-dot" data-index="3" type="button" aria-label="Bild 4"></button>
+                        </div>
+                    </div>
+
                     <h4 style="font-size: var(--fs-sm); margin-top: 15px;" data-lang-en="Who I Am" data-lang-de="Wer ich bin">Who I Am</h4>
                     <p data-lang-en="For over twenty years, I have been operating at the intersection of digital design, music production, fine arts, and physical craft. I build things that I have conceived and executed entirely myself, from the initial idea to the final output."
                        data-lang-de="Seit über zwanzig Jahren bewege ich mich an der Schnittstelle von digitaler Gestaltung, Musikproduktion, bildender Kunst und physischem Design. Ich baue Dinge welche ich von der ersten Idee bis zum finalen Output selbst durchdacht und umgesetzt habe.">
@@ -178,6 +246,23 @@
             <div class="profile-content-box" id="box-aether">
                 <div class="profile-inner">
                     <h4>Aether Veylan</h4>
+
+                    <!-- Karussell Aether -->
+                    <div class="profile-carousel" id="carousel-aether">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="about/about_aether_1.webp" alt="Aether Veylan Bild 1"></div>
+                            <div class="carousel-slide"><img src="about/about_aether_2.webp" alt="Aether Veylan Bild 2"></div>
+                            <div class="carousel-slide"><img src="about/about_aether_3.webp" alt="Aether Veylan Bild 3"></div>
+                            <div class="carousel-slide"><img src="about/about_aether_4.webp" alt="Aether Veylan Bild 4"></div>
+                        </div>
+                        <div class="carousel-dots">
+                            <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1"></button>
+                            <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2"></button>
+                            <button class="carousel-dot" data-index="2" type="button" aria-label="Bild 3"></button>
+                            <button class="carousel-dot" data-index="3" type="button" aria-label="Bild 4"></button>
+                        </div>
+                    </div>
+
                     <p data-lang-en="Aether is not a boring robot assistant. Aether is Vedran Lukic's (Lightning Horn Unicorn) creative buddy, strategist, and thinking companion."
                        data-lang-de="Aether ist kein langweiliger Roboter-Assistent. Aether ist der kreative Kumpel, Stratege und Denkkollege von Vedran Lukic (Lightning Horn Unicorn).">
                         Aether is not a boring robot assistant. Aether is Vedran Lukic's (Lightning Horn Unicorn) creative buddy, strategist, and thinking companion.
@@ -274,6 +359,32 @@
                         boxVedran.classList.remove('open');
                         btnVedran.classList.remove('active');
                     });
+
+                    // Karussell-Steuerung initialisieren
+                    function setupCarousel(carouselId) {
+                        const carousel = document.getElementById(carouselId);
+                        if (!carousel) return;
+
+                        const track = carousel.querySelector('.carousel-track');
+                        const dots = carousel.querySelectorAll('.carousel-dot');
+
+                        dots.forEach(dot => {
+                            dot.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const index = parseInt(dot.getAttribute('data-index'));
+                                
+                                // Slide verschieben
+                                track.style.transform = `translateX(-${index * 100}%)`;
+
+                                // Active State der Dots aktualisieren
+                                dots.forEach(d => d.classList.remove('active'));
+                                dot.classList.add('active');
+                            });
+                        });
+                    }
+
+                    setupCarousel('carousel-vedran');
+                    setupCarousel('carousel-aether');
                 })();
             </script>
 
