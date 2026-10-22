@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- JSZip & FileSaver für den gebündelten Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -55,6 +58,11 @@
     @keyframes textFlash {
       0%, 100% { color: var(--text-muted); }
       50% { color: var(--orange); text-shadow: 0 0 10px rgba(255,165,2,0.6); }
+    }
+    @keyframes eqDance {
+      0% { height: 6px; }
+      50% { height: 26px; }
+      100% { height: 12px; }
     }
 
     body {
@@ -106,8 +114,10 @@
 
     .download-all-container {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       margin: 20px 40px 10px 40px;
+      gap: 8px;
     }
 
     .download-all-btn {
@@ -137,6 +147,24 @@
     .download-all-btn:active {
       transform: translate(2px, 2px);
       box-shadow: 0px 0px 0px var(--text-main);
+    }
+
+    /* Fortschrittsbalken für ZIP-Download */
+    .zip-progress-wrapper {
+      width: 100%;
+      max-width: 320px;
+      height: 10px;
+      background: var(--border);
+      border: 2px solid var(--text-main);
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+    }
+    .zip-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--orange);
+      transition: width 0.1s linear;
     }
 
     .playlist-header { 
@@ -331,13 +359,24 @@
 
     .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 3px solid var(--text-main); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
     .np-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
-    .np-cover { width: 56px; height: 56px; border-radius: 4px; background: linear-gradient(135deg, var(--yellow), var(--orange)); border: 2px solid var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .np-cover { width: 56px; height: 56px; border-radius: 4px; background: linear-gradient(135deg, var(--yellow), var(--orange)); border: 2px solid var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; position: relative; overflow: hidden; }
+    
+    /* Audio Equalizer im Cover */
+    .np-equalizer { position: absolute; inset: 0; display: none; align-items: flex-end; justify-content: center; gap: 3px; padding-bottom: 6px; background: rgba(0,0,0,0.15); z-index: 3; pointer-events: none; }
+    .np-cover.playing-eq .np-equalizer { display: flex; }
+    .eq-bar { width: 4px; background: var(--yellow); border-top: 1px solid var(--text-main); animation: eqDance 0.6s infinite ease-in-out alternate; }
+    .eq-bar:nth-child(2) { animation-delay: 0.2s; background: var(--orange); }
+    .eq-bar:nth-child(3) { animation-delay: 0.4s; background: var(--red); }
+
     .np-track-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .np-track-name { font-size: 10px; color: var(--text-main); white-space: nowrap; overflow: hidden; position: relative; }
     .np-track-artist { font-size: 8px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .np-title-text { display: inline-block; white-space: nowrap; }
-    .np-track-name.marquee .np-title-text { padding-left: 100%; animation: titleMarquee 7s linear infinite; }
-    @keyframes titleMarquee { 0%, 10% { transform: translateX(0); } 90%, 100% { transform: translateX(-100%); } }
+    .np-track-name.marquee .np-title-text { padding-left: 100%; animation: titleMarquee 8s linear infinite; }
+    @keyframes titleMarquee { 
+      0% { transform: translateX(0); } 
+      100% { transform: translateX(-100%); } 
+    }
 
     .np-versions { display: none; align-items: center; gap: 6px; margin-top: 2px; }
     .np-version { width: 10px; height: 10px; border: 1px solid var(--text-dim); border-radius: 2px; background: transparent; cursor: pointer; transition: all 0.2s; outline: none; }
@@ -457,7 +496,14 @@
 
   <div class="now-playing">
     <div class="np-left">
-      <div class="np-cover" id="np-cover">🦆</div>
+      <div class="np-cover" id="np-cover">
+        🦆
+        <div class="np-equalizer" id="np-eq">
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+        </div>
+      </div>
       <div class="np-track-info">
         <div class="np-track-name" id="np-title"><span class="np-title-text">No track selected</span></div>
         <div class="np-track-artist" id="np-artist">Lightning Horn Unicorn</div>
@@ -503,6 +549,7 @@
 var isLimitUnlocked = false;
 var limitCharge = 0;
 var limitAudioCtx = null;
+var audioDurationCache = {};
 
 function initLimitAudio() {
   if (!limitAudioCtx) {
@@ -843,7 +890,10 @@ Vedran Lukic & Aether Veylan`;
     var html = '';
     
     html += '<div class="download-all-container">';
-    html += '  <button class="download-all-btn" id="downloadAllBtn">📥 DOWNLOAD ALL SONGS</button>';
+    html += '  <button class="download-all-btn" id="downloadAllBtn">📥 DOWNLOAD ALL SONGS (ZIP)</button>';
+    html += '  <div class="zip-progress-wrapper" id="zipProgressWrapper">';
+    html += '    <div class="zip-progress-fill" id="zipProgressFill"></div>';
+    html += '  </div>';
     html += '</div>';
 
     html += '<div class="playlist-header">';
@@ -911,19 +961,53 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
+    // JSZip Download mit Fortschrittsbalken & Inklusion ALLER Versionen
     var downloadAllBtn = document.getElementById('downloadAllBtn');
+    var zipProgressWrapper = document.getElementById('zipProgressWrapper');
+    var zipProgressFill = document.getElementById('zipProgressFill');
+
     if (downloadAllBtn) {
-      downloadAllBtn.addEventListener('click', function() {
+      downloadAllBtn.addEventListener('click', async function() {
+        if (typeof JSZip === 'undefined') {
+          alert('JSZip library not loaded.');
+          return;
+        }
+        downloadAllBtn.textContent = '⏳ PREPARING ZIP...';
+        downloadAllBtn.disabled = true;
+        if (zipProgressWrapper) zipProgressWrapper.style.display = 'block';
+        if (zipProgressFill) zipProgressFill.style.width = '0%';
+
+        var zip = new JSZip();
         var allTracks = getAllFilesIncludingVersions();
-        allTracks.forEach(function(track, idx) {
-          setTimeout(function() {
-            var a = document.createElement('a');
-            a.href = track.file;
-            a.download = track.title;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }, idx * 400);
+        var total = allTracks.length;
+
+        for (var idx = 0; idx < total; idx++) {
+          var track = allTracks[idx];
+          downloadAllBtn.textContent = `⏳ PACKING (${idx + 1}/${total})...`;
+          var pct = Math.round(((idx + 1) / total) * 100);
+          if (zipProgressFill) zipProgressFill.style.width = pct + '%';
+
+          try {
+            var response = await fetch(track.file);
+            var blob = await response.blob();
+            var safeTitle = track.title.replace(/[\/\\?%*:|"<>]/g, '_');
+            zip.file(safeTitle + '.mp3', blob);
+          } catch (err) {
+            console.error(`Fehler beim Laden von ${track.title}:`, err);
+          }
+        }
+
+        downloadAllBtn.textContent = '📦 GENERATING ZIP...';
+        zip.generateAsync({ type: 'blob' }).then(function(content) {
+          saveAs(content, 'Lightning_Horn_Unicorn_All_Songs.zip');
+          downloadAllBtn.textContent = '📥 DOWNLOAD ALL SONGS (ZIP)';
+          downloadAllBtn.disabled = false;
+          if (zipProgressWrapper) zipProgressWrapper.style.display = 'none';
+        }).catch(function(err) {
+          console.error('ZIP Error:', err);
+          downloadAllBtn.textContent = '📥 DOWNLOAD ALL SONGS (ZIP)';
+          downloadAllBtn.disabled = false;
+          if (zipProgressWrapper) zipProgressWrapper.style.display = 'none';
         });
       });
     }
@@ -1067,6 +1151,7 @@ Vedran Lukic & Aether Veylan`;
   var npTitleContainer = document.getElementById('np-title');
   var npVersions = document.getElementById('np-versions');
   var npBar = document.getElementById('np-bar');
+  var npCoverBox = document.getElementById('np-cover');
 
   function fmtTime(s) {
     if (isNaN(s)) return '0:00';
@@ -1077,6 +1162,11 @@ Vedran Lukic & Aether Veylan`;
 
   function updatePlayBtn(playing) {
     npPlay.innerHTML = playing ? '⏸' : '▶';
+    if (npCoverBox) {
+      if (playing) npCoverBox.classList.add('playing-eq');
+      else npCoverBox.classList.remove('playing-eq');
+    }
+
     document.querySelectorAll('.song-row').forEach(function(r) { 
       r.classList.remove('playing');
       var icon = r.querySelector('.song-play-icon');
@@ -1214,10 +1304,20 @@ Vedran Lukic & Aether Veylan`;
   function loadDurations() {
     document.querySelectorAll('.song-row').forEach(function(row) {
       var song = songList[parseInt(row.dataset.idx)];
-      var audio = new Audio(); audio.preload = 'metadata'; audio.src = song.file;
+      var durationEl = row.querySelector('.song-duration');
+      if (!durationEl) return;
+
+      if (audioDurationCache[song.file]) {
+        durationEl.textContent = fmtTime(audioDurationCache[song.file]);
+        return;
+      }
+
+      var audio = new Audio(); 
+      audio.preload = 'metadata'; 
+      audio.src = song.file;
       audio.addEventListener('loadedmetadata', function() {
-        var el = row.querySelector('.song-duration');
-        if (el) el.textContent = fmtTime(audio.duration);
+        audioDurationCache[song.file] = audio.duration;
+        durationEl.textContent = fmtTime(audio.duration);
       });
     });
   }
