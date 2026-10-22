@@ -371,7 +371,7 @@
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
     
-    /* Aktionsbuttons (Disk, Planet, Notenschlüssel) nebeneinander */
+    /* Aktionsbuttons (Disk, Planet, Gitarre) nebeneinander */
     .song-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
     .action-btn { width: 34px; height: 34px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 14px; outline: none; }
     .song-item-wrapper:hover .action-btn { opacity: 1; border-color: var(--text-main); color: var(--text-main); }
@@ -392,10 +392,11 @@
       line-height: 1.6;
     }
     .song-submenu.open {
-      max-height: 300px;
+      max-height: 600px;
       padding: 12px 16px;
       border-top: 1px dashed var(--border);
       margin-bottom: 8px;
+      overflow-y: auto;
     }
     .submenu-content {
       white-space: pre-wrap;
@@ -485,7 +486,6 @@
       .song-list-container { padding: 0 12px; }
       .song-list-header { display: none; }
       
-      /* Angepasst fürs Handy: Alle 3 Buttons bleiben sauber nebeneinander */
       .song-row { grid-template-columns: 24px 1fr auto auto; padding: 12px; gap: 8px; background: #fff; border: 2px solid var(--border); }
       .song-row .song-duration { display: none; }
       .song-actions { display: flex; }
@@ -745,6 +745,9 @@ function unlockSecret() {
       id: 'bsides', name: 'B-Sides Acoustic Etc', icon: '🎤',
       songs: [
         { title: 'Duck Pants', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_DUCK_PANTS.mp3' },
+        { title: 'Elk Emil', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.mp3',
+          lore: "ELK EMIL\n\nSong & Guitar Chords written by Vedran Lukic\n\nIntro\n\"G  C  D  G  C  C\"\n\"G  C  D  G  C  C\"\n\nVerse 1\n[G] Through the malls he [C] emerges, [Em] stomping [D] the floor\n[G] Last guardian of [C] forests, [G] his hooves move like [D] a thunderchoir\n[G] Through the malls he [C] emerges, [Em] stomping [D] the floor\n[Em] And he is marching [C] on, and the city [G] is freed by [D] night\n\nChorus\n[G] Elk Emil, in his neon-red cape!\n[C] Racing on [D] asphalt, no wall can [G] escape!\n[D] He opens the gates of civilization’s land,\n[Em] Claims back the forest by thunder’s [D] command. [G]\n\nVerse 2\n[C] Thirsty, all shout, “Where is the Wi-Fi?!”\n[Em] But Emil pulls the cable: “Now it’s time for pine!”\n[C] He stomps the ground, the chamber shakes,\n[D] And chandeliers dance as the old law breaks.\n\nThe New Constitution\n[C] Paragraph One: Free moss for all kids.\n[Em] Paragraph Two: Give the stag his Tinder hits.\n[C] Paragraph Three: A highway for [D] badgers at night.\n[C] Paragraph Four: No selfies with wildlife.\n[Em] The chancellor sweats, the Beamer flickers,\n[C] Emil shows charts: “Viking chicken cluckers!”\n\nThe Final Lesson\n[C] [Em] [D] Graphs explode, bar charts ignite,\n(Silence)\nHe teaches photosynthesis till lobbyists\n[G] say bye.\n\nFinale: Without Guitar\nHe raises his hooves, now levitates,\nA nation of antlers, now wide awake.\nOne hoof marks the trail, with rhetoric precise.\nDa dam dom bump\nDa dam dom bump"
+        },
         { title: 'Elk Emil', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.mp3' },
         { title: 'Goat', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_GOAT_ALTERNATE_BURNING_HORNS_DISCO_VERSION.mp3',
           versions: [
@@ -873,7 +876,7 @@ function unlockSecret() {
     var all = [];
     genres.forEach(function(g) {
       g.songs.forEach(function(s) {
-        all.push({ genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null });
+        all.push({ genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null, lore: s.lore || null });
       });
     });
     return all;
@@ -924,7 +927,7 @@ Vedran Lukic & Aether Veylan`;
     } else {
       var g = genres.find(function(x) { return x.id === genreId; });
       songs = g.songs.map(function(s) {
-        return { genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null };
+        return { genre: g.id, genreName: g.name, genreIcon: g.icon, title: s.title, file: s.file, versions: s.versions || null, lore: s.lore || null };
       });
       title = g.name.toUpperCase();
       icon = g.icon;
@@ -966,11 +969,11 @@ Vedran Lukic & Aether Veylan`;
     html += '  </div>';
     html += '</div>';
 
-    /* Erklärungstext (Legende) oben über den Songs */
+    /* Legende oben über der Songliste */
     html += '<div class="song-legend-bar">';
     html += '  <div class="legend-item"><span>💾 Disk: Song speichern / herunterladen</span></div>';
     html += '  <div class="legend-item"><span>🪐 Planet: Song-Bedeutung / Lore öffnen</span></div>';
-    html += '  <div class="legend-item"><span>🎼 Notenschlüssel: Lyrics & Live-Akkorde öffnen</span></div>';
+    html += '  <div class="legend-item"><span>🎸 Gitarre: Lyrics & Live-Akkorde öffnen</span></div>';
     html += '</div>';
 
     html += '<div class="song-list-container">';
@@ -983,7 +986,6 @@ Vedran Lukic & Aether Veylan`;
       var hasVersions = song.versions && song.versions.length > 1;
       var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
 
-      /* Song-Wrapper enthält die Hauptzeile UND das direkt darunter liegende Akkordeon-Untermenü */
       html += '<div class="song-item-wrapper' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
       
       html += '  <div class="song-row">';
@@ -1000,21 +1002,20 @@ Vedran Lukic & Aether Veylan`;
       
       html += '    <div class="song-duration">--:--</div>';
       
-      /* Aktionsbuttons nebeneinander (Disk, Planet, Notenschlüssel) */
       html += '    <div class="song-actions">';
       html += '      <button class="action-btn dl-btn" data-song="' + i + '" title="Download Song">💾</button>';
       html += '      <button class="action-btn lore-btn" data-type="lore" title="Song Meaning & Lore">🪐</button>';
-      html += '      <button class="action-btn chords-btn" data-type="chords" title="Lyrics & Chords">🎼</button>';
+      html += '      <button class="action-btn chords-btn" data-type="chords" title="Lyrics & Chords">🎸</button>';
       html += '    </div>';
 
-      html += '  </div>'; // Ende song-row
+      html += '  </div>';
 
       /* Das ausklappbare Untermenü direkt unter dem Song */
       html += '  <div class="song-submenu" id="submenu-' + i + '">';
       html += '    <div class="submenu-content">COMING SOON</div>';
       html += '  </div>';
 
-      html += '</div>'; // Ende song-item-wrapper
+      html += '</div>';
     });
     html += '</div>';
 
@@ -1155,7 +1156,6 @@ Vedran Lukic & Aether Veylan`;
   }
 
   function bindSongEvents() {
-    // Song abspielen bei Klick auf die Zeile
     document.querySelectorAll('.song-row').forEach(function(row) {
       row.addEventListener('click', function(e) {
         if (e.target.closest('.version-dot') || e.target.closest('.song-actions')) return;
@@ -1200,7 +1200,6 @@ Vedran Lukic & Aether Veylan`;
       });
     });
 
-    // Disk Download Event
     document.querySelectorAll('.dl-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -1212,15 +1211,15 @@ Vedran Lukic & Aether Veylan`;
       });
     });
 
-    // Planet & Notenschlüssel Toggle-Events für das Untermenü unter dem Song
     document.querySelectorAll('.lore-btn, .chords-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
         var wrapper = btn.closest('.song-item-wrapper');
+        var idx = parseInt(wrapper.dataset.idx);
+        var song = songList[idx];
         var submenu = wrapper.querySelector('.song-submenu');
         var isOpen = submenu.classList.contains('open');
         
-        // Alle anderen Untermenüs in der Liste schließen und Buttons zurücksetzen
         document.querySelectorAll('.song-submenu').forEach(function(sm) { sm.classList.remove('open'); });
         document.querySelectorAll('.lore-btn, .chords-btn').forEach(function(b) { b.classList.remove('active-tab'); });
 
@@ -1228,12 +1227,16 @@ Vedran Lukic & Aether Veylan`;
           submenu.classList.add('open');
           btn.classList.add('active-tab');
           
-          // Hier kannst du später dynamisch den Text je nach Typ (Lore oder Chords) anpassen:
           var contentBox = submenu.querySelector('.submenu-content');
           if (btn.classList.contains('lore-btn')) {
             contentBox.textContent = "🪐 SONG LORE & MEANING:\nComing soon...";
           } else {
-            contentBox.textContent = "🎼 LYRICS & LIVE CHORDS:\nComing soon...";
+            // Wenn für Elk Emil (oder andere mit echtem Text) Akkorde hinterlegt sind, anzeigen!
+            if (song.lore) {
+              contentBox.textContent = song.lore;
+            } else {
+              contentBox.textContent = "🎸 LYRICS & LIVE CHORDS:\nComing soon...";
+            }
           }
         }
       });
