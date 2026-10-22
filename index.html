@@ -22,8 +22,7 @@
     --accent: #8fd9fb;
   }
 
-
-- { box-sizing: border-box; }
+  * { box-sizing: border-box; }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -146,10 +145,6 @@
   #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
   #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
 
-  /* =========================================================================
-     VERTIKALMODUS-SICHERES, FLEXibles UI LAYOUT (KEIN ÜBERLAPPEN MEHR)
-     ========================================================================= */
-
   #ui-wrapper { 
     position: fixed; 
     top: max(10px, env(safe-area-inset-top)); 
@@ -216,12 +211,10 @@
   .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* EFFEKTE */
   #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
   #rainbow-aura.active { display: block; animation: rainbowAura 0.55s linear infinite; }
   @keyframes rainbowAura { from { transform: translate(-50%, -50%) rotate(0deg) scale(0.78); opacity: 0.05; } 50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); opacity: 0.18; } to { transform: translate(-50%, -50%) rotate(360deg) scale(0.78); opacity: 0.05; } }
 
-  /* SHMUP MULTI-LASER */
   .shmup-center { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
   .shmup-beam { position: absolute; top: -8px; height: 16px; width: 45vw; border-radius: 8px; opacity: 0; }
   .shmup-beam.right { left: 0; transform-origin: left center; background: linear-gradient(90deg, #fff, #ff3030, #ff9d21, transparent); animation: fireRight var(--speed) linear infinite; animation-delay: var(--delay); }
@@ -229,7 +222,6 @@
   @keyframes fireRight { 0% { transform: rotate(var(--angle)) translateX(5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
   @keyframes fireLeft { 0% { transform: rotate(var(--angle)) translateX(-5vw) scaleX(0.2); opacity: 1; filter: hue-rotate(0deg); } 100% { transform: rotate(var(--angle)) translateX(-50vw) scaleX(1); opacity: 0; filter: hue-rotate(360deg); } }
 
-  /* EMOJIS */
   #heart-emojis.active, #rainbow-emojis.active { display: block; }
   .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
   @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
@@ -243,6 +235,17 @@
 
   #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
   #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
+
+  /* Zitat-Vorschlag Button & Modal Styling */
+  #quote-btn {
+    background: none; border: none; font-size: 20px; cursor: pointer; 
+    opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
+    padding: 2px 8px; filter: grayscale(100%); 
+  }
+  #quote-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
+
+  #quote-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100003; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.95); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
+  #quote-modal p { margin: 0 0 20px 0; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
   @media (max-width: 600px) { 
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
@@ -330,7 +333,19 @@
 
   <div id="head-menu">
     <select id="head-select" class="glass"></select>
-    <button id="disclaimer-btn" aria-label="Legal Disclaimer" title="Legal Disclaimer">⚠️</button>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button id="quote-btn" aria-label="Zitat Vorschlagen" title="Zitat vorschlagen">💬</button>
+      <button id="disclaimer-btn" aria-label="Legal Disclaimer" title="Legal Disclaimer">⚠️</button>
+    </div>
+  </div>
+
+  <div id="quote-modal">
+    <div style="font-size: 28px; margin-bottom: 8px;">💬</div>
+    <p>Willst du ein Zitat beisteuern? Schick mir deinen Spruch per Mail – mit deinem Namen oder anonym. Wenn er gut ist, landet er hier!</p>
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <a id="quote-mail-link" href="mailto:lightninghornunicorn@gmail.com?subject=Zitat-Vorschlag%20für%20LHU&body=Hi%20Vedran,%0A%0AMein%20Zitat-Vorschlag:%20%5BHier%20Spruch%20einfügen%5D%0AName%20(oder%20anonym):%20%5BHier%20Namen%20einfügen%5D" class="btn glass" style="text-decoration: none; display: inline-flex; align-items: center;">Spruch senden ⚡</a>
+      <button id="close-quote" class="btn glass">Schließen</button>
+    </div>
   </div>
 
   <div id="disclaimer-modal">
@@ -526,6 +541,10 @@
   document.getElementById("disclaimer-btn").onclick = () => { document.getElementById("disclaimer-modal").style.display = "block"; };
   document.getElementById("close-disclaimer").onclick = () => { document.getElementById("disclaimer-modal").style.display = "none"; };
 
+  // Zitat Vorschlag Modal Event Handler
+  document.getElementById("quote-btn").onclick = () => { document.getElementById("quote-modal").style.display = "block"; };
+  document.getElementById("close-quote").onclick = () => { document.getElementById("quote-modal").style.display = "none"; };
+
   const MODELS = [
     { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
     { label: "uniturnoeyeballhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/uniturnoeyeballhorn.glb" },
@@ -540,7 +559,6 @@
   function startLoading() { loadingEl.classList.add("show"); }
   function stopLoading() { loadingEl.classList.remove("show"); }
 
-  // PS2 WISHY-WASHY PIXEL LOOK RENDERER
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
 
@@ -718,7 +736,6 @@
   document.getElementById("wisdom-btn").onclick = () => {
     if (!object || gagActive || rainbowActive) return;
 
-    // Stoppe vorherige Instanzen (TextSchreiben, Sprachausgabe, Fallback-Timer)
     if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
     if (typewriterInterval) clearInterval(typewriterInterval);
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -752,7 +769,7 @@
     textEl.classList.add("wisdom-active");
 
     let charIndex = 0; 
-    const typingSpeed = 15; // Sehr schnelles Tippen
+    const typingSpeed = 15; 
     const totalTypeTime = phrase.length * typingSpeed;
 
     isTyping = true; 
@@ -779,7 +796,6 @@
 
       const headIdx = document.getElementById("head-select").selectedIndex;
 
-      // Mittelmäßig schnelle Sprachausgabe (rate zwischen 1.25 und 1.45)
       const profiles = [
         { p: 0.1, r: 1.35 },
         { p: 1.8, r: 1.45 },
