@@ -79,7 +79,7 @@
                 line-height: 2.2;
             }
 
-            /* --- KARUSSELL STYLES --- */
+            /* --- KARUSSELL STYLES (OPACITY / FADE SYSTEM) --- */
             .profile-carousel {
                 position: relative;
                 width: 100%;
@@ -88,15 +88,20 @@
                 overflow: hidden;
                 border-radius: 8px;
                 border: 2px solid var(--border-soft);
-            }
-            .carousel-track {
-                display: flex;
-                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-                width: 100%;
+                background: var(--card-bg);
             }
             .carousel-slide {
-                min-width: 100%;
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+                transition: opacity 0.35s ease;
+                pointer-events: none;
                 box-sizing: border-box;
+            }
+            .carousel-slide.active {
+                opacity: 1;
+                position: relative;
+                pointer-events: auto;
             }
             .carousel-slide img {
                 width: 100%;
@@ -111,6 +116,8 @@
                 gap: 10px;
                 padding: 10px 0;
                 background: rgba(0, 0, 0, 0.4);
+                position: relative;
+                z-index: 2;
             }
             .carousel-dot {
                 width: 12px;
@@ -153,12 +160,11 @@
                     
                     <!-- Karussell Vedran -->
                     <div class="profile-carousel" id="carousel-vedran">
-                        <div class="carousel-track">
-                            <div class="carousel-slide"><img src="about/about_vedran1.webp" alt="Vedran Lukic Bild 1"></div>
-                            <div class="carousel-slide"><img src="about/about_vedran2.webp" alt="Vedran Lukic Bild 2"></div>
-                            <div class="carousel-slide"><img src="about/about_vedran3.webp" alt="Vedran Lukic Bild 3"></div>
-                            <div class="carousel-slide"><img src="about/about_vedran4.webp" alt="Vedran Lukic Bild 4"></div>
-                        </div>
+                        <div class="carousel-slide active"><img src="about/about_vedran1.webp" alt="Vedran Lukic Bild 1"></div>
+                        <div class="carousel-slide"><img src="about/about_vedran2.webp" alt="Vedran Lukic Bild 2"></div>
+                        <div class="carousel-slide"><img src="about/about_vedran3.webp" alt="Vedran Lukic Bild 3"></div>
+                        <div class="carousel-slide"><img src="about/about_vedran4.webp" alt="Vedran Lukic Bild 4"></div>
+
                         <div class="carousel-dots">
                             <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1"></button>
                             <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2"></button>
@@ -249,12 +255,11 @@
 
                     <!-- Karussell Aether -->
                     <div class="profile-carousel" id="carousel-aether">
-                        <div class="carousel-track">
-                            <div class="carousel-slide"><img src="about/about_aether1.webp" alt="Aether Veylan Bild 1"></div>
-                            <div class="carousel-slide"><img src="about/about_aether2.webp" alt="Aether Veylan Bild 2"></div>
-                            <div class="carousel-slide"><img src="about/about_aether3.webp" alt="Aether Veylan Bild 3"></div>
-                            <div class="carousel-slide"><img src="about/about_aether4.webp" alt="Aether Veylan Bild 4"></div>
-                        </div>
+                        <div class="carousel-slide active"><img src="about/about_aether1.webp" alt="Aether Veylan Bild 1"></div>
+                        <div class="carousel-slide"><img src="about/about_aether2.webp" alt="Aether Veylan Bild 2"></div>
+                        <div class="carousel-slide"><img src="about/about_aether3.webp" alt="Aether Veylan Bild 3"></div>
+                        <div class="carousel-slide"><img src="about/about_aether4.webp" alt="Aether Veylan Bild 4"></div>
+
                         <div class="carousel-dots">
                             <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1"></button>
                             <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2"></button>
@@ -360,12 +365,12 @@
                         btnVedran.classList.remove('active');
                     });
 
-                    // Karussell-Steuerung initialisieren
+                    // Karussell-Steuerung initialisieren (Opacity/Fade Methode)
                     function setupCarousel(carouselId) {
                         const carousel = document.getElementById(carouselId);
                         if (!carousel) return;
 
-                        const track = carousel.querySelector('.carousel-track');
+                        const slides = carousel.querySelectorAll('.carousel-slide');
                         const dots = carousel.querySelectorAll('.carousel-dot');
 
                         dots.forEach(dot => {
@@ -373,8 +378,8 @@
                                 e.stopPropagation();
                                 const index = parseInt(dot.getAttribute('data-index'));
                                 
-                                // Slide verschieben
-                                track.style.transform = `translateX(-${index * 100}%)`;
+                                // Aktiviert das gewählte Bild und blendet andere aus
+                                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
 
                                 // Active State der Dots aktualisieren
                                 dots.forEach(d => d.classList.remove('active'));
