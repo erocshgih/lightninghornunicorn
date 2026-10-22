@@ -149,7 +149,6 @@
       box-shadow: 0px 0px 0px var(--text-main);
     }
 
-    /* Fortschrittsbalken für ZIP-Download */
     .zip-progress-wrapper {
       width: 100%;
       max-width: 320px;
@@ -320,11 +319,27 @@
     .playlist-title { font-size: clamp(24px, 3.5vw, 42px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; text-align: center; } 
 
+    /* Erklärungstext für die Icons oben über der Songliste */
+    .song-legend-bar {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 10px 40px 15px;
+      font-size: 8px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-wrap: wrap;
+      border-bottom: 1px dashed var(--border);
+      margin-bottom: 10px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+
     .song-list-container { padding: 0 40px; }
-    .song-list-header { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-    .song-list-header span:nth-child(3), .song-list-header span:nth-child(4) { text-align: right; }
+    .song-list-header { display: grid; grid-template-columns: 40px 1fr 120px 80px 120px; gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .song-list-header span:nth-child(3), .song-list-header span:nth-child(4), .song-list-header span:nth-child(5) { text-align: right; }
     
-    .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 50px; gap: 16px; padding: 12px 16px; border-radius: 8px; cursor: pointer; align-items: center; transition: background 0.2s; animation: fadeIn 0.4s ease forwards; opacity: 0; }
+    .song-row { display: grid; grid-template-columns: 40px 1fr 120px 80px 120px; gap: 16px; padding: 12px 16px; border-radius: 8px; cursor: pointer; align-items: center; transition: background 0.2s; animation: fadeIn 0.4s ease forwards; opacity: 0; }
     .song-row:hover { background: var(--row-hover); }
     .song-row.playing { background: rgba(255,222,0,0.2); }
     
@@ -349,19 +364,37 @@
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
     
-    .song-download { display: flex; align-items: center; justify-content: center; }
-    .dl-btn { width: 36px; height: 36px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; opacity: 0; font-size: 16px; outline: none; }
-    .song-row:hover .dl-btn { opacity: 1; }
-    .dl-btn:hover { border-color: var(--text-main); color: var(--text-main); background: var(--bg-main); box-shadow: 2px 2px 0px var(--text-main); transform: translate(-2px, -2px); }
-    .dl-btn.dl-active { border-color: var(--orange); color: var(--orange); opacity: 1; }
-    .dl-btn svg { display: none; } 
-    .dl-btn::after { content: '💾'; } 
+    /* Aktionsbuttons (Disk, Planet, Notenschlüssel) */
+    .song-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; position: relative; }
+    .action-btn { width: 34px; height: 34px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 14px; outline: none; }
+    .song-row:hover .action-btn { opacity: 1; border-color: var(--text-main); color: var(--text-main); }
+    .action-btn:hover { background: var(--bg-main); box-shadow: 2px 2px 0px var(--text-main); transform: translate(-2px, -2px); }
+
+    /* Coming Soon Dropdown Menü für Planet & Notenschlüssel */
+    .coming-soon-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #1e272e;
+      color: var(--yellow);
+      border: 2px solid var(--text-main);
+      padding: 6px 10px;
+      font-size: 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+      pointer-events: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .coming-soon-dropdown.show { display: block; animation: fadeIn 0.2s ease forwards; }
 
     .now-playing { position: fixed; left: 0; right: 0; bottom: 0; height: 90px; background: #ffffff; border-top: 3px solid var(--text-main); display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 24px; z-index: 1000; box-shadow: 0 -4px 20px rgba(255,165,2,0.04); }
     .np-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
     .np-cover { width: 56px; height: 56px; border-radius: 4px; background: linear-gradient(135deg, var(--yellow), var(--orange)); border: 2px solid var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; position: relative; overflow: hidden; }
     
-    /* Audio Equalizer im Cover */
     .np-equalizer { position: absolute; inset: 0; display: none; align-items: flex-end; justify-content: center; gap: 3px; padding-bottom: 6px; background: rgba(0,0,0,0.15); z-index: 3; pointer-events: none; }
     .np-cover.playing-eq .np-equalizer { display: flex; }
     .eq-bar { width: 4px; background: var(--yellow); border-top: 1px solid var(--text-main); animation: eqDance 0.6s infinite ease-in-out alternate; }
@@ -442,9 +475,8 @@
       .song-list-container { padding: 0 12px; }
       .song-list-header { display: none; }
       
-      .song-row { grid-template-columns: 24px 1fr auto auto; padding: 12px; gap: 12px; background: #fff; margin-bottom: 8px; box-shadow: var(--shadow-sm); border: 2px solid var(--border); }
-      .song-row .song-duration { display: none; }
-      .song-row .dl-btn { opacity: 1; border-color: var(--border); }
+      .song-row { grid-template-columns: 24px 1fr auto; padding: 12px; gap: 12px; background: #fff; margin-bottom: 8px; box-shadow: var(--shadow-sm); border: 2px solid var(--border); }
+      .song-row .song-duration, .song-row .song-actions { display: none; }
 
       .now-playing { height: 130px; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 12px; padding: 12px 16px; bottom: 0; }
       .np-left { grid-column: 1; grid-row: 1; }
@@ -922,9 +954,16 @@ Vedran Lukic & Aether Veylan`;
     html += '  </div>';
     html += '</div>';
 
+    /* Erklärungstext (Legende) oben über den Songs */
+    html += '<div class="song-legend-bar">';
+    html += '  <div class="legend-item"><span>💾 Disk: Download Song</span></div>';
+    html += '  <div class="legend-item"><span>🪐 Planet: Song Lore & Bedeutung</span></div>';
+    html += '  <div class="legend-item"><span>🎼 Notenschlüssel: Lyrics & Live-Akkorde</span></div>';
+    html += '</div>';
+
     html += '<div class="song-list-container">';
     html += '  <div class="song-list-header">';
-    html += '    <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span></span>';
+    html += '    <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span>Actions</span>';
     html += '  </div>';
 
     songs.forEach(function(song, i) {
@@ -945,7 +984,23 @@ Vedran Lukic & Aether Veylan`;
       html += '    </div>';
       
       html += '    <div class="song-duration">--:--</div>';
-      html += '    <div class="song-download"><button class="dl-btn" data-song="' + i + '" title="Download"></button></div>';
+      
+      /* Aktionsbuttons: Disk (Download), Planet (Lore), Notenschlüssel (Lyrics/Chords) */
+      html += '    <div class="song-actions">';
+      html += '      <button class="action-btn dl-btn" data-song="' + i + '" title="Download Song">💾</button>';
+      
+      html += '      <div style="position:relative;">';
+      html += '        <button class="action-btn lore-btn" title="Song Lore & Meaning">🪐</button>';
+      html += '        <div class="coming-soon-dropdown">COMING SOON</div>';
+      html += '      </div>';
+
+      html += '      <div style="position:relative;">';
+      html += '        <button class="action-btn chords-btn" title="Lyrics & Live Chords">🎼</button>';
+      html += '        <div class="coming-soon-dropdown">COMING SOON</div>';
+      html += '      </div>';
+
+      html += '    </div>';
+
       html += '  </div>';
     });
     html += '</div>';
@@ -961,7 +1016,6 @@ Vedran Lukic & Aether Veylan`;
     loadDurations();
     mainEl.scrollTop = 0;
     
-    // JSZip Download mit Fortschrittsbalken & Inklusion ALLER Versionen
     var downloadAllBtn = document.getElementById('downloadAllBtn');
     var zipProgressWrapper = document.getElementById('zipProgressWrapper');
     var zipProgressFill = document.getElementById('zipProgressFill');
@@ -1090,7 +1144,7 @@ Vedran Lukic & Aether Veylan`;
   function bindSongEvents() {
     document.querySelectorAll('.song-row').forEach(function(row) {
       row.addEventListener('click', function(e) {
-        if (e.target.closest('.version-dot') || e.target.closest('.dl-btn')) return;
+        if (e.target.closest('.version-dot') || e.target.closest('.song-actions')) return;
         var idx = parseInt(row.dataset.idx);
         
         if (currentSongIdx === idx && currentAudio) {
@@ -1131,13 +1185,37 @@ Vedran Lukic & Aether Veylan`;
       });
     });
 
+    // Disk Download Event
     document.querySelectorAll('.dl-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var song = songList[parseInt(btn.dataset.song)];
+        var songIdx = parseInt(btn.closest('.song-row').dataset.idx);
+        var song = songList[songIdx];
         var a = document.createElement('a');
         a.href = song.file; a.download = song.title;
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      });
+    });
+
+    // Planet & Notenschlüssel Coming Soon Dropdown Event
+    document.querySelectorAll('.lore-btn, .chords-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var dropdown = btn.nextElementSibling;
+        
+        // Alle anderen offenen Dropdowns schließen
+        document.querySelectorAll('.coming-soon-dropdown').forEach(function(d) {
+          if (d !== dropdown) d.classList.remove('show');
+        });
+
+        dropdown.classList.toggle('show');
+      });
+    });
+
+    // Bei Klick irgendwo anders auf der Seite alle Dropdowns schließen
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.coming-soon-dropdown').forEach(function(d) {
+        d.classList.remove('show');
       });
     });
   }
