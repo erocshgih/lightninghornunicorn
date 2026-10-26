@@ -513,6 +513,154 @@
       .intro-logo-wrapper { flex-direction: column; }
       #intro-duck-canvas { width: 100px !important; height: 100px !important; }
     }
+
+
+    /* DUCKLOADS: kleine Luxusdetails, fast ohne zusätzliche Rechenlast */
+    @keyframes ambientDrift {
+      0%, 100% { opacity: .48; transform: translate3d(-1%, 0, 0); }
+      50% { opacity: .78; transform: translate3d(1%, 0, 0); }
+    }
+    @keyframes coverHalo {
+      0%, 100% { opacity: .38; transform: scale(.985); }
+      50% { opacity: .72; transform: scale(1.025); }
+    }
+    @keyframes goldGlimmer {
+      0%, 84%, 100% { opacity: 0; transform: translateX(-130%); }
+      90% { opacity: .5; }
+      97% { opacity: 0; transform: translateX(130%); }
+    }
+    @keyframes activeEdge {
+      0%, 100% { opacity: .45; }
+      50% { opacity: .9; }
+    }
+
+    /* Eine ruhige, warme Lichtfläche im Hintergrund statt weiterer Canvas-Effekte. */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -12%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 18% 12%, rgba(255, 222, 0, .12), transparent 34%),
+        radial-gradient(ellipse at 86% 72%, rgba(255, 165, 2, .09), transparent 36%);
+      animation: ambientDrift 18s ease-in-out infinite;
+      contain: strict;
+    }
+    .app { position: relative; isolation: isolate; }
+    .sidebar, .now-playing { backdrop-filter: none; }
+    .sidebar { background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,253,247,.96)); }
+
+    /* Der Header bekommt ein sehr langsames Lichtspiel, ohne seine Geometrie zu bewegen. */
+    .playlist-header {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fff3cd 0%, rgba(255,253,247,.94) 100%);
+    }
+    .playlist-header::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,222,0,.22), transparent 58%);
+      opacity: .7;
+      animation: ambientDrift 16s ease-in-out infinite;
+    }
+
+    /* Vinyl-artwork: ein feiner Lichtsaum statt eines zusätzlichen Effektsystems. */
+    .playlist-cover-wrapper {
+      box-shadow: 0 5px 16px rgba(115, 83, 10, .08), 0 0 0 1px rgba(255,255,255,.7);
+      transition: box-shadow .25s ease, transform .25s ease;
+    }
+    .playlist-cover-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(255,255,255,.6);
+      border-radius: 15px;
+      pointer-events: none;
+      opacity: .75;
+    }
+    .playlist-cover-wrapper:hover {
+      box-shadow: 0 8px 24px rgba(255,165,2,.16), 0 0 0 1px rgba(255,255,255,.9);
+      transform: translateY(-2px);
+    }
+    .playlist-cover {
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+    }
+    .playlist-cover::after {
+      content: '';
+      position: absolute;
+      inset: -18%;
+      z-index: 2;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.25) 48%, transparent 58%);
+      transform: translateX(-130%);
+      animation: goldGlimmer 9s ease-in-out infinite;
+    }
+
+    /* Die aktive Zeile erhält einen warmen Rand, kein zusätzliches Leuchtgewitter. */
+    .song-item-wrapper { position: relative; overflow: hidden; }
+    .song-item-wrapper.playing {
+      box-shadow: inset 3px 0 0 var(--orange);
+      animation: activeEdge 3.8s ease-in-out infinite;
+    }
+    .song-item-wrapper.playing .song-title { color: #5b4810; }
+    .sidebar-playlist { position: relative; overflow: hidden; }
+    .sidebar-playlist.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22%;
+      bottom: 22%;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--orange);
+      opacity: .85;
+    }
+
+    /* Ein kleiner Lichtreflex auf dem Fortschrittsbalken, nur solange Musik läuft. */
+    .np-bar { overflow: hidden; }
+    .np-fill { overflow: hidden; }
+    .np-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 22px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.62));
+      pointer-events: none;
+    }
+    .np-cover { box-shadow: 0 2px 8px rgba(255,165,2,.12); }
+    .now-playing {
+      background: linear-gradient(105deg, #fff 0%, #fffdf7 52%, #fff8e7 100%);
+      box-shadow: 0 -5px 24px rgba(255,165,2,.07);
+      border-top: 2px solid transparent;
+      border-image: linear-gradient(90deg, var(--yellow), #fff3cd 48%, var(--orange)) 1;
+    }
+
+    /* Tastaturfokus sichtbar und ruhig, statt nur auf Hover zu reagieren. */
+    :is(button, a, [role="button"], .song-row, .sidebar-playlist):focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before,
+      .playlist-header::before,
+      .playlist-cover::after,
+      .song-item-wrapper.playing {
+        animation: none !important;
+      }
+      .playlist-cover-wrapper,
+      .sidebar-playlist,
+      .song-item-wrapper,
+      .np-btn,
+      .action-btn { transition: none !important; }
+    }
   </style>
 </head>
 <body>
