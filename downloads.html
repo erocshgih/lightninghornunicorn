@@ -319,6 +319,17 @@
     .playlist-title { font-size: clamp(24px, 3.5vw, 42px); color: var(--text-main); line-height: 1.2; }
     .playlist-desc { font-size: 10px; color: var(--text-muted); max-width: 600px; line-height: 1.8; white-space: pre-wrap; text-align: center; } 
 
+    /* Sektions-Trennüberschriften in der Songliste */
+    .section-divider-title {
+      font-size: 9px;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 24px 16px 8px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--yellow);
+    }
+
     /* Legende oben über der Songliste */
     .song-legend-bar {
       display: flex;
@@ -748,7 +759,6 @@ function unlockSecret() {
         { title: 'Elk Emil', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.mp3',
           lore: "ELK EMIL\n\nSong & Guitar Chords written by Vedran Lukic\n\nIntro\n\"G  C  D  G  C  C\"\n\"G  C  D  G  C  C\"\n\nVerse 1\n[G] Through the malls he [C] emerges, [Em] stomping [D] the floor\n[G] Last guardian of [C] forests, [G] his hooves move like [D] a thunderchoir\n[G] Through the malls he [C] emerges, [Em] stomping [D] the floor\n[Em] And he is marching [C] on, and the city [G] is freed by [D] night\n\nChorus\n[G] Elk Emil, in his neon-red cape!\n[C] Racing on [D] asphalt, no wall can [G] escape!\n[D] He opens the gates of civilization’s land,\n[Em] Claims back the forest by thunder’s [D] command. [G]\n\nVerse 2\n[C] Thirsty, all shout, “Where is the Wi-Fi?!”\n[Em] But Emil pulls the cable: “Now it’s time for pine!”\n[C] He stomps the ground, the chamber shakes,\n[D] And chandeliers dance as the old law breaks.\n\nThe New Constitution\n[C] Paragraph One: Free moss for all kids.\n[Em] Paragraph Two: Give the stag his Tinder hits.\n[C] Paragraph Three: A highway for [D] badgers at night.\n[C] Paragraph Four: No selfies with wildlife.\n[Em] The chancellor sweats, the Beamer flickers,\n[C] Emil shows charts: “Viking chicken cluckers!”\n\nThe Final Lesson\n[C] [Em] [D] Graphs explode, bar charts ignite,\n(Silence)\nHe teaches photosynthesis till lobbyists\n[G] say bye.\n\nFinale: Without Guitar\nHe raises his hooves, now levitates,\nA nation of antlers, now wide awake.\nOne hoof marks the trail, with rhetoric precise.\nDa dam dom bump\nDa dam dom bump"
         },
-        { title: 'Elk Emil', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.mp3' },
         { title: 'Goat', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_GOAT_ALTERNATE_BURNING_HORNS_DISCO_VERSION.mp3',
           versions: [
             { label: 'Burning Horns', file: 'downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_GOAT_ALTERNATE_BURNING_HORNS_DISCO_VERSION.mp3' },
@@ -981,42 +991,70 @@ Vedran Lukic & Aether Veylan`;
     html += '    <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span>Actions</span>';
     html += '  </div>';
 
-    songs.forEach(function(song, i) {
-      var delay = (i * 0.03).toFixed(2);
-      var hasVersions = song.versions && song.versions.length > 1;
-      var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
+    /* SONGS MIT CHORDSHEETS / LYRICS VON DEN ANDEREN TRENNEN */
+    var chordSongs = [];
+    var normalSongs = [];
 
-      html += '<div class="song-item-wrapper' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
-      
-      html += '  <div class="song-row">';
-      html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">' + (isThisPlaying ? '⏸' : '▶') + '</span></div>';
-      html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
-      
-      html += '    <div class="song-version-dots' + (isLimitUnlocked ? '' : ' locked') + '">';
-      if (hasVersions) {
-        song.versions.forEach(function(v, vi) {
-          html += '<span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.label + '"></span>';
-        });
+    songs.forEach(function(song) {
+      if (song.lore) {
+        chordSongs.push(song);
+      } else {
+        normalSongs.push(song);
       }
-      html += '    </div>';
-      
-      html += '    <div class="song-duration">--:--</div>';
-      
-      html += '    <div class="song-actions">';
-      html += '      <button class="action-btn dl-btn" data-song="' + i + '" title="Download Song">💾</button>';
-      html += '      <button class="action-btn lore-btn" data-type="lore" title="Song Meaning & Lore">🪐</button>';
-      html += '      <button class="action-btn chords-btn" data-type="chords" title="Lyrics & Chords">🎸</button>';
-      html += '    </div>';
-
-      html += '  </div>';
-
-      /* Das ausklappbare Untermenü direkt unter dem Song */
-      html += '  <div class="song-submenu" id="submenu-' + i + '">';
-      html += '    <div class="submenu-content">COMING SOON</div>';
-      html += '  </div>';
-
-      html += '</div>';
     });
+
+    var globalIndex = 0;
+
+    // Funktion zum Rendern einer Song-Gruppe
+    function renderSongGroup(groupSongs, groupTitle) {
+      if (groupSongs.length === 0) return;
+      if (groupTitle) {
+        html += '<div class="section-divider-title">' + groupTitle + '</div>';
+      }
+
+      groupSongs.forEach(function(song) {
+        var i = globalIndex++;
+        var delay = (i * 0.03).toFixed(2);
+        var hasVersions = song.versions && song.versions.length > 1;
+        var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
+
+        html += '<div class="song-item-wrapper' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
+        
+        html += '  <div class="song-row">';
+        html += '    <div class="song-num-play"><span class="song-num">' + (i + 1) + '</span><span class="song-play-icon">' + (isThisPlaying ? '⏸' : '▶') + '</span></div>';
+        html += '    <div class="song-info"><div class="song-title">' + song.title + '</div><div class="song-artist">' + song.genreName + '</div></div>';
+        
+        html += '    <div class="song-version-dots' + (isLimitUnlocked ? '' : ' locked') + '">';
+        if (hasVersions) {
+          song.versions.forEach(function(v, vi) {
+            html += '<span class="version-dot' + (vi === 0 ? ' active' : '') + '" data-song="' + i + '" data-ver="' + vi + '" title="' + v.label + '"></span>';
+          });
+        }
+        html += '    </div>';
+        
+        html += '    <div class="song-duration">--:--</div>';
+        
+        html += '    <div class="song-actions">';
+        html += '      <button class="action-btn dl-btn" data-song="' + i + '" title="Download Song">💾</button>';
+        html += '      <button class="action-btn lore-btn" data-type="lore" title="Song Meaning & Lore">🪐</button>';
+        html += '      <button class="action-btn chords-btn" data-type="chords" title="Lyrics & Chords">🎸</button>';
+        html += '    </div>';
+
+        html += '  </div>';
+
+        /* Das ausklappbare Untermenü direkt unter dem Song */
+        html += '  <div class="song-submenu" id="submenu-' + i + '">';
+        html += '    <div class="submenu-content">COMING SOON</div>';
+        html += '  </div>';
+
+        html += '</div>';
+      });
+    }
+
+    // Wenn es Songs mit Chordsheets gibt, zuerst anzeigen mit eigener Sektion!
+    renderSongGroup(chordSongs, '🎸 Songs mit Chordsheets & Lyrics');
+    renderSongGroup(normalSongs, chordSongs.length > 0 ? '🎵 Alle anderen Songs' : '');
+
     html += '</div>';
 
     mainEl.innerHTML = html;
@@ -1231,7 +1269,6 @@ Vedran Lukic & Aether Veylan`;
           if (btn.classList.contains('lore-btn')) {
             contentBox.textContent = "🪐 SONG LORE & MEANING:\nComing soon...";
           } else {
-            // Wenn für Elk Emil (oder andere mit echtem Text) Akkorde hinterlegt sind, anzeigen!
             if (song.lore) {
               contentBox.textContent = song.lore;
             } else {
