@@ -863,11 +863,15 @@ function unlockSecret() {
     });
 
     function animateIntro() {
+      if (!canvas.isConnected) {
+        renderer.dispose();
+        return;
+      }
       requestAnimationFrame(animateIntro);
       if (duckMesh) {
         duckMesh.rotation.y += 0.04;
         var flash = Math.pow(Math.max(0, Math.sin(duckMesh.rotation.y * 2)), 12);
-        var glowIntensity = flash * 1.5; 
+        var glowIntensity = flash * 1.5;
         duckMats.forEach(function(m) { m.emissiveIntensity = glowIntensity; });
       }
       renderer.render(scene, camera);
@@ -909,6 +913,24 @@ function unlockSecret() {
   }
 
   function renderPlaylist(genreId) {
+    // A playlist switch changes the meaning of every list index. Stop the old
+    // track so controls can never address a different song in the new playlist.
+    if (genreId !== currentGenre && currentAudio) {
+      currentAudio.pause();
+      currentAudio.src = '';
+      currentAudio = null;
+      currentSongIdx = -1;
+      npPlay.innerHTML = '▶';
+      npTitleText.textContent = 'No track selected';
+      npArtist.textContent = 'Lightning Horn Unicorn';
+      npCurrent.textContent = '0:00';
+      npTotal.textContent = '0:00';
+      npFill.style.width = '0%';
+      npVersions.innerHTML = '';
+      npVersions.style.display = 'none';
+      npBar.classList.remove('buffering');
+      if (npCoverBox) npCoverBox.classList.remove('playing-eq');
+    }
     currentGenre = genreId;
     var songs, title, icon, desc;
 
@@ -1002,6 +1024,7 @@ Vedran Lukic & Aether Veylan`;
       }
     });
 
+    songs = chordSongs.concat(normalSongs);
     var globalIndex = 0;
 
     function renderSongGroup(groupSongs, groupTitle) {
@@ -1087,35 +1110,51 @@ Vedran Lukic & Aether Veylan`;
         var zip = new JSZip();
         var allTracks = getAllFilesIncludingVersions();
         var total = allTracks.length;
+        var failedTracks = [];
+        var usedNames = Object.create(null);
 
-        for (var idx = 0; idx < total; idx++) {
-          var track = allTracks[idx];
-          downloadAllBtn.textContent = `⏳ PACKING (${idx + 1}/${total})...`;
-          var pct = Math.round(((idx + 1) / total) * 100);
-          if (zipProgressFill) zipProgressFill.style.width = pct + '%';
+        try {
+          for (var idx = 0; idx < total; idx++) {
+            var track = allTracks[idx];
+            downloadAllBtn.textContent = `⏳ PACKING (${idx + 1}/${total})...`;
+            var pct = Math.round(((idx + 1) / total) * 100);
+            if (zipProgressFill) zipProgressFill.style.width = pct + '%';
 
-          try {
-            var response = await fetch(track.file);
-            var blob = await response.blob();
-            var safeTitle = track.title.replace(/[\/\\?%*:|"<>]/g, '_');
-            zip.file(safeTitle + '.mp3', blob);
-          } catch (err) {
-            console.error(`Fehler beim Laden von ${track.title}:`, err);
+            try {
+              var response = await fetch(track.file);
+              if (!response.ok) throw new Error('HTTP ' + response.status);
+              var blob = await response.blob();
+              if (!blob.size) throw new Error('Leere Datei');
+              var safeTitle = track.title.replace(/[\/\\?%*:|"<>]/g, '_').trim() || ('track_' + (idx + 1));
+              var filename = safeTitle + '.mp3';
+              var nameCount = (usedNames[filename] || 0) + 1;
+              usedNames[filename] = nameCount;
+              if (nameCount > 1) filename = safeTitle + ' (' + nameCount + ').mp3';
+              zip.file(filename, blob);
+            } catch (err) {
+              failedTracks.push(track.title + ': ' + (err.message || 'Download fehlgeschlagen'));
+              console.error('Fehler beim Laden von ' + track.title + ':', err);
+            }
           }
-        }
 
-        downloadAllBtn.textContent = '📦 GENERATING ZIP...';
-        zip.generateAsync({ type: 'blob' }).then(function(content) {
+          if (Object.keys(zip.files).length === 0) {
+            throw new Error('Keine Audiodateien konnten geladen werden. Bitte Dateipfade und Server prüfen.');
+          }
+
+          downloadAllBtn.textContent = '📦 GENERATING ZIP...';
+          var content = await zip.generateAsync({ type: 'blob' });
           saveAs(content, 'Lightning_Horn_Unicorn_All_Songs.zip');
-          downloadAllBtn.textContent = '📥 DOWNLOAD ALL SONGS (ZIP)';
-          downloadAllBtn.disabled = false;
-          if (zipProgressWrapper) zipProgressWrapper.style.display = 'none';
-        }).catch(function(err) {
+          if (failedTracks.length) {
+            alert('ZIP erstellt, aber ' + failedTracks.length + ' Datei(en) fehlten:\n\n' + failedTracks.join('\n'));
+          }
+        } catch (err) {
           console.error('ZIP Error:', err);
+          alert('Der ZIP-Download ist fehlgeschlagen: ' + (err.message || err));
+        } finally {
           downloadAllBtn.textContent = '📥 DOWNLOAD ALL SONGS (ZIP)';
           downloadAllBtn.disabled = false;
           if (zipProgressWrapper) zipProgressWrapper.style.display = 'none';
-        });
+        }
       });
     }
 
@@ -1218,24 +1257,26 @@ Vedran Lukic & Aether Veylan`;
     document.querySelectorAll('.version-dot').forEach(function(dot) {
       dot.addEventListener('click', function(e) {
         e.stopPropagation();
-        var songIdx = parseInt(dot.closest('.song-item-wrapper').dataset.idx);
-        var verIdx = parseInt(dot.dataset.ver);
+        var wrapper = dot.closest('.song-item-wrapper');
+        var songIdx = Number(wrapper && wrapper.dataset.idx);
+        var verIdx = Number(dot.dataset.ver);
         var song = songList[songIdx];
-        
-        dot.closest('.song-version-dots').querySelectorAll('.version-dot').forEach(function(d) { d.classList.remove('active'); });
+        if (!song || !song.versions || !song.versions[verIdx]) return;
+
+        wrapper.querySelectorAll('.version-dot').forEach(function(d) { d.classList.remove('active'); });
         dot.classList.add('active');
         song.file = song.versions[verIdx].file;
-        
-        var wrapper = document.querySelector('.song-item-wrapper[data-idx="' + songIdx + '"]');
-        if (wrapper) {
-          wrapper.querySelector('.song-artist').textContent = song.genreName + ' — ' + song.versions[verIdx].label;
-        }
+        var artistEl = wrapper.querySelector('.song-artist');
+        if (artistEl) artistEl.textContent = song.genreName + ' — ' + song.versions[verIdx].label;
 
         if (currentSongIdx === songIdx && currentAudio) {
           var wasPlaying = !currentAudio.paused;
-          playSong(currentSongIdx);
-          if (!wasPlaying) { currentAudio.pause(); updatePlayBtn(false); }
+          playSong(songIdx, { autoplay: wasPlaying });
         }
+        if (currentSongIdx === songIdx) renderPlayerVersions(song);
+        var durationEl = wrapper.querySelector('.song-duration');
+        if (durationEl) durationEl.textContent = audioDurationCache[song.file] ? fmtTime(audioDurationCache[song.file]) : '--:--';
+        if (durationEl && !audioDurationCache[song.file]) loadDurationForSong(song, durationEl);
       });
     });
 
@@ -1328,23 +1369,23 @@ Vedran Lukic & Aether Veylan`;
       npVersions.style.display = 'flex';
       song.versions.forEach(function(version, idx) {
         var btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'np-version' + (song.file === version.file ? ' active' : '');
         btn.title = version.label;
+        btn.setAttribute('aria-label', 'Version: ' + version.label);
         btn.addEventListener('click', function(e) {
           e.stopPropagation();
+          var wasPlaying = !!currentAudio && !currentAudio.paused;
           song.file = version.file;
-          
           var wrapper = document.querySelector('.song-item-wrapper[data-idx="' + currentSongIdx + '"]');
           if (wrapper) {
-            wrapper.querySelectorAll('.version-dot').forEach(d => d.classList.remove('active'));
+            wrapper.querySelectorAll('.version-dot').forEach(function(d) { d.classList.remove('active'); });
             var activeDot = wrapper.querySelector('.version-dot[data-ver="' + idx + '"]');
             if (activeDot) activeDot.classList.add('active');
-            wrapper.querySelector('.song-artist').textContent = song.genreName + ' — ' + version.label;
+            var artistEl = wrapper.querySelector('.song-artist');
+            if (artistEl) artistEl.textContent = song.genreName + ' — ' + version.label;
           }
-
-          var wasPlaying = !currentAudio.paused;
-          playSong(currentSongIdx);
-          if (!wasPlaying) { currentAudio.pause(); updatePlayBtn(false); }
+          playSong(currentSongIdx, { autoplay: wasPlaying });
         });
         npVersions.appendChild(btn);
       });
@@ -1353,57 +1394,110 @@ Vedran Lukic & Aether Veylan`;
     }
   }
 
-  function playSong(idx) {
-    if (idx < 0 || idx >= songList.length) return;
-    if (currentAudio) { currentAudio.pause(); }
-    
+  function playSong(idx, options) {
+    options = options || {};
+    if (!songList.length || idx < 0 || idx >= songList.length) return;
+
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.removeAttribute('src');
+      currentAudio.load();
+    }
+
     var song = songList[idx];
-    currentAudio = new Audio(song.file);
+    var audio = new Audio();
+    audio.preload = 'metadata';
+    audio.src = song.file;
+    currentAudio = audio;
     currentSongIdx = idx;
 
     npTitleText.textContent = song.title;
     npTitleContainer.classList.add('marquee');
-    
-    var activeLabel = "";
-    if (song.versions) {
-      var activeVer = song.versions.find(v => v.file === song.file);
-      if (activeVer && activeVer.label !== 'Original') activeLabel = ' — ' + activeVer.label;
-    }
+    var activeVer = song.versions ? song.versions.find(function(v) { return v.file === song.file; }) : null;
+    var activeLabel = activeVer && activeVer.label !== 'Original' ? ' — ' + activeVer.label : '';
     npArtist.textContent = song.genreName + activeLabel;
-    
+    npCurrent.textContent = '0:00';
+    npTotal.textContent = '0:00';
+    npFill.style.width = '0%';
+    npBar.classList.remove('buffering');
     renderPlayerVersions(song);
 
-    npFill.style.width = '0%';
-    
-    currentAudio.addEventListener('loadedmetadata', function() { npTotal.textContent = fmtTime(currentAudio.duration); });
-    currentAudio.addEventListener('timeupdate', function() {
-      if (currentAudio.duration) {
-        npFill.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + '%';
-        npCurrent.textContent = fmtTime(currentAudio.currentTime);
+    audio.addEventListener('loadedmetadata', function() {
+      if (currentAudio !== audio) return;
+      npTotal.textContent = fmtTime(audio.duration);
+      audioDurationCache[song.file] = audio.duration;
+      var wrapper = document.querySelector('.song-item-wrapper[data-idx="' + idx + '"]');
+      var durationEl = wrapper && wrapper.querySelector('.song-duration');
+      if (durationEl) durationEl.textContent = fmtTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', function() {
+      if (currentAudio !== audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+      npFill.style.width = ((audio.currentTime / audio.duration) * 100) + '%';
+      npCurrent.textContent = fmtTime(audio.currentTime);
+    });
+    audio.addEventListener('waiting', function() {
+      if (currentAudio === audio) npBar.classList.add('buffering');
+    });
+    audio.addEventListener('canplay', function() {
+      if (currentAudio === audio) npBar.classList.remove('buffering');
+    });
+    audio.addEventListener('error', function() {
+      if (currentAudio !== audio) return;
+      npBar.classList.remove('buffering');
+      updatePlayBtn(false);
+      console.error('Audio konnte nicht geladen werden:', song.file);
+    });
+    audio.addEventListener('ended', function() {
+      if (currentAudio !== audio) return;
+      if (idx < songList.length - 1) {
+        playSong(idx + 1, { autoplay: true });
+      } else {
+        updatePlayBtn(false);
+        npFill.style.width = '100%';
+        npCurrent.textContent = fmtTime(audio.duration);
       }
     });
-    
-    currentAudio.addEventListener('waiting', function() {
-      npBar.classList.add('buffering');
-    });
-    currentAudio.addEventListener('canplay', function() {
-      npBar.classList.remove('buffering');
-    });
 
-    currentAudio.addEventListener('ended', function() { playSong(idx + 1); });
-
-    currentAudio.play();
-    updatePlayBtn(true);
+    updatePlayBtn(false);
+    if (options.autoplay !== false) {
+      var playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function(err) {
+          if (currentAudio !== audio) return;
+          updatePlayBtn(false);
+          if (err && err.name !== 'AbortError') console.warn('Wiedergabe konnte nicht gestartet werden:', err);
+        });
+      }
+    }
   }
 
   npPlay.addEventListener('click', function() {
-    if (currentSongIdx === -1 && songList.length > 0) playSong(0);
-    else if (currentAudio && !currentAudio.paused) { currentAudio.pause(); updatePlayBtn(false); }
-    else if (currentAudio) { currentAudio.play(); updatePlayBtn(true); }
+    if (currentSongIdx === -1 && songList.length > 0) {
+      playSong(0, { autoplay: true });
+    } else if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+      updatePlayBtn(false);
+    } else if (currentAudio) {
+      var audio = currentAudio;
+      var playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function(err) {
+          if (currentAudio === audio) updatePlayBtn(false);
+          if (err && err.name !== 'AbortError') console.warn('Wiedergabe konnte nicht fortgesetzt werden:', err);
+        });
+      }
+      updatePlayBtn(true);
+    }
   });
 
-  document.getElementById('np-prev').addEventListener('click', function() { playSong(currentSongIdx <= 0 ? songList.length - 1 : currentSongIdx - 1); });
-  document.getElementById('np-next').addEventListener('click', function() { playSong(currentSongIdx >= songList.length - 1 ? 0 : currentSongIdx + 1); });
+  document.getElementById('np-prev').addEventListener('click', function() {
+    if (!songList.length) return;
+    playSong(currentSongIdx <= 0 ? songList.length - 1 : currentSongIdx - 1, { autoplay: true });
+  });
+  document.getElementById('np-next').addEventListener('click', function() {
+    if (!songList.length) return;
+    playSong(currentSongIdx < 0 || currentSongIdx >= songList.length - 1 ? 0 : currentSongIdx + 1, { autoplay: true });
+  });
 
   document.getElementById('np-dl').addEventListener('click', function() {
     if (currentSongIdx === -1) return;
@@ -1413,13 +1507,14 @@ Vedran Lukic & Aether Veylan`;
   });
 
   npBar.addEventListener('click', function(e) {
-    if (!currentAudio) return;
+    if (!currentAudio || !Number.isFinite(currentAudio.duration) || currentAudio.duration <= 0) return;
     playQuackSound();
-    
+
     var rect = this.getBoundingClientRect();
+    if (!rect.width) return;
     var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     var targetTime = pct * currentAudio.duration;
-    
+
     currentAudio.currentTime = targetTime;
     
     if (currentAudio.buffered.length > 0) {
@@ -1440,24 +1535,32 @@ Vedran Lukic & Aether Veylan`;
     el.addEventListener('click', function() { renderPlaylist(el.dataset.genre); });
   });
 
+  function loadDurationForSong(song, durationEl) {
+    if (!song || !durationEl || !song.file) return;
+    var file = song.file;
+    if (audioDurationCache[file]) {
+      durationEl.textContent = fmtTime(audioDurationCache[file]);
+      return;
+    }
+    var audio = new Audio();
+    audio.preload = 'metadata';
+    audio.addEventListener('loadedmetadata', function() {
+      if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+      audioDurationCache[file] = audio.duration;
+      durationEl.textContent = fmtTime(audio.duration);
+      audio.src = '';
+    }, { once: true });
+    audio.addEventListener('error', function() {
+      durationEl.textContent = '--:--';
+    }, { once: true });
+    audio.src = file;
+  }
+
   function loadDurations() {
     document.querySelectorAll('.song-item-wrapper').forEach(function(wrapper) {
-      var song = songList[parseInt(wrapper.dataset.idx)];
+      var song = songList[Number(wrapper.dataset.idx)];
       var durationEl = wrapper.querySelector('.song-duration');
-      if (!durationEl) return;
-
-      if (audioDurationCache[song.file]) {
-        durationEl.textContent = fmtTime(audioDurationCache[song.file]);
-        return;
-      }
-
-      var audio = new Audio(); 
-      audio.preload = 'metadata'; 
-      audio.src = song.file;
-      audio.addEventListener('loadedmetadata', function() {
-        audioDurationCache[song.file] = audio.duration;
-        durationEl.textContent = fmtTime(audio.duration);
-      });
+      loadDurationForSong(song, durationEl);
     });
   }
 
@@ -1489,16 +1592,26 @@ Vedran Lukic & Aether Veylan`;
 
     var gltfLoader = new THREE.GLTFLoader();
     var ducks3D = [];
-    setInterval(function() {
-      gltfLoader.load('glb/rubberduck.glb', function(gltf) {
-        var m = gltf.scene;
-        m.scale.setScalar(0.6 + Math.random() * 1.2);
-        m.rotation.y = Math.PI;
-        m.position.set(-7, -2 + Math.random() * 4, 0);
-        bgScene.add(m);
-        ducks3D.push({ mesh: m, speed: 14 / (12 + Math.random() * 8), born: performance.now(), lifetime: 20000 });
-      });
-    }, 12000);
+    var duckTemplate = null;
+    var duckSpawnTimer = null;
+
+    function spawnBackgroundDuck() {
+      if (!duckTemplate) return;
+      var m = duckTemplate.clone(true);
+      m.scale.setScalar(0.6 + Math.random() * 1.2);
+      m.rotation.y = Math.PI;
+      m.position.set(-7, -2 + Math.random() * 4, 0);
+      bgScene.add(m);
+      ducks3D.push({ mesh: m, speed: 14 / (12 + Math.random() * 8), born: performance.now(), lifetime: 20000 });
+    }
+
+    gltfLoader.load('glb/rubberduck.glb', function(gltf) {
+      duckTemplate = gltf.scene;
+      spawnBackgroundDuck();
+      duckSpawnTimer = setInterval(spawnBackgroundDuck, 12000);
+    }, undefined, function(err) {
+      console.warn('Hintergrund-Ente konnte nicht geladen werden:', err);
+    });
 
     window.addEventListener('resize', function() {
       bgCamera.aspect = window.innerWidth / window.innerHeight;
