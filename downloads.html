@@ -442,6 +442,8 @@
     .np-controls { display: flex; align-items: center; gap: 24px; }
     .np-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; transition: all 0.1s; outline: none; }
     .np-btn:hover { color: var(--text-main); transform: scale(1.2); }
+    .np-btn.shuffle-active { color: var(--orange); text-shadow: 0 0 8px rgba(255, 140, 0, 0.45); }
+    .np-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
     
     .np-btn.play { width: 44px; height: 44px; border-radius: 4px; background: var(--yellow); border: 2px solid var(--text-main); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 2px 2px 0px var(--text-main); }
     .np-btn.play:hover { transform: translate(1px, 1px) !important; background: var(--orange); box-shadow: 1px 1px 0px var(--text-main); }
@@ -567,9 +569,10 @@
     </div>
     <div class="np-center">
       <div class="np-controls">
-        <button class="np-btn" id="np-prev">⏮</button>
-        <button class="np-btn play" id="np-play">▶</button>
-        <button class="np-btn" id="np-next">⏭</button>
+        <button class="np-btn" id="np-shuffle" type="button" title="Shuffle aus" aria-label="Shuffle" aria-pressed="false">🔀</button>
+        <button class="np-btn" id="np-prev" type="button" title="Vorheriger Song" aria-label="Vorheriger Song">⏮</button>
+        <button class="np-btn play" id="np-play" type="button" title="Play/Pause" aria-label="Play">▶</button>
+        <button class="np-btn" id="np-next" type="button" title="Nächster Song" aria-label="Nächster Song">⏭</button>
       </div>
       <div class="np-progress">
         <span class="np-time" id="np-current">0:00</span>
@@ -601,6 +604,9 @@
 <canvas id="duck3D"></canvas>
 
 <script>
+// @ts-nocheck
+// This file is plain JavaScript. Acode may otherwise report TypeScript-only
+// implicit-any diagnostics for ordinary JavaScript callback parameters.
 var isLimitUnlocked = false;
 var limitCharge = 0;
 var limitAudioCtx = null;
@@ -833,6 +839,7 @@ function unlockSecret() {
     var canvas = document.getElementById('intro-duck-canvas');
     if (!canvas) return;
     var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     renderer.setSize(100, 100);
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
@@ -862,12 +869,17 @@ function unlockSecret() {
       scene.add(duckMesh);
     });
 
-    function animateIntro() {
+    var introFrameId = 0;
+    var introLastFrame = 0;
+    function animateIntro(timestamp) {
       if (!canvas.isConnected) {
+        if (introFrameId) cancelAnimationFrame(introFrameId);
         renderer.dispose();
         return;
       }
-      requestAnimationFrame(animateIntro);
+      introFrameId = requestAnimationFrame(animateIntro);
+      if (document.hidden || timestamp - introLastFrame < 33) return;
+      introLastFrame = timestamp;
       if (duckMesh) {
         duckMesh.rotation.y += 0.04;
         var flash = Math.pow(Math.max(0, Math.sin(duckMesh.rotation.y * 2)), 12);
@@ -885,6 +897,9 @@ function unlockSecret() {
   var songList = [];
   var currentAudio = null;
   var currentSongIdx = -1;
+  // Start in shuffle mode so visitors immediately get a random listening path.
+  var shuffleEnabled = true;
+  var shuffleBag = [];
 
   function getAllSongs() {
     var all = [];
@@ -1083,6 +1098,7 @@ Vedran Lukic & Aether Veylan`;
 
     mainEl.innerHTML = html;
     songList = songs;
+    shuffleBag = [];
 
     document.querySelectorAll('.sidebar-playlist').forEach(function(el) {
       el.classList.toggle('active', el.dataset.genre === genreId);
@@ -1241,15 +1257,24 @@ Vedran Lukic & Aether Veylan`;
         var idx = parseInt(wrapper.dataset.idx);
         
         if (currentSongIdx === idx && currentAudio) {
+          // The audio element is the source of truth. Its play/pause events
+          // update both the list icon and the bottom player together.
           if (!currentAudio.paused) {
             currentAudio.pause();
-            updatePlayBtn(false);
           } else {
-            currentAudio.play();
-            updatePlayBtn(true);
+            var audioToResume = currentAudio;
+            var resumePromise = audioToResume.play();
+            if (resumePromise && typeof resumePromise.catch === 'function') {
+              resumePromise.catch(function(err) {
+                if (currentAudio === audioToResume) updatePlayBtn(false);
+                if (err && err.name !== 'AbortError') {
+                  console.warn('Wiedergabe konnte nicht fortgesetzt werden:', err);
+                }
+              });
+            }
           }
         } else {
-          playSong(idx);
+          playSong(idx, { autoplay: true });
         }
       });
     });
@@ -1325,6 +1350,7 @@ Vedran Lukic & Aether Veylan`;
   var npTitleText = document.querySelector('.np-title-text');
   var npArtist = document.getElementById('np-artist');
   var npPlay = document.getElementById('np-play');
+  var npShuffle = document.getElementById('np-shuffle');
   var npFill = document.getElementById('np-fill');
   var npCurrent = document.getElementById('np-current');
   var npTotal = document.getElementById('np-total');
@@ -1394,6 +1420,46 @@ Vedran Lukic & Aether Veylan`;
     }
   }
 
+  function updateShuffleButton() {
+    if (!npShuffle) return;
+    npShuffle.classList.toggle('shuffle-active', shuffleEnabled);
+    npShuffle.setAttribute('aria-pressed', shuffleEnabled ? 'true' : 'false');
+    npShuffle.title = shuffleEnabled ? 'Shuffle an' : 'Shuffle aus';
+  }
+
+  // A shuffled bag plays every track once before starting another round.
+  // The current track is excluded whenever the bag is prepared.
+  function refillShuffleBag() {
+    shuffleBag = [];
+    for (var i = 0; i < songList.length; i++) {
+      if (i !== currentSongIdx) shuffleBag.push(i);
+    }
+    for (var j = shuffleBag.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var temp = shuffleBag[j];
+      shuffleBag[j] = shuffleBag[k];
+      shuffleBag[k] = temp;
+    }
+  }
+
+  function getNextSongIndex() {
+    if (!songList.length) return -1;
+    if (!shuffleEnabled) return currentSongIdx < 0 || currentSongIdx >= songList.length - 1 ? 0 : currentSongIdx + 1;
+    if (!shuffleBag.length) refillShuffleBag();
+    if (!shuffleBag.length) return currentSongIdx;
+    return shuffleBag.pop();
+  }
+
+  if (npShuffle) {
+    npShuffle.addEventListener('click', function() {
+      shuffleEnabled = !shuffleEnabled;
+      if (shuffleEnabled) refillShuffleBag();
+      else shuffleBag = [];
+      updateShuffleButton();
+    });
+  }
+  updateShuffleButton();
+
   function playSong(idx, options) {
     options = options || {};
     if (!songList.length || idx < 0 || idx >= songList.length) return;
@@ -1404,9 +1470,17 @@ Vedran Lukic & Aether Veylan`;
       currentAudio.load();
     }
 
+    if (shuffleEnabled) {
+      // If the visitor manually chooses a track, remove it from the pending
+      // shuffle bag so it cannot unexpectedly repeat later in the same round.
+      shuffleBag = shuffleBag.filter(function(pendingIdx) { return pendingIdx !== idx; });
+    }
+
     var song = songList[idx];
     var audio = new Audio();
-    audio.preload = 'metadata';
+    // Preload the selected opening track aggressively during the intro.
+    // Playback still waits for a visitor gesture to respect browser autoplay rules.
+    audio.preload = 'auto';
     audio.src = song.file;
     currentAudio = audio;
     currentSongIdx = idx;
@@ -1421,6 +1495,19 @@ Vedran Lukic & Aether Veylan`;
     npFill.style.width = '0%';
     npBar.classList.remove('buffering');
     renderPlayerVersions(song);
+
+    // Keep every play/pause indicator driven by the actual audio state.
+    // This avoids the list and the bottom player drifting out of sync when
+    // play() is delayed, rejected, or interrupted by a track change.
+    audio.addEventListener('play', function() {
+      if (currentAudio === audio) updatePlayBtn(true);
+    });
+    audio.addEventListener('playing', function() {
+      if (currentAudio === audio) updatePlayBtn(true);
+    });
+    audio.addEventListener('pause', function() {
+      if (currentAudio === audio) updatePlayBtn(false);
+    });
 
     audio.addEventListener('loadedmetadata', function() {
       if (currentAudio !== audio) return;
@@ -1449,7 +1536,9 @@ Vedran Lukic & Aether Veylan`;
     });
     audio.addEventListener('ended', function() {
       if (currentAudio !== audio) return;
-      if (idx < songList.length - 1) {
+      if (shuffleEnabled) {
+        playSong(getNextSongIndex(), { autoplay: true });
+      } else if (idx < songList.length - 1) {
         playSong(idx + 1, { autoplay: true });
       } else {
         updatePlayBtn(false);
@@ -1476,17 +1565,15 @@ Vedran Lukic & Aether Veylan`;
       playSong(0, { autoplay: true });
     } else if (currentAudio && !currentAudio.paused) {
       currentAudio.pause();
-      updatePlayBtn(false);
     } else if (currentAudio) {
-      var audio = currentAudio;
-      var playPromise = audio.play();
+      var audioToResume = currentAudio;
+      var playPromise = audioToResume.play();
       if (playPromise && typeof playPromise.catch === 'function') {
         playPromise.catch(function(err) {
-          if (currentAudio === audio) updatePlayBtn(false);
+          if (currentAudio === audioToResume) updatePlayBtn(false);
           if (err && err.name !== 'AbortError') console.warn('Wiedergabe konnte nicht fortgesetzt werden:', err);
         });
       }
-      updatePlayBtn(true);
     }
   });
 
@@ -1496,7 +1583,7 @@ Vedran Lukic & Aether Veylan`;
   });
   document.getElementById('np-next').addEventListener('click', function() {
     if (!songList.length) return;
-    playSong(currentSongIdx < 0 || currentSongIdx >= songList.length - 1 ? 0 : currentSongIdx + 1, { autoplay: true });
+    playSong(getNextSongIndex(), { autoplay: true });
   });
 
   document.getElementById('np-dl').addEventListener('click', function() {
@@ -1580,7 +1667,8 @@ Vedran Lukic & Aether Veylan`;
 
   try {
     var bgCanvas = document.getElementById('duck3D');
-    var bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+    var bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: false });
+    bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     bgRenderer.setSize(window.innerWidth, window.innerHeight);
     var bgScene = new THREE.Scene();
     var bgCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -1593,7 +1681,6 @@ Vedran Lukic & Aether Veylan`;
     var gltfLoader = new THREE.GLTFLoader();
     var ducks3D = [];
     var duckTemplate = null;
-    var duckSpawnTimer = null;
 
     function spawnBackgroundDuck() {
       if (!duckTemplate) return;
@@ -1608,7 +1695,13 @@ Vedran Lukic & Aether Veylan`;
     gltfLoader.load('glb/rubberduck.glb', function(gltf) {
       duckTemplate = gltf.scene;
       spawnBackgroundDuck();
-      duckSpawnTimer = setInterval(spawnBackgroundDuck, 12000);
+      function scheduleBackgroundDuck() {
+        setTimeout(function() {
+          if (!document.hidden) spawnBackgroundDuck();
+          scheduleBackgroundDuck();
+        }, 12000);
+      }
+      scheduleBackgroundDuck();
     }, undefined, function(err) {
       console.warn('Hintergrund-Ente konnte nicht geladen werden:', err);
     });
@@ -1619,8 +1712,12 @@ Vedran Lukic & Aether Veylan`;
       bgRenderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    function bgAnimate() {
-      requestAnimationFrame(bgAnimate);
+    var bgFrameId = 0;
+    var bgLastFrame = 0;
+    function bgAnimate(timestamp) {
+      bgFrameId = requestAnimationFrame(bgAnimate);
+      if (document.hidden || timestamp - bgLastFrame < 33) return;
+      bgLastFrame = timestamp;
       var now = performance.now();
       for (var i = ducks3D.length - 1; i >= 0; i--) {
         var duck = ducks3D[i];
@@ -1634,6 +1731,14 @@ Vedran Lukic & Aether Veylan`;
   } catch(e) {}
 
   renderPlaylist('all');
+  // Shuffle starts enabled. Select a random opening track and begin preloading
+  // it while the intro is visible; never force audio playback on page load.
+  if (songList.length) {
+    var initialRandomIndex = Math.floor(Math.random() * songList.length);
+    playSong(initialRandomIndex, { autoplay: false });
+    refillShuffleBag();
+    updateShuffleButton();
+  }
 
   var introEl = document.getElementById('intro');
   var introBarFill = document.getElementById('intro-bar-fill');
@@ -1647,7 +1752,7 @@ Vedran Lukic & Aether Veylan`;
     }
     introProgress += 2 + Math.random() * 5;
     introBarFill.style.width = Math.min(100, introProgress) + '%';
-    setTimeout(introTick, 40 + Math.random() * 80);
+    setTimeout(introTick, 70 + Math.random() * 100);
   }
   setTimeout(introTick, 600);
 
