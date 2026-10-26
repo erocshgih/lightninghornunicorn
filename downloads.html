@@ -382,7 +382,7 @@
     
     .song-duration { font-size: 10px; color: var(--text-muted); text-align: right; }
     
-    /* Aktionsbuttons (Disk, Planet, Gitarre) nebeneinander */
+    /* Aktionsbuttons nebeneinander */
     .song-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
     .action-btn { width: 34px; height: 34px; border-radius: 4px; background: transparent; border: 2px solid var(--text-dim); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.1s; font-size: 14px; outline: none; }
     .song-item-wrapper:hover .action-btn { opacity: 1; border-color: var(--text-main); color: var(--text-main); }
@@ -979,11 +979,11 @@ Vedran Lukic & Aether Veylan`;
     html += '  </div>';
     html += '</div>';
 
-    /* Legende oben über der Songliste */
+    /* Legende oben über der Songliste (Dynamisch angepasst) */
     html += '<div class="song-legend-bar">';
     html += '  <div class="legend-item"><span>💾 Disk: Song speichern / herunterladen</span></div>';
-    html += '  <div class="legend-item"><span>🪐 Planet: Song-Bedeutung / Lore öffnen</span></div>';
-    html += '  <div class="legend-item"><span>🎸 Gitarre: Lyrics & Live-Akkorde öffnen</span></div>';
+    html += '  <div class="legend-item"><span>🪐 Planet: Description / Meaning</span></div>';
+    html += '  <div class="legend-item"><span>🎸 Gitarre: Chordsheets (nur bei ausgewählten Songs)</span></div>';
     html += '</div>';
 
     html += '<div class="song-list-container">';
@@ -991,7 +991,6 @@ Vedran Lukic & Aether Veylan`;
     html += '    <span>#</span><span>Title</span><span>Versions</span><span>Duration</span><span>Actions</span>';
     html += '  </div>';
 
-    /* SONGS MIT CHORDSHEETS / LYRICS VON DEN ANDEREN TRENNEN */
     var chordSongs = [];
     var normalSongs = [];
 
@@ -1005,7 +1004,6 @@ Vedran Lukic & Aether Veylan`;
 
     var globalIndex = 0;
 
-    // Funktion zum Rendern einer Song-Gruppe
     function renderSongGroup(groupSongs, groupTitle) {
       if (groupSongs.length === 0) return;
       if (groupTitle) {
@@ -1017,6 +1015,7 @@ Vedran Lukic & Aether Veylan`;
         var delay = (i * 0.03).toFixed(2);
         var hasVersions = song.versions && song.versions.length > 1;
         var isThisPlaying = (currentSongIdx === i && currentAudio && !currentAudio.paused);
+        var hasChords = !!song.lore;
 
         html += '<div class="song-item-wrapper' + (currentSongIdx === i ? ' playing' : '') + '" data-idx="' + i + '" style="animation-delay: ' + delay + 's">';
         
@@ -1036,8 +1035,10 @@ Vedran Lukic & Aether Veylan`;
         
         html += '    <div class="song-actions">';
         html += '      <button class="action-btn dl-btn" data-song="' + i + '" title="Download Song">💾</button>';
-        html += '      <button class="action-btn lore-btn" data-type="lore" title="Song Meaning & Lore">🪐</button>';
-        html += '      <button class="action-btn chords-btn" data-type="chords" title="Lyrics & Chords">🎸</button>';
+        html += '      <button class="action-btn lore-btn" data-type="lore" title="Description / Meaning">🪐</button>';
+        if (hasChords) {
+          html += '      <button class="action-btn chords-btn" data-type="chords" title="Chordsheets">🎸</button>';
+        }
         html += '    </div>';
 
         html += '  </div>';
@@ -1051,9 +1052,9 @@ Vedran Lukic & Aether Veylan`;
       });
     }
 
-    // Wenn es Songs mit Chordsheets gibt, zuerst anzeigen mit eigener Sektion!
-    renderSongGroup(chordSongs, '🎸 Songs mit Chordsheets & Lyrics');
-    renderSongGroup(normalSongs, chordSongs.length > 0 ? '🎵 Alle anderen Songs' : '');
+    // Exakte Bezeichnungen: "Songs mit Chordsheets" und "Songs"
+    renderSongGroup(chordSongs, 'Songs mit Chordsheets');
+    renderSongGroup(normalSongs, chordSongs.length > 0 ? 'Songs' : '');
 
     html += '</div>';
 
@@ -1267,12 +1268,12 @@ Vedran Lukic & Aether Veylan`;
           
           var contentBox = submenu.querySelector('.submenu-content');
           if (btn.classList.contains('lore-btn')) {
-            contentBox.textContent = "🪐 SONG LORE & MEANING:\nComing soon...";
+            contentBox.textContent = "Description / Meaning:\nComing soon...";
           } else {
             if (song.lore) {
               contentBox.textContent = song.lore;
             } else {
-              contentBox.textContent = "🎸 LYRICS & LIVE CHORDS:\nComing soon...";
+              contentBox.textContent = "Chordsheets:\nComing soon...";
             }
           }
         }
