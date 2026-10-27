@@ -425,7 +425,20 @@
 
     .np-track-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .np-track-name { font-size: 10px; color: var(--text-main); white-space: nowrap; overflow: hidden; position: relative; }
-    .np-track-artist { font-size: 8px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .np-track-artist { font-size: 8px; color: var(--text-muted); white-space: nowrap; overflow: hidden; position: relative; min-width: 0; }
+    .np-artist-text { display: inline-block; white-space: nowrap; }
+    .np-track-artist.artist-marquee .np-artist-text { padding-right: 100%; animation: artistMarquee 10s linear infinite; }
+    @keyframes artistMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    /* Tiny cyan dotted sound-wave, drawn by CSS rather than an audio visualizer. */
+    .np-cover::before { content: ''; position: absolute; inset: 0; z-index: 1; opacity: .0; pointer-events: none; background-image: radial-gradient(circle, rgba(113,220,255,.95) 1px, transparent 1.8px); background-size: 6px 6px; background-position: 0 0; mask-image: radial-gradient(ellipse at 50% 60%, #000 0 45%, transparent 74%); }
+    .np-cover.wave-active::before { opacity: .85; animation: duckDotWave 1.7s linear infinite; }
+    @keyframes duckDotWave { 0% { background-position: 0 3px; transform: translateY(2px) scaleY(.65); } 50% { background-position: 9px 0; transform: translateY(-1px) scaleY(1.05); } 100% { background-position: 18px 3px; transform: translateY(2px) scaleY(.65); } }
+    .np-loading-ring { position: absolute; inset: 0; z-index: 5; display: none; pointer-events: none; }
+    .np-cover.loading-track .np-loading-ring { display: block; }
+    .np-loading-letter { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; margin: -4px 0 0 -4px; color: #dff8ff; font: 700 6px/9px monospace; text-align: center; text-shadow: 0 0 4px #27bfff; animation: loadingOrbit .72s linear infinite; transform: rotate(var(--angle)) translateY(-19px) rotate(calc(-1 * var(--angle))); }
+    @keyframes loadingOrbit { from { transform: rotate(var(--angle)) translateY(-19px) rotate(calc(-1 * var(--angle))); } to { transform: rotate(calc(var(--angle) + 360deg)) translateY(-19px) rotate(calc(-1 * (var(--angle) + 360deg))); } }
+    .np-cover.loading-track .np-equalizer { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { .np-track-artist.artist-marquee .np-artist-text, .np-cover.wave-active::before, .np-loading-letter { animation-duration: 3s; } }
     .np-title-text { display: inline-block; white-space: nowrap; }
     .np-track-name.marquee .np-title-text { padding-left: 100%; animation: titleMarquee 8s linear infinite; }
     @keyframes titleMarquee { 
@@ -703,6 +716,7 @@
     <div class="np-left">
       <div class="np-cover" id="np-cover">
         🦆
+        <div class="np-loading-ring" id="np-loading-ring" aria-hidden="true"></div>
         <div class="np-equalizer" id="np-eq">
           <div class="eq-bar"></div>
           <div class="eq-bar"></div>
@@ -1506,6 +1520,24 @@ Vedran Lukic & Aether Veylan`;
   var npVersions = document.getElementById('np-versions');
   var npBar = document.getElementById('np-bar');
   var npCoverBox = document.getElementById('np-cover');
+  var npLoadingRing = document.getElementById('np-loading-ring');
+  var audioObjectUrl = null;
+  var audioLoadToken = 0;
+
+  function setTrackLoading(loading) {
+    if (npCoverBox) npCoverBox.classList.toggle('loading-track', !!loading);
+    if (npBar) npBar.classList.toggle('buffering', !!loading);
+  }
+  if (npLoadingRing) {
+    'LOADING'.split('').forEach(function(letter, index, letters) {
+      var span = document.createElement('span');
+      span.className = 'np-loading-letter';
+      span.textContent = letter;
+      span.style.setProperty('--angle', (index * 360 / letters.length) + 'deg');
+      span.style.animationDelay = (-index * 0.09) + 's';
+      npLoadingRing.appendChild(span);
+    });
+  }
 
   function fmtTime(s) {
     if (isNaN(s)) return '0:00';
@@ -1517,8 +1549,8 @@ Vedran Lukic & Aether Veylan`;
   function updatePlayBtn(playing) {
     npPlay.innerHTML = playing ? '⏸' : '▶';
     if (npCoverBox) {
-      if (playing) npCoverBox.classList.add('playing-eq');
-      else npCoverBox.classList.remove('playing-eq');
+      if (playing) { npCoverBox.classList.add('playing-eq', 'wave-active'); }
+      else { npCoverBox.classList.remove('playing-eq', 'wave-active'); }
     }
 
     document.querySelectorAll('.song-item-wrapper').forEach(function(r) { 
@@ -1626,18 +1658,21 @@ Vedran Lukic & Aether Veylan`;
 
     var song = songList[idx];
     var audio = new Audio();
-    // Preload the selected opening track aggressively during the intro.
-    // Playback still waits for a visitor gesture to respect browser autoplay rules.
     audio.preload = 'auto';
-    audio.src = song.file;
     currentAudio = audio;
     currentSongIdx = idx;
+    var loadToken = ++audioLoadToken;
+    setTrackLoading(true);
 
     npTitleText.textContent = song.title;
     npTitleContainer.classList.add('marquee');
     var activeVer = song.versions ? song.versions.find(function(v) { return v.file === song.file; }) : null;
     var activeLabel = activeVer && activeVer.label !== 'Original' ? ' — ' + activeVer.label : '';
-    npArtist.textContent = song.genreName + activeLabel;
+    npArtist.innerHTML = '<span class="np-artist-text"></span>';
+    var artistText = npArtist.querySelector('.np-artist-text');
+    artistText.textContent = song.genreName + activeLabel;
+    npArtist.classList.remove('artist-marquee');
+    requestAnimationFrame(function() { if (artistText && artistText.scrollWidth > npArtist.clientWidth + 4) npArtist.classList.add('artist-marquee'); });
     npCurrent.textContent = '0:00';
     npTotal.textContent = '0:00';
     npFill.style.width = '0%';
@@ -1651,14 +1686,15 @@ Vedran Lukic & Aether Veylan`;
       if (currentAudio === audio) updatePlayBtn(true);
     });
     audio.addEventListener('playing', function() {
-      if (currentAudio === audio) updatePlayBtn(true);
+      if (currentAudio === audio) { updatePlayBtn(true); if (npCoverBox) npCoverBox.classList.add('wave-active'); }
     });
     audio.addEventListener('pause', function() {
-      if (currentAudio === audio) updatePlayBtn(false);
+      if (currentAudio === audio) { updatePlayBtn(false); if (npCoverBox) npCoverBox.classList.remove('wave-active'); }
     });
 
     audio.addEventListener('loadedmetadata', function() {
       if (currentAudio !== audio) return;
+      setTrackLoading(false);
       npTotal.textContent = fmtTime(audio.duration);
       audioDurationCache[song.file] = audio.duration;
       var wrapper = document.querySelector('.song-item-wrapper[data-idx="' + idx + '"]');
@@ -1678,6 +1714,7 @@ Vedran Lukic & Aether Veylan`;
     });
     audio.addEventListener('error', function() {
       if (currentAudio !== audio) return;
+      setTrackLoading(false);
       npBar.classList.remove('buffering');
       updatePlayBtn(false);
       console.error('Audio konnte nicht geladen werden:', song.file);
@@ -1696,16 +1733,40 @@ Vedran Lukic & Aether Veylan`;
     });
 
     updatePlayBtn(false);
-    if (options.autoplay !== false) {
-      var playPromise = audio.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(function(err) {
+    // Fetch the entire MP3 first, then play from a Blob URL. This avoids mid-song
+    // network buffering when the server permits same-origin fetches.
+    fetch(song.file).then(function(response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.blob();
+    }).then(function(blob) {
+      if (currentAudio !== audio || loadToken !== audioLoadToken) return;
+      if (audioObjectUrl) URL.revokeObjectURL(audioObjectUrl);
+      audioObjectUrl = URL.createObjectURL(blob);
+      audio.src = audioObjectUrl;
+      audio.load();
+      setTrackLoading(false);
+      if (options.autoplay !== false) {
+        var playPromise = audio.play();
+        if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(function(err) {
           if (currentAudio !== audio) return;
           updatePlayBtn(false);
           if (err && err.name !== 'AbortError') console.warn('Wiedergabe konnte nicht gestartet werden:', err);
         });
       }
-    }
+    }).catch(function(err) {
+      if (currentAudio !== audio || loadToken !== audioLoadToken) return;
+      // Fallback for hosts that disallow fetch/CORS: native audio streaming.
+      console.warn('Vollständiges Vorladen nicht möglich, verwende Streaming:', err);
+      audio.src = song.file;
+      audio.load();
+      if (options.autoplay !== false) {
+        var fallbackPromise = audio.play();
+        if (fallbackPromise && typeof fallbackPromise.catch === 'function') fallbackPromise.catch(function(playErr) {
+          if (currentAudio === audio) updatePlayBtn(false);
+          if (playErr && playErr.name !== 'AbortError') console.warn('Wiedergabe konnte nicht gestartet werden:', playErr);
+        });
+      }
+    });
   }
 
   npPlay.addEventListener('click', function() {
