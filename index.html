@@ -77,63 +77,73 @@
 
   #lhu-intro-word {
     position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; perspective: 900px; font-family: Impact, sans-serif; font-weight: 900; letter-spacing: .12em;
-    color: white; text-shadow: 0 0 8px rgba(255,255,255,.95), 0 0 25px rgba(80,210,255,.8), 0 0 55px rgba(170,60,255,.65); 
-    opacity: 0; pointer-events: none;
+    text-align: center; perspective: 1000px; font-family: Impact, sans-serif; font-weight: 900; letter-spacing: .12em;
+    color: white; opacity: 0; pointer-events: none; z-index: 10;
   }
-
-  #lhu-intro-word > span { display: block; line-height: .82; transform-style: preserve-3d; will-change: transform, opacity, letter-spacing, filter; }
-  #lhu-intro-word > span:nth-child(1) { font-size: clamp(32px, 8vw, 110px); }
-  #lhu-intro-word > span:nth-child(2) { font-size: clamp(26px, 6vw, 82px); }
-  #lhu-intro-word > span:nth-child(3) { font-size: clamp(34px, 9vw, 120px); }
 
   #lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap: clamp(10px, 3vw, 22px); width:min(88vw,420px); margin-bottom: 5px; }
 
+  /* --- BUTTONS MIT ÄSTHETISCHEN, PERFORMANTEN ANIMATIONEN --- */
   .lhu-pill { 
     width: clamp(60px, 12vh, 94px); height: clamp(60px, 12vh, 94px); 
-    border-radius:50%; border:3px solid rgba(210,210,210,.65); cursor:pointer; 
-    box-shadow:inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.18); transition:transform .12s ease; 
+    border-radius: 50%; border: 3px solid rgba(210,210,210,.65); cursor: pointer; 
+    box-shadow: inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.18); 
+    transition: transform .2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .2s ease; 
+    position: relative; overflow: hidden;
   }
-  .lhu-pill:hover { transform:scale(1.04); }
-  .lhu-pill:active { transform:scale(.96); }
-  .lhu-pill-red { background:radial-gradient(circle at 34% 27%,#ff9b9b 0 7%,#e33131 28%,#8d0909 72%,#390000 100%); }
-  .lhu-pill-yellow { background:radial-gradient(circle at 34% 27%,#fff4a0 0 7%,#f0c51f 28%,#9c7800 72%,#3e3000 100%); }
-  .lhu-pill-blue { background:radial-gradient(circle at 34% 27%,#9edcff 0 7%,#2587db 28%,#0c397c 72%,#00162f 100%); }
+  .lhu-pill:hover { transform: scale(1.08); box-shadow: inset 0 0 0 4px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.3), 0 0 20px rgba(255,255,255,0.2); }
+  .lhu-pill:active { transform: scale(.92); }
+  
+  /* Roter Button: Cyberpunk Scanline */
+  .lhu-pill-red { background: radial-gradient(circle at 34% 27%,#ff9b9b 0 7%,#e33131 28%,#8d0909 72%,#390000 100%); }
+  .lhu-pill-red::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,0,0.4) 3px, transparent 4px);
+    opacity: 0; transition: opacity 0.3s;
+    animation: scanline 4s linear infinite; pointer-events: none;
+  }
+  .lhu-pill-red:hover::before { opacity: 1; }
+  @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
 
-  #lhu-intro.lhu-intro-red #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,20,20,.14),rgba(90,0,0,.56) 68%,rgba(0,0,0,.94)); }
-  #lhu-intro.lhu-intro-yellow #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(255,220,30,.14),rgba(100,80,0,.48) 68%,rgba(0,0,0,.94)); }
-  #lhu-intro.lhu-intro-blue #lhu-intro-vignette { background:radial-gradient(circle at center,rgba(30,120,255,.16),rgba(0,30,100,.52) 68%,rgba(0,0,0,.94)); }
+  /* Gelber Button: Goldenes Pulsieren */
+  .lhu-pill-yellow { background: radial-gradient(circle at 34% 27%,#fff4a0 0 7%,#f0c51f 28%,#9c7800 72%,#3e3000 100%); }
+  .lhu-pill-yellow:hover {
+    animation: yellowPulse 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes yellowPulse {
+    0% { box-shadow: inset 0 0 0 4px rgba(0,0,0,.35), 0 0 10px rgba(240,197,31,0.3); }
+    100% { box-shadow: inset 0 0 0 4px rgba(0,0,0,.35), 0 0 30px rgba(240,197,31,0.8), 0 0 50px rgba(240,197,31,0.4); }
+  }
+
+  /* Blauer Button: Wasser Ripple */
+  .lhu-pill-blue { background: radial-gradient(circle at 34% 27%,#9edcff 0 7%,#2587db 28%,#0c397c 72%,#00162f 100%); }
+  .lhu-pill-blue::after {
+    content: ''; position: absolute; top: 50%; left: 50%; width: 150%; height: 150%; 
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none;
+  }
+  .lhu-pill-blue:hover::after { animation: rippleBlue 1.5s ease-out infinite; }
+  @keyframes rippleBlue {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+  }
 
   #intro-skip-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(8px, 1.5vh, 12px);
-    margin-top: clamp(5px, 1.5vh, 10px);
-    width: 100%;
-    align-items: center;
+    display: flex; flex-direction: column; gap: clamp(8px, 1.5vh, 12px);
+    margin-top: clamp(5px, 1.5vh, 10px); width: 100%; align-items: center;
   }
   .intro-skip-btn {
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(4px);
-    width: min(280px, 80vw);
-    min-height: clamp(45px, 6vh, 55px);
+    background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 15px;
+    font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+    cursor: pointer; transition: all 0.2s ease; backdrop-filter: blur(4px);
+    width: min(280px, 80vw); min-height: clamp(45px, 6vh, 55px);
   }
   .intro-skip-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.6); transform: scale(1.03); }
   .intro-skip-btn:active { transform: scale(0.95); }
 
   /* --- Z-INDEX THEATER --- */
-  #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; }
-
+  #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease; }
   #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
 
   #wisdom-display { 
@@ -149,26 +159,16 @@
   #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
 
   #ui-wrapper { 
-    position: fixed; 
-    top: max(10px, env(safe-area-inset-top)); 
-    left: 50%; transform: translateX(-50%); 
+    position: fixed; top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); 
     z-index: 10; display: flex; gap: 8px; width: min(94vw, 440px); justify-content: center;
   }
-
   #effect-buttons { 
-    position: fixed; 
-    top: max(60px, calc(env(safe-area-inset-top) + 52px)); 
-    left: 50%; transform: translateX(-50%); 
-    z-index: 11; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-    width: min(94vw, 440px);
+    position: fixed; top: max(60px, calc(env(safe-area-inset-top) + 52px)); left: 50%; transform: translateX(-50%); 
+    z-index: 11; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: min(94vw, 440px);
   }
-
   #head-menu { 
-    position: fixed; 
-    bottom: max(12px, env(safe-area-inset-bottom)); 
-    left: 50%; transform: translateX(-50%); 
-    z-index: 10; width: min(94vw, 440px); 
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
+    position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); 
+    z-index: 10; width: min(94vw, 440px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
   }
 
   .bg-nav-btn {
@@ -186,65 +186,28 @@
 
   /* --- PREMIUM GLASS UI UPGRADE --- */
   .glass { 
-    background: var(--glass-bg); 
-    backdrop-filter: blur(16px); 
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border); 
-    color: var(--text); 
-    border-radius: 12px; 
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border); color: var(--text); border-radius: 12px; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-
   .btn { 
-    padding: clamp(8px, 1.5vh, 12px) clamp(16px, 3vw, 24px); 
-    font-size: clamp(12px, 3vw, 14px); 
-    font-weight: 600; 
-    letter-spacing: 0.05em;
-    text-transform: uppercase; 
-    cursor: pointer; 
-    min-height: 44px; /* Touch-Optimierung */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    padding: clamp(8px, 1.5vh, 12px) clamp(16px, 3vw, 24px); font-size: clamp(12px, 3vw, 14px); 
+    font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; 
+    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
   }
-
-  .btn:hover { 
-    background: rgba(255, 255, 255, 0.15); 
-    border-color: var(--glass-highlight);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-  }
-
-  .btn:active {
-    transform: translateY(0);
-  }
+  .btn:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--glass-highlight); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6); }
+  .btn:active { transform: translateY(0); }
 
   #head-select { 
-    width: 100%; 
-    padding: clamp(8px, 1.5vh, 12px) 16px; 
-    font-size: clamp(14px, 3.8vw, 16px); 
-    text-align: center; 
-    text-align-last: center; 
-    cursor: pointer; 
-    appearance: none; 
-    font-weight: 600; 
-    min-height: 44px; 
-    border-radius: 12px;
-    outline: none;
-    border: 1px solid var(--glass-border);
+    width: 100%; padding: clamp(8px, 1.5vh, 12px) 16px; font-size: clamp(14px, 3.8vw, 16px); 
+    text-align: center; text-align-last: center; cursor: pointer; appearance: none; font-weight: 600; 
+    min-height: 44px; border-radius: 12px; outline: none; border: 1px solid var(--glass-border);
   }
-  
-  #head-select option { 
-    background: #1a1d26; 
-    color: #fff; 
-    font-weight: normal;
-  }
+  #head-select option { background: #1a1d26; color: #fff; font-weight: normal; }
 
   .effect-btn { 
-    min-width: clamp(48px, 10vw, 60px); height: clamp(40px, 7vh, 50px); 
-    font-size: clamp(18px, 3.8vh, 24px); line-height: 1; 
-    display: flex; align-items: center; justify-content: center; padding: 0; flex: 1; max-width: 75px;
+    min-width: clamp(48px, 10vw, 60px); height: clamp(40px, 7vh, 50px); font-size: clamp(18px, 3.8vh, 24px); 
+    line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; flex: 1; max-width: 75px;
   }
 
   #loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; }
@@ -267,45 +230,24 @@
   .fast-rise-emoji { position: absolute; bottom: -15vh; left: var(--left); font-size: var(--size); opacity: 0; animation: riseFast var(--dur) linear var(--delay) infinite; will-change: transform, opacity; }
   @keyframes riseFast { 0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.2); opacity: 0; } }
 
-  #disclaimer-btn { 
+  #disclaimer-btn, #quote-btn { 
     background: none; border: none; font-size: 20px; cursor: pointer; 
     opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
     padding: 2px 8px; filter: grayscale(100%); 
   }
-  #disclaimer-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
+  #disclaimer-btn:hover, #quote-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
 
   /* Modals Smoother */
   #disclaimer-modal, #quote-modal { 
-    display: none; 
-    opacity: 0;
-    position: fixed; top: 50%; left: 50%; 
-    transform: translate(-50%, -45%) scale(0.95); 
-    z-index: 100002; 
-    width: min(90vw, 420px); padding: 32px; 
-    text-align: center; 
-    background: var(--glass-bg); 
-    border: 1px solid var(--glass-border); 
-    border-radius: 16px; 
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8); 
-    backdrop-filter: blur(20px); 
-    -webkit-backdrop-filter: blur(20px);
+    display: none; opacity: 0; position: fixed; top: 50%; left: 50%; 
+    transform: translate(-50%, -45%) scale(0.95); z-index: 100002; 
+    width: min(90vw, 420px); padding: 32px; text-align: center; 
+    background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; 
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  
-  #disclaimer-modal.show, #quote-modal.show {
-    display: block;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
+  #disclaimer-modal.show, #quote-modal.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
   #disclaimer-modal p, #quote-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
-  
-  #quote-btn {
-    background: none; border: none; font-size: 20px; cursor: pointer; 
-    opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
-    padding: 2px 8px; filter: grayscale(100%); 
-  }
-  #quote-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
 
   @media (max-width: 600px) { 
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
@@ -343,11 +285,7 @@
       </div>
 
     </div>
-    <div id="lhu-intro-word">
-      <span>LIGHTNING</span>
-      <span>HORN</span>
-      <span>UNICORN</span>
-    </div>
+    <div id="lhu-intro-word"></div>
   </div>
 
   <!-- MAIN APP LAYER -->
@@ -474,7 +412,7 @@
 
   function drawBg() {
     requestAnimationFrame(drawBg);
-    if (document.hidden) return; // Performance: Pause when tab is hidden
+    if (document.hidden) return; 
 
     mctx.fillStyle = "#04050a";
     mctx.fillRect(0, 0, W, H);
@@ -537,7 +475,6 @@
   import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
   import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
 
-  // --- PERFORMANCE: Dynamic Pixel Ratio ---
   const getDPR = () => {
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     const dpr = window.devicePixelRatio || 1;
@@ -606,7 +543,6 @@
   let currentWisdomLang = '';
   let isTyping = false; 
 
-  // --- UI MODALS (Smooth Transitions) ---
   const toggleModal = (id, show) => {
     const el = document.getElementById(id);
     if (show) el.classList.add("show");
@@ -707,18 +643,13 @@
 
   let object = null, mixer = null; const clock = new THREE.Clock();
 
-  // --- MEMORY LEAK FIX: Dispose 3D Models ---
   function disposeObject(obj) {
     if (!obj) return;
     obj.traverse((child) => {
       if (child.isMesh) {
         if (child.geometry) child.geometry.dispose();
         if (child.material) {
-          if (Array.isArray(child.material)) {
-            child.material.forEach(m => disposeMaterial(m));
-          } else {
-            disposeMaterial(child.material);
-          }
+          if (Array.isArray(child.material)) { child.material.forEach(m => disposeMaterial(m)); } else { disposeMaterial(child.material); }
         }
       }
     });
@@ -736,7 +667,6 @@
 
   function loadHead(url) {
     startLoading(); 
-    // Alte Ressourcen restlos entfernen
     if (object) { 
       scene.remove(object); 
       disposeObject(object); 
@@ -808,8 +738,26 @@
     camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone }; controls.enabled = false; controls.autoRotate = false;
   }
 
+  // --- WICHTIGER FIX: Wisdom bei Klick auf andere Buttons sofort abbrechen ---
+  function interruptWisdom() {
+    if (!wisdomActive) return;
+    wisdomActive = false;
+    isTyping = false;
+    if (typewriterInterval) clearInterval(typewriterInterval);
+    if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    
+    const textEl = document.getElementById("wisdom-display");
+    textEl.classList.remove("wisdom-active");
+    textEl.textContent = "";
+    document.getElementById("matrix-bg").style.opacity = "1";
+  }
+
   document.getElementById("heart-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
+    interruptWisdom(); // <--- NEU: Bricht Wisdom sofort ab
+    if (!object || gagActive || rainbowActive) return; 
+    
+    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
     gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
     const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center);
@@ -825,15 +773,16 @@
   }
 
   document.getElementById("rainbow-btn").onclick = () => {
-    if (!object || gagActive || rainbowActive || wisdomActive) return; music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
+    interruptWisdom(); // <--- NEU: Bricht Wisdom sofort ab
+    if (!object || gagActive || rainbowActive) return; 
+    
+    music.pause(); musicOn = false; document.getElementById("music-toggle").textContent = t.playMusic;
     rainbowActive = true; rainbowStart = performance.now(); 
     rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone(); rainbowBaseScale = object.scale.clone();
     document.getElementById("matrix-bg").style.opacity = "0";
     rainbowMatStates = []; 
     if(object.userData.emissiveMats) {
-        object.userData.emissiveMats.forEach(m => {
-            rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity });
-        });
+        object.userData.emissiveMats.forEach(m => { rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }); });
     }
     document.getElementById("rainbow-aura").classList.add("active"); document.getElementById("rainbow-emojis").classList.add("active");
     const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize); const center = new THREE.Vector3(); box.getCenter(center); const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z); tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
@@ -851,6 +800,7 @@
   document.getElementById("wisdom-btn").onclick = () => {
     if (!object || gagActive || rainbowActive) return;
 
+    // Falls bereits ein Zitat läuft, dieses erst beenden, bevor ein neues startet
     if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
     if (typewriterInterval) clearInterval(typewriterInterval);
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -892,10 +842,7 @@
     typewriterInterval = setInterval(() => {
         textEl.textContent += phrase.charAt(charIndex);
         charIndex++;
-        if(charIndex >= phrase.length) {
-            clearInterval(typewriterInterval);
-            isTyping = false; 
-        }
+        if(charIndex >= phrase.length) { clearInterval(typewriterInterval); isTyping = false; }
     }, typingSpeed);
 
     const cleanupWisdom = () => {
@@ -911,15 +858,7 @@
 
       const headIdx = document.getElementById("head-select").selectedIndex;
 
-      const profiles = [
-        { p: 0.1, r: 1.35 },
-        { p: 1.8, r: 1.45 },
-        { p: 0.4, r: 1.25 },
-        { p: 0.8, r: 1.35 },
-        { p: 1.5, r: 1.40 },
-        { p: 1.2, r: 1.30 },
-        { p: 0.9, r: 1.35 }
-      ];
+      const profiles = [ { p: 0.1, r: 1.35 }, { p: 1.8, r: 1.45 }, { p: 0.4, r: 1.25 }, { p: 0.8, r: 1.35 }, { p: 1.5, r: 1.40 }, { p: 1.2, r: 1.30 }, { p: 0.9, r: 1.35 } ];
 
       const prof = profiles[headIdx % profiles.length];
       utterance.pitch = prof.p;
@@ -933,7 +872,6 @@
       }
 
       utterance.onend = () => { isTyping = false; }; 
-
       synth.speak(utterance);
     }
 
@@ -954,7 +892,7 @@
   selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
   loadHead(MODELS[0].url);
 
-  /* 3. DYNAMISCHE INTRO LOGIK */
+  /* 3. DYNAMISCHE INTRO LOGIK - KÜNSTLERISCHES UPGRADE */
   (() => {
     const intro = document.getElementById("lhu-intro");
     const audio = document.getElementById("lhu-intro-audio");
@@ -963,23 +901,12 @@
     const btnSkipHeads = document.getElementById("btn-skip-heads");
     const btnSkipMain = document.getElementById("btn-skip-main");
 
-    if(btnSkipHeads) {
-      btnSkipHeads.addEventListener("click", () => {
-        if (intro) intro.remove();
-      });
-    }
-
-    if(btnSkipMain) {
-      btnSkipMain.addEventListener("click", () => {
-        location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html";
-      });
-    }
+    if(btnSkipHeads) btnSkipHeads.addEventListener("click", () => { if (intro) intro.remove(); });
+    if(btnSkipMain) btnSkipMain.addEventListener("click", () => { location.href = "https://erocshgih.github.io/lightninghornunicorn/menu.html"; });
 
     const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-
     const word = document.getElementById("lhu-intro-word");
-    const lines = [...word.querySelectorAll("span")];
-
+    
     let W = 0, H = 0, introStart = 0; let introVariant = "yellow"; 
 
     const variantColors = {
@@ -992,24 +919,12 @@
     const fsSource = `
       precision mediump float;
       uniform vec2 r; uniform float t; uniform float h;
-
-      vec3 hsv2rgb(vec3 c) {
-          vec3 rgb = clamp(abs(mod(c.x*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.);
-          return c.z * mix(vec3(1.), rgb, c.y);
-      }
+      vec3 hsv2rgb(vec3 c) { vec3 rgb = clamp(abs(mod(c.x*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.); return c.z * mix(vec3(1.), rgb, c.y); }
       float hash11(float p) { p = fract(p * .1031); p *= p + 33.33; p *= p + p; return fract(p); }
       float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
       mat2 rot(float a) { float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
-      float noise(vec2 p) {
-          vec2 i=floor(p), f=fract(p);
-          float a=hash12(i), b=hash12(i+vec2(1.,0.)), c=hash12(i+vec2(0.,1.)), d=hash12(i+vec2(1.,1.));
-          vec2 u = smoothstep(0.0, 1.0, f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
-      }
-      float fbm(vec2 p) {
-          float v=0., a=0.5;
-          for(int i=0;i<8;++i){ v+=a*noise(p); p*=rot(0.45)*2.; a*=0.5; }
-          return v;
-      }
+      float noise(vec2 p) { vec2 i=floor(p), f=fract(p); float a=hash12(i), b=hash12(i+vec2(1.,0.)), c=hash12(i+vec2(0.,1.)), d=hash12(i+vec2(1.,1.)); vec2 u = smoothstep(0.0, 1.0, f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y); }
+      float fbm(vec2 p) { float v=0., a=0.5; for(int i=0;i<8;++i){ v+=a*noise(p); p*=rot(0.45)*2.; a*=0.5; } return v; }
       void main() {
           vec2 uv = gl_FragCoord.xy / r.xy; uv = 2.0 * uv - 1.0; uv.x *= r.x / r.y;
           uv += 2.0 * fbm(uv * 1.0 + 0.8 * t * 1.5) - 1.0;
@@ -1024,21 +939,12 @@
         const vs = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vs, vsSource); gl.compileShader(vs);
         const fs = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fs, fsSource); gl.compileShader(fs);
         const prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.useProgram(prog);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); 
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
         const aLoc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
-
-        rLoc = gl.getUniformLocation(prog, "r");
-        tLoc = gl.getUniformLocation(prog, "t");
-        hLoc = gl.getUniformLocation(prog, "h");
+        rLoc = gl.getUniformLocation(prog, "r"); tLoc = gl.getUniformLocation(prog, "t"); hLoc = gl.getUniformLocation(prog, "h");
     }
 
-    function resizeIntro() { 
-      W = innerWidth; H = innerHeight; 
-      canvas.width = W; canvas.height = H; 
-      if(gl) gl.viewport(0, 0, W, H); 
-    }
+    function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; if(gl) gl.viewport(0, 0, W, H); }
 
     function animateIntro(now) {
       if (!document.body.contains(intro)) return;
@@ -1052,55 +958,63 @@
          gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
-      const textT = Math.max(0, Math.min(1, (t - .75) / 2.8)); const textEase = textT * textT * (3 - 2 * textT);
-
-      if (textT > 0) {
-        word.style.opacity = String(Math.min(1, textT * 2.5));
-        lines.forEach((el, i) => {
-          const reveal = Math.min(1, textT * 2.2); const collapse = Math.max(0, Math.min(1, (textT - .55) / .45)); const easeIn = collapse * collapse * (3 - 2 * collapse);
-          let x = 0, y = 0, z = 0, rotY = 0, rotZ = 0, scale = 1, opac = 1;
-
-          if (introVariant === "red") {
-            const slam = Math.pow(easeIn, 7); const shakeX = (1 - slam) * (Math.random() - 0.5) * 120; const shakeY = (1 - slam) * (Math.random() - 0.5) * 120;
-            x = (Math.random() - 0.5) * 600 * (1 - slam) + shakeX; y = -800 * (1 - slam) + shakeY; z = 400 * (1 - slam);
-            rotY = (Math.random() - 0.5) * 180 * (1 - slam); rotZ = (Math.random() - 0.5) * 90 * (1 - slam); scale = 1 + (1 - slam) * 5; opac = slam;
-          } else if (introVariant === "blue") {
-            const ritualPhase = t * 4.0 + i * ((Math.PI * 2) / 3); const radius = 350 * (1 - easeIn);
-            x = Math.cos(ritualPhase) * radius; z = Math.sin(ritualPhase) * radius; y = Math.sin(t * 3.0 + i) * 120 * (1 - easeIn);
-            rotY = (t * 250) + (easeIn * 360); rotZ = Math.sin(t * 2) * 20 * (1 - easeIn); scale = 0.5 + easeIn * 0.5;
-            opac = easeIn * (Math.sin(t * 30 + i) * 0.5 + 0.5); if (easeIn > 0.95) opac = 1; 
-          } else {
-            const spiral = textEase * Math.PI * 3.0; const phase = spiral + i * 2.1;
-            const x0 = Math.cos(phase) * 210 * reveal; const y0 = Math.sin(phase * .72) * 75 * reveal; const z0 = Math.sin(phase) * 280 * reveal;
-            const letterSpiral = spiral * 1.5 + i * 1.7; const radius = 180 * (1 - easeIn);
-            x = x0 * (1 - easeIn) + Math.cos(letterSpiral) * radius; y = y0 * (1 - easeIn) + Math.sin(letterSpiral) * radius + Math.sin(t * 4 + i) * 30 * (1 - easeIn); z = z0 * (1 - easeIn) + 120 - easeIn * 500;
-            rotY = Math.sin(phase) * 20 + easeIn * 540; rotZ = easeIn * 360; scale = .72 + (1 - easeIn) * .45; opac = .6 + scale * .35;
-          }
-          el.style.transform = `translate3d(${x}px,${y}px,${z}px) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`; el.style.opacity = String(opac);
-        });
-      }
-
       const seqT = t - 0.625;
       if (seqT >= 0 && seqT < 1.905) {
-        const index = Math.min(2, Math.floor(seqT / 0.635)); const local = seqT - index * 0.635;
-        word.innerHTML = ""; word.style.opacity = "1";
+        const index = Math.min(2, Math.floor(seqT / 0.635)); 
+        const local = seqT - index * 0.635;
+        
+        const vColor = variantColors[introVariant];
+        const currentWordStr = ["LIGHTNING", "HORN", "UNICORN"][index];
 
-        const stack = document.createElement("span");
-        stack.style.display = "flex"; stack.style.flexDirection = "column"; stack.style.alignItems = "center"; stack.style.fontFamily = "Impact, sans-serif"; stack.style.fontSize = "clamp(42px, 8vh, 88px)";
-        const vColor = variantColors[introVariant] || variantColors.yellow; stack.style.color = vColor.color; stack.style.textShadow = `0 0 3px ${vColor.shadow}`;
+        word.innerHTML = ""; 
+        word.style.opacity = "1";
+        word.style.perspective = "1000px";
 
-        for (const ch of ["LIGHTNING", "HORN", "UNICORN"][index]) {
-          const letter = document.createElement("span"); letter.textContent = ch; letter.style.display = "block"; letter.style.lineHeight = "0.88"; letter.style.fontSize = "1em"; letter.style.color = vColor.color; letter.style.fontFamily = "inherit"; letter.style.fontWeight = "900"; letter.style.backgroundImage = vColor.bg; letter.style.webkitBackgroundClip = "text"; letter.style.backgroundClip = "text"; letter.style.webkitTextFillColor = "transparent"; stack.appendChild(letter);
-        }
+        const stack = document.createElement("div");
+        stack.style.display = "flex"; stack.style.flexDirection = "column"; stack.style.alignItems = "center"; 
+        stack.style.fontFamily = "Impact, sans-serif"; stack.style.fontSize = "clamp(42px, 9vh, 100px)";
+        stack.style.transformStyle = "preserve-3d";
 
-        if (introVariant === "red") {
-          const g = Math.random() * 4; const jitterX = (Math.random() - 0.5) * 10; stack.style.transform = `translateX(${jitterX}px)`; stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.9), -${g*2}px 0 0 rgba(255,0,180,.9)`;
-        } else if (introVariant === "blue") {
-          const breath = Math.sin(local * Math.PI * 4); const glow = 5 + (breath * 15); stack.style.textShadow = `0 0 ${glow}px ${vColor.shadow}, 0 0 ${glow * 2}px rgba(255,255,255,0.4)`; if (local < 0.1 || (local > 0.3 && local < 0.35)) { stack.style.opacity = Math.random(); }
-        } else {
-          let bScale = 1; if (local < 0.2) { const progress = local / 0.2; bScale = 1 + Math.sin(progress * Math.PI) * 0.15; }
-          stack.style.transform = `scale(${bScale})`; let glitchPulse = 0; if (local > 0.15 && local < 0.22) { glitchPulse = Math.sin(((local - 0.15) / 0.07) * Math.PI); }
-          if (glitchPulse > 0) { const g = glitchPulse * 2.2; const jitterX = (Math.random() - 0.5) * g * 8; stack.style.transform = `scale(${bScale}) translateX(${jitterX}px)`; stack.style.textShadow = `0 0 5px ${vColor.shadow}, ${g*2}px 0 0 rgba(0,255,255,.8), -${g*2}px 0 0 rgba(255,0,180,.8)`; }
+        for (let i = 0; i < currentWordStr.length; i++) {
+          const ch = currentWordStr[i];
+          const letter = document.createElement("span"); 
+          letter.textContent = ch; 
+          letter.style.display = "inline-block"; letter.style.lineHeight = "0.9"; 
+          letter.style.color = vColor.color; letter.style.fontWeight = "900"; 
+          letter.style.backgroundImage = vColor.bg; letter.style.webkitBackgroundClip = "text"; 
+          letter.style.backgroundClip = "text"; letter.style.webkitTextFillColor = "transparent"; 
+          letter.style.transition = "none";
+
+          const p = Math.min(1, Math.max(0, local * 3)); 
+          const easeOutBack = 1 + 2.70158 * Math.pow(p - 1, 3) + 1.70158 * Math.pow(p - 1, 2);
+
+          if (introVariant === "red") {
+            const dir = (i % 2 === 0) ? 1 : -1;
+            const startX = dir * (Math.random() * 500 + 200);
+            const startY = (Math.random() - 0.5) * 500;
+            
+            if (p < 1) {
+                letter.style.transform = `translate3d(${startX * (1 - p)}px, ${startY * (1 - p)}px, 0) scale(${1.5 - p*0.5}) rotateZ(${dir * 45 * (1-p)}deg)`;
+                letter.style.opacity = p;
+            } else {
+                const jitterX = (Math.random() - 0.5) * 4; const jitterY = (Math.random() - 0.5) * 4;
+                letter.style.transform = `translate3d(${jitterX}px, ${jitterY}px, 0)`;
+                letter.style.opacity = 1;
+                letter.style.textShadow = `${Math.random()*10-5}px 0 0 rgba(0,255,255,0.8), ${Math.random()*-10+5}px 0 0 rgba(255,0,100,0.8)`;
+            }
+          } else if (introVariant === "blue") {
+            const startZ = -800; const currentZ = startZ * (1 - easeOutBack); const currentRotY = (1 - p) * 180 * (i % 2 === 0 ? 1 : -1);
+            const wave = Math.sin(Date.now() * 0.003 + i * 0.5) * 15 * p;
+            letter.style.transform = `translate3d(0px, ${wave}px, ${currentZ}px) rotateY(${currentRotY}deg)`;
+            letter.style.opacity = p;
+            letter.style.textShadow = `0 0 ${20 + Math.sin(Date.now()*0.005 + i)*15}px ${vColor.shadow}`;
+          } else {
+            const startY = (i % 2 === 0) ? -200 : 200; const currentY = startY * (1 - easeOutBack);
+            letter.style.transform = `translate3d(0, ${currentY}px, 0) scaleY(${p < 1 ? 1.5 : 1})`;
+            letter.style.opacity = p;
+            letter.style.textShadow = `0 0 5px ${vColor.shadow}, 0 0 20px ${vColor.color}`;
+          }
+          stack.appendChild(letter);
         }
         word.appendChild(stack);
       } else { word.style.opacity = "0"; }
@@ -1115,18 +1029,10 @@
       btn.addEventListener("click", () => {
         introVariant = btn.dataset.intro; 
 
-        const flashColorMap = {
-          red: new THREE.Color(0xff3333),
-          yellow: new THREE.Color(0xffd400),
-          blue: new THREE.Color(0x33bbff)
-        };
+        const flashColorMap = { red: new THREE.Color(0xff3333), yellow: new THREE.Color(0xffd400), blue: new THREE.Color(0x33bbff) };
         const targetColor = flashColorMap[introVariant] || new THREE.Color(0xffffff);
 
-        hitEnterEmissiveMats.forEach(item => {
-          item.mat.emissive.copy(targetColor);
-          item.mat.emissiveIntensity = 4.5;
-        });
-
+        hitEnterEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 4.5; });
         document.getElementById("lhu-enter-panel").classList.add("hidden");
 
         if (audio) { audio.src = `lhu${introVariant}.mp3`; }
@@ -1141,12 +1047,11 @@
     });
   })();
 
-  // --- PERFORMANCE: Tab Visibility (Spart Akku, pausiert Rendering) ---
   let isTabVisible = true;
   document.addEventListener("visibilitychange", () => {
     isTabVisible = !document.hidden;
     if (isTabVisible) {
-        clock.getDelta(); // Verhindert Zeitsprünge in der Animation
+        clock.getDelta();
         if (musicOn && music.paused) music.play().catch(()=>{});
     } else {
         if (musicOn) music.pause();
@@ -1155,7 +1060,7 @@
 
   function animate() {
     requestAnimationFrame(animate);
-    if (!isTabVisible) return; // Stoppt das Rendern, wenn der Tab im Hintergrund ist
+    if (!isTabVisible) return;
 
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta);
@@ -1203,14 +1108,12 @@
       } 
       else if (wisdomActive) {
         let targetRotX = 0;
-
         if (isTyping) {
             const headIdx = document.getElementById("head-select").selectedIndex;
             const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00]; 
             const currentRate = rates[headIdx % rates.length];
             targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25; 
         }
-
         object.rotation.x += (targetRotX - object.rotation.x) * (delta * 12); 
         object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
         object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
@@ -1221,121 +1124,47 @@
         const baseFreq = Math.PI / (60 / 138 * 0.5); 
 
         let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
-        let targetPosX = 0, targetPosY = 0;
+        let phase4Active = false, phase6Active = false, phase7Active = false;
 
-        let phase4Active = false;
-        let phase6Active = false;
-        let phase7Active = false;
+        if (loopTime < 30 || loopTime >= 40) { window.isTrafficConePhase = false; }
 
-        if (loopTime < 30 || loopTime >= 40) {
-            window.isTrafficConePhase = false;
-        }
-
-        if (loopTime < 10) { 
-            musicPhase += baseFreq * delta; 
-            targetRotX = Math.sin(musicPhase) * 0.08; 
-        } else if (loopTime < 20) { 
-            musicPhase += baseFreq * 2.0 * delta; 
-            targetRotX = Math.sin(musicPhase) * 0.14; 
-        } else if (loopTime < 30) { 
-            musicPhase += baseFreq * 0.4 * delta; 
-            targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04; 
-            targetRotY = Math.sin(musicPhase) * 0.45; 
-            targetRotZ = Math.cos(musicPhase) * 0.22; 
-        } else if (loopTime < 40) {
-            phase4Active = true;
-            window.isTrafficConePhase = true;
-            targetRotX = Math.sin(loopTime * 40) * 0.08;
-            targetRotY = Math.sin(loopTime * 47) * 0.08;
-            targetRotZ = 0;
-        } else if (loopTime < 50) {
-            musicPhase += baseFreq * 1.5 * delta;
-            targetRotY = Math.sin(musicPhase) * 0.35; 
-            targetRotZ = Math.sin(musicPhase * 2) * 0.05; 
-        } else if (loopTime < 60) {
-            phase6Active = true;
-            musicPhase += baseFreq * delta;
-            targetRotX = Math.sin(musicPhase) * 0.08;
-        } else {
-            phase7Active = true;
-        }
+        if (loopTime < 10) { musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; } 
+        else if (loopTime < 20) { musicPhase += baseFreq * 2.0 * delta; targetRotX = Math.sin(musicPhase) * 0.14; } 
+        else if (loopTime < 30) { musicPhase += baseFreq * 0.4 * delta; targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04; targetRotY = Math.sin(musicPhase) * 0.45; targetRotZ = Math.cos(musicPhase) * 0.22; } 
+        else if (loopTime < 40) {
+            phase4Active = true; window.isTrafficConePhase = true;
+            targetRotX = Math.sin(loopTime * 40) * 0.08; targetRotY = Math.sin(loopTime * 47) * 0.08; targetRotZ = 0;
+        } 
+        else if (loopTime < 50) { musicPhase += baseFreq * 1.5 * delta; targetRotY = Math.sin(musicPhase) * 0.35; targetRotZ = Math.sin(musicPhase * 2) * 0.05; } 
+        else if (loopTime < 60) { phase6Active = true; musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; } 
+        else { phase7Active = true; }
 
         if (phase7Active) {
-            object.rotation.x += delta * 15; 
-            object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
-            object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-            object.position.x += (0 - object.position.x) * (delta * 8);
-            object.position.y += (Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
+            object.rotation.x += delta * 15; object.rotation.y += (0 - object.rotation.y) * (delta * 8); object.rotation.z += (0 - object.rotation.z) * (delta * 8);
+            object.position.x += (0 - object.position.x) * (delta * 8); object.position.y += (Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
             wasInPhase7 = true;
         } else {
-            if (wasInPhase7) {
-                object.rotation.x = object.rotation.x % (Math.PI * 2);
-                wasInPhase7 = false;
-            }
-            object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8); 
-            object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8); 
-            object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
-            object.position.x += (targetPosX - object.position.x) * (delta * 8);
-            object.position.y += (targetPosY - object.position.y) * (delta * 8);
+            if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
+            object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8); object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8); object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
+            object.position.x += (0 - object.position.x) * (delta * 8); object.position.y += (0 - object.position.y) * (delta * 8);
         }
 
         if (phase4Active) {
-            const blink = Math.floor(loopTime * 4) % 2 === 0; 
-            let targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
-
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.copy(targetColor);
-                    if(m.emissiveIntensity !== undefined) m.emissiveIntensity = blink ? 3.5 : 0.5;
-                });
-            }
+            const blink = Math.floor(loopTime * 4) % 2 === 0; let targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
+            if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.copy(targetColor); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = blink ? 3.5 : 0.5; }); }
         } else if (phase6Active) {
-            const cycle = (loopTime % 1.5) / 1.5; 
-            let targetColor = new THREE.Color();
-            if (cycle < 0.33) targetColor.setHex(0xff3333); 
-            else if (cycle < 0.66) targetColor.setHex(0xffd400); 
-            else targetColor.setHex(0x33bbff); 
-
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.lerp(targetColor, delta * 12);
-                    if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 2.5;
-                });
-            }
+            const cycle = (loopTime % 1.5) / 1.5; let targetColor = new THREE.Color();
+            if (cycle < 0.33) targetColor.setHex(0xff3333); else if (cycle < 0.66) targetColor.setHex(0xffd400); else targetColor.setHex(0x33bbff); 
+            if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.lerp(targetColor, delta * 12); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 2.5; }); }
         } else {
-            if(object.userData.emissiveMats) {
-                object.userData.emissiveMats.forEach(m => {
-                    m.emissive.lerp(m.userData.origE, delta * 5);
-                    if (m.emissiveIntensity !== undefined) {
-                        let targetI = m.userData.origI !== undefined ? m.userData.origI : 1;
-                        m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5);
-                    }
-                });
-            }
+            if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.lerp(m.userData.origE, delta * 5); if (m.emissiveIntensity !== undefined) { let targetI = m.userData.origI !== undefined ? m.userData.origI : 1; m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5); } }); }
         }
       } else { 
         window.isTrafficConePhase = false;
-
-        if (wasInPhase7) {
-            object.rotation.x = object.rotation.x % (Math.PI * 2);
-            wasInPhase7 = false;
-        }
-
-        object.rotation.x += (0 - object.rotation.x) * (delta * 8); 
-        object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
-        object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
-        object.position.x += (0 - object.position.x) * (delta * 8);
-        object.position.y += (0 - object.position.y) * (delta * 8);
-
-        if(object.userData.emissiveMats) {
-            object.userData.emissiveMats.forEach(m => {
-                m.emissive.lerp(m.userData.origE, delta * 5);
-                if (m.emissiveIntensity !== undefined) {
-                    let targetI = m.userData.origI !== undefined ? m.userData.origI : 1;
-                    m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5);
-                }
-            });
-        }
+        if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
+        object.rotation.x += (0 - object.rotation.x) * (delta * 8); object.rotation.y += (0 - object.rotation.y) * (delta * 8); object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
+        object.position.x += (0 - object.position.x) * (delta * 8); object.position.y += (0 - object.position.y) * (delta * 8);
+        if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.lerp(m.userData.origE, delta * 5); if (m.emissiveIntensity !== undefined) { let targetI = m.userData.origI !== undefined ? m.userData.origI : 1; m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5); } }); }
       }
     }
     renderer.render(scene, camera);
@@ -1345,7 +1174,6 @@
   }
   animate();
 
-  // --- PERFORMANCE: Throttled Resize ---
   let resizeTimeout;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
