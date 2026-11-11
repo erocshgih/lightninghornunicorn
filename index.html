@@ -20,6 +20,9 @@
     --text: #f3f4f8;
     --muted: rgba(243, 244, 248, 0.6);
     --accent: #8fd9fb;
+    --glass-bg: rgba(15, 18, 25, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-highlight: rgba(255, 255, 255, 0.25);
   }
 
   * { box-sizing: border-box; }
@@ -181,24 +184,62 @@
 
   #container3D canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
 
-  .glass { background: rgba(0, 0, 0, 0.85); border: 2px solid rgba(255, 255, 255, 0.3); color: var(--text); border-radius: 6px; }
+  /* --- PREMIUM GLASS UI UPGRADE --- */
+  .glass { 
+    background: var(--glass-bg); 
+    backdrop-filter: blur(16px); 
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border); 
+    color: var(--text); 
+    border-radius: 12px; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
 
   .btn { 
-    padding: clamp(6px, 1.2vh, 10px) 16px; 
-    font-size: clamp(12px, 3.2vw, 15px); 
-    font-weight: 700; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; 
-    min-height: clamp(36px, 6vh, 46px); 
+    padding: clamp(8px, 1.5vh, 12px) clamp(16px, 3vw, 24px); 
+    font-size: clamp(12px, 3vw, 14px); 
+    font-weight: 600; 
+    letter-spacing: 0.05em;
+    text-transform: uppercase; 
+    cursor: pointer; 
+    min-height: 44px; /* Touch-Optimierung */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
-  .btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+  .btn:hover { 
+    background: rgba(255, 255, 255, 0.15); 
+    border-color: var(--glass-highlight);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
 
   #head-select { 
     width: 100%; 
-    padding: clamp(6px, 1.2vh, 10px) 16px; 
-    font-size: clamp(13px, 3.8vw, 16px); text-align: center; text-align-last: center; 
-    cursor: pointer; appearance: none; font-weight: bold; 
-    min-height: clamp(38px, 7vh, 48px); 
+    padding: clamp(8px, 1.5vh, 12px) 16px; 
+    font-size: clamp(14px, 3.8vw, 16px); 
+    text-align: center; 
+    text-align-last: center; 
+    cursor: pointer; 
+    appearance: none; 
+    font-weight: 600; 
+    min-height: 44px; 
+    border-radius: 12px;
+    outline: none;
+    border: 1px solid var(--glass-border);
   }
-  #head-select option { color: #111; }
+  
+  #head-select option { 
+    background: #1a1d26; 
+    color: #fff; 
+    font-weight: normal;
+  }
 
   .effect-btn { 
     min-width: clamp(48px, 10vw, 60px); height: clamp(40px, 7vh, 50px); 
@@ -233,19 +274,38 @@
   }
   #disclaimer-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
 
-  #disclaimer-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100002; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.9); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
-  #disclaimer-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
+  /* Modals Smoother */
+  #disclaimer-modal, #quote-modal { 
+    display: none; 
+    opacity: 0;
+    position: fixed; top: 50%; left: 50%; 
+    transform: translate(-50%, -45%) scale(0.95); 
+    z-index: 100002; 
+    width: min(90vw, 420px); padding: 32px; 
+    text-align: center; 
+    background: var(--glass-bg); 
+    border: 1px solid var(--glass-border); 
+    border-radius: 16px; 
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8); 
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  
+  #disclaimer-modal.show, #quote-modal.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 
-  /* Zitat-Vorschlag Button & Modal Styling */
+  #disclaimer-modal p, #quote-modal p { margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.9); }
+  
   #quote-btn {
     background: none; border: none; font-size: 20px; cursor: pointer; 
     opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
     padding: 2px 8px; filter: grayscale(100%); 
   }
   #quote-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
-
-  #quote-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100003; width: min(85vw, 420px); padding: 25px; text-align: center; background: rgba(0, 0, 0, 0.95); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
-  #quote-modal p { margin: 0 0 20px 0; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.9); }
 
   @media (max-width: 600px) { 
     #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
@@ -413,6 +473,9 @@
   document.getElementById("bg-next").addEventListener("click", () => { currentBgIndex = (currentBgIndex + 1) % 3; window.setMatrixTheme(currentBgIndex); });
 
   function drawBg() {
+    requestAnimationFrame(drawBg);
+    if (document.hidden) return; // Performance: Pause when tab is hidden
+
     mctx.fillStyle = "#04050a";
     mctx.fillRect(0, 0, W, H);
 
@@ -456,11 +519,15 @@
         }
       }
     }
-    requestAnimationFrame(drawBg);
   }
 
   initTheme(); drawBg();
-  window.addEventListener("resize", initTheme);
+  
+  let matrixResizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(matrixResizeTimeout);
+    matrixResizeTimeout = setTimeout(initTheme, 200);
+  });
 </script>
 
 <script type="module">
@@ -469,6 +536,13 @@
   import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
   import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
   import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
+
+  // --- PERFORMANCE: Dynamic Pixel Ratio ---
+  const getDPR = () => {
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    const dpr = window.devicePixelRatio || 1;
+    return isMobile ? Math.min(dpr, 1.5) : Math.min(dpr, 2);
+  };
 
   const isGerman = (navigator.language || navigator.userLanguage).toLowerCase().startsWith('de');
 
@@ -530,20 +604,25 @@
 
   let availableWisdomIndices = [];
   let currentWisdomLang = '';
-
   let isTyping = false; 
+
+  // --- UI MODALS (Smooth Transitions) ---
+  const toggleModal = (id, show) => {
+    const el = document.getElementById(id);
+    if (show) el.classList.add("show");
+    else el.classList.remove("show");
+  };
 
   const disclaimerTexts = {
     de: "Diese Inhalte stellen fiktive Parodien zu Unterhaltungszwecken dar und repräsentieren nicht die Ansichten, Überzeugungen oder Absichten von Einzelpersonen oder Entitäten.",
     en: "These statements constitute fictional parody for entertainment purposes only and do not represent the views, beliefs, or intentions of any individual or entity."
   };
   document.getElementById("disclaimer-text").textContent = isGerman ? disclaimerTexts.de : disclaimerTexts.en;
-  document.getElementById("disclaimer-btn").onclick = () => { document.getElementById("disclaimer-modal").style.display = "block"; };
-  document.getElementById("close-disclaimer").onclick = () => { document.getElementById("disclaimer-modal").style.display = "none"; };
-
-  // Zitat Vorschlag Modal Event Handler
-  document.getElementById("quote-btn").onclick = () => { document.getElementById("quote-modal").style.display = "block"; };
-  document.getElementById("close-quote").onclick = () => { document.getElementById("quote-modal").style.display = "none"; };
+  
+  document.getElementById("disclaimer-btn").onclick = () => toggleModal("disclaimer-modal", true);
+  document.getElementById("close-disclaimer").onclick = () => toggleModal("disclaimer-modal", false);
+  document.getElementById("quote-btn").onclick = () => toggleModal("quote-modal", true);
+  document.getElementById("close-quote").onclick = () => toggleModal("quote-modal", false);
 
   const MODELS = [
     { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
@@ -562,8 +641,8 @@
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); 
-  renderer.setPixelRatio(0.6); 
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "high-performance" }); 
+  renderer.setPixelRatio(getDPR()); 
   renderer.setSize(innerWidth, innerHeight); 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.getElementById("container3D").appendChild(renderer.domElement);
@@ -581,7 +660,7 @@
   const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
 
   const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "low-power" });
-  hitEnterRenderer.setPixelRatio(0.6); 
+  hitEnterRenderer.setPixelRatio(getDPR()); 
   hitEnterRenderer.setClearColor(0x000000, 0); 
   hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
   hitEnterSlot.appendChild(hitEnterRenderer.domElement);
@@ -628,10 +707,46 @@
 
   let object = null, mixer = null; const clock = new THREE.Clock();
 
+  // --- MEMORY LEAK FIX: Dispose 3D Models ---
+  function disposeObject(obj) {
+    if (!obj) return;
+    obj.traverse((child) => {
+      if (child.isMesh) {
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(m => disposeMaterial(m));
+          } else {
+            disposeMaterial(child.material);
+          }
+        }
+      }
+    });
+  }
+
+  function disposeMaterial(mat) {
+    if (mat.map) mat.map.dispose();
+    if (mat.lightMap) mat.lightMap.dispose();
+    if (mat.bumpMap) mat.bumpMap.dispose();
+    if (mat.normalMap) mat.normalMap.dispose();
+    if (mat.specularMap) mat.specularMap.dispose();
+    if (mat.envMap) mat.envMap.dispose();
+    mat.dispose();
+  }
+
   function loadHead(url) {
     startLoading(); 
-    if (object) { scene.remove(object); object = null; } 
-    if (mixer) { mixer.stopAllAction(); mixer = null; }
+    // Alte Ressourcen restlos entfernen
+    if (object) { 
+      scene.remove(object); 
+      disposeObject(object); 
+      object = null; 
+    } 
+    if (mixer) { 
+      mixer.stopAllAction(); 
+      mixer.uncacheRoot(mixer.getRoot()); 
+      mixer = null; 
+    }
 
     loader.load(
       url, 
@@ -1026,8 +1141,22 @@
     });
   })();
 
+  // --- PERFORMANCE: Tab Visibility (Spart Akku, pausiert Rendering) ---
+  let isTabVisible = true;
+  document.addEventListener("visibilitychange", () => {
+    isTabVisible = !document.hidden;
+    if (isTabVisible) {
+        clock.getDelta(); // Verhindert Zeitsprünge in der Animation
+        if (musicOn && music.paused) music.play().catch(()=>{});
+    } else {
+        if (musicOn) music.pause();
+    }
+  });
+
   function animate() {
     requestAnimationFrame(animate);
+    if (!isTabVisible) return; // Stoppt das Rendern, wenn der Tab im Hintergrund ist
+
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta);
 
@@ -1215,7 +1344,18 @@
     hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
   }
   animate();
-  window.addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+  // --- PERFORMANCE: Throttled Resize ---
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        camera.aspect = innerWidth / innerHeight; 
+        camera.updateProjectionMatrix(); 
+        renderer.setPixelRatio(getDPR());
+        renderer.setSize(innerWidth, innerHeight); 
+    }, 150);
+  });
 </script>
 </body>
 </html>
