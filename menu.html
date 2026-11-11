@@ -241,41 +241,32 @@
         #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
 
         /* ========================================= */
-        /* === VHS MULTIVERSE (FESTER RAHMEN) ====== */
+        /* === VHS MULTIVERSE BILDEFFEKTE (FIX) === */
         /* ========================================= */
 
-        /* Der Rahmen (Bleibt absolut starr!) */
+        /* Der Rahmen bleibt absolut starr */
         .vhs-zoom-wrapper {
-            position: relative;
-            display: inline-block;
             overflow: hidden !important;
-            border: 4px solid #1a1a1a; /* Der feste TV-Rahmen */
             border-radius: var(--radius);
-            background: #000; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.9);
-            transform: none !important; /* Verhindert das Hüpfen des Rahmens */
-            cursor: zoom-in;
-            margin: 20px auto;
-            max-width: 100%;
-            line-height: 0; /* Verhindert kleine Lücken unter dem Bild */
+            transform: none !important;
+            contain: paint;
+            position: relative;
+            /* WICHTIG: Verhindert, dass der Container selbst wackelt */
+            will-change: auto; 
         }
 
-        /* Das Bild (Wackelt im Rahmen!) */
-        .vhs-zoom-wrapper .vhs-wobble-img {
-            display: block;
-            /* Wir machen das Bild etwas größer, damit beim Wackeln keine Lücken am Rand entstehen */
-            width: calc(100% + 24px) !important;
-            max-width: calc(300px + 24px) !important; 
-            margin: -12px !important; /* Zentriert das größere Bild wieder */
+        /* Nur das Bild wackelt */
+        .vhs-wobble-img {
             animation: vhsIdleWobble 4.5s ease-in-out infinite;
             will-change: transform, filter;
+            transform-origin: center center;
         }
 
-        /* Das heftige Glitchen beim Bildwechsel */
         .vhs-zoom-wrapper.glitching .vhs-wobble-img {
             animation: vhsGlitch 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
+        /* Der Wobble-Effekt für das Bild */
         @keyframes vhsIdleWobble {
             0%, 100% { transform: translateX(0) skewX(0); filter: saturate(1) contrast(1.02); }
             25%      { transform: translateX(1.5px) skewX(-0.3deg); filter: saturate(1.15) contrast(1.04); }
@@ -283,30 +274,33 @@
             75%      { transform: translateX(0.8px) skewX(-0.15deg); filter: saturate(1.08) contrast(1.03); }
         }
 
+        /* Der Glitch-Effekt für das Bild */
         @keyframes vhsGlitch {
             0%   { transform: translateX(0) skewX(0); filter: none; }
-            8%   { transform: translateX(-10px) skewX(4deg) scaleY(1.03); filter: hue-rotate(90deg) saturate(3) contrast(1.5); }
-            16%  { transform: translateX(8px) skewX(-5deg) scaleY(0.97); filter: hue-rotate(-60deg) saturate(2.5) contrast(1.3); }
-            28%  { transform: translateX(-6px) skewX(3deg) scaleY(1.02); filter: hue-rotate(45deg) saturate(2); }
+            8%   { transform: translateX(-10px) skewX(4deg); filter: hue-rotate(90deg) saturate(3) contrast(1.5); }
+            16%  { transform: translateX(8px) skewX(-5deg); filter: hue-rotate(-60deg) saturate(2.5) contrast(1.3); }
+            28%  { transform: translateX(-6px) skewX(3deg); filter: hue-rotate(45deg) saturate(2); }
             42%  { transform: translateX(4px) skewX(-2deg); filter: none; }
-            58%  { transform: translateX(-3px) skewX(1.5deg) scaleY(1.01); filter: hue-rotate(-30deg) saturate(1.8); }
+            58%  { transform: translateX(-3px) skewX(1.5deg); filter: hue-rotate(-30deg) saturate(1.8); }
             75%  { transform: translateX(1.5px) skewX(-0.5deg); filter: saturate(1.4); }
             100% { transform: translateX(0) skewX(0); filter: none; }
         }
 
-        /* Das CRT-Overlay im Bild (Auch starr) */
+        /* Das CRT-Overlay - sitzt starr im Container */
         .vhs-crt-overlay {
             position: absolute;
             inset: 0;
             pointer-events: none;
             opacity: 0;
             z-index: 3;
+            border-radius: var(--radius);
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0.9) 0%, 
+                rgba(255, 255, 255, 0.95) 0%, 
                 rgba(0, 255, 255, 0.35) 30%, 
-                rgba(255, 0, 255, 0.12) 60%, 
+                rgba(255, 0, 255, 0.15) 60%, 
                 transparent 100%);
             mix-blend-mode: overlay;
+            transform-origin: center center;
         }
 
         .vhs-crt-overlay::before {
@@ -336,11 +330,12 @@
             animation: crtScanBar 0.8s linear;
         }
 
+        /* WICHTIG: Hier wurde das scaleX entfernt! Nur noch scaleY! */
         @keyframes crtImagePowerOn {
-            0%   { opacity: 0; transform: scaleY(0.02) scaleX(1.1); filter: brightness(6); }
-            15%  { opacity: 1; transform: scaleY(1.15) scaleX(0.92); filter: brightness(3.5) hue-rotate(180deg) saturate(2); }
-            30%  { opacity: 1; transform: scaleY(0.98) scaleX(1.02); filter: brightness(2) hue-rotate(90deg); }
-            50%  { opacity: 0.85; transform: scaleY(1) scaleX(1); filter: brightness(1.3) hue-rotate(30deg); }
+            0%   { opacity: 0; transform: scaleY(0.02); filter: brightness(6); }
+            15%  { opacity: 1; transform: scaleY(1.15); filter: brightness(3.5) hue-rotate(180deg) saturate(2); }
+            30%  { opacity: 1; transform: scaleY(0.98); filter: brightness(2) hue-rotate(90deg); }
+            50%  { opacity: 0.85; transform: scaleY(1); filter: brightness(1.3) hue-rotate(30deg); }
             75%  { opacity: 0.4; filter: brightness(1) hue-rotate(0deg); }
             100% { opacity: 0; filter: brightness(1); }
         }
@@ -507,7 +502,7 @@
 
             const mainContent = document.getElementById('mainContent');
             let currentCategory = ''; 
-            let vhsImageObserver = null; 
+            let vhsImageObserver = null;
 
             async function triggerCategoryChange(cat) {
                 if (cat === currentCategory) return;
@@ -555,6 +550,7 @@
 
                                     applyGlobalMute();
 
+                                    // === ZOOM-WRAPPER ===
                                     const noZoomCats = ['HUMANART', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
                                     if (!noZoomCats.includes(cat)) {
                                         mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
@@ -572,20 +568,15 @@
                                         });
                                     }
 
-                                    // === VHS MULTIVERSE EFFEKT SETUP ===
+                                    // === VHS MULTIVERSE ===
                                     if (cat === 'VHS MULTIVERSE') {
                                         const imgEl = mainContent.querySelector('.zoom-wrapper img') || mainContent.querySelector('img');
                                         if (imgEl) {
                                             const wrapper = imgEl.closest('.zoom-wrapper') || imgEl.parentElement;
-                                            
                                             if (wrapper) {
-                                                // 1. Der Rahmen (Wrapper) wird starr und bekommt TV-Look
                                                 wrapper.classList.add('vhs-zoom-wrapper');
-                                                
-                                                // 2. Das Bild bekommt den Wobble
                                                 imgEl.classList.add('vhs-wobble-img');
 
-                                                // 3. CRT Overlay hinzufügen
                                                 const crtOverlay = document.createElement('div');
                                                 crtOverlay.className = 'vhs-crt-overlay';
                                                 wrapper.appendChild(crtOverlay);
@@ -910,6 +901,7 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
+            // 10. Initiale Tür-Öffnung
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
