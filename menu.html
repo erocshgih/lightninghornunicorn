@@ -70,18 +70,11 @@
         html[data-theme="mono-gray"] main { filter: grayscale(1); }
         html[data-theme="mono-green"] main { filter: grayscale(1) sepia(0.9) hue-rotate(70deg) saturate(2.8) brightness(0.9); }
         
-        /* Optimierter CRT-Effekt (kein SVG-Noise mehr, viel weniger Rechenlast) */
-        html[data-theme="crt"] main { 
-            animation: crtGlitch 5s infinite steps(1, end), crtJitter 3s ease-in-out infinite; 
-            will-change: transform, filter; 
-        }
+        html[data-theme="crt"] main { animation: crtGlitch 5s infinite steps(1, end), crtJitter 3s ease-in-out infinite; will-change: transform, filter; }
         html[data-theme="crt"]::after {
             content: ""; position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.25;
-            background-image: 
-                repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 4px),
-                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 100% 4px, 3px 3px;
-            mix-blend-mode: overlay;
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 4px), radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 100% 4px, 3px 3px; mix-blend-mode: overlay;
         }
 
         @keyframes crtGlitch { 
@@ -96,9 +89,7 @@
             60% { transform: translate(0.1px, 0.3px); } 
         }
 
-        @media (prefers-reduced-motion: reduce) { 
-            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } 
-        }
+        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
         /* ========== BASE STYLES ========== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -107,6 +98,34 @@
 
         main#mainContent * { scrollbar-width: none; }
         main#mainContent *::-webkit-scrollbar { display: none; }
+
+        /* ========== CRT HOLOGRAM EFFECT ========== */
+        #crt-hologram-overlay {
+            position: fixed; inset: 0; z-index: 9997; pointer-events: none; opacity: 0; display: none;
+            background: #000; overflow: hidden;
+        }
+        #crt-hologram-overlay.active { display: block; animation: crtPowerOn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        .crt-scanlines {
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.15) 3px, transparent 4px);
+            opacity: 0.6;
+        }
+        .crt-flash {
+            position: absolute; inset: 0; background: #fff; opacity: 0; mix-blend-mode: overlay;
+        }
+        
+        /* Power-On Animation */
+        @keyframes crtPowerOn {
+            0% { opacity: 0; background: transparent; }
+            5% { opacity: 1; background: #fff; filter: brightness(5); }
+            10% { opacity: 1; background: #fff; filter: brightness(2); transform: scaleY(0.01) scaleX(1.2); }
+            25% { opacity: 1; background: rgba(0, 255, 255, 0.2); filter: hue-rotate(90deg) contrast(1.5); transform: scaleY(1.2) scaleX(0.9); }
+            40% { opacity: 1; background: rgba(255, 0, 255, 0.1); transform: scaleY(1) scaleX(1.05); }
+            60% { opacity: 0.8; background: transparent; transform: scaleY(1) scaleX(1); }
+            80% { opacity: 0.3; }
+            100% { opacity: 0; display: none; }
+        }
 
         /* ========== HEADER & MENÜ ========== */
         .header { 
@@ -236,7 +255,6 @@
 
         .door-tile {
             background-image: url('pixelart/pixelart_vedran.png'); background-size: contain; background-position: center center; background-repeat: no-repeat; width: 100%; height: 100%;
-            /* Transformation wird flüssig aus dem JS (Delta Time) injiziert! */
             transform: perspective(400px) translate(var(--t-tx, 0px), var(--t-ty, 0px)) rotate(var(--t-rot, 0deg)) rotateY(var(--t-rotY, 0deg)) skewX(var(--t-skx, 0deg)) scale(var(--t-sx, 1), var(--t-sy, 1));
             filter: var(--t-fil, none);
             will-change: transform, filter;
@@ -254,6 +272,12 @@
 <body>
     
     <audio id="quackAudio" preload="auto"></audio>
+
+    <!-- NEUES CRT OVERLAY -->
+    <div id="crt-hologram-overlay">
+        <div class="crt-scanlines"></div>
+        <div class="crt-flash"></div>
+    </div>
 
     <div id="door-overlay" class="closed" data-category="ABOUT">
         <div class="door-panel"></div>
@@ -393,7 +417,18 @@
                 sliderWrap.classList.toggle('collapsed', isCollapsed);
             });
 
-            // 5. Kategorie & Fetch Management
+            // 5. CRT Hologramm Effekt Steuerung
+            const crtOverlay = document.getElementById('crt-hologram-overlay');
+            
+            function triggerCRTEffect() {
+                if (!crtOverlay) return;
+                crtOverlay.classList.remove('active');
+                // Reflow erzwingen, damit die Animation neu startet
+                void crtOverlay.offsetWidth; 
+                crtOverlay.classList.add('active');
+            }
+
+            // 6. Kategorie & Fetch Management (mit Observer für VHS)
             const categoryPages = {
                 'ABOUT': '01_about.html',
                 'VHS MULTIVERSE': '02_vhsmultiverse.html',
@@ -407,10 +442,14 @@
 
             const mainContent = document.getElementById('mainContent');
             let currentCategory = ''; 
+            let vhsImageObserver = null; // Wichtig für den MutationObserver
 
             async function triggerCategoryChange(cat) {
                 if (cat === currentCategory) return;
                 currentCategory = cat;
+
+                // Observer trennen, wenn wir die Kategorie wechseln
+                if (vhsImageObserver) { vhsImageObserver.disconnect(); vhsImageObserver = null; }
 
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
@@ -423,7 +462,6 @@
                     item.classList.toggle('active', item.getAttribute('data-cat') === cat);
                 });
 
-                // Lade-Animation / Verzögerung für die Tür
                 setTimeout(async () => {
                     const targetPage = categoryPages[cat];
                     if (targetPage) {
@@ -444,7 +482,6 @@
                                         if (text) el.innerHTML = text;
                                     });
 
-                                    // Skripte neu ausführen
                                     Array.from(mainContent.querySelectorAll("script")).forEach(oldScript => {
                                         const newScript = document.createElement("script");
                                         Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
@@ -454,7 +491,6 @@
 
                                     applyGlobalMute();
 
-                                    // Zoom-Wrapper (Lupe) erstellen
                                     const noZoomCats = ['HUMANART', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
                                     if (!noZoomCats.includes(cat)) {
                                         mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
@@ -471,6 +507,24 @@
                                             }
                                         });
                                     }
+
+                                    // === VHS MULTIVERSE CRT EFFECT OBSERVER ===
+                                    if (cat === 'VHS MULTIVERSE') {
+                                        // Wir suchen das erste große Bild im Content, das sich ändert
+                                        const targetImg = mainContent.querySelector('img');
+                                        if (targetImg) {
+                                            vhsImageObserver = new MutationObserver((mutations) => {
+                                                mutations.forEach((mutation) => {
+                                                    if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                                                        triggerCRTEffect();
+                                                    }
+                                                });
+                                            });
+                                            vhsImageObserver.observe(targetImg, { attributes: true, attributeFilter: ['src'] });
+                                        }
+                                    }
+                                    // ==========================================
+
                                 } else {
                                     mainContent.innerHTML = `<p>Inhalt konnte nicht geladen werden.</p>`;
                                 }
@@ -511,7 +565,7 @@
             }
             track.appendChild(trackFragment);
 
-            // 6. Physik & Slider Management
+            // 7. Physik & Slider Management
             let setW = 0, pos = 0;
             const sliderTrackEl = document.getElementById('sliderTrack');
             const sliderThumbEl = document.getElementById('sliderThumb');
@@ -562,11 +616,10 @@
                 document.documentElement.style.setProperty('--dynamic-hue', `${rgbProgress * 60}deg`);
             }
 
-            // 7. Tür-Physik (Optimiert!)
+            // 8. Tür-Physik (Optimiert!)
             let wobbleTime = 0;
 
             function updateTilesSmooth(dt) {
-                // Performance: Nur updaten, wenn die Türen auch geschlossen sind!
                 const door = document.getElementById('door-overlay');
                 if (!door || door.classList.contains('open')) return;
 
@@ -633,7 +686,7 @@
                 door.style.setProperty('--t-fil', filter);
             }
 
-            // 8. Drag Interactions
+            // 9. Drag Interactions
             let stripDragging = false, stripStartX = 0, stripLastX = 0, stripVelocity = 0, stripTimeDrag = 0;
 
             strip.addEventListener('mousedown', (e) => {
@@ -683,25 +736,25 @@
                 wrap();
             }
 
-            // 9. Main Loop (Performance optimiert)
+            // 10. Main Loop
             let lastTime = performance.now();
             let isTabVisible = true;
 
             document.addEventListener('visibilitychange', () => {
                 isTabVisible = !document.hidden;
-                if (isTabVisible) lastTime = performance.now(); // Reset Time
+                if (isTabVisible) lastTime = performance.now(); 
             });
 
             function loop(time) {
                 if (!time) time = performance.now();
                 if (!isTabVisible) {
                     requestAnimationFrame(loop);
-                    return; // Pausiere Berechnungen, wenn Tab im Hintergrund
+                    return; 
                 }
 
                 let dt = time - lastTime;
                 lastTime = time;
-                if (dt > 100) dt = 16; // Verhindert Sprünge
+                if (dt > 100) dt = 16; 
                 if (dt < 0) dt = 0;
                 
                 updateRgbLamp(dt);
@@ -728,7 +781,6 @@
                 requestAnimationFrame(loop);
             }
 
-            // Resize Handling (mit Throttle)
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -738,7 +790,6 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            // 10. Initiale Tür-Öffnung
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
