@@ -241,46 +241,54 @@
         #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
 
         /* ========================================= */
-        /* === NEUE VHS MULTIVERSE BILDEFFEKTE ==== */
+        /* === VHS MULTIVERSE: STARRER RAHMEN ====== */
         /* ========================================= */
 
+        /* Der Wrapper ist der FESTE Rahmen. Er bewegt sich NIE. */
         .vhs-zoom-wrapper {
             overflow: hidden !important;
             border-radius: var(--radius);
-            transform: none !important; /* Hover-Scale deaktiviert, Wobble übernimmt das */
-            contain: paint; /* Performance-Boost: Isoliert das Element vom Rest */
+            transform: none !important; /* Hover-Scale komplett aus, auch kein Wackeln */
+            contain: paint;
+            /* Rahmen-Optik: subtiler Rand, damit man den "Bildschirm" erkennt */
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15), 0 8px 30px rgba(0, 0, 0, 0.35);
+            background: #000;
         }
+        .vhs-zoom-wrapper:hover { transform: none !important; }
+        .vhs-zoom-wrapper::after { display: none !important; } /* Lupe ausblenden - stört den VHS-Look */
 
-        /* Permanenter VHS-Wobble - läuft dauerhaft, aber sehr subtil */
+        /* Das Bild wackelt IM Rahmen. Es ist überdimensional, damit beim Wackeln kein Rand sichtbar wird. */
         .vhs-wobble-img {
             animation: vhsIdleWobble 4.5s ease-in-out infinite;
             will-change: transform, filter;
+            transform-origin: center center;
         }
 
-        /* Heftiger Glitch beim Bildwechsel */
+        /* Heftiger Glitch beim Bildwechsel - nur das Bild, nicht der Rahmen */
         .vhs-zoom-wrapper.glitching .vhs-wobble-img {
             animation: vhsGlitch 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
+        /* Permanenter, subtiler VHS-Wobble. Scale bleibt konstant 1.08, damit nie ein Rand erscheint. */
         @keyframes vhsIdleWobble {
-            0%, 100% { transform: translateX(0) skewX(0); filter: saturate(1) contrast(1.02); }
-            25%      { transform: translateX(1.2px) skewX(-0.3deg); filter: saturate(1.15) contrast(1.04); }
-            50%      { transform: translateX(-1.2px) skewX(0.25deg); filter: saturate(1) contrast(1.02); }
-            75%      { transform: translateX(0.6px) skewX(-0.15deg); filter: saturate(1.08) contrast(1.03); }
+            0%, 100% { transform: scale(1.08) translateX(0) skewX(0); filter: saturate(1) contrast(1.02); }
+            25%      { transform: scale(1.08) translateX(1.5px) skewX(-0.4deg); filter: saturate(1.15) contrast(1.05); }
+            50%      { transform: scale(1.08) translateX(-1.5px) skewX(0.3deg); filter: saturate(1) contrast(1.02); }
+            75%      { transform: scale(1.08) translateX(0.8px) skewX(-0.2deg); filter: saturate(1.08) contrast(1.03); }
         }
 
         @keyframes vhsGlitch {
-            0%   { transform: translateX(0) skewX(0); filter: none; }
-            8%   { transform: translateX(-10px) skewX(4deg) scaleY(1.03); filter: hue-rotate(90deg) saturate(3) contrast(1.5); }
-            16%  { transform: translateX(8px) skewX(-5deg) scaleY(0.97); filter: hue-rotate(-60deg) saturate(2.5) contrast(1.3); }
-            28%  { transform: translateX(-6px) skewX(3deg) scaleY(1.02); filter: hue-rotate(45deg) saturate(2); }
-            42%  { transform: translateX(4px) skewX(-2deg); filter: none; }
-            58%  { transform: translateX(-3px) skewX(1.5deg) scaleY(1.01); filter: hue-rotate(-30deg) saturate(1.8); }
-            75%  { transform: translateX(1.5px) skewX(-0.5deg); filter: saturate(1.4); }
-            100% { transform: translateX(0) skewX(0); filter: none; }
+            0%   { transform: scale(1.08) translateX(0) skewX(0); filter: none; }
+            8%   { transform: scale(1.08) translateX(-9px) skewX(4deg); filter: hue-rotate(90deg) saturate(3) contrast(1.5); }
+            16%  { transform: scale(1.08) translateX(7px) skewX(-5deg); filter: hue-rotate(-60deg) saturate(2.5) contrast(1.3); }
+            28%  { transform: scale(1.08) translateX(-5px) skewX(3deg); filter: hue-rotate(45deg) saturate(2); }
+            42%  { transform: scale(1.08) translateX(4px) skewX(-2deg); filter: none; }
+            58%  { transform: scale(1.08) translateX(-3px) skewX(1.5deg); filter: hue-rotate(-30deg) saturate(1.8); }
+            75%  { transform: scale(1.08) translateX(1.5px) skewX(-0.5deg); filter: saturate(1.4); }
+            100% { transform: scale(1.08) translateX(0) skewX(0); filter: none; }
         }
 
-        /* Das CRT-Overlay im Bild */
+        /* Das CRT-Overlay - liegt fest im Rahmen */
         .vhs-crt-overlay {
             position: absolute;
             inset: 0;
@@ -494,13 +502,12 @@
 
             const mainContent = document.getElementById('mainContent');
             let currentCategory = ''; 
-            let vhsImageObserver = null; // Beobachter für das VHS-Bild
+            let vhsImageObserver = null;
 
             async function triggerCategoryChange(cat) {
                 if (cat === currentCategory) return;
                 currentCategory = cat;
 
-                // Alten Beobachter trennen
                 if (vhsImageObserver) { vhsImageObserver.disconnect(); vhsImageObserver = null; }
 
                 const door = document.getElementById('door-overlay');
@@ -561,18 +568,15 @@
                                         });
                                     }
 
-                                    // === VHS MULTIVERSE: Bild-Effekte aktivieren ===
+                                    // === VHS MULTIVERSE: Fester Rahmen + Wackel-Bild ===
                                     if (cat === 'VHS MULTIVERSE') {
                                         const imgEl = mainContent.querySelector('.zoom-wrapper img') || mainContent.querySelector('img');
                                         if (imgEl) {
                                             const wrapper = imgEl.closest('.zoom-wrapper') || imgEl.parentElement;
                                             if (wrapper) {
-                                                // Wrapper bekommt VHS-Klasse (overflow: hidden, etc.)
                                                 wrapper.classList.add('vhs-zoom-wrapper');
-                                                // Bild bekommt permanenten Wobble
                                                 imgEl.classList.add('vhs-wobble-img');
 
-                                                // CRT Overlay erzeugen und im Wrapper platzieren
                                                 const crtOverlay = document.createElement('div');
                                                 crtOverlay.className = 'vhs-crt-overlay';
                                                 wrapper.appendChild(crtOverlay);
@@ -581,7 +585,6 @@
                                                 let glitchTimeout = null;
 
                                                 const vhsTrigger = () => {
-                                                    // Aktuelles Bild suchen (falls ausgetauscht wurde)
                                                     const currentImg = wrapper.querySelector('img');
                                                     if (currentImg && !currentImg.classList.contains('vhs-wobble-img')) {
                                                         currentImg.classList.add('vhs-wobble-img');
@@ -590,12 +593,10 @@
                                                     if (isGlitching) return;
                                                     isGlitching = true;
 
-                                                    // CRT-Overlay neu starten
                                                     crtOverlay.classList.remove('active');
                                                     void crtOverlay.offsetWidth;
                                                     crtOverlay.classList.add('active');
 
-                                                    // Glitch-Wobble neu starten
                                                     wrapper.classList.remove('glitching');
                                                     void wrapper.offsetWidth;
                                                     wrapper.classList.add('glitching');
@@ -607,15 +608,12 @@
                                                     }, 850);
                                                 };
 
-                                                // Erst nach dem Einfügen des Overlays den Observer starten (verhindert Endlosschleife!)
                                                 vhsImageObserver = new MutationObserver((mutations) => {
                                                     let shouldTrigger = false;
                                                     for (const mutation of mutations) {
-                                                        // src-Attribut hat sich geändert
                                                         if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
                                                             shouldTrigger = true;
                                                         }
-                                                        // Neues img wurde eingefügt (Komplettaustausch)
                                                         if (mutation.type === 'childList') {
                                                             for (const node of mutation.addedNodes) {
                                                                 if (node.nodeType === 1 && (node.tagName === 'IMG' || (node.querySelector && node.querySelector('img')))) {
@@ -627,7 +625,6 @@
                                                     if (shouldTrigger) vhsTrigger();
                                                 });
 
-                                                // Beobachte das Bild (src) UND den Wrapper (childList für komplett ausgetauschte Bilder)
                                                 vhsImageObserver.observe(wrapper, {
                                                     attributes: true,
                                                     attributeFilter: ['src'],
@@ -635,7 +632,6 @@
                                                     subtree: true
                                                 });
 
-                                                // Initial einmal kurz den CRT-Effekt zeigen
                                                 setTimeout(vhsTrigger, 250);
                                             }
                                         }
@@ -905,7 +901,6 @@
             if (document.fonts && document.fonts.ready) { document.fonts.ready.then(measure); } else { measure(); }
             requestAnimationFrame(loop);
 
-            // 10. Initiale Tür-Öffnung
             setTimeout(() => { 
                 const door = document.getElementById('door-overlay');
                 if (door) {
