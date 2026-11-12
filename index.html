@@ -282,6 +282,38 @@
             #bg-prev { left: 0; border-radius: 0 8px 8px 0; width: 35px; height: 60px; font-size: 20px;}
             #bg-next { right: 0; border-radius: 8px 0 0 8px; width: 35px; height: 60px; font-size: 20px;} 
         }
+
+        /* Desktop: Farbbuttons bleiben statisch. Der Hit-Enter-Flash
+           (triggerHitEnterFlash) bleibt davon unberührt. */
+        @media (min-width: 900px) {
+            .lhu-pill,
+            .lhu-pill:hover,
+            .lhu-pill:active,
+            .lhu-pill.is-armed {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+                filter: none !important;
+                box-shadow: inset 0 0 0 4px rgba(0,0,0,.35),
+                            inset 0 8px 16px rgba(255,255,255,.18) !important;
+            }
+
+            .lhu-pill-red::before,
+            .lhu-pill-red:hover::before {
+                animation: none !important;
+                opacity: 0 !important;
+            }
+
+            .lhu-pill-yellow:hover {
+                animation: none !important;
+            }
+
+            .lhu-pill-blue:hover::after {
+                animation: none !important;
+                opacity: 0 !important;
+            }
+        }
+
     </style>
 </head>
 
