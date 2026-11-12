@@ -445,7 +445,7 @@
         #door-overlay.open   .door-panel { transform: translate3d(0, -120%, 0); }
 
         /* ---------- PROJECTS: BILDER STABIL ZENTRIERT ---------- */
-        main#mainContent .carousel-stage {
+        main#mainContent #projects-accordion .carousel-stage {
             position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -455,8 +455,8 @@
             justify-content: center;
             overflow: hidden;
         }
-        main#mainContent .carousel-slide,
-        main#mainContent .carousel-slide.active {
+        main#mainContent #projects-accordion .carousel-slide,
+        main#mainContent #projects-accordion .carousel-slide.active {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -466,7 +466,7 @@
             justify-content: center;
             box-sizing: border-box;
         }
-        main#mainContent .carousel-slide img {
+        main#mainContent #projects-accordion .carousel-slide img {
             display: block;
             width: 100% !important;
             height: 100% !important;
