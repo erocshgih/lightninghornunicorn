@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -6,42 +6,77 @@
 </head>
 <body>
     <main>
-        <!-- Spezifisches CSS nur für diese Unterseite -->
         <style>
-            section p { font-size: var(--fs-sm); margin: 18px auto; text-align: center; }
+            /* ============================================
+               CONTACT — spezifische Styles
+               ============================================ */
+            section#CONTACT p {
+                font-size: var(--fs-body-content, 1.1rem);
+                margin: var(--space-md) auto;
+                text-align: center;
+                max-width: 65ch;
+            }
 
             .wobble-glitch-container {
                 position: relative;
                 display: inline-block;
             }
-
             .analog-glow {
                 pointer-events: none;
             }
 
+            /* Briefkasten-Bild */
             .tape-image {
                 display: block;
                 width: 100%;
-                max-width: 400px;
+                max-width: 420px;
                 height: auto;
-                margin: 40px auto;
-                border-radius: var(--radius);
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-                transition: transform 0.3s;
+                margin: var(--space-xl) auto var(--space-md);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-lg);
+                transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+                border: 2px solid var(--border-medium);
+            }
+            a.music-tape-link:hover .tape-image,
+            a.music-tape-link:focus-visible .tape-image {
+                transform: scale(1.03) rotate(-1deg);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+            }
+            a.music-tape-link {
+                display: block;
+                text-decoration: none;
+                outline: none;
+            }
+            a.music-tape-link:focus-visible {
+                outline: 3px solid var(--strip-active);
+                outline-offset: 6px;
+                border-radius: var(--radius-lg);
             }
 
-            .tape-image:hover {
-                transform: scale(1.03);
+            /* Blinkender Status-Text */
+            .system-status {
+                font-family: var(--font-display, 'Press Start 2P', monospace);
+                font-size: 0.6rem;
+                color: #00FF28;
+                text-align: center;
+                letter-spacing: 2px;
+                margin-top: var(--space-md);
+                animation: retroBlink 1.2s infinite steps(2);
+                text-shadow: 0 0 8px rgba(0, 255, 40, 0.5);
             }
 
             @keyframes retroBlink {
-                0% { opacity: 1; }
-                50% { opacity: 0; }
-                100% { opacity: 1; }
+                0%, 49% { opacity: 1; }
+                50%, 100% { opacity: 0; }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .system-status { animation: none; opacity: 1; }
+                .tape-image { transition: none; }
             }
 
             @media (min-width: 769px) {
-                section p { font-size: var(--fs-base); max-width: 600px; line-height: 2; }
+                section#CONTACT p { font-size: 1.25rem; line-height: 1.8; }
                 .tape-image { max-width: 500px; }
             }
         </style>
@@ -51,28 +86,30 @@
 
             <p data-lang-en="For global funding campaigns, collaborative ventures, or cosmic feedback – dispatch a message directly to me."
                data-lang-de="Für globale Kampagnen, Kollaborationen oder kosmischen Input – schicke eine Email direkt zu mir.">
+                Für globale Kampagnen, Kollaborationen oder kosmischen Input – schicke eine Email direkt zu mir.
             </p>
 
             <p data-lang-en="Click the mailbox below to send an email."
                data-lang-de="Klick auf den Briefkasten unten, um eine Email zu senden."
-               style="font-family: 'Press Start 2P', cursive; font-size: var(--fs-xs); color: var(--text-soft); text-align: center; margin-bottom: 20px; line-height: 2.2;">
+               style="font-family: var(--font-display); font-size: var(--fs-xs); color: var(--text-soft); margin-bottom: var(--space-md); line-height: 2;">
+                Klick auf den Briefkasten unten, um eine Email zu senden.
             </p>
 
-            <a href="mailto:lightninghornunicorn@gmail.com" class="music-tape-link" style="margin: 30px auto; display: block;">
+            <a href="mailto:lightninghornunicorn@gmail.com" class="music-tape-link" aria-label="Email an Lightning Horn Unicorn senden">
                 <div class="wobble-glitch-container">
-                    <img src="unicornmail.webp" alt="The Ironic Furry Unicorn Mailbox TRK-2000 with Nano Banana" class="tape-image">
+                    <img src="unicornmail.webp" alt="Der ironische Furry-Einhorn-Briefkasten TRK-2000 mit Nano Banana" class="tape-image" loading="lazy" decoding="async">
                     <div class="analog-glow"></div>
                 </div>
             </a>
 
-            <p style="font-size: 0.5rem; color: #00FF28; text-align: center; letter-spacing: 2px; margin-top: 10px; animation: retroBlink 1.2s infinite steps(2);">
+            <p class="system-status">
                 &#9889; TRK-2000 SYSTEM ONLINE &#9889;
             </p>
         </section>
 
         <script>
             (function initContact() {
-                const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
+                const lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
                 document.querySelectorAll('[data-lang-en]').forEach(el => {
                     const text = el.getAttribute(`data-lang-${lang}`);
                     if (text) el.innerHTML = text;

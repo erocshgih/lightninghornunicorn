@@ -6,111 +6,178 @@
 </head>
 <body>
     <main>
-        <!-- Spezifisches CSS nur für diese Unterseite -->
         <style>
+            /* ============================================
+               HUMANART — spezifische Styles
+               (Globale Tokens kommen aus shared.css)
+               ============================================ */
+
+            /* Fallback, falls die Datei direkt geöffnet wird */
             :root {
-                --accent-red: #e02424;
+                --accent-red:  #e02424;
                 --accent-blue: #1a73e8;
             }
 
-            html[data-theme="dark"] { --accent-red: #ff4d4d; --accent-blue: #3b82f6; }
-            html[data-theme="mono-gray"] { --accent-red: #aaaaaa; --accent-blue: #cccccc; }
-            html[data-theme="mono-green"] { --accent-red: #39ff14; --accent-blue: #b6ffb6; }
-            html[data-theme="crt"] { --accent-red: #ff9999; --accent-blue: #99ccff; }
-
-            /* 3D CONTAINER */
+            /* 3D-Container */
             #three-container {
                 width: 100%;
                 height: 55vh;
-                min-height: 400px;
-                cursor: grab;
-                margin: 0 auto 10px auto; 
+                min-height: 380px;
+                margin: 0 auto var(--space-sm, 16px) auto;
                 position: relative;
                 background: transparent;
+                border-radius: var(--radius, 10px);
+                cursor: grab;
+                overflow: hidden;
+                touch-action: none;
+                isolation: isolate;
             }
-            #three-container:active {
-                cursor: grabbing;
-            }
-            
-            /* ZOOM BUTTONS STYLING */
-            .three-zoom-controls {
-                display: flex;
-                justify-content: center;
-                gap: 15px;
-                margin-bottom: 25px;
-            }
-            .zoom-btn {
-                background: rgba(0, 0, 0, 0.6);
-                border: 1px solid var(--accent-blue);
-                color: var(--accent-blue);
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                font-size: 20px;
-                font-weight: bold;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-                box-shadow: 0 0 8px rgba(26, 115, 232, 0.3);
-            }
-            .zoom-btn:hover {
-                background: var(--accent-blue);
-                color: #000;
-                box-shadow: 0 0 15px var(--accent-blue);
-            }
-            .zoom-btn:active {
-                transform: scale(0.92);
+            #three-container:active { cursor: grabbing; }
+            #three-container canvas {
+                display: block;
+                width: 100% !important;
+                height: 100% !important;
+                touch-action: none;
             }
 
-            /* Loading-Text für den 3D Container */
+            /* Loading-State */
             .loading-text {
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                font-size: var(--fs-xs, 0.5rem);
-                color: var(--accent-blue);
-                text-shadow: 0 0 10px rgba(26, 115, 232, 0.5);
-                animation: pulse 1s infinite alternate;
-                z-index: 10;
+                font-family: var(--font-display, 'Press Start 2P', monospace);
+                font-size: 0.55rem;
+                letter-spacing: 0.18em;
+                color: var(--accent-blue, #1a73e8);
+                text-shadow: 0 0 12px rgba(26, 115, 232, 0.55);
+                z-index: 5;
                 pointer-events: none;
+                text-align: center;
+                max-width: 90%;
+                animation: pulse 1.4s ease-in-out infinite alternate;
             }
-            @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+            @keyframes pulse {
+                from { opacity: 0.45; }
+                to   { opacity: 1; }
+            }
+            .loading-text.is-error {
+                color: var(--accent-red, #e02424);
+                text-shadow: 0 0 12px rgba(224, 36, 36, 0.55);
+                animation: none;
+                opacity: 1;
+            }
 
+            /* Hint unter dem 3D-Container */
+            .three-hint {
+                position: absolute;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-family: var(--font-body, 'VT323', monospace);
+                font-size: 0.85rem;
+                letter-spacing: 0.06em;
+                color: var(--text-muted, #57504a);
+                background: rgba(0, 0, 0, 0.45);
+                color: #fff;
+                padding: 6px 14px;
+                border-radius: 20px;
+                pointer-events: none;
+                z-index: 6;
+                opacity: 0;
+                animation: hintFade 4.2s ease forwards;
+            }
+            @keyframes hintFade {
+                0%   { opacity: 0; transform: translate(-50%, 6px); }
+                15%  { opacity: 1; transform: translate(-50%, 0); }
+                80%  { opacity: 1; }
+                100% { opacity: 0; }
+            }
+
+            /* Zoom-Buttons */
+            .three-zoom-controls {
+                display: flex;
+                justify-content: center;
+                gap: 14px;
+                margin-bottom: var(--space-md, 24px);
+            }
+            .zoom-btn {
+                background: var(--card-bg, #fff);
+                border: 2px solid var(--border-medium, #cec6b8);
+                color: var(--accent-blue, #1a73e8);
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                font-size: 22px;
+                font-weight: 700;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.18s ease, transform 0.1s ease,
+                            box-shadow 0.2s ease, border-color 0.18s ease;
+                box-shadow: 0 0 10px rgba(26, 115, 232, 0.2);
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .zoom-btn:hover,
+            .zoom-btn:focus-visible {
+                background: var(--accent-blue, #1a73e8);
+                color: #fff;
+                border-color: var(--accent-blue, #1a73e8);
+                box-shadow: 0 0 18px rgba(26, 115, 232, 0.55);
+                outline: none;
+            }
+            .zoom-btn:active { transform: scale(0.92); }
+
+            /* Disclaimer */
             .atom-disclaimer {
-                font-size: 0.65rem !important; 
-                margin-top: 15px;
-                margin-bottom: 25px;
-                color: var(--accent-blue) !important;
-                letter-spacing: 2px;
-                text-align: center !important;
-                text-shadow: 0 0 10px rgba(26, 115, 232, 0.5); 
+                font-family: var(--font-body, 'VT323', monospace);
+                font-size: 0.9rem !important;
+                margin: var(--space-sm, 16px) auto var(--space-md, 24px);
+                color: var(--accent-blue, #1a73e8);
+                letter-spacing: 0.12em;
+                text-align: center;
+                max-width: 90%;
+                opacity: 0.85;
             }
 
+            /* Responsive Anpassungen */
             @media (min-width: 769px) {
-                #three-container { height: 65vh; }
+                #three-container { height: 62vh; min-height: 460px; }
+                .loading-text { font-size: 0.62rem; }
+            }
+            @media (max-width: 480px) {
+                #three-container { height: 48vh; min-height: 320px; }
+                .zoom-btn { width: 44px; height: 44px; font-size: 20px; }
+                .atom-disclaimer { font-size: 0.82rem !important; letter-spacing: 0.08em; }
             }
 
-            @media (max-width: 480px) {
-                #three-container { height: 45vh; }
+            /* Reduced Motion */
+            @media (prefers-reduced-motion: reduce) {
+                .loading-text { animation: none; opacity: 1; }
+                .three-hint   { animation: none; opacity: 0.8; }
+            }
+
+            /* Auf Touch-Geräten: grab-Cursor unnötig */
+            @media (hover: none) and (pointer: coarse) {
+                #three-container { cursor: default; }
+                #three-container:active { cursor: default; }
             }
         </style>
 
         <section id="HUMANART">
             <h2 data-lang-en="HUMANART" data-lang-de="HUMANART">HUMANART</h2>
 
-            <div id="three-container">
-                <div id="three-loader" class="loading-text">RENDERING ARTWORK... 0%</div>
+            <div id="three-container" role="img" aria-label="Interaktive 3D-Kugel mit 14 Kunstwerken des Künstlers Vedran Lukic">
+                <div id="three-loader" class="loading-text" aria-live="polite">LADE 3D UMGEBUNG…</div>
             </div>
 
-            <!-- SEPARATE ZOOM BUTTONS FÜR DESKTOP / TOUCH -->
             <div class="three-zoom-controls">
-                <button id="zoom-out" class="zoom-btn" title="Herauszoomen" aria-label="Zoom Out">−</button>
-                <button id="zoom-in" class="zoom-btn" title="Hineinzoomen" aria-label="Zoom In">+</button>
+                <button id="zoom-out" class="zoom-btn" title="Herauszoomen" aria-label="Herauszoomen">−</button>
+                <button id="zoom-in"  class="zoom-btn" title="Hineinzoomen" aria-label="Hineinzoomen">+</button>
             </div>
-            
+
             <p class="atom-disclaimer">
                 ART BY VEDRAN LUKIC : everything is connected...
             </p>
@@ -119,76 +186,198 @@
                data-lang-de="Erkunde die Schönheit der menschlichen Kunst, vollständig von mir gestaltet.<br><br>Jedes Stück beginnt mit meinen <span style='color: var(--accent-red); font-weight: bold;'>originellen Ideen</span> und wird mit Sorgfalt zum Leben erweckt. Ich arbeite sowohl mit digitalen Werkzeugen als auch mit traditionellen Methoden, oft mit Bleistift und minimaler Farbe, wobei der Schwerpunkt auf <span style='color: var(--accent-blue);'>Einfachheit und Eleganz</span> liegt.<br><br>Wenn ich Farbe hinzufüge, geschieht dies, um einen besonderen Akzent zu setzen.<br><br><span style='color: var(--accent-red);'>Genieße die Reinheit handgefertigter Kunst.</span>">
             </p>
 
-            <!-- BILDER-DATENBANK FÜR DIE 3D-KUGEL -->
             <div id="image-data-source" style="display: none;" aria-hidden="true">
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/mynameisrain.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/candle.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/rainbowonyx.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/clown.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/bigwavecube.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/bananismagainstgorillas.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/augapfel.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/apffel2.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/acircleofcolors.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/eagletriangle.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/face001.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/girlwithseashell.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/blackmountainlandscape.webp"></span>
-                <span data-src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/humanart/chillin.webp"></span>
+                <span data-src="humanart/mynameisrain.webp"></span>
+                <span data-src="humanart/candle.webp"></span>
+                <span data-src="humanart/rainbowonyx.webp"></span>
+                <span data-src="humanart/clown.webp"></span>
+                <span data-src="humanart/bigwavecube.webp"></span>
+                <span data-src="humanart/bananismagainstgorillas.webp"></span>
+                <span data-src="humanart/augapfel.webp"></span>
+                <span data-src="humanart/apffel2.webp"></span>
+                <span data-src="humanart/acircleofcolors.webp"></span>
+                <span data-src="humanart/eagletriangle.webp"></span>
+                <span data-src="humanart/face001.webp"></span>
+                <span data-src="humanart/girlwithseashell.webp"></span>
+                <span data-src="humanart/blackmountainlandscape.webp"></span>
+                <span data-src="humanart/chillin.webp"></span>
             </div>
         </section>
 
         <script>
-            // 3D-Engine Initialisierung für das Menü-System
-            (function initThreeJsCradle() {
-                const container = document.getElementById('three-container');
+            /* ============================================================
+               HUMANART — Three.js Cradle (v2.0)
+               Mit vollständiger Lifecycle-Disposal.
+               ============================================================ */
+            (function initHumanart3D() {
+                const container  = document.getElementById('three-container');
                 const loaderText = document.getElementById('three-loader');
-                if (!container || typeof THREE === 'undefined') return;
+                if (!container) return;
 
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-                
-                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-                renderer.setSize(container.clientWidth, container.clientHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                container.appendChild(renderer.domElement);
-
-                const controls = new THREE.OrbitControls(camera, renderer.domElement);
-                controls.enableDamping = true;
-                controls.dampingFactor = 0.05;
-                controls.enablePan = false;
-                controls.minDistance = 20;
-                controls.maxDistance = 350;
-
-                // Zoom-Button Logik implementieren
-                const zoomInBtn = document.getElementById('zoom-in');
-                const zoomOutBtn = document.getElementById('zoom-out');
-
-                if (zoomInBtn && zoomOutBtn) {
-                    zoomInBtn.addEventListener('click', () => {
-                        const dir = camera.position.clone().sub(controls.target);
-                        const newDist = Math.max(controls.minDistance, dir.length() * 0.8);
-                        dir.normalize().multiplyScalar(newDist).add(controls.target);
-                        camera.position.copy(dir);
-                    });
-
-                    zoomOutBtn.addEventListener('click', () => {
-                        const dir = camera.position.clone().sub(controls.target);
-                        const newDist = Math.min(controls.maxDistance, dir.length() * 1.25);
-                        dir.normalize().multiplyScalar(newDist).add(controls.target);
-                        camera.position.copy(dir);
-                    });
+                // Guard: THREE global vorhanden?
+                if (typeof THREE === 'undefined') {
+                    if (loaderText) {
+                        loaderText.innerText = '⚠ 3D ENGINE NICHT VERFÜGBAR';
+                        loaderText.classList.add('is-error');
+                    }
+                    console.warn('[HUMANART] THREE ist nicht global verfügbar.');
+                    return;
                 }
 
-                const sourceNodes = document.querySelectorAll('#image-data-source span');
-                const imageUrls = Array.from(sourceNodes).map(node => node.getAttribute('data-src'));
+                /* ------------------------------------------------
+                   Lifecycle / Cleanup-Stapel
+                   ------------------------------------------------ */
+                const localCleanups = [];
+                let isDestroyed = false;
 
+                function registerCleanup(fn) {
+                    if (typeof window.__lhuRegisterCleanup === 'function') {
+                        window.__lhuRegisterCleanup(fn);
+                    } else {
+                        localCleanups.push(fn);
+                    }
+                }
+
+                // Fallback für Direkt-Öffnen (kein menu.html drumherum)
+                if (typeof window.__lhuRegisterCleanup !== 'function') {
+                    window.addEventListener('pagehide', () => {
+                        isDestroyed = true;
+                        localCleanups.forEach(fn => { try { fn(); } catch(e) {} });
+                        localCleanups.length = 0;
+                    }, { once: true });
+                }
+
+                /* ------------------------------------------------
+                   Device / Qualitäts-Probing
+                   ------------------------------------------------ */
+                const isMobile   = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const saveData   = !!(navigator.connection && navigator.connection.saveData);
+
+                function getDPR() {
+                    if (saveData) return 1;
+                    const dpr = window.devicePixelRatio || 1;
+                    return isMobile ? Math.min(dpr, 1.25) : Math.min(dpr, 1.5);
+                }
+
+                /* ------------------------------------------------
+                   Scene / Camera / Renderer
+                   ------------------------------------------------ */
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(
+                    60,
+                    Math.max(1, container.clientWidth) / Math.max(1, container.clientHeight),
+                    0.1,
+                    1000
+                );
+
+                function fitCamera() {
+                    const w = container.clientWidth;
+                    const h = container.clientHeight;
+                    if (!w || !h) return;
+                    const aspect = w / h;
+                    const baseZ = 220;
+                    // Bei Portrait weiter weg, damit Radius 95 + Sprites passen
+                    const z = aspect < 1 ? baseZ * (1 + (1 - aspect) * 0.65) : baseZ;
+                    camera.position.set(0, 0, z);
+                    camera.updateProjectionMatrix();
+                }
+
+                const renderer = new THREE.WebGLRenderer({
+                    alpha: true,
+                    antialias: false,
+                    powerPreference: 'high-performance',
+                    // Wichtig: Verhindert voreiligen Context-Verlust
+                    failIfMajorPerformanceCaveat: false
+                });
+                renderer.setPixelRatio(getDPR());
+                renderer.setSize(container.clientWidth || 1, container.clientHeight || 1);
+                renderer.setClearColor(0x000000, 0);
+                container.appendChild(renderer.domElement);
+
+                fitCamera();
+
+                /* ------------------------------------------------
+                   Controls
+                   ------------------------------------------------ */
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = !reduceMotion;
+                controls.dampingFactor = 0.06;
+                controls.enablePan = false;
+                controls.autoRotate = !reduceMotion;
+                controls.autoRotateSpeed = 0.9;
+                controls.minDistance = 20;
+                controls.maxDistance = 350;
+                controls.rotateSpeed = isMobile ? 0.7 : 1.0;
+                controls.zoomSpeed = isMobile ? 0.8 : 1.0;
+
+                /* ------------------------------------------------
+                   Zoom-Buttons
+                   ------------------------------------------------ */
+                const zoomInBtn  = document.getElementById('zoom-in');
+                const zoomOutBtn = document.getElementById('zoom-out');
+                const zoomListeners = [];
+
+                function attachZoom(btn, factor) {
+                    if (!btn) return;
+                    const handler = () => {
+                        const dir = camera.position.clone().sub(controls.target);
+                        const currentDist = dir.length();
+                        let newDist = currentDist * factor;
+                        newDist = Math.max(controls.minDistance, Math.min(controls.maxDistance, newDist));
+                        dir.normalize().multiplyScalar(newDist).add(controls.target);
+                        camera.position.copy(dir);
+                        controls.update();
+                    };
+                    btn.addEventListener('click', handler);
+                    zoomListeners.push({ btn, handler });
+                }
+                attachZoom(zoomInBtn, 0.78);
+                attachZoom(zoomOutBtn, 1.28);
+
+                /* ------------------------------------------------
+                   Loading-Progress
+                   ------------------------------------------------ */
+                const sourceNodes = document.querySelectorAll('#image-data-source span');
+                const imageUrls = Array.from(sourceNodes).map(n => n.getAttribute('data-src')).filter(Boolean);
+                const total = imageUrls.length;
+
+                let loadedCount = 0;
+                let failedCount = 0;
+
+                function updateProgress() {
+                    if (!loaderText || isDestroyed) return;
+                    const done = loadedCount + failedCount;
+                    if (done < total) {
+                        loaderText.textContent = `RENDERING ${done}/${total}`;
+                    } else {
+                        loaderText.style.display = 'none';
+                        // Hint einblenden
+                        if (!reduceMotion) {
+                            const hint = document.createElement('div');
+                            hint.className = 'three-hint';
+                            hint.textContent = isMobile
+                                ? '👆 Wischen zum Drehen'
+                                : '🖱 Ziehen zum Drehen · Scrollen zum Zoomen';
+                            container.appendChild(hint);
+                            setTimeout(() => {
+                                if (hint.parentNode) hint.parentNode.removeChild(hint);
+                            }, 4500);
+                        }
+                    }
+                }
+                updateProgress();
+
+                /* ------------------------------------------------
+                   Sprite-Layout (Fibonacci-Kugel)
+                   ------------------------------------------------ */
                 const nodesData = [];
                 const radius = 80;
+                const baseSize = isMobile ? 26 : 32;
 
-                for(let index = 0; index < imageUrls.length; index++) {
-                    const phi = Math.acos(-1 + (2 * index) / imageUrls.length);
-                    const theta = Math.sqrt(imageUrls.length * Math.PI) * phi;
+                for (let i = 0; i < total; i++) {
+                    const phi   = Math.acos(-1 + (2 * i) / total);
+                    const theta = Math.sqrt(total * Math.PI) * phi;
                     nodesData.push(new THREE.Vector3(
                         radius * Math.sin(phi) * Math.cos(theta),
                         radius * Math.sin(phi) * Math.sin(theta),
@@ -196,52 +385,202 @@
                     ));
                 }
 
-                camera.position.set(0, 0, 220);
-
-                const manager = new THREE.LoadingManager();
-                manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-                    if (loaderText) {
-                        loaderText.innerText = `RENDERING ARTWORK... ${Math.round((itemsLoaded / itemsTotal) * 100)}%`;
-                    }
-                };
-                manager.onLoad = function () {
-                    if (loaderText) {
-                        loaderText.style.display = 'none';
-                    }
-                };
-
-                const textureLoader = new THREE.TextureLoader(manager);
+                /* ------------------------------------------------
+                   Texture Loading
+                   ------------------------------------------------ */
+                const textureLoader = new THREE.TextureLoader();
+                const textures = [];       // für Disposal
+                const materials = [];      // für Disposal
+                const sprites = [];        // für Scene-Removal
 
                 imageUrls.forEach((url, i) => {
-                    textureLoader.load(url, (texture) => {
-                        const aspect = texture.image.width / texture.image.height;
-                        const material = new THREE.SpriteMaterial({ map: texture, depthTest: false }); 
-                        const sprite = new THREE.Sprite(material);
-                        
-                        const baseSize = 30;
-                        sprite.scale.set(baseSize * (aspect > 1 ? aspect : 1), baseSize * (aspect < 1 ? 1/aspect : 1), 1);
-                        sprite.position.copy(nodesData[i]);
-                        scene.add(sprite);
-                    });
+                    textureLoader.load(
+                        url,
+                        (texture) => {
+                            if (isDestroyed) { texture.dispose(); return; }
+
+                            // Qualitätseinstellungen
+                            texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+                            texture.minFilter = THREE.LinearFilter;
+                            texture.magFilter = THREE.LinearFilter;
+                            if (THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
+
+                            const img = texture.image;
+                            if (!img || !img.width || !img.height) {
+                                // Kein Bild → Fehler zählen
+                                failedCount++;
+                                texture.dispose();
+                                updateProgress();
+                                return;
+                            }
+
+                            const aspect = img.width / img.height;
+                            const material = new THREE.SpriteMaterial({
+                                map: texture,
+                                depthTest: false,
+                                transparent: true
+                            });
+                            const sprite = new THREE.Sprite(material);
+
+                            const scaleX = baseSize * (aspect > 1 ? aspect : 1);
+                            const scaleY = baseSize * (aspect < 1 ? 1 / aspect : 1);
+                            sprite.scale.set(scaleX, scaleY, 1);
+                            sprite.position.copy(nodesData[i]);
+                            scene.add(sprite);
+
+                            textures.push(texture);
+                            materials.push(material);
+                            sprites.push(sprite);
+
+                            loadedCount++;
+                            updateProgress();
+                        },
+                        undefined,
+                        (err) => {
+                            if (isDestroyed) return;
+                            failedCount++;
+                            console.warn(`[HUMANART] Bild fehlgeschlagen: ${url}`, err);
+                            updateProgress();
+                        }
+                    );
                 });
 
+                /* ------------------------------------------------
+                   Animation Loop
+                   ------------------------------------------------ */
+                let animationId = null;
+                const clock = new THREE.Clock();
+
                 function animate() {
-                    requestAnimationFrame(animate);
-                    scene.rotation.y -= 0.0005;
-                    scene.rotation.x -= 0.0002;
+                    animationId = requestAnimationFrame(animate);
+                    if (isDestroyed) return;
+                    if (document.hidden) return;
+                    if (!container.clientWidth || !container.clientHeight) return;
+
+                    const delta = clock.getDelta();
+
+                    if (!reduceMotion) {
+                        // Leichte Eigenrotation der Szene — bleibt erhalten
+                        scene.rotation.y -= 0.0005 * (delta * 60);
+                        scene.rotation.x -= 0.0002 * (delta * 60);
+                    }
+
                     controls.update();
                     renderer.render(scene, camera);
                 }
-                animate();
 
-                window.addEventListener('resize', () => {
-                    if (!container.clientWidth) return;
-                    const width = container.clientWidth;
-                    const height = container.clientHeight;
-                    renderer.setSize(width, height);
-                    camera.aspect = width / height;
-                    camera.updateProjectionMatrix();
+                function startAnimate() {
+                    if (animationId === null) {
+                        clock.getDelta(); // Reset, damit kein Zeitsprung
+                        animationId = requestAnimationFrame(animate);
+                    }
+                }
+                function stopAnimate() {
+                    if (animationId !== null) {
+                        cancelAnimationFrame(animationId);
+                        animationId = null;
+                    }
+                }
+
+                /* ------------------------------------------------
+                   Visibility Handling
+                   ------------------------------------------------ */
+                const onVisibility = () => {
+                    if (document.hidden) stopAnimate();
+                    else startAnimate();
+                };
+                document.addEventListener('visibilitychange', onVisibility);
+
+                /* ------------------------------------------------
+                   Resize Handling
+                   ------------------------------------------------ */
+                let resizeRAF = null;
+
+                function handleResize() {
+                    if (isDestroyed) return;
+                    if (!container.clientWidth || !container.clientHeight) return;
+                    if (resizeRAF) cancelAnimationFrame(resizeRAF);
+                    resizeRAF = requestAnimationFrame(() => {
+                        if (isDestroyed) return;
+                        const w = container.clientWidth;
+                        const h = container.clientHeight;
+                        renderer.setSize(w, h);
+                        renderer.setPixelRatio(getDPR());
+                        camera.aspect = w / h;
+                        fitCamera();
+                        controls.update();
+                    });
+                }
+
+                let resizeObserver = null;
+                if ('ResizeObserver' in window) {
+                    resizeObserver = new ResizeObserver(handleResize);
+                    resizeObserver.observe(container);
+                }
+                window.addEventListener('resize', handleResize, { passive: true });
+
+                /* ------------------------------------------------
+                   CLEANUP
+                   ------------------------------------------------ */
+                registerCleanup(() => {
+                    if (isDestroyed) return;
+                    isDestroyed = true;
+
+                    stopAnimate();
+
+                    // Event Listener
+                    document.removeEventListener('visibilitychange', onVisibility);
+                    window.removeEventListener('resize', handleResize);
+                    if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null; }
+                    if (resizeRAF) { cancelAnimationFrame(resizeRAF); resizeRAF = null; }
+                    zoomListeners.forEach(({ btn, handler }) => {
+                        if (btn) btn.removeEventListener('click', handler);
+                    });
+                    zoomListeners.length = 0;
+
+                    // Scene
+                    sprites.forEach(sprite => {
+                        if (sprite.parent) sprite.parent.remove(sprite);
+                    });
+                    sprites.length = 0;
+
+                    materials.forEach(mat => {
+                        if (mat.map) mat.map = null;
+                        mat.dispose();
+                    });
+                    materials.length = 0;
+
+                    textures.forEach(tex => tex.dispose());
+                    textures.length = 0;
+
+                    // Controls
+                    if (controls) {
+                        controls.enabled = false;
+                        if (controls.dispose) controls.dispose();
+                    }
+
+                    // Renderer
+                    try {
+                        if (renderer.forceContextLoss) renderer.forceContextLoss();
+                        renderer.dispose();
+                    } catch (e) {
+                        // Manche Browser werfen bei wiederholtem Dispose — ignorieren
+                    }
+                    if (renderer.domElement && renderer.domElement.parentNode) {
+                        renderer.domElement.parentNode.removeChild(renderer.domElement);
+                    }
+
+                    // Loading-Text zurücksetzen (falls noch sichtbar)
+                    if (loaderText) {
+                        loaderText.textContent = '';
+                        loaderText.style.display = 'none';
+                    }
                 });
+
+                /* ------------------------------------------------
+                   Los
+                   ------------------------------------------------ */
+                startAnimate();
             })();
         </script>
     </main>
