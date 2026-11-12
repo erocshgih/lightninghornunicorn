@@ -27,10 +27,9 @@
         :root {
             --bg-intro: #04050a;
             --text-intro: #f3f4f8;
-            --glass-bg: rgba(15, 18, 25, 0.65);
+            --glass-bg: rgba(15, 18, 25, 0.75);
             --glass-border: rgba(255, 255, 255, 0.12);
             --glass-highlight: rgba(255, 255, 255, 0.25);
-            --accent-intro: #8fd9fb;
         }
 
         html, body {
@@ -85,7 +84,7 @@
         #lhu-intro-word {
             position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; perspective: 1200px; font-family: 'Impact', 'Press Start 2P', sans-serif; font-weight: 900; letter-spacing: .12em;
-            color: white; opacity: 0; pointer-events: none; z-index: 20; /* Über dem Canvas */
+            color: white; opacity: 0; pointer-events: none; z-index: 20;
         }
 
         #lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap: clamp(10px, 3vw, 22px); width:min(88vw,420px); margin-bottom: 5px; }
@@ -160,24 +159,27 @@
         #rainbow-aura { position: fixed; pointer-events: none; z-index: 4; display: none; }
         #container3D { position: relative; width: 100%; height: 100vh; height: 100dvh; z-index: 5; touch-action: none; }
 
-        #ui-wrapper { 
-            position: fixed; top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); 
-            z-index: 10; display: flex; gap: 8px; width: min(94vw, 440px); justify-content: center;
+        /* --- NEUES UI LAYER (Verhindert Überlappung) --- */
+        #ui-layer {
+            position: fixed; inset: 0; pointer-events: none; 
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)) 10px;
+            z-index: 10;
         }
-        #effect-buttons { 
-            position: fixed; top: max(60px, calc(env(safe-area-inset-top) + 52px)); left: 50%; transform: translateX(-50%); 
-            z-index: 11; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: min(94vw, 440px);
+        .ui-top {
+            display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: auto; width: 100%;
         }
-        #head-menu { 
-            position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); 
-            z-index: 10; width: min(94vw, 440px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
+        .ui-bottom {
+            display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: auto; width: 100%;
         }
+        
+        #ui-wrapper, #effect-buttons { display: flex; gap: 8px; justify-content: center; width: 100%; max-width: 440px; }
 
         .bg-nav-btn {
             position: fixed; top: 50%; transform: translateY(-50%); z-index: 15;
             background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(255, 255, 255, 0.3);
             color: var(--text-intro); width: 45px; height: 65px; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s, transform 0.1s;
+            font-size: 22px; cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s, transform 0.1s; pointer-events: auto;
         }
         .bg-nav-btn:hover { background: rgba(255, 255, 255, 0.2); }
         .bg-nav-btn:active { transform: translateY(-50%) scale(0.9); }
@@ -204,7 +206,7 @@
         .btn:active { transform: translateY(0); }
 
         #head-select { 
-            width: 100%; padding: clamp(8px, 1.5vh, 12px) 16px; 
+            width: 100%; max-width: 440px; padding: clamp(8px, 1.5vh, 12px) 16px; 
             font-family: var(--font-body, 'VT323', monospace);
             font-size: clamp(1.1rem, 3.8vw, 1.3rem); 
             text-align: center; text-align-last: center; cursor: pointer; appearance: none; font-weight: 600; 
@@ -220,28 +222,19 @@
 
         /* --- QUOTE COUNTER (Grüner Zähler) --- */
         .quote-counter {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #00FF28;
-            color: #000;
+            position: absolute; top: -6px; right: -6px;
+            background: #00FF28; color: #000;
             font-family: var(--font-display, 'Press Start 2P', monospace);
-            font-size: 10px;
-            font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 12px;
+            font-size: 10px; font-weight: bold; padding: 3px 6px; border-radius: 12px;
             box-shadow: 0 0 10px rgba(0, 255, 40, 0.6), inset 0 0 4px rgba(255,255,255,0.8);
-            pointer-events: none;
-            transition: transform 0.1s var(--ease-spring, ease);
+            pointer-events: none; transition: transform 0.1s var(--ease-spring, ease);
         }
-        .quote-counter.bump {
-            transform: scale(1.4);
-        }
+        .quote-counter.bump { transform: scale(1.4); }
 
         /* --- LOADING & MODALS --- */
         #loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text-intro); font-family: var(--font-display); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; }
         #loading.show { display: flex; }
-        .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, var(--accent)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
+        .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, #8fd9fb); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
@@ -262,7 +255,7 @@
         #disclaimer-btn, #quote-btn { 
             background: none; border: none; font-size: 20px; cursor: pointer; 
             opacity: 0.35; transition: opacity 0.2s, transform 0.2s, filter 0.2s; 
-            padding: 2px 8px; filter: grayscale(100%); 
+            padding: 2px 8px; filter: grayscale(100%); pointer-events: auto;
         }
         #disclaimer-btn:hover, #quote-btn:hover { opacity: 1; transform: scale(1.15); filter: grayscale(0%); }
 
@@ -344,25 +337,29 @@
 
     <div id="loading"><div class="spinner"></div><span class="loading-text">LÄDT</span></div>
 
-    <!-- UI WRAPPER -->
-    <div id="ui-wrapper">
-        <button id="music-toggle" class="btn glass">Musik abspielen</button>
-        <button id="navigate-to-main" class="btn glass">Hauptseite</button>
-    </div>
+    <!-- NEUES UI LAYER (VERHINDERT ÜBERLAPPUNG) -->
+    <div id="ui-layer">
+        <div class="ui-top">
+            <div id="ui-wrapper">
+                <button id="music-toggle" class="btn glass">Musik abspielen</button>
+                <button id="navigate-to-main" class="btn glass">Hauptseite</button>
+            </div>
 
-    <div id="effect-buttons">
-        <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
-        <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
-        <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom" aria-label="Zitat anzeigen">
-            🗿<span id="quote-counter" class="quote-counter">0</span>
-        </button>
-    </div>
-
-    <div id="head-menu">
-        <select id="head-select" class="glass"></select>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button id="quote-btn" aria-label="Zitat Vorschlagen" title="Zitat vorschlagen">💬</button>
-            <button id="disclaimer-btn" aria-label="Legal Disclaimer" title="Legal Disclaimer">⚠️</button>
+            <div id="effect-buttons">
+                <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
+                <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
+                <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom" aria-label="Zitat anzeigen">
+                    🗿<span id="quote-counter" class="quote-counter">0</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="ui-bottom">
+            <select id="head-select" class="glass"></select>
+            <div style="display: flex; gap: 10px; align-items: center; pointer-events: auto;">
+                <button id="quote-btn" aria-label="Zitat Vorschlagen" title="Zitat vorschlagen">💬</button>
+                <button id="disclaimer-btn" aria-label="Legal Disclaimer" title="Legal Disclaimer">⚠️</button>
+            </div>
         </div>
     </div>
 
@@ -389,7 +386,7 @@
         (function initBackground() {
             const mcanvas = document.getElementById("matrix-bg");
             const mctx = mcanvas.getContext("2d", { alpha: false });
-            const DOWNSCALE = 0.6; // Etwas höher für knackigere Effekte
+            const DOWNSCALE = 0.6;
             let W, H, cx, cy;
             let currentBgIndex = 0;
             window.isTrafficConePhase = false;
@@ -572,8 +569,6 @@
                 currentWisdomLang = lang;
                 availableWisdomIndices = dailyWisdom[lang].map((_, i) => i);
             }
-            
-            // Wenn 0 übrig sind, zeigen wir die volle Zahl an (Reset passiert beim Klick)
             const displayCount = availableWisdomIndices.length === 0 ? dailyWisdom[lang].length : availableWisdomIndices.length;
             wisdomCounterEl.textContent = displayCount;
 
@@ -583,7 +578,6 @@
             }
         }
         
-        // Initialisierung
         updateWisdomCounter();
 
         const toggleModal = (id, show) => {
@@ -644,10 +638,12 @@
         hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
         hitEnterSlot.appendChild(hitEnterRenderer.domElement);
 
-        hitEnterScene.add(new THREE.AmbientLight(0xffffff, 2.0)); hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.8));
-        const hitKey = new THREE.DirectionalLight(0xffffff, 3.0); hitKey.position.set(3, 5, 6); hitEnterScene.add(hitKey);
-        const hitFill = new THREE.DirectionalLight(0xaac8ff, 1.8); hitFill.position.set(-5, 2, 4); hitEnterScene.add(hitFill);
-        const hitRim = new THREE.DirectionalLight(0xffffff, 2.2); hitRim.position.set(0, 3, -5); hitEnterScene.add(hitRim);
+        // Mehr Licht für das Intro-Modell!
+        hitEnterScene.add(new THREE.AmbientLight(0xffffff, 3.0)); 
+        hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 2.5));
+        const hitKey = new THREE.DirectionalLight(0xffffff, 4.0); hitKey.position.set(3, 5, 6); hitEnterScene.add(hitKey);
+        const hitFill = new THREE.DirectionalLight(0xaac8ff, 2.5); hitFill.position.set(-5, 2, 4); hitEnterScene.add(hitFill);
+        const hitRim = new THREE.DirectionalLight(0xff8c22, 3.5); hitRim.position.set(0, 3, -5); hitEnterScene.add(hitRim);
 
         let hitEnterObject = null, hitEnterMixer = null;
         let hitEnterEmissiveMats = [];
@@ -856,10 +852,8 @@
                 availableWisdomIndices = activeWisdom.map((_, index) => index);
             }
 
-            // RESET LOGIK: Wenn keine Zitate mehr da sind, füllen wir wieder auf
             if (availableWisdomIndices.length === 0) {
                 availableWisdomIndices = activeWisdom.map((_, index) => index);
-                // Kurze visuelle Bestätigung des Resets
                 wisdomCounterEl.style.background = "#fff";
                 setTimeout(() => wisdomCounterEl.style.background = "#00FF28", 300);
             }
@@ -868,7 +862,7 @@
             const selectedQuoteIndex = availableWisdomIndices[randomIndexWithinAvailable];
             availableWisdomIndices.splice(randomIndexWithinAvailable, 1);
             
-            updateWisdomCounter(true); // Bump-Animation für den Zähler
+            updateWisdomCounter(true);
 
             const phrase = activeWisdom[selectedQuoteIndex];
             const textEl = document.getElementById("wisdom-display");
@@ -934,7 +928,7 @@
         selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
         loadHead(MODELS[0].url);
 
-        /* 3. DYNAMISCHE INTRO LOGIK - KÜNSTLERISCHES UPGRADE V2 */
+        /* 3. DYNAMISCHE INTRO LOGIK - JETZT IN ECHTZEIT */
         (() => {
             const intro = document.getElementById("lhu-intro");
             const audio = document.getElementById("lhu-intro-audio");
@@ -990,7 +984,6 @@
 
             function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; if(gl) gl.viewport(0, 0, W, H); }
 
-            // Spring Physics Helper für Blue
             function easeOutElastic(x) {
                 const c4 = (2 * Math.PI) / 3;
                 return x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
@@ -1016,7 +1009,6 @@
                     letter.style.backgroundClip = "text"; letter.style.webkitTextFillColor = "transparent"; 
                     letter.style.transition = "none";
                     
-                    // Zufälliger Seed pro Buchstabe für einzigartige Glitches/Physik
                     letter.dataset.seed = Math.random();
                     letter.dataset.offset = (Math.random() - 0.5);
                     
@@ -1029,8 +1021,7 @@
             function animateIntro(now) {
                 if (!document.body.contains(intro)) return;
                 const timeOffset = (now - introStart) / 1000;
-                const t = timeOffset / 2;
-
+                
                 if(gl) {
                     gl.uniform2f(rLoc, W, H);
                     gl.uniform1f(tLoc, timeOffset);
@@ -1038,10 +1029,11 @@
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
 
-                const seqT = t - 0.625;
-                if (seqT >= 0 && seqT < 1.905) {
-                    const index = Math.min(2, Math.floor(seqT / 0.635)); 
-                    const local = seqT - index * 0.635;
+                // Die Animation beginnt sofort und wechselt jedes Wort nach 1.1 Sekunden
+                const seqT = timeOffset - 0.1; 
+                if (seqT >= 0 && seqT < 3.3) {
+                    const index = Math.min(2, Math.floor(seqT / 1.1)); 
+                    const local = seqT - index * 1.1; 
                     const currentWordStr = ["LIGHTNING", "HORN", "UNICORN"][index];
 
                     if (word.dataset.currentWord !== currentWordStr) {
@@ -1050,43 +1042,36 @@
                     }
                     word.style.opacity = "1";
 
-                    // p geht von 0 bis 1 während der Dauer des Wortes
-                    const p = Math.min(1, Math.max(0, local * 2.5)); 
-                    const pText = Math.min(1, p * 1.5); // Schnellere Text-Reveal-Phase
+                    const p = Math.min(1, Math.max(0, local * 1.2)); 
+                    const pText = Math.min(1, p * 1.5);
 
                     currentSpans.forEach((letter, i) => {
                         const seed = parseFloat(letter.dataset.seed);
                         const offset = parseFloat(letter.dataset.offset);
 
                         if (introVariant === "red") {
-                            // VHS GLITCH / SLICE ASSEMBLY
+                            // VHS GLITCH / SLICE ASSEMBLY (ohne clip-path, sauberer RGB Split)
                             const delay = i * 0.05;
                             const pLocal = Math.max(0, Math.min(1, (pText - delay) * 2));
                             
                             if (pLocal < 1) {
-                                // Chaos phase
                                 const glitchX = Math.sin(now * 0.05 + i) * 30 * (1 - pLocal);
                                 const glitchY = Math.cos(now * 0.07 + i) * 15 * (1 - pLocal);
-                                const sliceTop = 50 + Math.sin(now * 0.02 + i) * 50;
                                 
                                 letter.style.transform = `translate3d(${glitchX}px, ${glitchY}px, 0) scaleY(${1.5 - pLocal * 0.5})`;
-                                letter.style.clipPath = `polygon(0 0, 100% 0, 100% ${sliceTop}%, 0 ${sliceTop}%)`;
-                                letter.style.textShadow = `${-10 * (1 - pLocal)}px 0 0 rgba(0,255,255,0.8), ${10 * (1 - pLocal)}px 0 0 rgba(255,0,100,0.8)`;
+                                letter.style.textShadow = `${-20 * (1 - pLocal)}px 0 0 rgba(0,255,255,0.8), ${20 * (1 - pLocal)}px 0 0 rgba(255,0,100,0.8)`;
                                 letter.style.opacity = pLocal;
                             } else {
-                                // Settled phase (subtle glitch)
                                 const isGlitching = Math.random() < 0.05;
                                 const gx = isGlitching ? (Math.random() - 0.5) * 20 : 0;
                                 const gy = isGlitching ? (Math.random() - 0.5) * 10 : 0;
                                 letter.style.transform = `translate3d(${gx}px, ${gy}px, 0) scaleY(1)`;
-                                letter.style.clipPath = `polygon(0 0, 100% 0, 100% 100%, 0 100%)`;
                                 letter.style.textShadow = isGlitching ? `-5px 0 0 rgba(0,255,255,0.8), 5px 0 0 rgba(255,0,100,0.8)` : `0 0 10px rgba(255,50,50,0.5)`;
                                 letter.style.opacity = 1;
                             }
                         } 
                         else if (introVariant === "yellow") {
                             // CINEMATIC / EDITORIAL
-                            // Sanftes Einfliegen aus der Unschärfe und Tiefe
                             const delay = i * 0.06;
                             const pLocal = Math.max(0, Math.min(1, (pText - delay) * 3));
                             
@@ -1097,7 +1082,6 @@
                             const blur = 20 * (1 - pLocal);
                             const rotateX = 45 * (1 - pLocal);
                             
-                            // Atmung wenn fertig
                             const wave = pLocal >= 1 ? Math.sin(now * 0.002 + i * 0.5) * 10 : 0;
                             const rotZ = pLocal >= 1 ? Math.sin(now * 0.001 + i) * 2 : 0;
 
@@ -1112,15 +1096,13 @@
                             const pLocal = Math.max(0, Math.min(1, (pText - delay) * 2));
                             
                             if (pLocal < 1) {
-                                // Elastischer Drop
                                 const elasticY = -400 * (1 - easeOutElastic(pLocal));
-                                const squash = 1 + Math.sin(pLocal * Math.PI) * 0.5; // Squash and stretch
+                                const squash = 1 + Math.sin(pLocal * Math.PI) * 0.5;
                                 const stretch = 1 - Math.sin(pLocal * Math.PI) * 0.3;
                                 
                                 letter.style.transform = `translate3d(0, ${elasticY}px, 0) scale(${stretch}, ${squash})`;
                                 letter.style.opacity = Math.min(1, pLocal * 3);
                             } else {
-                                // Liquid idle wobble
                                 const wobble = Math.sin(now * 0.003 + i * 0.8) * 8;
                                 const skewX = Math.sin(now * 0.002 + i * 1.2) * 5;
                                 
@@ -1135,7 +1117,7 @@
                     word.dataset.currentWord = "";
                 }
 
-                if (t >= 2.625) { intro.remove(); return; }
+                if (timeOffset >= 3.5) { intro.remove(); return; }
                 introAnimId = requestAnimationFrame(animateIntro);
             }
 
