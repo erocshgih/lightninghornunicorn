@@ -99,6 +99,13 @@
         }
         .lhu-pill:hover { transform: scale(1.08); }
         .lhu-pill:active { transform: scale(.92); }
+        .lhu-pill.is-armed {
+            transform: scale(1.1);
+            filter: brightness(1.35) saturate(1.2);
+            box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 28px currentColor,
+                        inset 0 0 0 4px rgba(0,0,0,.25), inset 0 8px 16px rgba(255,255,255,.25);
+        }
+        .lhu-pill:disabled { cursor: default; }
         
         .lhu-pill-red { background: radial-gradient(circle at 34% 27%,#ff9b9b 0 7%,#e33131 28%,#8d0909 72%,#390000 100%); }
         .lhu-pill-red::before {
@@ -636,6 +643,26 @@
 
         let hitEnterObject = null, hitEnterMixer = null;
         let hitEnterEmissiveMats = [];
+        let hitEnterPauseUntil = 0;
+        let hitEnterFlashActive = false;
+
+        function triggerHitEnterFlash(color) {
+            const flashColor = new THREE.Color(color);
+            hitEnterEmissiveMats.forEach(({ mat }) => {
+                mat.emissive.copy(flashColor);
+                mat.emissiveIntensity = 5.0;
+            });
+            hitEnterFlashActive = true;
+            hitEnterPauseUntil = performance.now() + 2000;
+        }
+
+        function restoreHitEnterAppearance() {
+            hitEnterEmissiveMats.forEach(({ mat, origCol, origInt }) => {
+                mat.emissive.copy(origCol);
+                mat.emissiveIntensity = origInt;
+            });
+            hitEnterFlashActive = false;
+        }
 
         function fitHitEnterModel(model) {
             const box = new THREE.Box3().setFromObject(model); const center = box.getCenter(new THREE.Vector3()); const size = box.getSize(new THREE.Vector3()); const maxSize = Math.max(size.x, size.y, size.z, 0.001);
@@ -652,10 +679,12 @@
                 materials.forEach((mat) => { 
                     if ("envMapIntensity" in mat) mat.envMapIntensity = 1.5; 
                     if ("roughness" in mat && mat.roughness > 0.75) mat.roughness = 0.58; 
-                    if ("emissive" in mat) { 
-                        mat.emissive.setRGB(0.055, 0.055, 0.055); 
-                        mat.emissiveIntensity = 0.35; 
-                        hitEnterEmissiveMats.push({ mat, origCol: mat.emissive.clone(), origInt: mat.emissiveIntensity });
+                    if ("emissive" in mat) {
+                        const origCol = mat.emissive.clone();
+                        const origInt = mat.emissiveIntensity;
+                        mat.emissive.setRGB(0.055, 0.055, 0.055);
+                        mat.emissiveIntensity = 0.35;
+                        hitEnterEmissiveMats.push({ mat, origCol, origInt });
                     } 
                 });
             });
@@ -1100,27 +1129,79 @@
                     word.dataset.currentWord = "";
                 }
 
-                if (timeOffset >= 3.5) { intro.remove(); return; }
-                introAnimId = requestAnimationFrame(animateIntro);
+                if (timeOffset >= 3.5) {
+                intro.remove();
+                introAnimId = null;
+                window.removeEventListener("resize", resizeIntro);
+                return;
+            }
+            introAnimId = requestAnimationFrame(animateIntro);
             }
 
             resizeIntro(); window.addEventListener("resize", resizeIntro);
 
-            document.querySelectorAll(".lhu-pill").forEach(btn => {
+            const introButtons = Array.from(document.querySelectorAll(".lhu-pill"));
+            const introHint = document.getElementById("lhu-intro-hint");
+            const introColors = {
+                red: 0xff3333,
+                yellow: 0xffd400,
+                blue: 0x33bbff
+            };
+            let armedVariant = null;
+            let introLaunched = false;
+
+            introButtons.forEach(btn => {
+                btn.setAttribute("aria-label", `${btn.dataset.intro} intro`);
+                btn.setAttribute("aria-pressed", "false");
+
                 btn.addEventListener("click", () => {
-                    introVariant = btn.dataset.intro; 
-                    const flashColorMap = { red: new THREE.Color(0xff3333), yellow: new THREE.Color(0xffd400), blue: new THREE.Color(0x33bbff) };
-                    const targetColor = flashColorMap[introVariant] || new THREE.Color(0xffffff);
-                    hitEnterEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 5.0; });
+                    if (introLaunched) return;
+
+                    const chosenVariant = btn.dataset.intro;
+
+                    // First press arms this color and triggers the two-second Enter flash/pause.
+                    if (armedVariant !== chosenVariant) {
+                        armedVariant = chosenVariant;
+                        introVariant = chosenVariant;
+
+                        introButtons.forEach(other => {
+                            const isSelected = other === btn;
+                            other.classList.toggle("is-armed", isSelected);
+                            other.setAttribute("aria-pressed", String(isSelected));
+                        });
+
+                        triggerHitEnterFlash(introColors[chosenVariant]);
+
+                        if (introHint) {
+                            introHint.textContent = isGerman
+                                ? `NOCHMAL DRÜCKEN: ${chosenVariant.toUpperCase()}`
+                                : `PRESS AGAIN: ${chosenVariant.toUpperCase()}`;
+                        }
+                        return;
+                    }
+
+                    // Second press on the same color launches the matching intro.
+                    introLaunched = true;
+                    introButtons.forEach(button => { button.disabled = true; });
+                    introVariant = chosenVariant;
+
+                    if (introHint) introHint.textContent = "";
                     document.getElementById("lhu-enter-panel").classList.add("hidden");
-                    if (audio) { audio.src = `lhu${introVariant}.mp3`; }
+
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                        audio.src = `lhu${introVariant}.mp3`;
+                        audio.load();
+                    }
 
                     setTimeout(() => {
-                        if (audio) audio.play().catch(()=>{});
+                        if (audio) audio.play().catch(() => {});
                         introStart = performance.now();
+                        if (introAnimId !== null) cancelAnimationFrame(introAnimId);
                         introAnimId = requestAnimationFrame(animateIntro);
                     }, 320);
-                }, { once: true });
+                });
             });
         })();
 
@@ -1245,8 +1326,16 @@
                 }
             }
             renderer.render(scene, camera);
-            if (hitEnterMixer) hitEnterMixer.update(delta); 
-            if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75; 
+            const hitEnterNow = performance.now();
+            const hitEnterPaused = hitEnterFlashActive && hitEnterNow < hitEnterPauseUntil;
+
+            if (hitEnterFlashActive && !hitEnterPaused) {
+                restoreHitEnterAppearance();
+            }
+            if (!hitEnterPaused) {
+                if (hitEnterMixer) hitEnterMixer.update(delta);
+                if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75;
+            }
             hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
         }
         animate();
