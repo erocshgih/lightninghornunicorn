@@ -13,25 +13,18 @@
     <meta name="author" content="Vedran Lukic" />
     <meta name="theme-color" content="#04050a" />
 
-    <!-- Google Fonts (auch wenn hauptsächlich lokal, für konsistente Initialisierung) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
-    <!-- GLOBALE THREE.JS BIBLIOTHEK (r128 für Konsistenz mit menu.html) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
-    <!-- NEUES SHARED DESIGN SYSTEM -->
     <link rel="stylesheet" href="shared.css">
 
     <style>
-        /* ============================================
-           INDEX / INTRO — spezifisches Design
-           ============================================ */
         :root {
-            /* Lokale Überschreibungen für die dunkle Intro-Welt */
             --bg-intro: #04050a;
             --text-intro: #f3f4f8;
             --glass-bg: rgba(15, 18, 25, 0.65);
@@ -51,7 +44,7 @@
             overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
         }
 
-        /* --- 1. INTRO LAYER --- */
+        /* --- INTRO LAYER --- */
         #lhu-intro {
             position: fixed; inset: 0; z-index: 100000; 
             overflow-y: auto; overflow-x: hidden; 
@@ -91,8 +84,8 @@
 
         #lhu-intro-word {
             position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; perspective: 1000px; font-family: 'Press Start 2P', monospace; font-weight: 900; letter-spacing: .12em;
-            color: white; opacity: 0; pointer-events: none; z-index: 10;
+            text-align: center; perspective: 1200px; font-family: 'Impact', 'Press Start 2P', sans-serif; font-weight: 900; letter-spacing: .12em;
+            color: white; opacity: 0; pointer-events: none; z-index: 20; /* Über dem Canvas */
         }
 
         #lhu-pill-buttons { display:flex; justify-content:center; align-items:center; gap: clamp(10px, 3vw, 22px); width:min(88vw,420px); margin-bottom: 5px; }
@@ -151,7 +144,7 @@
         .intro-skip-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.6); transform: scale(1.03); }
         .intro-skip-btn:active { transform: scale(0.95); }
 
-        /* --- 2. MAIN APP LAYER --- */
+        /* --- MAIN APP LAYER --- */
         #matrix-bg { position: fixed; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease; }
         #heart-emojis, #rainbow-emojis { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; display: none; }
 
@@ -198,6 +191,7 @@
             background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border); color: var(--text-intro); border-radius: var(--radius-sm, 6px); 
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); transition: all 0.3s var(--ease-out, ease);
+            position: relative; /* Für den Counter */
         }
         .btn { 
             padding: clamp(8px, 1.5vh, 12px) clamp(16px, 3vw, 24px); 
@@ -222,6 +216,26 @@
         .effect-btn { 
             min-width: clamp(48px, 10vw, 60px); height: clamp(40px, 7vh, 50px); font-size: clamp(18px, 3.8vh, 24px); 
             line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; flex: 1; max-width: 75px;
+        }
+
+        /* --- QUOTE COUNTER (Grüner Zähler) --- */
+        .quote-counter {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #00FF28;
+            color: #000;
+            font-family: var(--font-display, 'Press Start 2P', monospace);
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 255, 40, 0.6), inset 0 0 4px rgba(255,255,255,0.8);
+            pointer-events: none;
+            transition: transform 0.1s var(--ease-spring, ease);
+        }
+        .quote-counter.bump {
+            transform: scale(1.4);
         }
 
         /* --- LOADING & MODALS --- */
@@ -339,7 +353,9 @@
     <div id="effect-buttons">
         <button id="heart-btn" class="btn glass effect-btn" title="rizz">♥</button>
         <button id="rainbow-btn" class="btn glass effect-btn" title="rainbow">🌈</button>
-        <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom">🗿</button>
+        <button id="wisdom-btn" class="btn glass effect-btn" title="wisdom" aria-label="Zitat anzeigen">
+            🗿<span id="quote-counter" class="quote-counter">0</span>
+        </button>
     </div>
 
     <div id="head-menu">
@@ -367,13 +383,13 @@
     </div>
 
     <!-- ==============================================
-         JS PART 1: BACKGROUND & THEMES (Canvas 2D)
+         JS PART 1: BACKGROUND (Canvas 2D)
          ============================================== -->
     <script>
         (function initBackground() {
             const mcanvas = document.getElementById("matrix-bg");
             const mctx = mcanvas.getContext("2d", { alpha: false });
-            const DOWNSCALE = 0.5; // Weniger Pixel = massiv bessere Performance
+            const DOWNSCALE = 0.6; // Etwas höher für knackigere Effekte
             let W, H, cx, cy;
             let currentBgIndex = 0;
             window.isTrafficConePhase = false;
@@ -382,7 +398,6 @@
             const LHU_WORDS = ["AETHER", "VEDRAN", "DNA 🧬", "BLITZ ⚡", "INTELLIGENCE", "ART", "SOUND", "PERSONA", "SCIENCE", "UNICORN", "ROBOT", "IMAGINATION", "AESTHETICS"];
             let currentWordIdx = 0, wordTimer = 0;
 
-            // Vorab gerenderte Grafiken für Performance
             const ballCanvases = [];
             const ballColors = [ ['#fff', '#ff3333', '#390000'], ['#fff', '#ffd400', '#3e3000'], ['#fff', '#33bbff', '#00162f'] ];
             ballColors.forEach(c => {
@@ -419,10 +434,9 @@
             document.getElementById("bg-prev").addEventListener("click", () => { currentBgIndex = (currentBgIndex - 1 + 3) % 3; window.setMatrixTheme(currentBgIndex); });
             document.getElementById("bg-next").addEventListener("click", () => { currentBgIndex = (currentBgIndex + 1) % 3; window.setMatrixTheme(currentBgIndex); });
 
-            let animId = null;
             function drawBg() {
-                animId = requestAnimationFrame(drawBg);
-                if (document.hidden) return; // Pausiere bei verstecktem Tab
+                requestAnimationFrame(drawBg);
+                if (document.hidden) return;
 
                 mctx.fillStyle = "#04050a";
                 mctx.fillRect(0, 0, W, H);
@@ -547,6 +561,30 @@
         let availableWisdomIndices = [];
         let currentWisdomLang = '';
         let isTyping = false; 
+
+        const wisdomCounterEl = document.getElementById('quote-counter');
+        const wisdomBtn = document.getElementById('wisdom-btn');
+
+        function updateWisdomCounter(bump = false) {
+            if (!wisdomCounterEl) return;
+            const lang = isGerman ? 'de' : 'en';
+            if (currentWisdomLang !== lang) {
+                currentWisdomLang = lang;
+                availableWisdomIndices = dailyWisdom[lang].map((_, i) => i);
+            }
+            
+            // Wenn 0 übrig sind, zeigen wir die volle Zahl an (Reset passiert beim Klick)
+            const displayCount = availableWisdomIndices.length === 0 ? dailyWisdom[lang].length : availableWisdomIndices.length;
+            wisdomCounterEl.textContent = displayCount;
+
+            if (bump) {
+                wisdomCounterEl.classList.add('bump');
+                setTimeout(() => wisdomCounterEl.classList.remove('bump'), 150);
+            }
+        }
+        
+        // Initialisierung
+        updateWisdomCounter();
 
         const toggleModal = (id, show) => {
             const el = document.getElementById(id);
@@ -702,7 +740,6 @@
                 (error) => {
                     console.error("Fehler beim Laden von " + url + ":", error);
                     stopLoading();
-                    // Sanfter Fehler statt Alert
                     const container = document.getElementById("container3D");
                     const errDiv = document.createElement("div");
                     errDiv.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff4d4d;font-family:'Press Start 2P',monospace;text-align:center;background:rgba(0,0,0,0.8);padding:20px;border-radius:10px;";
@@ -795,7 +832,7 @@
             controls.enabled = true; controls.autoRotate = true; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
         }
 
-        document.getElementById("wisdom-btn").onclick = () => {
+        wisdomBtn.onclick = () => {
             if (!object || gagActive || rainbowActive) return;
 
             if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
@@ -814,14 +851,24 @@
             const targetLang = isGerman ? 'de' : 'en';
             const activeWisdom = isGerman ? dailyWisdom.de : dailyWisdom.en;
 
-            if (currentWisdomLang !== targetLang || availableWisdomIndices.length === 0) {
+            if (currentWisdomLang !== targetLang) {
                 currentWisdomLang = targetLang;
                 availableWisdomIndices = activeWisdom.map((_, index) => index);
+            }
+
+            // RESET LOGIK: Wenn keine Zitate mehr da sind, füllen wir wieder auf
+            if (availableWisdomIndices.length === 0) {
+                availableWisdomIndices = activeWisdom.map((_, index) => index);
+                // Kurze visuelle Bestätigung des Resets
+                wisdomCounterEl.style.background = "#fff";
+                setTimeout(() => wisdomCounterEl.style.background = "#00FF28", 300);
             }
 
             const randomIndexWithinAvailable = Math.floor(Math.random() * availableWisdomIndices.length);
             const selectedQuoteIndex = availableWisdomIndices[randomIndexWithinAvailable];
             availableWisdomIndices.splice(randomIndexWithinAvailable, 1);
+            
+            updateWisdomCounter(true); // Bump-Animation für den Zähler
 
             const phrase = activeWisdom[selectedQuoteIndex];
             const textEl = document.getElementById("wisdom-display");
@@ -887,7 +934,7 @@
         selectEl.addEventListener("change", (e) => { loadHead(e.target.value); }); 
         loadHead(MODELS[0].url);
 
-        /* 3. DYNAMISCHE INTRO LOGIK - KÜNSTLERISCHES UPGRADE */
+        /* 3. DYNAMISCHE INTRO LOGIK - KÜNSTLERISCHES UPGRADE V2 */
         (() => {
             const intro = document.getElementById("lhu-intro");
             const audio = document.getElementById("lhu-intro-audio");
@@ -925,7 +972,8 @@
                     vec2 uv = gl_FragCoord.xy / r.xy; uv = 2.0 * uv - 1.0; uv.x *= r.x / r.y;
                     uv += 2.0 * fbm(uv * 1.0 + 0.8 * t * 1.5) - 1.0;
                     float dist = abs(uv.x);
-                    vec3 col = hsv2rgb(vec3(h/360.0, 0.8, 0.9)) * pow(mix(0.0, 0.08, hash11(t * 1.5)) / dist, 1.1);
+                    // Hellerer und knackigerer Shader für die Intro-Effekte
+                    vec3 col = hsv2rgb(vec3(h/360.0, 0.9, 1.0)) * pow(mix(0.0, 0.15, hash11(t * 1.5)) / dist, 1.0);
                     gl_FragColor = vec4(col, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));
                 }
             `;
@@ -942,7 +990,12 @@
 
             function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; if(gl) gl.viewport(0, 0, W, H); }
 
-            // OPTIMIERUNG: DOM-Elemente nur einmal erstellen, nicht jeden Frame!
+            // Spring Physics Helper für Blue
+            function easeOutElastic(x) {
+                const c4 = (2 * Math.PI) / 3;
+                return x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
+            }
+
             let currentSpans = [];
             function buildWordSpans(wordStr) {
                 word.innerHTML = ""; 
@@ -951,6 +1004,7 @@
                 stack.style.display = "flex"; stack.style.flexDirection = "column"; stack.style.alignItems = "center"; 
                 stack.style.fontFamily = "Impact, sans-serif"; stack.style.fontSize = "clamp(42px, 9vh, 100px)";
                 stack.style.transformStyle = "preserve-3d";
+                stack.style.perspective = "1000px";
 
                 for (let i = 0; i < wordStr.length; i++) {
                     const ch = wordStr[i];
@@ -961,6 +1015,11 @@
                     letter.style.backgroundImage = variantColors[introVariant].bg; letter.style.webkitBackgroundClip = "text"; 
                     letter.style.backgroundClip = "text"; letter.style.webkitTextFillColor = "transparent"; 
                     letter.style.transition = "none";
+                    
+                    // Zufälliger Seed pro Buchstabe für einzigartige Glitches/Physik
+                    letter.dataset.seed = Math.random();
+                    letter.dataset.offset = (Math.random() - 0.5);
+                    
                     stack.appendChild(letter);
                     currentSpans.push(letter);
                 }
@@ -985,37 +1044,90 @@
                     const local = seqT - index * 0.635;
                     const currentWordStr = ["LIGHTNING", "HORN", "UNICORN"][index];
 
-                    // Rebuild spans only when word changes
                     if (word.dataset.currentWord !== currentWordStr) {
                         word.dataset.currentWord = currentWordStr;
                         buildWordSpans(currentWordStr);
                     }
                     word.style.opacity = "1";
 
-                    const p = Math.min(1, Math.max(0, local * 3)); 
-                    const easeOutBack = 1 + 2.70158 * Math.pow(p - 1, 3) + 1.70158 * Math.pow(p - 1, 2);
+                    // p geht von 0 bis 1 während der Dauer des Wortes
+                    const p = Math.min(1, Math.max(0, local * 2.5)); 
+                    const pText = Math.min(1, p * 1.5); // Schnellere Text-Reveal-Phase
 
                     currentSpans.forEach((letter, i) => {
+                        const seed = parseFloat(letter.dataset.seed);
+                        const offset = parseFloat(letter.dataset.offset);
+
                         if (introVariant === "red") {
-                            const dir = (i % 2 === 0) ? 1 : -1;
-                            const startX = dir * (Math.random() * 500 + 200);
-                            const startY = (Math.random() - 0.5) * 500;
-                            if (p < 1) {
-                                letter.style.transform = `translate3d(${startX * (1 - p)}px, ${startY * (1 - p)}px, 0) scale(${1.5 - p*0.5}) rotateZ(${dir * 45 * (1-p)}deg)`;
-                                letter.style.opacity = p;
+                            // VHS GLITCH / SLICE ASSEMBLY
+                            const delay = i * 0.05;
+                            const pLocal = Math.max(0, Math.min(1, (pText - delay) * 2));
+                            
+                            if (pLocal < 1) {
+                                // Chaos phase
+                                const glitchX = Math.sin(now * 0.05 + i) * 30 * (1 - pLocal);
+                                const glitchY = Math.cos(now * 0.07 + i) * 15 * (1 - pLocal);
+                                const sliceTop = 50 + Math.sin(now * 0.02 + i) * 50;
+                                
+                                letter.style.transform = `translate3d(${glitchX}px, ${glitchY}px, 0) scaleY(${1.5 - pLocal * 0.5})`;
+                                letter.style.clipPath = `polygon(0 0, 100% 0, 100% ${sliceTop}%, 0 ${sliceTop}%)`;
+                                letter.style.textShadow = `${-10 * (1 - pLocal)}px 0 0 rgba(0,255,255,0.8), ${10 * (1 - pLocal)}px 0 0 rgba(255,0,100,0.8)`;
+                                letter.style.opacity = pLocal;
                             } else {
-                                letter.style.transform = `translate3d(${Math.sin(now*0.01+i)*2}px, ${Math.cos(now*0.01+i)*2}px, 0)`;
+                                // Settled phase (subtle glitch)
+                                const isGlitching = Math.random() < 0.05;
+                                const gx = isGlitching ? (Math.random() - 0.5) * 20 : 0;
+                                const gy = isGlitching ? (Math.random() - 0.5) * 10 : 0;
+                                letter.style.transform = `translate3d(${gx}px, ${gy}px, 0) scaleY(1)`;
+                                letter.style.clipPath = `polygon(0 0, 100% 0, 100% 100%, 0 100%)`;
+                                letter.style.textShadow = isGlitching ? `-5px 0 0 rgba(0,255,255,0.8), 5px 0 0 rgba(255,0,100,0.8)` : `0 0 10px rgba(255,50,50,0.5)`;
                                 letter.style.opacity = 1;
                             }
-                        } else if (introVariant === "blue") {
-                            const startZ = -800; const currentZ = startZ * (1 - easeOutBack); const currentRotY = (1 - p) * 180 * (i % 2 === 0 ? 1 : -1);
-                            const wave = Math.sin(Date.now() * 0.003 + i * 0.5) * 15 * p;
-                            letter.style.transform = `translate3d(0px, ${wave}px, ${currentZ}px) rotateY(${currentRotY}deg)`;
-                            letter.style.opacity = p;
-                        } else {
-                            const startY = (i % 2 === 0) ? -200 : 200; const currentY = startY * (1 - easeOutBack);
-                            letter.style.transform = `translate3d(0, ${currentY}px, 0) scaleY(${p < 1 ? 1.5 : 1})`;
-                            letter.style.opacity = p;
+                        } 
+                        else if (introVariant === "yellow") {
+                            // CINEMATIC / EDITORIAL
+                            // Sanftes Einfliegen aus der Unschärfe und Tiefe
+                            const delay = i * 0.06;
+                            const pLocal = Math.max(0, Math.min(1, (pText - delay) * 3));
+                            
+                            const startY = 80;
+                            const startZ = -200;
+                            const currentY = startY * (1 - pLocal);
+                            const currentZ = startZ * (1 - pLocal);
+                            const blur = 20 * (1 - pLocal);
+                            const rotateX = 45 * (1 - pLocal);
+                            
+                            // Atmung wenn fertig
+                            const wave = pLocal >= 1 ? Math.sin(now * 0.002 + i * 0.5) * 10 : 0;
+                            const rotZ = pLocal >= 1 ? Math.sin(now * 0.001 + i) * 2 : 0;
+
+                            letter.style.transform = `translate3d(0, ${currentY + wave}px, ${currentZ}px) rotateX(${rotateX}deg) rotateZ(${rotZ}deg)`;
+                            letter.style.filter = `blur(${blur}px)`;
+                            letter.style.opacity = pLocal;
+                            letter.style.textShadow = `0 0 ${20 + Math.sin(now*0.005 + i)*10}px ${variantColors.yellow.shadow}`;
+                        } 
+                        else if (introVariant === "blue") {
+                            // LIQUID / ELASTIC BOUNCE
+                            const delay = i * 0.04;
+                            const pLocal = Math.max(0, Math.min(1, (pText - delay) * 2));
+                            
+                            if (pLocal < 1) {
+                                // Elastischer Drop
+                                const elasticY = -400 * (1 - easeOutElastic(pLocal));
+                                const squash = 1 + Math.sin(pLocal * Math.PI) * 0.5; // Squash and stretch
+                                const stretch = 1 - Math.sin(pLocal * Math.PI) * 0.3;
+                                
+                                letter.style.transform = `translate3d(0, ${elasticY}px, 0) scale(${stretch}, ${squash})`;
+                                letter.style.opacity = Math.min(1, pLocal * 3);
+                            } else {
+                                // Liquid idle wobble
+                                const wobble = Math.sin(now * 0.003 + i * 0.8) * 8;
+                                const skewX = Math.sin(now * 0.002 + i * 1.2) * 5;
+                                
+                                letter.style.transform = `translate3d(${wobble}px, 0, 0) skewX(${skewX}deg) scale(1, 1)`;
+                                letter.style.opacity = 1;
+                                letter.style.textShadow = `0 0 15px ${variantColors.blue.shadow}`;
+                            }
                         }
                     });
                 } else { 
@@ -1034,7 +1146,7 @@
                     introVariant = btn.dataset.intro; 
                     const flashColorMap = { red: new THREE.Color(0xff3333), yellow: new THREE.Color(0xffd400), blue: new THREE.Color(0x33bbff) };
                     const targetColor = flashColorMap[introVariant] || new THREE.Color(0xffffff);
-                    hitEnterEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 4.5; });
+                    hitEnterEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 5.0; });
                     document.getElementById("lhu-enter-panel").classList.add("hidden");
                     if (audio) { audio.src = `lhu${introVariant}.mp3`; }
 
