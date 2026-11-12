@@ -1070,4 +1070,197 @@
                             const rotZ = pLocal >= 1 ? Math.sin(now * 0.001 + i) * 2 : 0;
 
                             letter.style.transform = `translate3d(0, ${currentY + wave}px, ${currentZ}px) rotateX(${rotateX}deg) rotateZ(${rotZ}deg)`;
-                            letter.style.filter =
+                            letter.style.filter = `blur(${blur}px)`;
+                            letter.style.opacity = pLocal;
+                            letter.style.textShadow = `0 0 ${20 + Math.sin(now*0.005 + i)*10}px ${variantColors.yellow.shadow}`;
+                        } 
+                        else if (introVariant === "blue") {
+                            const delay = i * 0.04;
+                            const pLocal = Math.max(0, Math.min(1, (pText - delay) * 2));
+                            
+                            if (pLocal < 1) {
+                                const elasticY = -400 * (1 - easeOutElastic(pLocal));
+                                const squash = 1 + Math.sin(pLocal * Math.PI) * 0.5;
+                                const stretch = 1 - Math.sin(pLocal * Math.PI) * 0.3;
+                                
+                                letter.style.transform = `translate3d(0, ${elasticY}px, 0) scale(${stretch}, ${squash})`;
+                                letter.style.opacity = Math.min(1, pLocal * 3);
+                            } else {
+                                const wobble = Math.sin(now * 0.003 + i * 0.8) * 8;
+                                const skewX = Math.sin(now * 0.002 + i * 1.2) * 5;
+                                
+                                letter.style.transform = `translate3d(${wobble}px, 0, 0) skewX(${skewX}deg) scale(1, 1)`;
+                                letter.style.opacity = 1;
+                                letter.style.textShadow = `0 0 15px ${variantColors.blue.shadow}`;
+                            }
+                        }
+                    });
+                } else { 
+                    word.style.opacity = "0"; 
+                    word.dataset.currentWord = "";
+                }
+
+                if (timeOffset >= 3.5) { intro.remove(); return; }
+                introAnimId = requestAnimationFrame(animateIntro);
+            }
+
+            resizeIntro(); window.addEventListener("resize", resizeIntro);
+
+            document.querySelectorAll(".lhu-pill").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    introVariant = btn.dataset.intro; 
+                    const flashColorMap = { red: new THREE.Color(0xff3333), yellow: new THREE.Color(0xffd400), blue: new THREE.Color(0x33bbff) };
+                    const targetColor = flashColorMap[introVariant] || new THREE.Color(0xffffff);
+                    hitEnterEmissiveMats.forEach(item => { item.mat.emissive.copy(targetColor); item.mat.emissiveIntensity = 5.0; });
+                    document.getElementById("lhu-enter-panel").classList.add("hidden");
+                    if (audio) { audio.src = `lhu${introVariant}.mp3`; }
+
+                    setTimeout(() => {
+                        if (audio) audio.play().catch(()=>{});
+                        introStart = performance.now();
+                        introAnimId = requestAnimationFrame(animateIntro);
+                    }, 320);
+                }, { once: true });
+            });
+        })();
+
+        let isTabVisible = true;
+        document.addEventListener("visibilitychange", () => {
+            isTabVisible = !document.hidden;
+            if (isTabVisible) {
+                clock.getDelta();
+                if (musicOn && music.paused) music.play().catch(()=>{});
+            } else {
+                if (musicOn) music.pause();
+            }
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!isTabVisible) return;
+
+            const delta = clock.getDelta();
+            if (mixer) mixer.update(delta);
+
+            if (camTween) {
+                const k = Math.min(1, (performance.now() - camTween.start) / camTween.dur);
+                const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+                camera.position.lerpVectors(camTween.fromPos, camTween.toPos, e); 
+                controls.target.lerpVectors(camTween.fromTarget, camTween.toTarget, e); 
+                camera.lookAt(controls.target);
+                if (k >= 1) { if(camTween.onDone) camTween.onDone(); camTween = null; controls.enabled = true; }
+            } else controls.update();
+
+            if (object) {
+                if (gagActive) {
+                    const tt = (performance.now() - gagStart) / 1000; const amp = gagSize.length() * 0.04;
+                    object.position.x = gagBase.x + Math.sin(tt * 5) * amp; 
+                    object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6; 
+                    object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
+                    object.rotation.z = Math.sin(tt * 5) * 0.08; 
+                    object.rotation.y = Math.sin(tt * 3) * 0.12;
+                } 
+                else if (rainbowActive) {
+                    const tt = (performance.now() - rainbowStart) / 1000;
+                    if (tt < 0.35) {
+                        const u = tt / 0.35; object.position.y = rainbowBasePos.y + Math.pow(u, 3) * 20; 
+                    } else if (tt < 0.45) {
+                        object.scale.setScalar(0.75); object.position.y = rainbowBasePos.y - 14; object.position.z = rainbowBasePos.z - 15; 
+                    } else if (tt < 2.45) {
+                        const u = (tt - 0.45) / 2.0; object.position.y = (rainbowBasePos.y - 14) + (u * 28); object.position.z = rainbowBasePos.z - 15;
+                        object.rotation.y = rainbowBaseRot.y + (u * Math.PI * 2 * 3); object.rotation.x = rainbowBaseRot.x + 0.4; 
+                        const pulse = 0.7 + 0.3 * Math.sin(tt * 28); const hue = (tt * 260) % 360;
+                        if(object.userData.emissiveMats) {
+                            object.userData.emissiveMats.forEach(m => {
+                                m.emissive.setHSL(hue / 360, 1, 0.52); 
+                                if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 0.35 + pulse * 3.0;
+                            });
+                        }
+                        const screenPos = object.position.clone().project(camera); const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth; const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
+                        const crossfire = document.getElementById("shmup-container"); const centerPoint = crossfire.querySelector(".shmup-center");
+                        if (centerPoint) { centerPoint.style.left = screenX + "px"; centerPoint.style.top = screenY + "px"; }
+                        if (tt >= 0.7 && tt < 2.2) { crossfire.style.display = "block"; } else { crossfire.style.display = "none"; }
+                    }
+                    if (tt >= 2.45) endRainbow();
+                } 
+                else if (wisdomActive) {
+                    let targetRotX = 0;
+                    if (isTyping) {
+                        const headIdx = document.getElementById("head-select").selectedIndex;
+                        const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00]; 
+                        const currentRate = rates[headIdx % rates.length];
+                        targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25; 
+                    }
+                    object.rotation.x += (targetRotX - object.rotation.x) * (delta * 12); 
+                    object.rotation.y += (0 - object.rotation.y) * (delta * 8); 
+                    object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
+                }
+                else if (musicOn) { 
+                    musicPlayTime += delta; 
+                    const loopTime = musicPlayTime % 70; 
+                    const baseFreq = Math.PI / (60 / 138 * 0.5); 
+
+                    let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
+                    let phase4Active = false, phase6Active = false, phase7Active = false;
+
+                    if (loopTime < 30 || loopTime >= 40) { window.isTrafficConePhase = false; }
+
+                    if (loopTime < 10) { musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; } 
+                    else if (loopTime < 20) { musicPhase += baseFreq * 2.0 * delta; targetRotX = Math.sin(musicPhase) * 0.14; } 
+                    else if (loopTime < 30) { musicPhase += baseFreq * 0.4 * delta; targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04; targetRotY = Math.sin(musicPhase) * 0.45; targetRotZ = Math.cos(musicPhase) * 0.22; } 
+                    else if (loopTime < 40) {
+                        phase4Active = true; window.isTrafficConePhase = true;
+                        targetRotX = Math.sin(loopTime * 40) * 0.08; targetRotY = Math.sin(loopTime * 47) * 0.08; targetRotZ = 0;
+                    } 
+                    else if (loopTime < 50) { musicPhase += baseFreq * 1.5 * delta; targetRotY = Math.sin(musicPhase) * 0.35; targetRotZ = Math.sin(musicPhase * 2) * 0.05; } 
+                    else if (loopTime < 60) { phase6Active = true; musicPhase += baseFreq * delta; targetRotX = Math.sin(musicPhase) * 0.08; } 
+                    else { phase7Active = true; }
+
+                    if (phase7Active) {
+                        object.rotation.x += delta * 15; object.rotation.y += (0 - object.rotation.y) * (delta * 8); object.rotation.z += (0 - object.rotation.z) * (delta * 8);
+                        object.position.x += (0 - object.position.x) * (delta * 8); object.position.y += (Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
+                        wasInPhase7 = true;
+                    } else {
+                        if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
+                        object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8); object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8); object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
+                        object.position.x += (0 - object.position.x) * (delta * 8); object.position.y += (0 - object.position.y) * (delta * 8);
+                    }
+
+                    if (phase4Active) {
+                        const blink = Math.floor(loopTime * 4) % 2 === 0; let targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
+                        if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.copy(targetColor); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = blink ? 3.5 : 0.5; }); }
+                    } else if (phase6Active) {
+                        const cycle = (loopTime % 1.5) / 1.5; let targetColor = new THREE.Color();
+                        if (cycle < 0.33) targetColor.setHex(0xff3333); else if (cycle < 0.66) targetColor.setHex(0xffd400); else targetColor.setHex(0x33bbff); 
+                        if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.lerp(targetColor, delta * 12); if(m.emissiveIntensity !== undefined) m.emissiveIntensity = 2.5; }); }
+                    } else {
+                        if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.lerp(m.userData.origE, delta * 5); if (m.emissiveIntensity !== undefined) { let targetI = m.userData.origI !== undefined ? m.userData.origI : 1; m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5); } }); }
+                    }
+                } else { 
+                    window.isTrafficConePhase = false;
+                    if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
+                    object.rotation.x += (0 - object.rotation.x) * (delta * 8); object.rotation.y += (0 - object.rotation.y) * (delta * 8); object.rotation.z += (0 - object.rotation.z) * (delta * 8); 
+                    object.position.x += (0 - object.position.x) * (delta * 8); object.position.y += (0 - object.position.y) * (delta * 8);
+                    if(object.userData.emissiveMats) { object.userData.emissiveMats.forEach(m => { m.emissive.lerp(m.userData.origE, delta * 5); if (m.emissiveIntensity !== undefined) { let targetI = m.userData.origI !== undefined ? m.userData.origI : 1; m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5); } }); }
+                }
+            }
+            renderer.render(scene, camera);
+            if (hitEnterMixer) hitEnterMixer.update(delta); 
+            if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75; 
+            hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
+        }
+        animate();
+
+        let resizeTimeout;
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                camera.aspect = innerWidth / innerHeight; 
+                camera.updateProjectionMatrix(); 
+                renderer.setPixelRatio(getDPR());
+                renderer.setSize(innerWidth, innerHeight); 
+            }, 150);
+        });
+    </script>
+</body>
+</html>
