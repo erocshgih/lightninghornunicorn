@@ -1077,7 +1077,11 @@
                         filter = `saturate(${1 + Math.max(0, Math.sin(t)) * 0.5})`;
                         break;
                     case 'PROJECTS':
-                        // PROJECTS bleibt ruhig: keine seitliche oder vertikale Bewegung der Bildkacheln.
+                        t = wobbleTime * Math.PI * 2 / 0.8;
+                        tx = Math.sin(t * 3) * 3;
+                        ty = Math.cos(t * 4) * 2;
+                        rot = Math.sin(t * 5) * 2;
+                        sx = 1 + Math.max(0, Math.sin(t * 4)) * 0.03;
                         break;
                     case 'STORYTIME':
                         t = wobbleTime * Math.PI * 2 / 1.5;
