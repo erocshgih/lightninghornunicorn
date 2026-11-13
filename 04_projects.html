@@ -678,9 +678,8 @@
                         prodHeader.type = 'button';
                         prodHeader.className = 'prod-header';
                         prodHeader.setAttribute('aria-expanded', 'false');
-                        const has3DModel = Array.isArray(prod.images) && prod.images.some(item => typeof item.model === 'string' && item.model.toLowerCase().endsWith('.glb'));
                         prodHeader.innerHTML = `
-                            <span class="prod-name-wrap"><span class="prod-name">${prod.name}</span>${has3DModel ? '<span class="prod-3d-badge" aria-label="Enthält ein interaktives 3D-Modell">3D</span>' : ''}</span>
+                            <span class="prod-name-wrap"><span class="prod-name">${prod.name}</span></span>
                             <span class="prod-arrow" aria-hidden="true">&#9654;</span>
                         `;
                         prodHeader.addEventListener('click', () => toggleProd(prodEl));

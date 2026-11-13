@@ -4,7 +4,7 @@
            ============================================================ */
         document.addEventListener('DOMContentLoaded', () => {
 
-            /* HYPNO ASCII OVERLAY: lazy Three.js effect, active only during loading. */
+            /* HYPNO ASCII OVERLAY: fixed character grid, rotating SVG source. */
             (() => {
                 const loaderImages = Array.from(document.querySelectorAll('#loading .hypnoload-asset, #index-loading .hypnoload-intro'));
                 if (!loaderImages.length) return;
@@ -12,21 +12,27 @@
                     const root = img.closest('#loading, #index-loading');
                     return !!root && root.classList.contains('show') && getComputedStyle(root).display !== 'none';
                 };
-                const wrappers = loaderImages.map(img => {
-                    const wrap = document.createElement('span');
-                    wrap.className = 'hypnoload-spin';
-                    img.parentNode.insertBefore(wrap, img);
-                    wrap.appendChild(img);
-                    wrap.style.width = 'clamp(190px, 30vw, 276px)';
-                    wrap.style.aspectRatio = '1';
-                    wrap.style.position = 'relative';
-                    return { img, wrap, effect: null, renderer: null, scene: null, camera: null, raf: 0, started: false };
+                const items = loaderImages.map(img => {
+                    const stage = document.createElement('span');
+                    stage.className = 'hypnoload-stage';
+                    img.parentNode.insertBefore(stage, img);
+                    stage.appendChild(img);
+                    stage.style.width = 'clamp(190px, 30vw, 276px)';
+                    stage.style.height = 'clamp(190px, 30vw, 276px)';
+                    stage.style.position = 'relative';
+                    stage.style.display = 'block';
+                    stage.style.flex = '0 0 auto';
+                    img.classList.add('hypnoload-fallback-spin');
+                    return { img, stage, effect: null, renderer: null, scene: null, camera: null, plane: null, raf: 0, started: false, ready: false, last: 0 };
                 });
                 let threePromise = null;
                 const loadThree = () => threePromise || (threePromise = Promise.all([
                     import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js'),
                     import('https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/effects/AsciiEffect.js')
-                ]).then(([THREE, ascii]) => ({ THREE, AsciiEffect: ascii.AsciiEffect })).catch(err => { console.warn('LHU ASCII overlay unavailable; SVG loader remains active.', err); return null; }));
+                ]).then(([THREE, ascii]) => ({ THREE, AsciiEffect: ascii.AsciiEffect })).catch(err => {
+                    console.warn('LHU ASCII overlay unavailable; rotating SVG fallback remains active.', err);
+                    return null;
+                }));
                 async function start(item) {
                     if (item.started || !active(item.img)) return;
                     item.started = true;
@@ -34,40 +40,58 @@
                     if (!libs || !active(item.img)) { item.started = false; return; }
                     const { THREE, AsciiEffect } = libs;
                     try {
+                        if (!item.img.complete || !item.img.naturalWidth) await new Promise((resolve, reject) => {
+                            item.img.addEventListener('load', resolve, { once: true });
+                            item.img.addEventListener('error', reject, { once: true });
+                        });
+                        const size = Math.max(190, Math.min(276, Math.round(item.stage.getBoundingClientRect().width || 276)));
                         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
-                        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
-                        renderer.setSize(276, 276, false);
+                        renderer.setPixelRatio(1);
+                        renderer.setSize(size, size, false);
                         renderer.setClearColor(0x000000, 0);
                         const scene = new THREE.Scene();
                         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
                         camera.position.z = 2;
-                        const texture = new THREE.TextureLoader().load(item.img.src);
+                        const texture = new THREE.Texture(item.img);
                         texture.colorSpace = THREE.SRGBColorSpace;
-                        const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide }));
+                        texture.needsUpdate = true;
+                        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+                        const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
                         scene.add(plane);
                         const effect = new AsciiEffect(renderer, ' .:-=+*#%@', { invert: true, resolution: 0.13, scale: 1, color: false, alpha: true });
-                        effect.setSize(276, 276);
-                        effect.domElement.style.position = 'absolute';
-                        effect.domElement.style.inset = '0';
-                        effect.domElement.style.width = '100%';
-                        effect.domElement.style.height = '100%';
-                        effect.domElement.style.overflow = 'hidden';
-                        effect.domElement.style.color = 'white';
-                        effect.domElement.style.backgroundColor = 'transparent';
-                        effect.domElement.style.font = '3px/0.72 monospace';
-                        effect.domElement.style.textAlign = 'center';
-                        effect.domElement.style.pointerEvents = 'none';
-                        item.wrap.appendChild(effect.domElement);
-                        item.renderer = renderer; item.scene = scene; item.camera = camera; item.effect = effect;
-                        const draw = () => {
+                        effect.setSize(size, size);
+                        const asciiSurface = effect.domElement;
+                        asciiSurface.className = 'hypnoload-ascii-surface';
+                        Object.assign(asciiSurface.style, {
+                            position: 'absolute', inset: '0', width: '100%', height: '100%',
+                            overflow: 'hidden', color: '#fff', backgroundColor: 'transparent',
+                            font: '3px/0.72 monospace', textAlign: 'center', pointerEvents: 'none',
+                            transform: 'none', animation: 'none'
+                        });
+                        item.stage.appendChild(asciiSurface);
+                        item.renderer = renderer; item.scene = scene; item.camera = camera; item.effect = effect; item.plane = plane;
+                        item.stage.classList.add('ascii-ready');
+                        item.ready = true;
+                        const draw = now => {
                             if (!active(item.img)) { item.raf = 0; item.started = false; return; }
+                            const delta = item.last ? Math.min((now - item.last) / 1000, 0.05) : 0;
+                            item.last = now;
+                            // Only the SVG texture plane rotates. The ASCII surface/layout never transforms.
+                            plane.rotation.z += delta * (Math.PI * 2 / 0.65);
                             effect.render(scene, camera);
                             item.raf = requestAnimationFrame(draw);
                         };
-                        draw();
-                    } catch (err) { item.started = false; console.warn('LHU ASCII overlay failed; SVG loader remains active.', err); }
+                        item.raf = requestAnimationFrame(draw);
+                    } catch (err) {
+                        item.started = false;
+                        item.stage.classList.remove('ascii-ready');
+                        console.warn('LHU ASCII overlay failed; rotating SVG fallback remains active.', err);
+                    }
                 }
-                const update = () => wrappers.forEach(item => { if (active(item.img)) start(item); else if (item.raf) { cancelAnimationFrame(item.raf); item.raf = 0; item.started = false; } });
+                const update = () => items.forEach(item => {
+                    if (active(item.img)) start(item);
+                    else if (item.raf) { cancelAnimationFrame(item.raf); item.raf = 0; item.started = false; item.last = 0; }
+                });
                 const observer = new MutationObserver(update);
                 document.querySelectorAll('#loading, #index-loading').forEach(el => observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] }));
                 document.addEventListener('visibilitychange', update);
