@@ -852,8 +852,6 @@
                     item.setAttribute('aria-current', isActive ? 'page' : 'false');
                     item.closest('.sphere-option')?.classList.toggle('is-active', isActive);
                 });
-                const categoryLabel = document.getElementById('categorySphereLabel');
-                if (categoryLabel) categoryLabel.textContent = cat;
 
                 categoryTransitionTimer = window.setTimeout(async () => {
                     if (loadToken !== categoryLoadToken) return;
@@ -1028,11 +1026,11 @@
 
             // The visible category navigation is a compact field of material spheres.
             const sphereGrid = document.getElementById('categorySphereGrid');
-            const sphereLabel = document.getElementById('categorySphereLabel');
             if (sphereGrid) {
                 CATS.forEach((cat, index) => {
                     const option = document.createElement('div');
                     option.className = 'sphere-option';
+                    option.style.setProperty('--sphere-order', String(index));
                     const sphere = document.createElement('button');
                     sphere.type = 'button';
                     sphere.className = `sphere-category sphere-material-${index + 1}`;
@@ -1042,18 +1040,11 @@
                     const name = document.createElement('span');
                     name.className = 'sphere-category-name';
                     name.textContent = cat;
-                    const showName = () => { if (sphereLabel) sphereLabel.textContent = cat; };
-                    sphere.addEventListener('pointerenter', showName);
-                    sphere.addEventListener('focus', showName);
                     sphere.addEventListener('click', () => {
-                        showName();
                         triggerCategoryChange(cat);
                     });
                     option.append(sphere, name);
                     sphereGrid.appendChild(option);
-                });
-                sphereGrid.addEventListener('pointerleave', () => {
-                    if (sphereLabel) sphereLabel.textContent = currentCategory || 'SELECT YOUR CATEGORY';
                 });
             }
 
