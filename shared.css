@@ -1351,3 +1351,187 @@ body.site-mode { overflow-y: auto; }
     .sphere-category::before { animation-duration: 12s; }
     .sphere-nav-toolbar.categories-open .sphere-option { animation-duration: .28s; }
 }
+
+
+/* ================================================================
+   LHU SPHERE FIELD v2 — INDUSTRIAL / GUNMETAL MATERIAL PASS
+   Restrained steel surfaces, low-key optical motion, precise spectral edge.
+   ================================================================ */
+#stripWrapper.sphere-nav-toolbar,
+#stripWrapper.sphere-nav-toolbar.categories-open {
+    border-color: var(--border-strong);
+    background: var(--header-bg);
+}
+
+/* One continuous frame: no divider between the button rail and the sphere field. */
+#stripWrapper.sphere-nav-toolbar .nav-toolbar-row,
+#stripWrapper.sphere-nav-toolbar.categories-open .nav-toolbar-row {
+    border: 0 !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+#stripWrapper.sphere-nav-toolbar .sphere-menu,
+#stripWrapper.sphere-nav-toolbar.categories-open .sphere-menu {
+    border: 0 !important;
+    border-top: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+#stripWrapper.sphere-nav-toolbar .sphere-menu::before,
+#stripWrapper.sphere-nav-toolbar .sphere-menu::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* The active category is identified by the sphere itself and its caption.
+   Do not add a duplicate heading in the panel. */
+#categorySpherePanel > .sphere-current-category,
+#categorySpherePanel > .sphere-category-heading,
+#categorySpherePanel > .sphere-menu-title,
+#categorySpherePanel > [data-sphere-current-category] {
+    display: none !important;
+}
+
+.sphere-category {
+    --sphere-light: #d4d9dc;
+    --sphere-mid: #78838a;
+    --sphere-dark: #303a41;
+    --sphere-deep: #101519;
+    --sphere-glow: rgba(175, 192, 201, .16);
+    border: 1px solid rgba(207, 216, 220, .62) !important;
+    background:
+        radial-gradient(ellipse at 27% 17%, rgba(255,255,255,.9) 0 1.8%, rgba(255,255,255,.38) 4.5%, transparent 19%),
+        radial-gradient(ellipse at 68% 78%, rgba(0,0,0,.35), transparent 45%),
+        radial-gradient(circle at 34% 29%, var(--sphere-light) 0%, var(--sphere-mid) 34%, var(--sphere-dark) 72%, var(--sphere-deep) 100%) !important;
+    box-shadow:
+        inset -10px -12px 20px rgba(0,0,0,.55),
+        inset 4px 5px 11px rgba(255,255,255,.27),
+        0 7px 15px rgba(0,0,0,.34) !important;
+    filter: saturate(.18) contrast(1.06);
+    animation: sphere-optical-orbit-v2 12.5s ease-in-out infinite !important;
+    animation-delay: calc(var(--sphere-order, 0) * -470ms) !important;
+    will-change: transform;
+}
+
+/* Distinct metal finishes, deliberately not a rainbow palette. */
+.sphere-category.sphere-material-1 {
+    --sphere-light:#e2e5e6; --sphere-mid:#929ca1; --sphere-dark:#414b51; --sphere-deep:#151a1e;
+}
+.sphere-category.sphere-material-2 {
+    --sphere-light:#c6cbcd; --sphere-mid:#737d82; --sphere-dark:#30393e; --sphere-deep:#0e1316;
+    background-image:
+        repeating-linear-gradient(176deg, rgba(255,255,255,.055) 0 1px, rgba(0,0,0,.035) 1px 3px),
+        radial-gradient(ellipse at 27% 17%, rgba(255,255,255,.8) 0 2%, transparent 18%),
+        radial-gradient(circle at 34% 29%, var(--sphere-light), var(--sphere-mid) 36%, var(--sphere-dark) 73%, var(--sphere-deep)) !important;
+}
+.sphere-category.sphere-material-3 {
+    --sphere-light:#d5d8d9; --sphere-mid:#858e92; --sphere-dark:#394247; --sphere-deep:#12171a;
+}
+.sphere-category.sphere-material-4 {
+    --sphere-light:#aeb7bc; --sphere-mid:#606c73; --sphere-dark:#252f35; --sphere-deep:#090e12;
+    background-image:
+        radial-gradient(ellipse at 28% 18%, rgba(255,255,255,.72) 0 2%, transparent 20%),
+        linear-gradient(120deg, rgba(255,255,255,.08), transparent 36%, rgba(0,0,0,.18) 72%),
+        radial-gradient(circle at 34% 29%, var(--sphere-light), var(--sphere-mid) 36%, var(--sphere-dark) 73%, var(--sphere-deep)) !important;
+}
+.sphere-category.sphere-material-5 {
+    --sphere-light:#cbd1d4; --sphere-mid:#77838a; --sphere-dark:#303b42; --sphere-deep:#11171b;
+}
+.sphere-category.sphere-material-6 {
+    --sphere-light:#e1e3e2; --sphere-mid:#949b9d; --sphere-dark:#4a5357; --sphere-deep:#191f22;
+}
+.sphere-category.sphere-material-7 {
+    --sphere-light:#aab3b8; --sphere-mid:#5f6a70; --sphere-dark:#252e34; --sphere-deep:#0b1013;
+    background-image:
+        repeating-linear-gradient(112deg, rgba(255,255,255,.05) 0 2px, transparent 2px 6px),
+        radial-gradient(ellipse at 27% 17%, rgba(255,255,255,.7) 0 2%, transparent 19%),
+        radial-gradient(circle at 34% 29%, var(--sphere-light), var(--sphere-mid) 36%, var(--sphere-dark) 73%, var(--sphere-deep)) !important;
+}
+.sphere-category.sphere-material-8 {
+    --sphere-light:#d8dddf; --sphere-mid:#89949a; --sphere-dark:#38434a; --sphere-deep:#12181c;
+}
+
+.sphere-category::before {
+    background: linear-gradient(108deg, transparent 37%, rgba(255,255,255,.015) 44%, rgba(244,248,249,.38) 49%, rgba(255,255,255,.035) 53%, transparent 61%) !important;
+    opacity: .56 !important;
+    animation: sphere-reflection-sweep-v2 9.5s ease-in-out infinite !important;
+    animation-delay: calc(var(--sphere-order, 0) * -540ms) !important;
+}
+.sphere-category::after {
+    background: radial-gradient(ellipse at 28% 17%, rgba(255,255,255,.42) 0 2%, rgba(255,255,255,.10) 8%, transparent 28%) !important;
+    box-shadow: inset 1px 1px 4px rgba(255,255,255,.13), inset -6px -8px 12px rgba(0,0,0,.24) !important;
+}
+
+.sphere-category:hover,
+.sphere-category:focus-visible {
+    animation-play-state: paused !important;
+    transform: perspective(520px) rotateX(-3deg) rotateY(2deg) translateY(-3px) scale(1.045) !important;
+    filter: saturate(.24) brightness(1.13) contrast(1.08) !important;
+    box-shadow:
+        inset -8px -10px 16px rgba(0,0,0,.48),
+        inset 4px 5px 12px rgba(255,255,255,.37),
+        0 10px 20px rgba(0,0,0,.4),
+        0 0 0 1px rgba(218,226,229,.42) !important;
+    outline: none !important;
+}
+.sphere-category.active {
+    animation-play-state: paused !important;
+    transform: perspective(520px) rotateX(0deg) rotateY(0deg) scale(1.055) !important;
+    border-color: rgba(235,241,243,.88) !important;
+    /* Very thin cyan / muted-red fringe: chromatic aberration, not a neon halo. */
+    box-shadow:
+        inset -8px -10px 16px rgba(0,0,0,.5),
+        inset 4px 5px 12px rgba(255,255,255,.34),
+        -1px 0 0 rgba(93,190,204,.72),
+        1px 0 0 rgba(183,102,91,.66),
+        0 0 0 1px rgba(222,229,232,.50),
+        0 8px 18px rgba(0,0,0,.38) !important;
+    filter: saturate(.22) contrast(1.12) !important;
+}
+.sphere-category.active::before {
+    opacity: .72 !important;
+    filter: none !important;
+    animation-duration: 7.5s !important;
+}
+.sphere-category-name {
+    color: rgba(190,198,202,.72) !important;
+    font-family: var(--font-display, monospace) !important;
+    font-size: clamp(8px, .76vw, 10px) !important;
+    letter-spacing: .075em !important;
+    text-transform: uppercase;
+}
+.sphere-option:hover .sphere-category-name,
+.sphere-option:focus-within .sphere-category-name,
+.sphere-option.is-active .sphere-category-name {
+    color: #edf0f1 !important;
+    text-shadow: 0 0 7px rgba(188,205,212,.16) !important;
+}
+
+.sphere-nav-toolbar.categories-open .sphere-option {
+    animation: sphere-manifest-v2 .58s cubic-bezier(.18,.78,.22,1) both !important;
+    animation-delay: calc(var(--sphere-order, 0) * 72ms) !important;
+}
+@keyframes sphere-manifest-v2 {
+    0% { opacity:0; transform:translateY(12px) scale(.88); filter:brightness(.65) blur(1.2px); }
+    72% { opacity:1; transform:translateY(-1px) scale(1.012); filter:brightness(1.08) blur(0); }
+    100% { opacity:1; transform:translateY(0) scale(1); filter:none; }
+}
+@keyframes sphere-optical-orbit-v2 {
+    0%,100% { transform:perspective(520px) rotateX(0deg) rotateY(-3deg); }
+    25% { transform:perspective(520px) rotateX(1.8deg) rotateY(2.5deg); }
+    50% { transform:perspective(520px) rotateX(-1.5deg) rotateY(4deg); }
+    75% { transform:perspective(520px) rotateX(-2deg) rotateY(-1.5deg); }
+}
+@keyframes sphere-reflection-sweep-v2 {
+    0%,15% { transform:translateX(-56%) rotate(13deg); opacity:.12; }
+    48% { opacity:.58; }
+    86%,100% { transform:translateX(56%) rotate(13deg); opacity:.14; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sphere-nav-toolbar.categories-open .sphere-option { animation-duration: .24s !important; }
+    .sphere-category { animation-duration: 18s !important; }
+    .sphere-category::before { animation-duration: 15s !important; }
+}
