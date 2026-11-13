@@ -342,31 +342,17 @@
             .lhu-3d-lightbox__tools { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
             .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
 
-            /* ASCII-Lade-Rahmen: läuft nur solange das jeweilige GLB noch lädt. */
-            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; overflow: hidden; background: rgba(0,0,0,.91); color: #f4f4f4; font-family: 'Courier New', monospace; opacity: 1; visibility: visible; transition: opacity .42s ease, visibility .42s ease; pointer-events: none; }
+            /* Minimal loading field: 40 moving LOADING rows over a fluid Marching-Cubes shape. */
+            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.48); color: #f3f3f3; opacity: 1; visibility: visible; transition: opacity .42s ease, visibility .42s ease; pointer-events: none; font-family: 'Courier New', monospace; }
             .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; }
-            .lhu-3d-loading-frame.has-error { background: rgba(12,0,0,.94); color: #ffbaba; }
-            .lhu-3d-loading-frame__edge { position: absolute; overflow: hidden; display: flex; align-items: center; white-space: nowrap; color: inherit; font-size: clamp(9px, 1.1vw, 12px); font-weight: 700; letter-spacing: .15em; text-shadow: 0 0 8px currentColor; }
-            .lhu-3d-loading-frame__edge--top { top: 0; left: 0; right: 0; height: 34px; border-bottom: 1px solid rgba(255,255,255,.38); }
-            .lhu-3d-loading-frame__edge--bottom { bottom: 0; left: 0; right: 0; height: 34px; border-top: 1px solid rgba(255,255,255,.38); }
-            .lhu-3d-loading-frame__edge--left { top: 34px; bottom: 34px; left: 0; width: 30px; justify-content: center; border-right: 1px solid rgba(255,255,255,.38); writing-mode: vertical-rl; }
-            .lhu-3d-loading-frame__edge--right { top: 34px; bottom: 34px; right: 0; width: 30px; justify-content: center; border-left: 1px solid rgba(255,255,255,.38); writing-mode: vertical-rl; transform: rotate(180deg); }
-            .lhu-3d-loading-frame__track { display: inline-flex; flex: 0 0 auto; gap: 22px; width: max-content; padding-left: 12px; animation: lhuLoadingMarquee 7s linear infinite; }
-            .lhu-3d-loading-frame__edge--bottom .lhu-3d-loading-frame__track { animation-direction: reverse; }
-            .lhu-3d-loading-frame__edge--left .lhu-3d-loading-frame__track { flex-direction: column; animation-name: lhuLoadingMarqueeY; animation-duration: 9s; }
-            .lhu-3d-loading-frame__edge--right .lhu-3d-loading-frame__track { flex-direction: column; animation-name: lhuLoadingMarqueeY; animation-duration: 8s; animation-direction: reverse; }
-            .lhu-3d-loading-frame__center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; max-width: calc(100% - 110px); text-align: center; padding: 26px; border: 1px solid rgba(255,255,255,.26); background: rgba(0,0,0,.46); box-shadow: 0 0 34px rgba(255,255,255,.06), inset 0 0 28px rgba(255,255,255,.035); }
-            .lhu-3d-loading-frame__code { font-size: clamp(9px, 1vw, 12px); letter-spacing: .14em; opacity: .7; }
-            .lhu-3d-loading-frame__title { font-size: clamp(20px, 4vw, 38px); font-weight: 800; letter-spacing: .2em; animation: lhuLoadingFlicker 1.2s steps(2, end) infinite; }
-            .lhu-3d-loading-frame__sub { font-size: 10px; letter-spacing: .16em; opacity: .75; }
-            .lhu-3d-loading-frame__bar { display: flex; gap: 5px; font-size: clamp(12px, 2vw, 18px); letter-spacing: .08em; }
-            .lhu-3d-loading-frame__bar span { display: inline-block; animation: lhuLoadingPulse .9s steps(2, end) infinite; }
-            .lhu-3d-loading-frame__bar span:nth-child(2) { animation-delay: .12s; }
-            .lhu-3d-loading-frame__bar span:nth-child(3) { animation-delay: .24s; }
-            @keyframes lhuLoadingMarquee { to { transform: translateX(-50%); } }
-            @keyframes lhuLoadingMarqueeY { to { transform: translateY(-50%); } }
-            @keyframes lhuLoadingFlicker { 50% { opacity: .62; } }
-            @keyframes lhuLoadingPulse { 50% { opacity: .2; } }
+            .lhu-3d-loading-frame.has-error { background: rgba(0,0,0,.72); color: #ffbaba; }
+            .lhu-3d-loading-fluid { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; opacity: .82; }
+            .lhu-3d-loading-lines { position: absolute; inset: 1.2% 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+            .lhu-3d-loading-row { display: flex; align-items: center; flex: 1 1 0; min-height: 0; width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(8px, 1.02vw, 13px); line-height: 1; font-weight: 600; letter-spacing: .055em; text-shadow: 0 0 5px rgba(255,255,255,.2); opacity: .48; }
+            .lhu-3d-loading-row__track { display: inline-flex; flex: 0 0 auto; width: max-content; will-change: transform; animation: lhuLoadingRowFlow var(--row-speed, 13s) linear var(--row-delay, 0s) infinite; }
+            .lhu-3d-loading-row:nth-child(even) .lhu-3d-loading-row__track { animation-direction: reverse; opacity: .76; }
+            .lhu-3d-loading-row__track span { display: inline-block; flex: 0 0 auto; padding-right: 1.8em; }
+            @keyframes lhuLoadingRowFlow { from { transform: translate3d(0,0,0); } to { transform: translate3d(-33.333333%,0,0); } }
             .carousel-dot-3d { width: auto; min-width: 42px; height: 26px; padding: 0 9px; border-radius: 14px; color: #111; background: #d8d8d8; font: 800 11px/1 sans-serif; letter-spacing: .06em; }
             .carousel-dot-3d::before { content: '3D'; }
             .carousel-dot-3d:hover, .carousel-dot-3d:focus-visible { background: var(--dot-active); color: #fff; }
@@ -379,9 +365,7 @@
                 .cat-header .arrow,
                 .prod-header .prod-arrow { transition-duration: 0.01ms; }
                 .model-loading .spinner { animation-duration: 2s; }
-                .lhu-3d-loading-frame__track,
-                .lhu-3d-loading-frame__title,
-                .lhu-3d-loading-frame__bar span { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+                .lhu-3d-loading-row__track { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
             }
         </style>
 
@@ -417,6 +401,115 @@
                 }
                 // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
                 ensureModelViewer();
+
+                /* Fluid-Loading-Visual: offizielles Three.js MarchingCubes-Addon.
+                   Das Canvas sitzt unter den 40 bewegten LOADING-Zeilen und läuft nur während des GLB-Ladevorgangs. */
+                function stopLoadingFluid(loader) {
+                    const runtime = loader && loader.__lhuFluidRuntime;
+                    if (!runtime) return;
+                    runtime.stopped = true;
+                    if (runtime.raf) cancelAnimationFrame(runtime.raf);
+                    if (runtime.resizeObserver) runtime.resizeObserver.disconnect();
+                    if (runtime.renderer) {
+                        try { runtime.renderer.dispose(); } catch (_) { /* ignore */ }
+                    }
+                    loader.__lhuFluidRuntime = null;
+                }
+
+                function startLoadingFluid(loader) {
+                    stopLoadingFluid(loader);
+                    const canvas = loader.querySelector('.lhu-3d-loading-fluid');
+                    if (!canvas) return;
+                    const runtime = { stopped: false, raf: 0, renderer: null, resizeObserver: null, lastFrame: 0 };
+                    loader.__lhuFluidRuntime = runtime;
+
+                    Promise.all([
+                        import('three'),
+                        import('three/addons/objects/MarchingCubes.js')
+                    ]).then(([THREE, addon]) => {
+                        if (runtime.stopped || !loader.isConnected || loader.classList.contains('is-loaded')) return;
+                        const { MarchingCubes } = addon;
+                        const width = Math.max(1, loader.clientWidth);
+                        const height = Math.max(1, loader.clientHeight);
+                        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'low-power' });
+                        runtime.renderer = renderer;
+                        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+                        renderer.setSize(width, height, false);
+                        renderer.setClearColor(0x000000, 0);
+                        if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+                        const scene = new THREE.Scene();
+                        const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 40);
+                        camera.position.set(0, 0, 4.6);
+                        scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+                        const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+                        keyLight.position.set(2.5, 3.5, 4.0);
+                        scene.add(keyLight);
+                        const rimLight = new THREE.PointLight(0x9b9b9b, 1.15, 9);
+                        rimLight.position.set(-2.7, -1.2, -1.8);
+                        scene.add(rimLight);
+
+                        const liquidMaterial = new THREE.MeshPhongMaterial({
+                            color: 0xc9c9c9,
+                            specular: 0xfafafa,
+                            shininess: 95,
+                            transparent: true,
+                            opacity: 0.92
+                        });
+                        const fluid = new MarchingCubes(26, liquidMaterial, false, false, 18000);
+                        fluid.scale.set(2.55, 2.55, 2.55);
+                        scene.add(fluid);
+
+                        const resize = () => {
+                            if (runtime.stopped) return;
+                            const w = Math.max(1, loader.clientWidth);
+                            const h = Math.max(1, loader.clientHeight);
+                            camera.aspect = w / h;
+                            camera.updateProjectionMatrix();
+                            renderer.setSize(w, h, false);
+                        };
+                        if (typeof ResizeObserver !== 'undefined') {
+                            runtime.resizeObserver = new ResizeObserver(resize);
+                            runtime.resizeObserver.observe(loader);
+                        } else {
+                            window.addEventListener('resize', resize, { passive: true });
+                            runtime.resizeObserver = { disconnect: () => window.removeEventListener('resize', resize) };
+                        }
+
+                        const blobCount = 8;
+                        const subtract = 12;
+                        const strength = 1.2 / ((Math.sqrt(blobCount) - 1) / 4 + 1);
+                        const startedAt = performance.now();
+                        const renderFrame = now => {
+                            if (runtime.stopped || !loader.isConnected || !modelLightbox || modelLightbox.hidden || loader.classList.contains('is-loaded') || loader.classList.contains('has-error')) {
+                                stopLoadingFluid(loader);
+                                return;
+                            }
+                            if (!runtime.lastFrame || now - runtime.lastFrame >= 1000 / 30) {
+                                const time = (now - startedAt) * 0.001;
+                                fluid.reset();
+                                for (let i = 0; i < blobCount; i++) {
+                                    const phase = i * 0.72;
+                                    const x = Math.sin(phase + 1.18 * time * (1.0 + 0.16 * Math.cos(i * 0.37))) * 0.23 + 0.5;
+                                    const y = Math.sin(phase * 1.31 + time * (0.72 + 0.06 * i)) * 0.22 + 0.5;
+                                    const z = Math.cos(phase + time * (0.48 + 0.035 * i)) * 0.23 + 0.5;
+                                    fluid.addBall(x, y, z, strength, subtract);
+                                }
+                                fluid.update();
+                                fluid.rotation.x = Math.sin(time * 0.31) * 0.12;
+                                fluid.rotation.y = time * 0.16;
+                                renderer.render(scene, camera);
+                                runtime.lastFrame = now;
+                            }
+                            runtime.raf = requestAnimationFrame(renderFrame);
+                        };
+                        runtime.raf = requestAnimationFrame(renderFrame);
+                    }).catch(err => {
+                        // The 40 text rows keep moving if WebGL or the addon cannot initialize.
+                        loader.classList.add('fluid-unavailable');
+                        console.warn('LHU MarchingCubes loading visual unavailable; animated LOADING rows remain active.', err);
+                    });
+                }
 
                 /* ------------------------------------------------
                    Datenmodell
@@ -609,23 +702,28 @@
                     modelLightbox.setAttribute('aria-modal', 'true');
                     modelLightbox.setAttribute('aria-label', 'Interaktive 3D-Modellansicht');
                     modelLightbox.innerHTML = `<div class="lhu-3d-lightbox__panel">
-                        <div class="lhu-3d-loading-frame" role="status" aria-live="polite">
-                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--top"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · LOADING · </span></div></div>
-                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--bottom"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · LOADING · </span></div></div>
-                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--left"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · </span></div></div>
-                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--right"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · </span></div></div>
-                            <div class="lhu-3d-loading-frame__center">
-                                <span class="lhu-3d-loading-frame__code">[ LHU / 3D DATA STREAM ]</span>
-                                <strong class="lhu-3d-loading-frame__title">LOADING</strong>
-                                <span class="lhu-3d-loading-frame__sub">INITIALIZING GEOMETRY</span>
-                                <span class="lhu-3d-loading-frame__bar"><span>[</span><span>###</span><span>]</span></span>
-                            </div>
+                        <div class="lhu-3d-loading-frame" role="status" aria-label="3D-Modell wird geladen" aria-live="polite">
+                            <canvas class="lhu-3d-loading-fluid" aria-hidden="true"></canvas>
+                            <div class="lhu-3d-loading-lines" aria-hidden="true"></div>
                         </div>
                         <button type="button" class="lhu-3d-lightbox__close" aria-label="3D-Ansicht schließen">×</button>
                         <div class="lhu-3d-lightbox__tools"><button type="button" data-zoom="out" aria-label="Herauszoomen">−</button><button type="button" data-zoom="in" aria-label="Hineinzoomen">+</button><button type="button" data-zoom="reset" aria-label="Ansicht zurücksetzen">↺</button></div>
                     </div>`;
+                    const loadingLines = modelLightbox.querySelector('.lhu-3d-loading-lines');
+                    const lineText = 'LOADING LOADING LOADING LOADING LOADING LOADING LOADING LOADING ';
+                    loadingLines.innerHTML = Array.from({ length: 40 }, (_, i) => {
+                        const speed = 10.5 + (i % 6) * 1.15;
+                        const delay = -(i * 0.27).toFixed(2);
+                        const direction = i % 2 === 0 ? '' : ' is-reversed';
+                        return `<div class="lhu-3d-loading-row${direction}" style="--row-speed:${speed}s;--row-delay:${delay}s"><div class="lhu-3d-loading-row__track"><span>${lineText}</span><span aria-hidden="true">${lineText}</span><span aria-hidden="true">${lineText}</span></div></div>`;
+                    }).join('');
                     document.body.appendChild(modelLightbox);
-                    const close = () => { modelLightbox.hidden = true; if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; } };
+                    const close = () => {
+                        const loadingFrame = modelLightbox.querySelector('.lhu-3d-loading-frame');
+                        stopLoadingFluid(loadingFrame);
+                        modelLightbox.hidden = true;
+                        if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
+                    };
                     modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
                     modelLightbox.addEventListener('click', e => { if (e.target === modelLightbox) close(); });
                     modelLightbox.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
@@ -644,13 +742,13 @@
                     const box = ensureModelLightbox();
                     const panel = box.querySelector('.lhu-3d-lightbox__panel');
                     const loader = panel.querySelector('.lhu-3d-loading-frame');
-                    const loaderTitle = loader.querySelector('.lhu-3d-loading-frame__title');
-                    const loaderSub = loader.querySelector('.lhu-3d-loading-frame__sub');
+                    const lineTracks = loader.querySelectorAll('.lhu-3d-loading-row__track span');
+                    const lineText = 'LOADING LOADING LOADING LOADING LOADING LOADING LOADING LOADING ';
 
                     if (modelLightboxViewer) modelLightboxViewer.remove();
-                    loader.classList.remove('is-loaded', 'has-error');
-                    loaderTitle.textContent = 'LOADING';
-                    loaderSub.textContent = `LOADING ${String(label || 'MODEL').toUpperCase()}`;
+                    loader.classList.remove('is-loaded', 'has-error', 'fluid-unavailable');
+                    lineTracks.forEach(span => { span.textContent = lineText; });
+                    startLoadingFluid(loader);
 
                     const viewer = document.createElement('model-viewer');
                     viewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
@@ -664,13 +762,14 @@
 
                     viewer.addEventListener('load', () => {
                         if (modelLightboxViewer !== viewer) return;
+                        stopLoadingFluid(loader);
                         loader.classList.add('is-loaded');
                     }, { once: true });
                     viewer.addEventListener('error', () => {
                         if (modelLightboxViewer !== viewer) return;
+                        stopLoadingFluid(loader);
                         loader.classList.add('has-error');
-                        loaderTitle.textContent = 'LOAD ERROR';
-                        loaderSub.textContent = 'MODEL COULD NOT BE LOADED';
+                        lineTracks.forEach(span => { span.textContent = 'MODEL COULD NOT BE LOADED · MODEL COULD NOT BE LOADED · '; });
                     }, { once: true });
 
                     modelLightboxViewer = viewer;
@@ -690,7 +789,10 @@
                    Cleanup (registriert beim Menü)
                    ------------------------------------------------ */
                 function projectsCleanup() {
-                    if (modelLightbox) modelLightbox.hidden = true;
+                    if (modelLightbox) {
+                        stopLoadingFluid(modelLightbox.querySelector('.lhu-3d-loading-frame'));
+                        modelLightbox.hidden = true;
+                    }
                     if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
                     activeModelViewers.forEach(mv => {
                         try {
