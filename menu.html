@@ -397,52 +397,31 @@
             text-transform: uppercase;
         }
 
-        /* ---------- DOOR OVERLAY ---------- */
-        #door-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            pointer-events: none;
-            overflow: hidden;
-        }
+        /* ========== METALLTÜR & KACHELN ========== */
+        #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
         #door-overlay.closed { pointer-events: all; }
-        #door-overlay .door-panel {
-            position: absolute; inset: 0;
-            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
-            will-change: transform;
-            backface-visibility: hidden;
-            background-color: var(--door-bg);
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            padding: 2vw;
-            gap: 1.5vw;
+        
+        #door-overlay .door-panel { 
+            position: absolute; inset: 0; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; will-change: transform; backface-visibility: hidden; 
+            background-color: var(--door-bg); 
+            display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(4, 1fr); padding: 2vw; gap: 1.5vw;   
         }
+
         .door-tile {
-            background-image: url('pixelart/pixelart_vedran.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            width: 100%; height: 100%;
-            transform: perspective(400px)
-                       translate(var(--t-tx, 0px), var(--t-ty, 0px))
-                       rotate(var(--t-rot, 0deg))
-                       rotateY(var(--t-rotY, 0deg))
-                       skewX(var(--t-skx, 0deg))
-                       scale(var(--t-sx, 1), var(--t-sy, 1));
+            background-image: url('pixelart/pixelart_vedran.png'); background-size: contain; background-position: center center; background-repeat: no-repeat; width: 100%; height: 100%;
+            transform: perspective(400px) translate(var(--t-tx, 0px), var(--t-ty, 0px)) rotate(var(--t-rot, 0deg)) rotateY(var(--t-rotY, 0deg)) skewX(var(--t-skx, 0deg)) scale(var(--t-sx, 1), var(--t-sy, 1));
             filter: var(--t-fil, none);
             will-change: transform, filter;
-            transition-delay: var(--t-delay, 0ms);
         }
+        
         @media (max-width: 768px) {
-            #door-overlay .door-panel {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(4, 1fr);
-                padding: 4vw;
-                gap: 3vw;
-            }
+            #door-overlay .door-panel { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); padding: 4vw; gap: 3vw; }
             .door-tile:nth-child(n+9) { display: none; }
         }
-        #door-overlay.closed .door-panel { transform: translate3d(0, 0, 0); }
-        #door-overlay.open   .door-panel { transform: translate3d(0, -120%, 0); }
+
+        #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
+        #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
+
 
         /* ---------- PROJECTS: BILDER STABIL ZENTRIERT ---------- */
         main#mainContent #projects-accordion .carousel-stage {
@@ -691,18 +670,13 @@
                 if (vhsImageObserver) { vhsImageObserver.disconnect(); vhsImageObserver = null; }
             }
 
-            /* --------------------------------------------------------
-               1. DOOR TILES (mit Diagonal-Stagger)
-               -------------------------------------------------------- */
+            /* 1. Türen (Tiles) initialisieren */
             const doorPanel = document.querySelector('.door-panel');
             if (doorPanel) {
                 const fragment = document.createDocumentFragment();
                 for (let i = 0; i < 32; i++) {
                     const tile = document.createElement('div');
                     tile.className = 'door-tile';
-                    const row = Math.floor(i / 8);
-                    const col = i % 8;
-                    tile.style.setProperty('--t-delay', `${(row + col) * 28}ms`);
                     fragment.appendChild(tile);
                 }
                 doorPanel.appendChild(fragment);
@@ -984,7 +958,7 @@
                             door.classList.add('open');
                         }, 150);
                     }
-                }, 900);
+                }, 1200);
             }
 
             /* --------------------------------------------------------
@@ -1281,7 +1255,7 @@
                     door.classList.add('open');
                     triggerCategoryChange('ABOUT');
                 }
-            }, 120);
+            }, 100);
         });
     </script>
 </body>
