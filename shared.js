@@ -314,7 +314,7 @@
 
                 function percentFromScale(scale) {
                     if (scale <= 1) {
-                        if (fitScale >= 0.9999) return 0;
+                        if (fitScale >= 0.9999) return scale >= 0.9999 ? 100 : 0;
                         return clamp(((scale - fitScale) / (1 - fitScale)) * 100, 0, 100);
                     }
                     return clamp(scale * 100, 100, LHU_ZOOM_MAX_PERCENT);
@@ -424,11 +424,8 @@
                 plus.addEventListener('click', () => setZoomPercent(zoomPercent + 25));
                 fit.addEventListener('click', fitToWindow);
 
-                percentInput.addEventListener('input', () => {
-                    if (percentInput.value === '') return;
-                    const value = Number(percentInput.value);
-                    if (Number.isFinite(value)) setZoomPercent(clamp(value, 0, LHU_ZOOM_MAX_PERCENT));
-                });
+                // Apply typed percentages when editing is committed, not on every keystroke.
+                // Otherwise render() rewrites the field while a multi-digit value is being entered.
                 percentInput.addEventListener('change', () => {
                     const value = percentInput.value === '' ? zoomPercent : Number(percentInput.value);
                     setZoomPercent(Number.isFinite(value) ? value : zoomPercent);

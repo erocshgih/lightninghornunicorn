@@ -729,8 +729,23 @@ select:focus-visible,
         }
         main#mainContent .lhu-image-frame--carousel {
             width: 100%;
-            height: 100%;
+            height: auto;
+            min-height: 0;
             margin: 0;
+            align-self: start;
+        }
+        /* Keep ABOUT carousel slides layered. The shared image-frame rule has
+           higher specificity than the page-local slide rule, so restate the
+           inactive/active positioning with matching shared specificity. */
+        main#mainContent .profile-carousel .carousel-slide.lhu-image-frame--carousel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: auto;
+            margin: 0;
+        }
+        main#mainContent .profile-carousel .carousel-slide.lhu-image-frame--carousel.active {
+            position: relative;
         }
         main#mainContent .profile-carousel .lhu-image-frame--carousel > img {
             width: 100%;
