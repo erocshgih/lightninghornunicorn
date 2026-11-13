@@ -264,7 +264,18 @@
             const stripWrapper = document.getElementById('stripWrapper');
             const sliderWrap = document.getElementById('sliderWrap');
             const headerEl = document.getElementById('headerEl');
-            let isCollapsed = false;
+            let categoriesOpen = false;
+            const categoryPanel = document.getElementById('categorySpherePanel');
+            const duckMenuLabel = collapseBtn?.querySelector('.duck-menu-label');
+            function setCategoryMenuOpen(open) {
+                categoriesOpen = Boolean(open);
+                categoryPanel?.classList.toggle('is-closed', !categoriesOpen);
+                categoryPanel?.setAttribute('aria-hidden', String(!categoriesOpen));
+                collapseBtn.setAttribute('aria-expanded', String(categoriesOpen));
+                collapseBtn.setAttribute('aria-label', categoriesOpen ? 'Kategorien schließen' : 'Kategorien öffnen');
+                collapseBtn.title = categoriesOpen ? 'Close categories' : 'Click for categories';
+                if (duckMenuLabel) duckMenuLabel.textContent = categoriesOpen ? 'CLOSE CATEGORIES' : 'CLICK FOR CATEGORIES';
+            }
 
             const quackFiles = ['quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3'];
             let quackQueue = [];
@@ -280,10 +291,10 @@
                     quackAudio.currentTime = 0;
                     quackAudio.play().catch(() => {});
                 }
-                isCollapsed = !isCollapsed;
-                headerEl.classList.toggle('collapsed', isCollapsed);
-                stripWrapper.classList.toggle('collapsed', isCollapsed);
-                sliderWrap.classList.toggle('collapsed', isCollapsed);
+                setCategoryMenuOpen(!categoriesOpen);
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && categoriesOpen) setCategoryMenuOpen(false);
             });
 
             /* --------------------------------------------------------
@@ -836,6 +847,13 @@
                     item.classList.toggle('active', isActive);
                     item.setAttribute('aria-current', isActive ? 'page' : 'false');
                 });
+                document.querySelectorAll('.sphere-category').forEach(item => {
+                    const isActive = item.getAttribute('data-cat') === cat;
+                    item.classList.toggle('active', isActive);
+                    item.setAttribute('aria-current', isActive ? 'page' : 'false');
+                });
+                const categoryLabel = document.getElementById('categorySphereLabel');
+                if (categoryLabel) categoryLabel.textContent = cat;
 
                 categoryTransitionTimer = window.setTimeout(async () => {
                     if (loadToken !== categoryLoadToken) return;
@@ -1007,6 +1025,32 @@
                 });
             }
             track.appendChild(trackFragment);
+
+            // The visible category navigation is a compact field of material spheres.
+            const sphereGrid = document.getElementById('categorySphereGrid');
+            const sphereLabel = document.getElementById('categorySphereLabel');
+            if (sphereGrid) {
+                CATS.forEach((cat, index) => {
+                    const sphere = document.createElement('button');
+                    sphere.type = 'button';
+                    sphere.className = `sphere-category sphere-material-${index + 1}`;
+                    sphere.dataset.cat = cat;
+                    sphere.setAttribute('aria-label', `Kategorie ${cat} öffnen`);
+                    sphere.setAttribute('aria-current', 'false');
+                    sphere.innerHTML = `<span class="sphere-category-name">${cat}</span>`;
+                    const showName = () => { if (sphereLabel) sphereLabel.textContent = cat; };
+                    sphere.addEventListener('pointerenter', showName);
+                    sphere.addEventListener('focus', showName);
+                    sphere.addEventListener('click', () => {
+                        showName();
+                        triggerCategoryChange(cat);
+                    });
+                    sphereGrid.appendChild(sphere);
+                });
+                sphereGrid.addEventListener('pointerleave', () => {
+                    if (sphereLabel) sphereLabel.textContent = currentCategory || 'SELECT YOUR CATEGORY';
+                });
+            }
 
             /* --------------------------------------------------------
                7. PHYSIK & SLIDER
