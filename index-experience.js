@@ -126,8 +126,50 @@
         ];
 
         const loadingEl = document.getElementById("index-loading");
-        function startLoading() { loadingEl.classList.add("show"); }
-        function stopLoading() { loadingEl.classList.remove("show"); }
+        const hypnoAsciiCanvas = document.getElementById("index-hypno-ascii");
+        const hypnoAsciiCtx = hypnoAsciiCanvas ? hypnoAsciiCanvas.getContext("2d", { alpha: true }) : null;
+        const hypnoSourceCanvas = document.createElement("canvas");
+        hypnoSourceCanvas.width = hypnoSourceCanvas.height = 256;
+        const hypnoSourceCtx = hypnoSourceCanvas.getContext("2d", { willReadFrequently: true });
+        const hypnoSvgImage = new Image(); // SVG stays in memory; it is never inserted or shown as an image.
+        hypnoSvgImage.src = "hypnoload.svg";
+        let hypnoAsciiRAF = 0;
+        let hypnoAsciiStartedAt = 0;
+        hypnoSvgImage.onload = () => { if (loadingEl.classList.contains("show")) startHypnoAscii(); };
+        function renderHypnoAscii(now) {
+            if (!hypnoAsciiCtx || !hypnoSourceCtx || !hypnoSvgImage.complete || !hypnoSvgImage.naturalWidth || !loadingEl.classList.contains("show")) return;
+            const w = hypnoSourceCanvas.width, h = hypnoSourceCanvas.height;
+            const t = (now - hypnoAsciiStartedAt) / 1000;
+            hypnoSourceCtx.clearRect(0, 0, w, h);
+            hypnoSourceCtx.save();
+            hypnoSourceCtx.translate(w / 2, h / 2);
+            hypnoSourceCtx.rotate(t * (Math.PI * 2 / 0.65));
+            const scale = Math.min(w / hypnoSvgImage.naturalWidth, h / hypnoSvgImage.naturalHeight);
+            const dw = hypnoSvgImage.naturalWidth * scale, dh = hypnoSvgImage.naturalHeight * scale;
+            hypnoSourceCtx.drawImage(hypnoSvgImage, -dw / 2, -dh / 2, dw, dh);
+            hypnoSourceCtx.restore();
+            const pixels = hypnoSourceCtx.getImageData(0, 0, w, h).data;
+            const cols = 52, rows = 52, cw = hypnoAsciiCanvas.width / cols, ch = hypnoAsciiCanvas.height / rows;
+            const glyphs = " .,:;irsXA253hMHGS#9B&@";
+            hypnoAsciiCtx.clearRect(0, 0, hypnoAsciiCanvas.width, hypnoAsciiCanvas.height);
+            hypnoAsciiCtx.textAlign = "center"; hypnoAsciiCtx.textBaseline = "middle";
+            hypnoAsciiCtx.font = `${Math.max(5, Math.floor(ch * 0.92))}px monospace`;
+            for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+                const sx = Math.min(w - 1, Math.floor((x + .5) / cols * w));
+                const sy = Math.min(h - 1, Math.floor((y + .5) / rows * h));
+                const k = (sy * w + sx) * 4, a = pixels[k + 3] / 255;
+                if (a < .08) continue;
+                const lum = (pixels[k] * .2126 + pixels[k + 1] * .7152 + pixels[k + 2] * .0722) / 255;
+                const idx = Math.max(0, Math.min(glyphs.length - 1, Math.round(lum * (glyphs.length - 1))));
+                const alpha = a * (.20 + lum * .78);
+                hypnoAsciiCtx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
+                hypnoAsciiCtx.fillText(glyphs[idx], (x + .5) * cw, (y + .5) * ch);
+            }
+            hypnoAsciiRAF = requestAnimationFrame(renderHypnoAscii);
+        }
+        function startHypnoAscii() { cancelAnimationFrame(hypnoAsciiRAF); hypnoAsciiStartedAt = performance.now(); hypnoAsciiRAF = requestAnimationFrame(renderHypnoAscii); }
+        function startLoading() { loadingEl.classList.add("show"); if (hypnoSvgImage.complete && hypnoSvgImage.naturalWidth) startHypnoAscii(); }
+        function stopLoading() { loadingEl.classList.remove("show"); cancelAnimationFrame(hypnoAsciiRAF); hypnoAsciiRAF = 0; }
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);

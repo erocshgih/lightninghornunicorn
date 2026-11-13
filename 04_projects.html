@@ -346,7 +346,7 @@
             .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.48); color: #f3f3f3; opacity: 1; visibility: visible; transition: opacity .42s ease, visibility .42s ease; pointer-events: none; font-family: 'Courier New', monospace; }
             .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; }
             .lhu-3d-loading-frame.has-error { background: rgba(0,0,0,.72); color: #ffbaba; }
-            .lhu-3d-loading-fluid { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; opacity: .82; }
+            .lhu-3d-loading-fluid { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; opacity: .95; pointer-events: none; mix-blend-mode: screen; }
             .lhu-3d-loading-lines { position: absolute; inset: 1.2% 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
             .lhu-3d-loading-row { display: flex; align-items: center; flex: 1 1 0; min-height: 0; width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(8px, 1.02vw, 13px); line-height: 1; font-weight: 600; letter-spacing: .055em; text-shadow: 0 0 5px rgba(255,255,255,.2); opacity: .48; }
             .lhu-3d-loading-row__track { display: inline-flex; flex: 0 0 auto; width: max-content; will-change: transform; animation: lhuLoadingRowFlow var(--row-speed, 13s) linear var(--row-delay, 0s) infinite; }
@@ -402,17 +402,14 @@
                 // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
                 ensureModelViewer();
 
-                /* Fluid-Loading-Visual: offizielles Three.js MarchingCubes-Addon.
-                   Das Canvas sitzt unter den 40 bewegten LOADING-Zeilen und läuft nur während des GLB-Ladevorgangs. */
+                /* Fluid-ASCII-Loading: 2D metaball field translated directly into LOADING glyphs.
+                   No WebGL, no 3D mesh: the fluid exists only as a moving ASCII luminance field. */
                 function stopLoadingFluid(loader) {
                     const runtime = loader && loader.__lhuFluidRuntime;
                     if (!runtime) return;
                     runtime.stopped = true;
                     if (runtime.raf) cancelAnimationFrame(runtime.raf);
                     if (runtime.resizeObserver) runtime.resizeObserver.disconnect();
-                    if (runtime.renderer) {
-                        try { runtime.renderer.dispose(); } catch (_) { /* ignore */ }
-                    }
                     loader.__lhuFluidRuntime = null;
                 }
 
@@ -420,95 +417,61 @@
                     stopLoadingFluid(loader);
                     const canvas = loader.querySelector('.lhu-3d-loading-fluid');
                     if (!canvas) return;
-                    const runtime = { stopped: false, raf: 0, renderer: null, resizeObserver: null, lastFrame: 0 };
+                    const ctx = canvas.getContext('2d', { alpha: true });
+                    if (!ctx) return;
+                    const runtime = { stopped: false, raf: 0, lastFrame: 0 };
                     loader.__lhuFluidRuntime = runtime;
-
-                    Promise.all([
-                        import('three'),
-                        import('three/addons/objects/MarchingCubes.js')
-                    ]).then(([THREE, addon]) => {
-                        if (runtime.stopped || !loader.isConnected || loader.classList.contains('is-loaded')) return;
-                        const { MarchingCubes } = addon;
-                        const width = Math.max(1, loader.clientWidth);
-                        const height = Math.max(1, loader.clientHeight);
-                        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'low-power' });
-                        runtime.renderer = renderer;
-                        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
-                        renderer.setSize(width, height, false);
-                        renderer.setClearColor(0x000000, 0);
-                        if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-                        const scene = new THREE.Scene();
-                        const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 40);
-                        camera.position.set(0, 0, 4.6);
-                        scene.add(new THREE.AmbientLight(0xffffff, 0.72));
-                        const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
-                        keyLight.position.set(2.5, 3.5, 4.0);
-                        scene.add(keyLight);
-                        const rimLight = new THREE.PointLight(0x9b9b9b, 1.15, 9);
-                        rimLight.position.set(-2.7, -1.2, -1.8);
-                        scene.add(rimLight);
-
-                        const liquidMaterial = new THREE.MeshPhongMaterial({
-                            color: 0xc9c9c9,
-                            specular: 0xfafafa,
-                            shininess: 95,
-                            transparent: true,
-                            opacity: 0.92
-                        });
-                        const fluid = new MarchingCubes(26, liquidMaterial, false, false, 18000);
-                        fluid.scale.set(2.55, 2.55, 2.55);
-                        scene.add(fluid);
-
-                        const resize = () => {
-                            if (runtime.stopped) return;
-                            const w = Math.max(1, loader.clientWidth);
-                            const h = Math.max(1, loader.clientHeight);
-                            camera.aspect = w / h;
-                            camera.updateProjectionMatrix();
-                            renderer.setSize(w, h, false);
-                        };
-                        if (typeof ResizeObserver !== 'undefined') {
-                            runtime.resizeObserver = new ResizeObserver(resize);
-                            runtime.resizeObserver.observe(loader);
-                        } else {
-                            window.addEventListener('resize', resize, { passive: true });
-                            runtime.resizeObserver = { disconnect: () => window.removeEventListener('resize', resize) };
+                    const resize = () => {
+                        const rect = loader.getBoundingClientRect();
+                        const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+                        canvas.width = Math.max(1, Math.round(rect.width * dpr));
+                        canvas.height = Math.max(1, Math.round(rect.height * dpr));
+                        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    };
+                    resize();
+                    if (typeof ResizeObserver !== 'undefined') {
+                        runtime.resizeObserver = new ResizeObserver(resize);
+                        runtime.resizeObserver.observe(loader);
+                    } else {
+                        window.addEventListener('resize', resize, { passive: true });
+                        runtime.resizeObserver = { disconnect: () => window.removeEventListener('resize', resize) };
+                    }
+                    const glyphs = ' .:LOADING';
+                    const render = now => {
+                        if (runtime.stopped || !loader.isConnected || !modelLightbox || modelLightbox.hidden || loader.classList.contains('is-loaded') || loader.classList.contains('has-error')) {
+                            stopLoadingFluid(loader); return;
                         }
-
-                        const blobCount = 8;
-                        const subtract = 12;
-                        const strength = 1.2 / ((Math.sqrt(blobCount) - 1) / 4 + 1);
-                        const startedAt = performance.now();
-                        const renderFrame = now => {
-                            if (runtime.stopped || !loader.isConnected || !modelLightbox || modelLightbox.hidden || loader.classList.contains('is-loaded') || loader.classList.contains('has-error')) {
-                                stopLoadingFluid(loader);
-                                return;
-                            }
-                            if (!runtime.lastFrame || now - runtime.lastFrame >= 1000 / 30) {
-                                const time = (now - startedAt) * 0.001;
-                                fluid.reset();
-                                for (let i = 0; i < blobCount; i++) {
-                                    const phase = i * 0.72;
-                                    const x = Math.sin(phase + 1.18 * time * (1.0 + 0.16 * Math.cos(i * 0.37))) * 0.23 + 0.5;
-                                    const y = Math.sin(phase * 1.31 + time * (0.72 + 0.06 * i)) * 0.22 + 0.5;
-                                    const z = Math.cos(phase + time * (0.48 + 0.035 * i)) * 0.23 + 0.5;
-                                    fluid.addBall(x, y, z, strength, subtract);
+                        if (!runtime.lastFrame || now - runtime.lastFrame >= 1000 / 24) {
+                            const width = Math.max(1, loader.clientWidth), height = Math.max(1, loader.clientHeight);
+                            ctx.clearRect(0, 0, width, height);
+                            const cellW = 8, cellH = 12;
+                            const cols = Math.ceil(width / cellW), rows = Math.ceil(height / cellH);
+                            const time = now * .00045;
+                            ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                            for (let gy = 0; gy < rows; gy++) {
+                                for (let gx = 0; gx < cols; gx++) {
+                                    const nx = (gx + .5) / cols, ny = (gy + .5) / rows;
+                                    let field = 0;
+                                    for (let b = 0; b < 5; b++) {
+                                        const phase = b * 1.2566;
+                                        const bx = .5 + Math.sin(time * (1.0 + b * .09) + phase) * .20;
+                                        const by = .5 + Math.cos(time * (.78 + b * .07) + phase * 1.37) * .22;
+                                        const dx = (nx - bx) * 1.05, dy = (ny - by) * .78;
+                                        field += .010 / (dx * dx + dy * dy + .0035);
+                                    }
+                                    const density = Math.max(0, Math.min(1, (field - 1.05) / 2.25));
+                                    if (density < .08) continue;
+                                    const glyphIndex = Math.min(glyphs.length - 1, Math.floor(density * (glyphs.length - 1)));
+                                    const char = glyphs[glyphIndex];
+                                    ctx.fillStyle = `rgba(245,245,245,${(.12 + density * .78).toFixed(3)})`;
+                                    ctx.fillText(char, gx * cellW + cellW / 2, gy * cellH + cellH / 2);
                                 }
-                                fluid.update();
-                                fluid.rotation.x = Math.sin(time * 0.31) * 0.12;
-                                fluid.rotation.y = time * 0.16;
-                                renderer.render(scene, camera);
-                                runtime.lastFrame = now;
                             }
-                            runtime.raf = requestAnimationFrame(renderFrame);
-                        };
-                        runtime.raf = requestAnimationFrame(renderFrame);
-                    }).catch(err => {
-                        // The 40 text rows keep moving if WebGL or the addon cannot initialize.
-                        loader.classList.add('fluid-unavailable');
-                        console.warn('LHU MarchingCubes loading visual unavailable; animated LOADING rows remain active.', err);
-                    });
+                            runtime.lastFrame = now;
+                        }
+                        runtime.raf = requestAnimationFrame(render);
+                    };
+                    runtime.raf = requestAnimationFrame(render);
                 }
 
                 /* ------------------------------------------------
