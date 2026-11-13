@@ -609,7 +609,7 @@ select:focus-visible,
             margin: 0 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
-            animation: hypnoRotate 2.8s linear infinite;
+            animation: hypnoRotate .65s linear infinite;
             filter: drop-shadow(0 0 12px rgba(0, 217, 255, .22));
         }
         #loading .loading-text {
@@ -621,7 +621,7 @@ select:focus-visible,
         }
         @keyframes hypnoRotate { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) {
-            #loading .hypnoload-asset { animation-duration: 12s; }
+            #loading .hypnoload-asset { animation-duration: 2s; }
             #loading { transition: none; }
         }
 

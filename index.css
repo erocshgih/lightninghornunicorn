@@ -231,12 +231,12 @@
             width: clamp(64px, 10vw, 92px);
             height: auto;
             max-width: none;
-            animation: introHypnoRotate 2.8s linear infinite;
+            animation: introHypnoRotate .65s linear infinite;
             filter: drop-shadow(0 0 12px rgba(0, 217, 255, .22));
         }
         @keyframes introHypnoRotate { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) {
-            #index-loading .hypnoload-intro { animation-duration: 12s; }
+            #index-loading .hypnoload-intro { animation-duration: 2s; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
