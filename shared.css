@@ -613,9 +613,7 @@ select:focus-visible,
         .hypnoload-stage { width: clamp(190px, 30vw, 276px); height: clamp(190px, 30vw, 276px); position: relative; display: block; flex: 0 0 auto; overflow: hidden; isolation: isolate; }
         .hypnoload-stage > img { position: absolute; inset: 0; z-index: 1; }
         .hypnoload-stage.ascii-ready > img { opacity: 0; animation: none !important; }
-        .hypnoload-ascii-surface { position: absolute !important; inset: 0 !important; z-index: 2 !important; display: block !important; width: 100% !important; height: 100% !important; overflow: hidden !important; color: #fff !important; background: transparent !important; pointer-events: none !important; transform: none !important; animation: none !important; }
-        .hypnoload-ascii-surface table { border-collapse: collapse !important; border-spacing: 0 !important; margin: 0 !important; padding: 0 !important; color: #fff !important; background: transparent !important; transform: none !important; animation: none !important; }
-        .hypnoload-ascii-surface td { padding: 0 !important; border: 0 !important; color: #fff !important; background: transparent !important; }
+        .hypnoload-ascii-surface { position: absolute !important; inset: 0 !important; z-index: 2 !important; display: block !important; width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; color: #fff !important; background: transparent !important; pointer-events: none !important; transform: none !important; animation: none !important; font-family: 'Courier New', monospace !important; font-weight: 600 !important; letter-spacing: 0 !important; white-space: pre !important; text-align: center !important; text-shadow: 0 0 2px rgba(255,255,255,.22) !important; font-variant-ligatures: none !important; user-select: none !important; }
         #loading .loading-text {
             font-family: var(--font-display);
             font-size: var(--fs-xs);

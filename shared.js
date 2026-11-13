@@ -4,16 +4,25 @@
            ============================================================ */
         document.addEventListener('DOMContentLoaded', () => {
 
-            /* HYPNO ASCII OVERLAY: stationary character grid, rotating SVG texture. */
+            /* HYPNO ASCII OVERLAY: self-contained Canvas renderer.
+               The character grid stays fixed; only the SVG pixels rotate underneath it. */
             (() => {
                 const loaderImages = Array.from(document.querySelectorAll(
                     '#loading .hypnoload-asset, #index-loading .hypnoload-intro'
                 ));
                 if (!loaderImages.length) return;
 
+                const COLS = 67;
+                const ROWS = 40;
+                const CHARS = ' .,:;irsXA253hMHGS#9B&@';
+                const FRAME_INTERVAL = 1000 / 30;
+                const ROTATION_MS = 650;
+
                 const active = img => {
                     const root = img.closest('#loading, #index-loading');
-                    return !!root && root.classList.contains('show') && getComputedStyle(root).display !== 'none';
+                    return !!root && root.classList.contains('show') &&
+                        getComputedStyle(root).display !== 'none' &&
+                        document.visibilityState !== 'hidden';
                 };
 
                 const items = loaderImages.map(img => {
@@ -21,174 +30,139 @@
                     stage.className = 'hypnoload-stage';
                     img.parentNode.insertBefore(stage, img);
                     stage.appendChild(img);
-                    img.classList.add('hypnoload-fallback-spin');
-                    return {
-                        img, stage, effect: null, renderer: null, texture: null,
-                        scene: null, camera: null, plane: null,
-                        raf: 0, started: false, ready: false, starting: false, last: 0
+                    const sample = document.createElement('canvas');
+                    sample.width = COLS;
+                    sample.height = ROWS;
+                    const ctx = sample.getContext('2d', { willReadFrequently: true });
+                    const pre = document.createElement('pre');
+                    pre.className = 'hypnoload-ascii-surface';
+                    pre.setAttribute('aria-hidden', 'true');
+                    pre.setAttribute('role', 'presentation');
+                    stage.appendChild(pre);
+
+                    const item = {
+                        img, stage, sample, ctx, pre,
+                        raf: 0, started: false, starting: false, ready: false,
+                        startedAt: 0, lastDraw: 0,
+                        setLayout() {
+                            const rect = stage.getBoundingClientRect();
+                            const fontSize = Math.max(4, rect.height / ROWS);
+                            pre.style.fontSize = `${fontSize}px`;
+                            pre.style.lineHeight = `${fontSize}px`;
+                        }
                     };
+                    return item;
                 });
 
-                /*
-                 * AsciiEffect.js imports the bare module name "three".
-                 * index.html provides an import map for this exact version.
-                 * Using the same Three.js revision as the intro avoids mismatched addons.
-                 */
-                let threePromise = null;
-                const loadThree = () => threePromise || (threePromise = Promise.all([
-                    import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'),
-                    import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/effects/AsciiEffect.js')
-                ]).then(([THREE, ascii]) => ({ THREE, AsciiEffect: ascii.AsciiEffect })).catch(err => {
-                    console.warn('LHU ASCII overlay could not load. The rotating SVG fallback remains active.', err);
-                    threePromise = null;
-                    return null;
-                }));
+                function drawAscii(item, angle) {
+                    const { ctx, img, pre } = item;
+                    ctx.clearRect(0, 0, COLS, ROWS);
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
 
-                async function prepare(item) {
-                    const libs = await loadThree();
-                    if (!libs || !active(item.img)) return false;
+                    // Work in a square logical coordinate system, then compensate for
+                    // the narrow width of monospace glyphs. This keeps the spiral round.
+                    ctx.save();
+                    ctx.translate(COLS / 2, ROWS / 2);
+                    ctx.scale(COLS / ROWS, 1);
+                    ctx.rotate(angle);
+                    ctx.drawImage(img, -ROWS / 2, -ROWS / 2, ROWS, ROWS);
+                    ctx.restore();
 
-                    if (typeof item.img.decode === 'function') {
-                        try { await item.img.decode(); } catch (_) { /* load event / naturalWidth below is authoritative */ }
-                    }
-                    if (!item.img.complete || !item.img.naturalWidth) {
-                        await new Promise((resolve, reject) => {
-                            item.img.addEventListener('load', resolve, { once: true });
-                            item.img.addEventListener('error', reject, { once: true });
-                        });
+                    let pixels;
+                    try {
+                        pixels = ctx.getImageData(0, 0, COLS, ROWS).data;
+                    } catch (err) {
+                        throw new Error(`ASCII pixel sampling failed: ${err.message}`);
                     }
 
-                    const { THREE, AsciiEffect } = libs;
-                    const rect = item.stage.getBoundingClientRect();
-                    const size = Math.max(190, Math.min(276, Math.round(rect.width || 276)));
-                    const renderer = new THREE.WebGLRenderer({
-                        alpha: true,
-                        antialias: false,
-                        powerPreference: 'low-power',
-                        preserveDrawingBuffer: true
-                    });
-                    renderer.setPixelRatio(1);
-                    renderer.setClearColor(0x000000, 0);
-                    renderer.domElement.style.backgroundColor = 'transparent';
-                    renderer.domElement.style.color = '#fff';
-
-                    const scene = new THREE.Scene();
-                    scene.background = null;
-                    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
-                    camera.position.z = 2;
-
-                    const texture = new THREE.Texture(item.img);
-                    texture.colorSpace = THREE.SRGBColorSpace;
-                    texture.minFilter = THREE.LinearFilter;
-                    texture.magFilter = THREE.LinearFilter;
-                    texture.needsUpdate = true;
-
-                    const material = new THREE.MeshBasicMaterial({
-                        map: texture,
-                        transparent: true,
-                        alphaTest: 0.001,
-                        depthWrite: false,
-                        side: THREE.DoubleSide
-                    });
-                    const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
-                    scene.add(plane);
-
-                    const effect = new AsciiEffect(renderer, ' .:-=+*#%@', {
-                        invert: false,
-                        resolution: 0.20,
-                        scale: 1,
-                        color: false,
-                        alpha: true
-                    });
-                    effect.setSize(size, size);
-
-                    const asciiSurface = effect.domElement;
-                    asciiSurface.className = 'hypnoload-ascii-surface';
-                    Object.assign(asciiSurface.style, {
-                        position: 'absolute',
-                        inset: '0',
-                        display: 'block',
-                        width: '100%',
-                        height: '100%',
-                        overflow: 'hidden',
-                        color: '#fff',
-                        backgroundColor: 'transparent',
-                        fontFamily: '"Courier New", monospace',
-                        textAlign: 'center',
-                        pointerEvents: 'none',
-                        transform: 'none',
-                        animation: 'none',
-                        zIndex: '2'
-                    });
-                    const table = asciiSurface.querySelector('table');
-                    if (table) {
-                        Object.assign(table.style, {
-                            borderCollapse: 'collapse',
-                            borderSpacing: '0',
-                            margin: '0',
-                            padding: '0',
-                            color: '#fff',
-                            backgroundColor: 'transparent'
-                        });
+                    const lines = new Array(ROWS);
+                    let p = 0;
+                    for (let y = 0; y < ROWS; y++) {
+                        let line = '';
+                        for (let x = 0; x < COLS; x++, p += 4) {
+                            const alpha = pixels[p + 3];
+                            if (alpha < 28) {
+                                line += ' ';
+                                continue;
+                            }
+                            const luminance = (pixels[p] * 0.2126 + pixels[p + 1] * 0.7152 + pixels[p + 2] * 0.0722) / 255;
+                            if (luminance < 0.09) {
+                                line += ' ';
+                            } else {
+                                const index = Math.min(CHARS.length - 1, Math.max(0, Math.round(luminance * (CHARS.length - 1))));
+                                line += CHARS[index];
+                            }
+                        }
+                        lines[y] = line;
                     }
-
-                    item.stage.appendChild(asciiSurface);
-                    item.renderer = renderer;
-                    item.texture = texture;
-                    item.scene = scene;
-                    item.camera = camera;
-                    item.plane = plane;
-                    item.effect = effect;
-                    item.ready = true;
-                    item.stage.classList.add('ascii-ready');
-                    return true;
+                    pre.textContent = lines.join('\n');
                 }
 
-                function draw(item, now) {
+                async function prepare(item) {
+                    if (typeof item.img.decode === 'function') {
+                        try { await item.img.decode(); } catch (_) { /* naturalWidth below decides */ }
+                    }
+                    if (!item.img.complete || !item.img.naturalWidth) {
+                        if (item.img.complete && !item.img.naturalWidth) {
+                            throw new Error(`Could not load ${item.img.currentSrc || item.img.src}`);
+                        }
+                        await new Promise((resolve, reject) => {
+                            item.img.addEventListener('load', resolve, { once: true });
+                            item.img.addEventListener('error', () => reject(new Error('hypnoload.svg failed to load')), { once: true });
+                        });
+                    }
+                    if (!item.ctx) throw new Error('Canvas 2D is not available');
+
+                    item.setLayout();
+                    drawAscii(item, 0);
+                    item.stage.classList.add('ascii-ready');
+                    item.ready = true;
+                }
+
+                function stop(item) {
+                    if (item.raf) cancelAnimationFrame(item.raf);
+                    item.raf = 0;
+                    item.started = false;
+                    item.lastDraw = 0;
+                }
+
+                function frame(item, now) {
                     if (!active(item.img)) {
-                        item.raf = 0;
-                        item.started = false;
-                        item.last = 0;
+                        stop(item);
                         return;
                     }
-                    const delta = item.last ? Math.min((now - item.last) / 1000, 0.05) : 0;
-                    item.last = now;
-                    // Rotate only the SVG plane. The ASCII DOM/table is never transformed.
-                    if (item.plane) item.plane.rotation.z += delta * (Math.PI * 2 / 0.65);
-                    if (item.effect) item.effect.render(item.scene, item.camera);
-                    item.raf = requestAnimationFrame(t => draw(item, t));
+                    if (!item.lastDraw || now - item.lastDraw >= FRAME_INTERVAL) {
+                        const elapsed = now - item.startedAt;
+                        const angle = (elapsed / ROTATION_MS) * Math.PI * 2;
+                        drawAscii(item, angle);
+                        item.lastDraw = now;
+                    }
+                    item.raf = requestAnimationFrame(t => frame(item, t));
                 }
 
                 async function start(item) {
                     if (item.started || item.starting || !active(item.img)) return;
                     item.starting = true;
                     try {
-                        if (!item.ready) {
-                            const ok = await prepare(item);
-                            if (!ok) { item.starting = false; return; }
-                        }
-                        if (!active(item.img)) { item.starting = false; return; }
-                        item.last = 0;
+                        if (!item.ready) await prepare(item);
+                        if (!active(item.img)) return;
+                        item.startedAt = performance.now();
+                        item.lastDraw = 0;
                         item.started = true;
-                        item.raf = requestAnimationFrame(t => draw(item, t));
+                        item.raf = requestAnimationFrame(t => frame(item, t));
                     } catch (err) {
                         item.stage.classList.remove('ascii-ready');
-                        item.started = false;
-                        console.warn('LHU ASCII rendering failed. The rotating SVG fallback remains active.', err);
+                        item.ready = false;
+                        console.warn('LHU ASCII renderer unavailable; rotating SVG fallback remains active.', err);
                     } finally {
                         item.starting = false;
                     }
                 }
 
                 const update = () => items.forEach(item => {
-                    if (active(item.img)) {
-                        start(item);
-                    } else if (item.raf) {
-                        cancelAnimationFrame(item.raf);
-                        item.raf = 0;
-                        item.started = false;
-                        item.last = 0;
-                    }
+                    if (active(item.img)) start(item);
+                    else stop(item);
                 });
 
                 const observer = new MutationObserver(update);
@@ -196,14 +170,7 @@
                     observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
                 });
                 document.addEventListener('visibilitychange', update);
-                window.addEventListener('resize', () => {
-                    items.forEach(item => {
-                        if (!item.ready || !item.effect || !active(item.img)) return;
-                        const rect = item.stage.getBoundingClientRect();
-                        const size = Math.max(190, Math.min(276, Math.round(rect.width || 276)));
-                        item.effect.setSize(size, size);
-                    });
-                });
+                window.addEventListener('resize', () => items.forEach(item => item.setLayout()));
                 update();
             })();
 
