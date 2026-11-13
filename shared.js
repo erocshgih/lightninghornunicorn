@@ -201,12 +201,11 @@
                 'DONATE':        'var(--accent)'
             };
 
-            // One shared, pointer-driven image viewer for ABOUT, VHS MULTIVERSE and PROJECTS.
+            // One shared, responsive image viewer for ABOUT, VHS MULTIVERSE and PROJECTS.
+            // 0% = fit to the current viewer area; 100% = natural image size; 700% = 7x natural size.
             let imageLightbox = null;
             let lightboxPreviousFocus = null;
-            let lightboxRequestToken = 0;
-            const LHU_ZOOM_MIN = 1;
-            const LHU_ZOOM_MAX = 5;
+            const LHU_ZOOM_MAX_PERCENT = 700;
 
             function ensureImageLightbox() {
                 if (imageLightbox) return imageLightbox;
@@ -244,80 +243,153 @@
                 minus.type = 'button';
                 minus.className = 'lhu-lightbox__zoom-button';
                 minus.textContent = '−';
-                minus.setAttribute('aria-label', 'Verkleinern');
-                minus.title = 'Verkleinern';
+                minus.setAttribute('aria-label', 'Zoom um 25 Prozentpunkte verringern');
+                minus.title = '−25 Prozentpunkte';
 
-                const readout = document.createElement('output');
-                readout.className = 'lhu-lightbox__zoom-value';
-                readout.setAttribute('aria-live', 'polite');
-                readout.textContent = '100%';
+                const percentInput = document.createElement('input');
+                percentInput.type = 'number';
+                percentInput.className = 'lhu-lightbox__zoom-input';
+                percentInput.min = '0';
+                percentInput.max = String(LHU_ZOOM_MAX_PERCENT);
+                percentInput.step = '1';
+                percentInput.inputMode = 'numeric';
+                percentInput.value = '0';
+                percentInput.setAttribute('aria-label', 'Zoom-Prozentwert von 0 bis 700 eingeben');
+                percentInput.title = 'Zoom von 0 bis 700 Prozent';
+
+                const percentSuffix = document.createElement('span');
+                percentSuffix.className = 'lhu-lightbox__zoom-suffix';
+                percentSuffix.textContent = '%';
 
                 const plus = document.createElement('button');
                 plus.type = 'button';
                 plus.className = 'lhu-lightbox__zoom-button';
                 plus.textContent = '+';
-                plus.setAttribute('aria-label', 'Vergrößern');
-                plus.title = 'Vergrößern';
+                plus.setAttribute('aria-label', 'Zoom um 25 Prozentpunkte erhöhen');
+                plus.title = '+25 Prozentpunkte';
 
-                const reset = document.createElement('button');
-                reset.type = 'button';
-                reset.className = 'lhu-lightbox__zoom-button lhu-lightbox__reset';
-                reset.textContent = '↺';
-                reset.setAttribute('aria-label', 'Zoom zurücksetzen');
-                reset.title = 'Zoom zurücksetzen';
+                const fit = document.createElement('button');
+                fit.type = 'button';
+                fit.className = 'lhu-lightbox__zoom-button lhu-lightbox__fit';
+                fit.textContent = '↺';
+                fit.setAttribute('aria-label', 'Bild an Fenster anpassen');
+                fit.title = 'An Fenster anpassen (0%)';
 
-                controls.append(minus, readout, plus, reset);
+                controls.append(minus, percentInput, percentSuffix, plus, fit);
                 const hint = document.createElement('p');
                 hint.className = 'lhu-lightbox__hint';
-                hint.textContent = 'Mausrad: Zoom · Ziehen: Verschieben · Touch: Zwei Finger zum Zoomen';
+                hint.textContent = '0% = Fenstergröße · 100% = Originalgröße · 700% = 7× · Mausrad / Ziehen / Touch';
 
                 overlay.append(close, stage, controls, hint);
                 document.body.appendChild(overlay);
 
-                let zoom = 1;
+                let zoomPercent = 0;
+                let zoomScale = 1;
+                let fitScale = 1;
                 let panX = 0;
                 let panY = 0;
                 const pointers = new Map();
                 let dragStart = null;
                 let pinchStart = null;
+                let resizeObserver = null;
 
                 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
                 const stageCenter = () => ({ x: stage.clientWidth / 2, y: stage.clientHeight / 2 });
 
+                function measureFitScale() {
+                    if (!image.naturalWidth || !image.naturalHeight || !stage.clientWidth || !stage.clientHeight) return 1;
+                    // Fit to the current Chrome/browser viewport, never upscale beyond the image's natural size.
+                    return Math.min(
+                        stage.clientWidth / image.naturalWidth,
+                        stage.clientHeight / image.naturalHeight,
+                        1
+                    );
+                }
+
+                function scaleFromPercent(value) {
+                    const p = clamp(Number(value) || 0, 0, LHU_ZOOM_MAX_PERCENT);
+                    if (p <= 100) return fitScale + (1 - fitScale) * (p / 100);
+                    return p / 100;
+                }
+
+                function percentFromScale(scale) {
+                    if (scale <= 1) {
+                        if (fitScale >= 0.9999) return 0;
+                        return clamp(((scale - fitScale) / (1 - fitScale)) * 100, 0, 100);
+                    }
+                    return clamp(scale * 100, 100, LHU_ZOOM_MAX_PERCENT);
+                }
+
                 function clampPan() {
-                    const center = stageCenter();
-                    const maxX = Math.max(0, (image.offsetWidth * zoom - stage.clientWidth) / 2);
-                    const maxY = Math.max(0, (image.offsetHeight * zoom - stage.clientHeight) / 2);
+                    if (!image.naturalWidth || !image.naturalHeight) {
+                        panX = 0;
+                        panY = 0;
+                        return;
+                    }
+                    const renderedWidth = image.naturalWidth * zoomScale;
+                    const renderedHeight = image.naturalHeight * zoomScale;
+                    const maxX = Math.max(0, (renderedWidth - stage.clientWidth) / 2);
+                    const maxY = Math.max(0, (renderedHeight - stage.clientHeight) / 2);
                     panX = clamp(panX, -maxX, maxX);
                     panY = clamp(panY, -maxY, maxY);
                 }
 
                 function render() {
                     clampPan();
-                    image.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${zoom})`;
-                    image.classList.toggle('is-zoomed', zoom > 1.01);
-                    readout.textContent = `${Math.round(zoom * 100)}%`;
-                    minus.disabled = zoom <= LHU_ZOOM_MIN + 0.001;
-                    plus.disabled = zoom >= LHU_ZOOM_MAX - 0.001;
+                    image.style.width = image.naturalWidth ? `${image.naturalWidth}px` : 'auto';
+                    image.style.height = image.naturalHeight ? `${image.naturalHeight}px` : 'auto';
+                    image.style.transform = `translate3d(${panX}px, ${panY}px, 0) translate(-50%, -50%) scale(${zoomScale})`;
+                    image.classList.toggle('is-zoomed', zoomPercent > 0);
+                    percentInput.value = String(Math.round(zoomPercent));
+                    minus.disabled = zoomPercent <= 0;
+                    plus.disabled = zoomPercent >= LHU_ZOOM_MAX_PERCENT;
+                    stage.classList.toggle('is-pannable', zoomPercent > 0 && (image.naturalWidth * zoomScale > stage.clientWidth + 1 || image.naturalHeight * zoomScale > stage.clientHeight + 1));
                 }
 
-                function setZoom(nextZoom, anchorClientX, anchorClientY) {
-                    const oldZoom = zoom;
-                    const newZoom = clamp(nextZoom, LHU_ZOOM_MIN, LHU_ZOOM_MAX);
-                    if (Math.abs(newZoom - oldZoom) < 0.001) return;
+                function applyScale(nextScale, anchorClientX, anchorClientY) {
+                    const minScale = fitScale;
+                    const maxScale = LHU_ZOOM_MAX_PERCENT / 100;
+                    const newScale = clamp(nextScale, minScale, maxScale);
+                    if (!image.naturalWidth || !image.naturalHeight) return;
+                    if (Math.abs(newScale - zoomScale) < 0.0001) return;
+
                     const rect = stage.getBoundingClientRect();
                     const center = stageCenter();
                     const anchorX = (anchorClientX == null ? rect.left + center.x : anchorClientX) - rect.left - center.x;
                     const anchorY = (anchorClientY == null ? rect.top + center.y : anchorClientY) - rect.top - center.y;
-                    const ratio = newZoom / oldZoom;
+                    const ratio = newScale / zoomScale;
                     panX = anchorX - (anchorX - panX) * ratio;
                     panY = anchorY - (anchorY - panY) * ratio;
-                    zoom = newZoom;
+                    zoomScale = newScale;
+                    zoomPercent = percentFromScale(newScale);
                     render();
                 }
 
-                function resetView() {
-                    zoom = 1;
+                function setZoomPercent(value, anchorClientX, anchorClientY) {
+                    const parsed = Number(value);
+                    if (!Number.isFinite(parsed)) return;
+                    zoomPercent = clamp(parsed, 0, LHU_ZOOM_MAX_PERCENT);
+                    const targetScale = scaleFromPercent(zoomPercent);
+                    // Preserve the cursor/touch anchor while changing the scale.
+                    const rect = stage.getBoundingClientRect();
+                    const center = stageCenter();
+                    const anchorX = (anchorClientX == null ? rect.left + center.x : anchorClientX) - rect.left - center.x;
+                    const anchorY = (anchorClientY == null ? rect.top + center.y : anchorClientY) - rect.top - center.y;
+                    const ratio = targetScale / Math.max(0.0001, zoomScale);
+                    panX = anchorX - (anchorX - panX) * ratio;
+                    panY = anchorY - (anchorY - panY) * ratio;
+                    zoomScale = targetScale;
+                    if (zoomPercent === 0) {
+                        panX = 0;
+                        panY = 0;
+                    }
+                    render();
+                }
+
+                function fitToWindow() {
+                    fitScale = measureFitScale();
+                    zoomPercent = 0;
+                    zoomScale = fitScale;
                     panX = 0;
                     panY = 0;
                     render();
@@ -336,7 +408,7 @@
                     const rect = stage.getBoundingClientRect();
                     pinchStart = {
                         distance: Math.max(1, pointerDistance(points[0], points[1])),
-                        zoom,
+                        scale: zoomScale,
                         panX,
                         panY,
                         midX: mid.x,
@@ -348,19 +420,35 @@
                 }
 
                 close.addEventListener('click', closeLightbox);
-                minus.addEventListener('click', () => setZoom(zoom / 1.25));
-                plus.addEventListener('click', () => setZoom(zoom * 1.25));
-                reset.addEventListener('click', resetView);
+                minus.addEventListener('click', () => setZoomPercent(zoomPercent - 25));
+                plus.addEventListener('click', () => setZoomPercent(zoomPercent + 25));
+                fit.addEventListener('click', fitToWindow);
+
+                percentInput.addEventListener('input', () => {
+                    if (percentInput.value === '') return;
+                    const value = Number(percentInput.value);
+                    if (Number.isFinite(value)) setZoomPercent(clamp(value, 0, LHU_ZOOM_MAX_PERCENT));
+                });
+                percentInput.addEventListener('change', () => {
+                    const value = percentInput.value === '' ? zoomPercent : Number(percentInput.value);
+                    setZoomPercent(Number.isFinite(value) ? value : zoomPercent);
+                });
+                percentInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        percentInput.blur();
+                    }
+                });
 
                 overlay.addEventListener('click', (event) => {
                     if (event.target === overlay) closeLightbox();
                 });
 
                 stage.addEventListener('wheel', (event) => {
-                    if (overlay.hidden) return;
+                    if (overlay.hidden || !image.naturalWidth) return;
                     event.preventDefault();
-                    const factor = event.deltaY < 0 ? 1.12 : 1 / 1.12;
-                    setZoom(zoom * factor, event.clientX, event.clientY);
+                    const next = zoomScale * (event.deltaY < 0 ? 1.12 : 1 / 1.12);
+                    applyScale(next, event.clientX, event.clientY);
                 }, { passive: false });
 
                 stage.addEventListener('pointerdown', (event) => {
@@ -370,7 +458,7 @@
                     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
                     if (pointers.size === 2) {
                         beginPinch();
-                    } else if (pointers.size === 1 && zoom > 1.01) {
+                    } else if (pointers.size === 1 && stage.classList.contains('is-pannable')) {
                         dragStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, panX, panY };
                     }
                 });
@@ -383,18 +471,18 @@
                         if (!pinchStart) beginPinch();
                         const points = [...pointers.values()];
                         const mid = pointerMidpoint(points[0], points[1]);
-                        const rect = stage.getBoundingClientRect();
-                        const nextZoom = clamp(
-                            pinchStart.zoom * pointerDistance(points[0], points[1]) / pinchStart.distance,
-                            LHU_ZOOM_MIN,
-                            LHU_ZOOM_MAX
+                        const nextScale = clamp(
+                            pinchStart.scale * pointerDistance(points[0], points[1]) / pinchStart.distance,
+                            fitScale,
+                            LHU_ZOOM_MAX_PERCENT / 100
                         );
-                        const ratio = nextZoom / pinchStart.zoom;
+                        const ratio = nextScale / pinchStart.scale;
                         panX = pinchStart.localX - (pinchStart.localX - pinchStart.panX) * ratio + (mid.x - pinchStart.midX);
                         panY = pinchStart.localY - (pinchStart.localY - pinchStart.panY) * ratio + (mid.y - pinchStart.midY);
-                        zoom = nextZoom;
+                        zoomScale = nextScale;
+                        zoomPercent = percentFromScale(nextScale);
                         render();
-                    } else if (dragStart && dragStart.pointerId === event.pointerId && zoom > 1.01) {
+                    } else if (dragStart && dragStart.pointerId === event.pointerId && stage.classList.contains('is-pannable')) {
                         panX = dragStart.panX + event.clientX - dragStart.x;
                         panY = dragStart.panY + event.clientY - dragStart.y;
                         render();
@@ -402,9 +490,10 @@
                 });
 
                 function finishPointer(event) {
+                    if (!pointers.has(event.pointerId)) return;
                     pointers.delete(event.pointerId);
                     if (pointers.size < 2) pinchStart = null;
-                    if (pointers.size === 1 && zoom > 1.01) {
+                    if (pointers.size === 1 && stage.classList.contains('is-pannable')) {
                         const [id, point] = [...pointers.entries()][0];
                         dragStart = { pointerId: id, x: point.x, y: point.y, panX, panY };
                     } else {
@@ -417,10 +506,10 @@
 
                 stage.addEventListener('keydown', (event) => {
                     const step = 48;
-                    if (event.key === '+' || event.key === '=') { event.preventDefault(); setZoom(zoom * 1.25); }
-                    else if (event.key === '-') { event.preventDefault(); setZoom(zoom / 1.25); }
-                    else if (event.key === '0') { event.preventDefault(); resetView(); }
-                    else if (zoom > 1.01 && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+                    if (event.key === '+' || event.key === '=') { event.preventDefault(); setZoomPercent(zoomPercent + 25); }
+                    else if (event.key === '-') { event.preventDefault(); setZoomPercent(zoomPercent - 25); }
+                    else if (event.key === '0') { event.preventDefault(); fitToWindow(); }
+                    else if (stage.classList.contains('is-pannable') && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
                         event.preventDefault();
                         if (event.key === 'ArrowLeft') panX += step;
                         if (event.key === 'ArrowRight') panX -= step;
@@ -430,42 +519,55 @@
                     }
                 });
 
-                const onKeyDown = (event) => {
+                function onKeyDown(event) {
                     if (overlay.hidden) return;
                     if (event.key === 'Escape') {
                         event.preventDefault();
                         closeLightbox();
                     }
-                };
+                }
                 document.addEventListener('keydown', onKeyDown);
 
                 function closeLightbox() {
                     overlay.hidden = true;
-                    lightboxRequestToken++;
                     image.removeAttribute('src');
+                    image.style.width = '';
+                    image.style.height = '';
                     pointers.clear();
                     dragStart = null;
                     pinchStart = null;
-                    resetView();
+                    if (resizeObserver) resizeObserver.disconnect();
+                    fitToWindow();
                     if (lightboxPreviousFocus && lightboxPreviousFocus.isConnected) lightboxPreviousFocus.focus();
                     lightboxPreviousFocus = null;
                 }
 
-                imageLightbox = { overlay, stage, image, close, closeLightbox, resetView, render };
+                image.addEventListener('load', () => {
+                    fitScale = measureFitScale();
+                    zoomPercent = 0;
+                    zoomScale = fitScale;
+                    panX = 0;
+                    panY = 0;
+                    render();
+                    stage.focus({ preventScroll: true });
+                });
+
+                resizeObserver = new ResizeObserver(() => {
+                    if (overlay.hidden || !image.naturalWidth) return;
+                    fitScale = measureFitScale();
+                    zoomScale = scaleFromPercent(zoomPercent);
+                    render();
+                });
+                resizeObserver.observe(stage);
+
+                imageLightbox = { overlay, stage, image, close, closeLightbox, setZoomPercent };
                 return imageLightbox;
             }
 
             window.__lhuOpenImageLightbox = (src, alt = 'Vergrößerte Ansicht') => {
                 if (!src) return;
                 const box = ensureImageLightbox();
-                const requestToken = ++lightboxRequestToken;
                 lightboxPreviousFocus = document.activeElement;
-                box.resetView();
-                box.image.onload = () => {
-                    if (requestToken !== lightboxRequestToken) return;
-                    box.render();
-                    box.stage.focus({ preventScroll: true });
-                };
                 box.image.alt = alt;
                 box.overlay.hidden = false;
                 box.image.src = src;
@@ -488,11 +590,6 @@
                 };
                 img.addEventListener('load', syncButton);
                 img.addEventListener('error', syncButton);
-                const sourceObserver = new MutationObserver(syncButton);
-                sourceObserver.observe(img, { attributes: true, attributeFilter: ['src', 'aria-disabled'] });
-                if (typeof window.__lhuRegisterCleanup === 'function') {
-                    window.__lhuRegisterCleanup(() => sourceObserver.disconnect());
-                }
                 button.addEventListener('click', (event) => {
                     event.preventDefault();
                     event.stopPropagation();
