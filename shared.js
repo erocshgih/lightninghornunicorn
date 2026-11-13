@@ -8,7 +8,7 @@
                The character grid stays fixed; only the SVG pixels rotate underneath it. */
             (() => {
                 const loaderImages = Array.from(document.querySelectorAll(
-                    '#loading .hypnoload-asset, #index-loading .hypnoload-intro'
+                    '#index-loading .hypnoload-intro'
                 ));
                 if (!loaderImages.length) return;
 
@@ -19,7 +19,7 @@
                 const ROTATION_MS = 650;
 
                 const active = img => {
-                    const root = img.closest('#loading, #index-loading');
+                    const root = img.closest('#index-loading');
                     return !!root && root.classList.contains('show') &&
                         getComputedStyle(root).display !== 'none' &&
                         document.visibilityState !== 'hidden';
@@ -166,7 +166,7 @@
                 });
 
                 const observer = new MutationObserver(update);
-                document.querySelectorAll('#loading, #index-loading').forEach(el => {
+                document.querySelectorAll('#index-loading').forEach(el => {
                     observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
                 });
                 document.addEventListener('visibilitychange', update);
@@ -774,16 +774,10 @@
             };
 
             const mainContent = document.getElementById('mainContent');
-            const loadingEl = document.getElementById('loading');
             const a11yStatus = document.getElementById('a11yStatus');
             let currentCategory = '';
             let vhsImageObserver = null;
 
-            function showLoading(show) {
-                if (!loadingEl) return;
-                loadingEl.classList.toggle('show', Boolean(show));
-                loadingEl.setAttribute('aria-hidden', show ? 'false' : 'true');
-            }
             function announceCategory(cat) {
                 if (a11yStatus) a11yStatus.textContent = `Kategorie ${cat} geladen`;
             }
@@ -833,7 +827,6 @@
                 const door = document.getElementById('door-overlay');
                 if (!door) return;
 
-                showLoading(false);
                 door.setAttribute('data-category', cat);
                 door.classList.remove('open');
                 door.classList.add('closed');
@@ -848,13 +841,11 @@
                     if (loadToken !== categoryLoadToken) return;
                     const targetPage = categoryPages[cat];
                     if (!targetPage) {
-                        if (loadToken === categoryLoadToken) showLoading(false);
                         return;
                     }
 
-                    // Die Tür ist jetzt vollständig geschlossen. Erst jetzt erscheint
-                    // HYPNOLOAD, damit sich beide Animationen nie überlagern.
-                    showLoading(true);
+                    // Die Tür bleibt während des Seitenladens geschlossen und übernimmt
+                    // allein die Übergangsanimation. Der Hypno-Loader gehört nur zum Index.
                     const controller = new AbortController();
                     categoryFetchController = controller;
 
@@ -976,8 +967,7 @@
                         if (loadToken === categoryLoadToken) {
                             categoryFetchController = null;
                             categoryTransitionTimer = null;
-                            showLoading(false);
-                            window.scrollTo(0, 0);
+                                        window.scrollTo(0, 0);
                             setTimeout(() => {
                                 if (loadToken !== categoryLoadToken) return;
                                 measure();

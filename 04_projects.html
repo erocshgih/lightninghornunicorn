@@ -287,13 +287,6 @@
                 border-top-color: var(--strip-active, #ff7a00);
                 animation: modelSpin 0.9s linear infinite;
             }
-            .model-loading .hypnoload-model {
-                width: 48px;
-                height: 48px;
-                display: block;
-                animation: modelSpin 2.8s linear infinite;
-                filter: drop-shadow(0 0 8px rgba(0, 217, 255, .2));
-            }
             .model-loading .label {
                 font-family: var(--font-display, 'Press Start 2P', monospace);
                 font-size: 11px;
@@ -343,11 +336,37 @@
             /* ---------- FULLSCREEN 3D MODEL VIEWER ---------- */
             .lhu-3d-lightbox[hidden] { display: none !important; }
             .lhu-3d-lightbox { position: fixed; inset: 0; z-index: 100200; display: flex; align-items: center; justify-content: center; padding: clamp(12px, 3vw, 36px); background: rgba(0,0,0,.94); backdrop-filter: blur(12px); }
-            .lhu-3d-lightbox__panel { position: relative; width: min(100%, 1100px); height: min(92vh, 900px); border: 1px solid rgba(255,255,255,.2); border-radius: 18px; background: radial-gradient(circle at 50% 40%, rgba(70,70,70,.22), #080808 72%); overflow: hidden; box-shadow: 0 24px 90px rgba(0,0,0,.6); }
-            .lhu-3d-lightbox model-viewer { width: 100%; height: 100%; display: block; background: transparent; --poster-color: transparent; }
-            .lhu-3d-lightbox__close { position: absolute; z-index: 3; top: 14px; right: 14px; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(0,0,0,.72); color: white; font: 28px/1 sans-serif; cursor: pointer; }
-            .lhu-3d-lightbox__tools { position: absolute; z-index: 3; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
+            .lhu-3d-lightbox__panel { position: relative; width: min(100%, 1100px); height: min(92vh, 900px); border: 1px solid rgba(255,255,255,.2); border-radius: 18px; background: radial-gradient(circle at 50% 40%, rgba(70,70,70,.22), #080808 72%); overflow: hidden; box-shadow: 0 24px 90px rgba(0,0,0,.6); isolation: isolate; }
+            .lhu-3d-lightbox model-viewer { position: relative; z-index: 0; width: 100%; height: 100%; display: block; background: transparent; --poster-color: transparent; }
+            .lhu-3d-lightbox__close { position: absolute; z-index: 5; top: 14px; right: 14px; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(0,0,0,.72); color: white; font: 28px/1 sans-serif; cursor: pointer; }
+            .lhu-3d-lightbox__tools { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
             .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
+
+            /* ASCII-Lade-Rahmen: läuft nur solange das jeweilige GLB noch lädt. */
+            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; overflow: hidden; background: rgba(0,0,0,.91); color: #f4f4f4; font-family: 'Courier New', monospace; opacity: 1; visibility: visible; transition: opacity .42s ease, visibility .42s ease; pointer-events: none; }
+            .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; }
+            .lhu-3d-loading-frame.has-error { background: rgba(12,0,0,.94); color: #ffbaba; }
+            .lhu-3d-loading-frame__edge { position: absolute; overflow: hidden; display: flex; align-items: center; white-space: nowrap; color: inherit; font-size: clamp(9px, 1.1vw, 12px); font-weight: 700; letter-spacing: .15em; text-shadow: 0 0 8px currentColor; }
+            .lhu-3d-loading-frame__edge--top { top: 0; left: 0; right: 0; height: 34px; border-bottom: 1px solid rgba(255,255,255,.38); }
+            .lhu-3d-loading-frame__edge--bottom { bottom: 0; left: 0; right: 0; height: 34px; border-top: 1px solid rgba(255,255,255,.38); }
+            .lhu-3d-loading-frame__edge--left { top: 34px; bottom: 34px; left: 0; width: 30px; justify-content: center; border-right: 1px solid rgba(255,255,255,.38); writing-mode: vertical-rl; }
+            .lhu-3d-loading-frame__edge--right { top: 34px; bottom: 34px; right: 0; width: 30px; justify-content: center; border-left: 1px solid rgba(255,255,255,.38); writing-mode: vertical-rl; transform: rotate(180deg); }
+            .lhu-3d-loading-frame__track { display: inline-flex; flex: 0 0 auto; gap: 22px; width: max-content; padding-left: 12px; animation: lhuLoadingMarquee 7s linear infinite; }
+            .lhu-3d-loading-frame__edge--bottom .lhu-3d-loading-frame__track { animation-direction: reverse; }
+            .lhu-3d-loading-frame__edge--left .lhu-3d-loading-frame__track { flex-direction: column; animation-name: lhuLoadingMarqueeY; animation-duration: 9s; }
+            .lhu-3d-loading-frame__edge--right .lhu-3d-loading-frame__track { flex-direction: column; animation-name: lhuLoadingMarqueeY; animation-duration: 8s; animation-direction: reverse; }
+            .lhu-3d-loading-frame__center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; max-width: calc(100% - 110px); text-align: center; padding: 26px; border: 1px solid rgba(255,255,255,.26); background: rgba(0,0,0,.46); box-shadow: 0 0 34px rgba(255,255,255,.06), inset 0 0 28px rgba(255,255,255,.035); }
+            .lhu-3d-loading-frame__code { font-size: clamp(9px, 1vw, 12px); letter-spacing: .14em; opacity: .7; }
+            .lhu-3d-loading-frame__title { font-size: clamp(20px, 4vw, 38px); font-weight: 800; letter-spacing: .2em; animation: lhuLoadingFlicker 1.2s steps(2, end) infinite; }
+            .lhu-3d-loading-frame__sub { font-size: 10px; letter-spacing: .16em; opacity: .75; }
+            .lhu-3d-loading-frame__bar { display: flex; gap: 5px; font-size: clamp(12px, 2vw, 18px); letter-spacing: .08em; }
+            .lhu-3d-loading-frame__bar span { display: inline-block; animation: lhuLoadingPulse .9s steps(2, end) infinite; }
+            .lhu-3d-loading-frame__bar span:nth-child(2) { animation-delay: .12s; }
+            .lhu-3d-loading-frame__bar span:nth-child(3) { animation-delay: .24s; }
+            @keyframes lhuLoadingMarquee { to { transform: translateX(-50%); } }
+            @keyframes lhuLoadingMarqueeY { to { transform: translateY(-50%); } }
+            @keyframes lhuLoadingFlicker { 50% { opacity: .62; } }
+            @keyframes lhuLoadingPulse { 50% { opacity: .2; } }
             .carousel-dot-3d { width: auto; min-width: 42px; height: 26px; padding: 0 9px; border-radius: 14px; color: #111; background: #d8d8d8; font: 800 11px/1 sans-serif; letter-spacing: .06em; }
             .carousel-dot-3d::before { content: '3D'; }
             .carousel-dot-3d:hover, .carousel-dot-3d:focus-visible { background: var(--dot-active); color: #fff; }
@@ -360,7 +379,9 @@
                 .cat-header .arrow,
                 .prod-header .prod-arrow { transition-duration: 0.01ms; }
                 .model-loading .spinner { animation-duration: 2s; }
-                .model-loading .hypnoload-model { animation-duration: 12s; }
+                .lhu-3d-loading-frame__track,
+                .lhu-3d-loading-frame__title,
+                .lhu-3d-loading-frame__bar span { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
             }
         </style>
 
@@ -587,7 +608,22 @@
                     modelLightbox.setAttribute('role', 'dialog');
                     modelLightbox.setAttribute('aria-modal', 'true');
                     modelLightbox.setAttribute('aria-label', 'Interaktive 3D-Modellansicht');
-                    modelLightbox.innerHTML = `<div class="lhu-3d-lightbox__panel"><button type="button" class="lhu-3d-lightbox__close" aria-label="3D-Ansicht schließen">×</button><div class="lhu-3d-lightbox__tools"><button type="button" data-zoom="out" aria-label="Herauszoomen">−</button><button type="button" data-zoom="in" aria-label="Hineinzoomen">+</button><button type="button" data-zoom="reset" aria-label="Ansicht zurücksetzen">↺</button></div></div>`;
+                    modelLightbox.innerHTML = `<div class="lhu-3d-lightbox__panel">
+                        <div class="lhu-3d-loading-frame" role="status" aria-live="polite">
+                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--top"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · LOADING · </span></div></div>
+                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--bottom"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · LOADING · </span></div></div>
+                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--left"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · </span></div></div>
+                            <div class="lhu-3d-loading-frame__edge lhu-3d-loading-frame__edge--right"><div class="lhu-3d-loading-frame__track"><span>LOADING · LOADING · LOADING · </span><span aria-hidden="true">LOADING · LOADING · LOADING · </span></div></div>
+                            <div class="lhu-3d-loading-frame__center">
+                                <span class="lhu-3d-loading-frame__code">[ LHU / 3D DATA STREAM ]</span>
+                                <strong class="lhu-3d-loading-frame__title">LOADING</strong>
+                                <span class="lhu-3d-loading-frame__sub">INITIALIZING GEOMETRY</span>
+                                <span class="lhu-3d-loading-frame__bar"><span>[</span><span>###</span><span>]</span></span>
+                            </div>
+                        </div>
+                        <button type="button" class="lhu-3d-lightbox__close" aria-label="3D-Ansicht schließen">×</button>
+                        <div class="lhu-3d-lightbox__tools"><button type="button" data-zoom="out" aria-label="Herauszoomen">−</button><button type="button" data-zoom="in" aria-label="Hineinzoomen">+</button><button type="button" data-zoom="reset" aria-label="Ansicht zurücksetzen">↺</button></div>
+                    </div>`;
                     document.body.appendChild(modelLightbox);
                     const close = () => { modelLightbox.hidden = true; if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; } };
                     modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
@@ -606,20 +642,45 @@
                 function openModelLightbox(modelSrc, label) {
                     ensureModelViewer();
                     const box = ensureModelLightbox();
+                    const panel = box.querySelector('.lhu-3d-lightbox__panel');
+                    const loader = panel.querySelector('.lhu-3d-loading-frame');
+                    const loaderTitle = loader.querySelector('.lhu-3d-loading-frame__title');
+                    const loaderSub = loader.querySelector('.lhu-3d-loading-frame__sub');
+
                     if (modelLightboxViewer) modelLightboxViewer.remove();
-                    modelLightboxViewer = document.createElement('model-viewer');
-                    modelLightboxViewer.setAttribute('src', modelSrc);
-                    modelLightboxViewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
-                    modelLightboxViewer.setAttribute('camera-controls', '');
-                    modelLightboxViewer.setAttribute('touch-action', 'pan-y');
-                    modelLightboxViewer.setAttribute('auto-rotate', '');
-                    modelLightboxViewer.setAttribute('auto-rotate-delay', '0');
-                    modelLightboxViewer.setAttribute('rotation-per-second', '24deg');
-                    modelLightboxViewer.setAttribute('shadow-intensity', '1');
-                    modelLightboxViewer.setAttribute('exposure', '1');
-                    box.querySelector('.lhu-3d-lightbox__panel').appendChild(modelLightboxViewer);
+                    loader.classList.remove('is-loaded', 'has-error');
+                    loaderTitle.textContent = 'LOADING';
+                    loaderSub.textContent = `LOADING ${String(label || 'MODEL').toUpperCase()}`;
+
+                    const viewer = document.createElement('model-viewer');
+                    viewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
+                    viewer.setAttribute('camera-controls', '');
+                    viewer.setAttribute('touch-action', 'pan-y');
+                    viewer.setAttribute('auto-rotate', '');
+                    viewer.setAttribute('auto-rotate-delay', '0');
+                    viewer.setAttribute('rotation-per-second', '24deg');
+                    viewer.setAttribute('shadow-intensity', '1');
+                    viewer.setAttribute('exposure', '1');
+
+                    viewer.addEventListener('load', () => {
+                        if (modelLightboxViewer !== viewer) return;
+                        loader.classList.add('is-loaded');
+                    }, { once: true });
+                    viewer.addEventListener('error', () => {
+                        if (modelLightboxViewer !== viewer) return;
+                        loader.classList.add('has-error');
+                        loaderTitle.textContent = 'LOAD ERROR';
+                        loaderSub.textContent = 'MODEL COULD NOT BE LOADED';
+                    }, { once: true });
+
+                    modelLightboxViewer = viewer;
+                    panel.appendChild(viewer);
                     box.hidden = false;
                     box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
+                    // Set the source only after the loader is visible and listeners exist.
+                    requestAnimationFrame(() => {
+                        if (modelLightboxViewer === viewer) viewer.setAttribute('src', modelSrc);
+                    });
                 }
 
                 let gIdx = 0;
@@ -858,7 +919,7 @@
                             style="width:100%;height:100%;background:transparent;--poster-color:transparent;display:block;">
                         </model-viewer>
                         <div class="model-loading" aria-hidden="true">
-                            <img class="hypnoload-model" src="hypnoload.svg" alt="" width="48" height="48">
+                            <div class="spinner"></div>
                             <div class="label">Loading 3D</div>
                         </div>
                     `;

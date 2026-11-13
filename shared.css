@@ -579,51 +579,28 @@ select:focus-visible,
             line-height: 1.6;
         }
 
-        /* ---------- HYPNOLOAD: gemeinsamer Ladeindikator ---------- */
-        /* Liegt unter der Tür (z-index 9999): die Türanimation bleibt unangetastet. */
-        #loading {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            background: rgba(5, 6, 10, 0.88);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity .22s ease, visibility .22s ease;
-        }
-        #loading.show {
-            display: flex;
-            opacity: 1;
-            visibility: visible;
-        }
-        #loading .hypnoload-asset {
+        /* ---------- HYPNOLOAD ASCII STAGE (nur index.html) ---------- */
+        .hypnoload-stage {
+            width: clamp(190px, 30vw, 276px);
+            height: clamp(190px, 30vw, 276px);
+            position: relative;
             display: block;
-            width: 100%; height: 100%; object-fit: contain;
-            max-width: none !important; margin: 0 !important;
-            border-radius: 0 !important; box-shadow: none !important;
-            animation: hypnoRotate 0.65s linear infinite;
-            transform-origin: 50% 50%;
-            filter: drop-shadow(0 0 12px rgba(255,255,255,.12));
+            flex: 0 0 auto;
+            overflow: hidden;
+            isolation: isolate;
         }
-        .hypnoload-stage { width: clamp(190px, 30vw, 276px); height: clamp(190px, 30vw, 276px); position: relative; display: block; flex: 0 0 auto; overflow: hidden; isolation: isolate; }
         .hypnoload-stage > img { position: absolute; inset: 0; z-index: 1; }
         .hypnoload-stage.ascii-ready > img { opacity: 0; animation: none !important; }
-        .hypnoload-ascii-surface { position: absolute !important; inset: 0 !important; z-index: 2 !important; display: block !important; width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; color: #fff !important; background: transparent !important; pointer-events: none !important; transform: none !important; animation: none !important; font-family: 'Courier New', monospace !important; font-weight: 600 !important; letter-spacing: 0 !important; white-space: pre !important; text-align: center !important; text-shadow: 0 0 2px rgba(255,255,255,.22) !important; font-variant-ligatures: none !important; user-select: none !important; }
-        #loading .loading-text {
-            font-family: var(--font-display);
-            font-size: var(--fs-xs);
-            letter-spacing: .24em;
-            color: var(--text);
-            text-transform: uppercase;
-        }
-        @keyframes hypnoRotate { to { transform: rotate(360deg); } }
-        @media (prefers-reduced-motion: reduce) {
-            #loading { transition: none; }
+        .hypnoload-ascii-surface {
+            position: absolute !important; inset: 0 !important; z-index: 2 !important;
+            display: block !important; width: 100% !important; height: 100% !important;
+            margin: 0 !important; padding: 0 !important; overflow: hidden !important;
+            color: #fff !important; background: transparent !important;
+            pointer-events: none !important; transform: none !important; animation: none !important;
+            font-family: 'Courier New', monospace !important; font-weight: 600 !important;
+            letter-spacing: 0 !important; white-space: pre !important; text-align: center !important;
+            text-shadow: 0 0 2px rgba(255,255,255,.22) !important;
+            font-variant-ligatures: none !important; user-select: none !important;
         }
 
         /* ========== METALLTÜR & KACHELN ========== */
