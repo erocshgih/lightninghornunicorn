@@ -228,16 +228,16 @@
         #index-loading.show { display: flex; }
         #index-loading .hypnoload-intro {
             display: block;
-            width: clamp(64px, 10vw, 92px);
+            width: clamp(190px, 30vw, 276px);
             height: auto;
             max-width: none;
-            animation: introHypnoRotate .65s linear infinite;
+            animation: none;
             filter: drop-shadow(0 0 12px rgba(0, 217, 255, .22));
         }
+        #index-loading .hypnoload-spin { width: clamp(190px, 30vw, 276px); aspect-ratio: 1; position: relative; display: grid; place-items: center; animation: introHypnoRotate 0.65s linear infinite; transform-origin: center; }
+        #index-loading .hypnoload-spin > img { width: 100%; height: 100%; object-fit: contain; }
         @keyframes introHypnoRotate { to { transform: rotate(360deg); } }
-        @media (prefers-reduced-motion: reduce) {
-            #index-loading .hypnoload-intro { animation-duration: 2s; }
-        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }

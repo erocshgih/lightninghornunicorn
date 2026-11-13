@@ -4,6 +4,78 @@
            ============================================================ */
         document.addEventListener('DOMContentLoaded', () => {
 
+            /* HYPNO ASCII OVERLAY: lazy Three.js effect, active only during loading. */
+            (() => {
+                const loaderImages = Array.from(document.querySelectorAll('#loading .hypnoload-asset, #index-loading .hypnoload-intro'));
+                if (!loaderImages.length) return;
+                const active = img => {
+                    const root = img.closest('#loading, #index-loading');
+                    return !!root && root.classList.contains('show') && getComputedStyle(root).display !== 'none';
+                };
+                const wrappers = loaderImages.map(img => {
+                    const wrap = document.createElement('span');
+                    wrap.className = 'hypnoload-spin';
+                    img.parentNode.insertBefore(wrap, img);
+                    wrap.appendChild(img);
+                    wrap.style.width = 'clamp(190px, 30vw, 276px)';
+                    wrap.style.aspectRatio = '1';
+                    wrap.style.position = 'relative';
+                    return { img, wrap, effect: null, renderer: null, scene: null, camera: null, raf: 0, started: false };
+                });
+                let threePromise = null;
+                const loadThree = () => threePromise || (threePromise = Promise.all([
+                    import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js'),
+                    import('https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/effects/AsciiEffect.js')
+                ]).then(([THREE, ascii]) => ({ THREE, AsciiEffect: ascii.AsciiEffect })).catch(err => { console.warn('LHU ASCII overlay unavailable; SVG loader remains active.', err); return null; }));
+                async function start(item) {
+                    if (item.started || !active(item.img)) return;
+                    item.started = true;
+                    const libs = await loadThree();
+                    if (!libs || !active(item.img)) { item.started = false; return; }
+                    const { THREE, AsciiEffect } = libs;
+                    try {
+                        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
+                        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+                        renderer.setSize(276, 276, false);
+                        renderer.setClearColor(0x000000, 0);
+                        const scene = new THREE.Scene();
+                        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+                        camera.position.z = 2;
+                        const texture = new THREE.TextureLoader().load(item.img.src);
+                        texture.colorSpace = THREE.SRGBColorSpace;
+                        const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide }));
+                        scene.add(plane);
+                        const effect = new AsciiEffect(renderer, ' .:-=+*#%@', { invert: true, resolution: 0.13, scale: 1, color: false, alpha: true });
+                        effect.setSize(276, 276);
+                        effect.domElement.style.position = 'absolute';
+                        effect.domElement.style.inset = '0';
+                        effect.domElement.style.width = '100%';
+                        effect.domElement.style.height = '100%';
+                        effect.domElement.style.overflow = 'hidden';
+                        effect.domElement.style.color = 'white';
+                        effect.domElement.style.backgroundColor = 'transparent';
+                        effect.domElement.style.font = '3px/0.72 monospace';
+                        effect.domElement.style.textAlign = 'center';
+                        effect.domElement.style.pointerEvents = 'none';
+                        item.wrap.appendChild(effect.domElement);
+                        item.renderer = renderer; item.scene = scene; item.camera = camera; item.effect = effect;
+                        const draw = () => {
+                            if (!active(item.img)) { item.raf = 0; item.started = false; return; }
+                            effect.render(scene, camera);
+                            item.raf = requestAnimationFrame(draw);
+                        };
+                        draw();
+                    } catch (err) { item.started = false; console.warn('LHU ASCII overlay failed; SVG loader remains active.', err); }
+                }
+                const update = () => wrappers.forEach(item => { if (active(item.img)) start(item); else if (item.raf) { cancelAnimationFrame(item.raf); item.raf = 0; item.started = false; } });
+                const observer = new MutationObserver(update);
+                document.querySelectorAll('#loading, #index-loading').forEach(el => observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] }));
+                document.addEventListener('visibilitychange', update);
+                window.addEventListener('resize', update);
+                update();
+            })();
+
+
             /* --------------------------------------------------------
                0. CLEANUP-INFRASTRUKTUR
                Content-Seiten können sich registrieren.

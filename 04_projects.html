@@ -340,6 +340,19 @@
                 .prod-body-inner { padding: 0 16px 20px; }
             }
 
+            /* ---------- FULLSCREEN 3D MODEL VIEWER ---------- */
+            .lhu-3d-lightbox[hidden] { display: none !important; }
+            .lhu-3d-lightbox { position: fixed; inset: 0; z-index: 100200; display: flex; align-items: center; justify-content: center; padding: clamp(12px, 3vw, 36px); background: rgba(0,0,0,.94); backdrop-filter: blur(12px); }
+            .lhu-3d-lightbox__panel { position: relative; width: min(100%, 1100px); height: min(92vh, 900px); border: 1px solid rgba(255,255,255,.2); border-radius: 18px; background: radial-gradient(circle at 50% 40%, rgba(70,70,70,.22), #080808 72%); overflow: hidden; box-shadow: 0 24px 90px rgba(0,0,0,.6); }
+            .lhu-3d-lightbox model-viewer { width: 100%; height: 100%; display: block; background: transparent; --poster-color: transparent; }
+            .lhu-3d-lightbox__close { position: absolute; z-index: 3; top: 14px; right: 14px; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(0,0,0,.72); color: white; font: 28px/1 sans-serif; cursor: pointer; }
+            .lhu-3d-lightbox__tools { position: absolute; z-index: 3; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
+            .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
+            .carousel-dot-3d { width: auto; min-width: 42px; height: 26px; padding: 0 9px; border-radius: 14px; color: #111; background: #d8d8d8; font: 800 11px/1 sans-serif; letter-spacing: .06em; }
+            .carousel-dot-3d::before { content: '3D'; }
+            .carousel-dot-3d:hover, .carousel-dot-3d:focus-visible { background: var(--dot-active); color: #fff; }
+            @media (max-width: 600px) { .lhu-3d-lightbox__panel { width: 100%; height: 88vh; border-radius: 12px; } }
+
             /* ---------- REDUCED MOTION ---------- */
             @media (prefers-reduced-motion: reduce) {
                 .cat-body,
@@ -564,6 +577,51 @@
                 if (!accordion) return;
 
                 const state = {};
+                let modelLightbox = null;
+                let modelLightboxViewer = null;
+                function ensureModelLightbox() {
+                    if (modelLightbox) return modelLightbox;
+                    modelLightbox = document.createElement('div');
+                    modelLightbox.className = 'lhu-3d-lightbox';
+                    modelLightbox.hidden = true;
+                    modelLightbox.setAttribute('role', 'dialog');
+                    modelLightbox.setAttribute('aria-modal', 'true');
+                    modelLightbox.setAttribute('aria-label', 'Interaktive 3D-Modellansicht');
+                    modelLightbox.innerHTML = `<div class="lhu-3d-lightbox__panel"><button type="button" class="lhu-3d-lightbox__close" aria-label="3D-Ansicht schließen">×</button><div class="lhu-3d-lightbox__tools"><button type="button" data-zoom="out" aria-label="Herauszoomen">−</button><button type="button" data-zoom="in" aria-label="Hineinzoomen">+</button><button type="button" data-zoom="reset" aria-label="Ansicht zurücksetzen">↺</button></div></div>`;
+                    document.body.appendChild(modelLightbox);
+                    const close = () => { modelLightbox.hidden = true; if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; } };
+                    modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
+                    modelLightbox.addEventListener('click', e => { if (e.target === modelLightbox) close(); });
+                    modelLightbox.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+                    modelLightbox.querySelectorAll('[data-zoom]').forEach(btn => btn.addEventListener('click', () => {
+                        if (!modelLightboxViewer) return;
+                        const action = btn.dataset.zoom;
+                        if (action === 'reset') { modelLightboxViewer.cameraOrbit = 'auto auto auto'; modelLightboxViewer.fieldOfView = 'auto'; return; }
+                        const orbit = modelLightboxViewer.getCameraOrbit();
+                        const next = orbit.radius * (action === 'in' ? 0.8 : 1.25);
+                        modelLightboxViewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${next}m`;
+                    }));
+                    return modelLightbox;
+                }
+                function openModelLightbox(modelSrc, label) {
+                    ensureModelViewer();
+                    const box = ensureModelLightbox();
+                    if (modelLightboxViewer) modelLightboxViewer.remove();
+                    modelLightboxViewer = document.createElement('model-viewer');
+                    modelLightboxViewer.setAttribute('src', modelSrc);
+                    modelLightboxViewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
+                    modelLightboxViewer.setAttribute('camera-controls', '');
+                    modelLightboxViewer.setAttribute('touch-action', 'pan-y');
+                    modelLightboxViewer.setAttribute('auto-rotate', '');
+                    modelLightboxViewer.setAttribute('auto-rotate-delay', '0');
+                    modelLightboxViewer.setAttribute('rotation-per-second', '24deg');
+                    modelLightboxViewer.setAttribute('shadow-intensity', '1');
+                    modelLightboxViewer.setAttribute('exposure', '1');
+                    box.querySelector('.lhu-3d-lightbox__panel').appendChild(modelLightboxViewer);
+                    box.hidden = false;
+                    box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
+                }
+
                 let gIdx = 0;
                 const activeModelViewers = new Set();
 
@@ -571,6 +629,8 @@
                    Cleanup (registriert beim Menü)
                    ------------------------------------------------ */
                 function projectsCleanup() {
+                    if (modelLightbox) modelLightbox.hidden = true;
+                    if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
                     activeModelViewers.forEach(mv => {
                         try {
                             if (mv.pause) mv.pause();
@@ -639,50 +699,50 @@
                         stage.className = 'carousel-stage';
                         stage.setAttribute('data-gidx', gIdx);
 
-                        prod.images.forEach((item, i) => {
+                        const modelItem = prod.images.find(item => typeof item.model === 'string' && item.model.toLowerCase().endsWith('.glb'));
+                        const imageItems = prod.images.filter(item => !item.model);
+                        imageItems.forEach((item, i) => {
                             const slide = document.createElement('div');
                             slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-                            if (item.model) {
-                                slide.setAttribute('data-model', item.model);
-                                slide.classList.add('is-model');
-                            } else {
-                                const img = document.createElement('img');
-                                img.src = item.src;
-                                img.alt = `${prod.name} – Ansicht ${i + 1}`;
-                                img.loading = 'lazy';
-                                img.decoding = 'async';
-                                slide.appendChild(img);
-
-                                if (typeof window.__lhuAttachImageZoom === 'function') {
-                                    window.__lhuAttachImageZoom(slide, img, `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
-                                }
+                            const img = document.createElement('img');
+                            img.src = item.src;
+                            img.alt = `${prod.name} – Ansicht ${i + 1}`;
+                            img.loading = 'lazy';
+                            img.decoding = 'async';
+                            slide.appendChild(img);
+                            if (typeof window.__lhuAttachImageZoom === 'function') {
+                                window.__lhuAttachImageZoom(slide, img, `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
                             }
                             stage.appendChild(slide);
                         });
                         wrapper.appendChild(stage);
                         inner.appendChild(wrapper);
 
-                        // Dots als echte Buttons
+                        // Bild-Unterpunkte plus optionaler letzter 3D-Unterpunkt.
                         const dots = document.createElement('div');
                         dots.className = 'carousel-dots';
                         dots.id = 'dots-' + gIdx;
-                        dots.setAttribute('role', 'tablist');
-                        dots.setAttribute('aria-label', `${prod.name} – Ansichten`);
-
-                        prod.images.forEach((_, i) => {
+                        dots.setAttribute('role', 'group');
+                        dots.setAttribute('aria-label', `${prod.name} – Bildansichten und 3D-Modell`);
+                        const projectIndex = gIdx;
+                        imageItems.forEach((_, i) => {
                             const dot = document.createElement('button');
                             dot.type = 'button';
                             dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-                            dot.setAttribute('role', 'tab');
-                            dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-                            dot.setAttribute('aria-label', `${prod.name} – Ansicht ${i + 1} von ${prod.images.length}`);
-                            const di = gIdx;
-                            dot.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                goToSlide(di, i);
-                            });
+                            dot.setAttribute('aria-label', `${prod.name} – Bild ${i + 1} von ${imageItems.length}`);
+                            dot.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+                            dot.addEventListener('click', e => { e.stopPropagation(); goToSlide(projectIndex, i); });
                             dots.appendChild(dot);
                         });
+                        if (modelItem) {
+                            const modelDot = document.createElement('button');
+                            modelDot.type = 'button';
+                            modelDot.className = 'carousel-dot carousel-dot-3d';
+                            modelDot.setAttribute('aria-label', `${prod.name} – interaktives 3D-Modell öffnen`);
+                            modelDot.title = '3D-Modell öffnen';
+                            modelDot.addEventListener('click', e => { e.stopPropagation(); openModelLightbox(modelItem.model, prod.name); });
+                            dots.appendChild(modelDot);
+                        }
                         inner.appendChild(dots);
 
                         if (prod.desc) {
@@ -696,7 +756,7 @@
                         prodEl.appendChild(prodBody);
                         catBodyInner.appendChild(prodEl);
 
-                        state[gIdx] = { idx: 0, total: prod.images.length };
+                        state[gIdx] = { idx: 0, total: imageItems.length };
                         gIdx++;
                     });
 
@@ -769,9 +829,9 @@
                     stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
                         sl.classList.toggle('active', i === s.idx);
                     });
-                    document.querySelectorAll(`#dots-${gi} .carousel-dot`).forEach((d, i) => {
+                    document.querySelectorAll(`#dots-${gi} .carousel-dot:not(.carousel-dot-3d)`).forEach((d, i) => {
                         d.classList.toggle('active', i === s.idx);
-                        d.setAttribute('aria-selected', i === s.idx ? 'true' : 'false');
+                        d.setAttribute('aria-pressed', i === s.idx ? 'true' : 'false');
                     });
                     updateStageManager();
                 }

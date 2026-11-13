@@ -603,15 +603,17 @@ select:focus-visible,
         }
         #loading .hypnoload-asset {
             display: block;
-            width: clamp(64px, 10vw, 92px);
+            width: clamp(190px, 30vw, 276px);
             height: auto;
             max-width: none !important;
             margin: 0 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
-            animation: hypnoRotate .65s linear infinite;
+            animation: none;
             filter: drop-shadow(0 0 12px rgba(0, 217, 255, .22));
         }
+        #loading .hypnoload-spin { width: clamp(190px, 30vw, 276px); aspect-ratio: 1; position: relative; display: grid; place-items: center; animation: hypnoRotate 0.65s linear infinite; transform-origin: center; }
+        #loading .hypnoload-spin > img { width: 100%; height: 100%; object-fit: contain; }
         #loading .loading-text {
             font-family: var(--font-display);
             font-size: var(--fs-xs);
@@ -621,7 +623,6 @@ select:focus-visible,
         }
         @keyframes hypnoRotate { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) {
-            #loading .hypnoload-asset { animation-duration: 2s; }
             #loading { transition: none; }
         }
 

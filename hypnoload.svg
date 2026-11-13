@@ -1,103 +1,11 @@
-import numpy as np
-from scipy.interpolate import splprep, PPoly
-
-w, h = 800, 800
-cx, cy = 400.0, 400.0
-R_outer = 390.0
-R_spiral_max = 376.0
-
-turns = 8.5
-theta_max = turns * 2 * np.pi
-r_start = 0.0
-b = (R_spiral_max - r_start) / theta_max
-
-pitch = 2 * np.pi * b
-stripe_period = pitch / 2.0
-
-def arm_half_width(theta):
-    t_in = np.clip(theta / (0.55 * 2 * np.pi), 0.0, 1.0)
-    w_in = np.sin(t_in * np.pi / 2.0) ** 1.15
-    t_out = np.clip((theta_max - theta) / (0.65 * 2 * np.pi), 0.0, 1.0)
-    w_out = np.sin(t_out * np.pi / 2.0) ** 1.15
-    max_hw = 0.25 * stripe_period
-    return max_hw * w_in * w_out
-
-def points_to_smooth_bezier_path(pts, smooth_s=0.02):
-    diffs = np.diff(pts, axis=0)
-    dist = np.hypot(diffs[:, 0], diffs[:, 1])
-    keep = np.concatenate(([True], dist > 1e-5))
-    pts = pts[keep]
-    if np.hypot(pts[0, 0] - pts[-1, 0], pts[0, 1] - pts[-1, 1]) > 1e-5:
-        pts = np.vstack([pts, pts[0]])
-    else:
-        pts[-1] = pts[0]
-        
-    tck, u = splprep([pts[:, 0], pts[:, 1]], u=None, s=smooth_s, per=1, k=3)
-    px = PPoly.from_spline((tck[0], tck[1][0], tck[2]))
-    py = PPoly.from_spline((tck[0], tck[1][1], tck[2]))
-    
-    k = tck[2]
-    knots = tck[0]
-    cmds = []
-    first = True
-    for idx in range(k, len(knots) - k - 1):
-        a, b_k = knots[idx], knots[idx + 1]
-        dt = b_k - a
-        if dt <= 1e-9:
-            continue
-        cx_c, cy_c = px.c[:, idx], py.c[:, idx]
-        x0, y0 = cx_c[3], cy_c[3]
-        dx0, dy0 = cx_c[2], cy_c[2]
-        x3 = cx_c[0]*dt**3 + cx_c[1]*dt**2 + cx_c[2]*dt + cx_c[3]
-        y3 = cy_c[0]*dt**3 + cy_c[1]*dt**2 + cy_c[2]*dt + cy_c[3]
-        dx3 = 3*cx_c[0]*dt**2 + 2*cx_c[1]*dt + cx_c[2]
-        dy3 = 3*cy_c[0]*dt**2 + 2*cy_c[1]*dt + cy_c[2]
-        
-        x1, y1 = x0 + (dt/3.0)*dx0, y0 + (dt/3.0)*dy0
-        x2, y2 = x3 - (dt/3.0)*dx3, y3 - (dt/3.0)*dy3
-        if first:
-            cmds.append(f"M {x0:.3f} {y0:.3f}")
-            first = False
-        cmds.append(f"C {x1:.3f} {y1:.3f}, {x2:.3f} {y2:.3f}, {x3:.3f} {y3:.3f}")
-    cmds.append("Z")
-    return " ".join(cmds)
-
-t_norm = np.linspace(0, 1, 950) ** 1.25
-thetas = t_norm * theta_max
-
-white_arm_paths = []
-for arm_idx in range(2):
-    phi0 = arm_idx * np.pi
-    r_c = r_start + b * thetas
-    hw = arm_half_width(thetas)
-    
-    r_out_edge = r_c + hw
-    ang_out = thetas + phi0
-    x_out = cx + r_out_edge * np.cos(ang_out)
-    y_out = cy + r_out_edge * np.sin(ang_out)
-    
-    r_in_edge = r_c - hw
-    ang_in = thetas[::-1] + phi0
-    x_in = cx + r_in_edge[::-1] * np.cos(ang_in)
-    y_in = cy + r_in_edge[::-1] * np.sin(ang_in)
-    
-    pts_x = np.concatenate([x_out, x_in[1:-1]])
-    pts_y = np.concatenate([y_out, y_in[1:-1]])
-    pts = np.column_stack([pts_x, pts_y])
-    
-    path_d = points_to_smooth_bezier_path(pts, smooth_s=0.02)
-    white_arm_paths.append(path_d)
-
-white_d = "\n".join(white_arm_paths)
-
-svg_point = f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">
-  <circle id="schwarz" cx="{cx:.1f}" cy="{cy:.1f}" r="{R_outer:.1f}" fill="#000000" />
-  <path id="weiss" fill="#FFFFFF" d="{white_d}" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+<title id="title">LHU Hypno Load</title><desc id="desc">A hypnotic spiral loading symbol.</desc>
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00d9ff"/><stop offset=".48" stop-color="#ff4fc8"/><stop offset="1" stop-color="#ff8a18"/>
+  </linearGradient>
+</defs>
+<circle cx="60" cy="60" r="54" fill="none" stroke="url(#g)" stroke-width="2" opacity=".22"/>
+<path d="M60 7 A53 53 0 1 1 13 60 C13 34 34 15 60 15 C84 15 103 34 103 58 C103 80 85 97 63 97 C43 97 27 82 27 62 C27 44 41 30 59 30 C75 30 88 43 88 59 C88 73 77 84 63 84 C51 84 42 75 42 63 C42 53 50 45 60 45 C68 45 75 52 75 60 C75 66 70 71 64 71 C59 71 56 68 56 63" fill="none" stroke="url(#g)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="60" cy="60" r="4" fill="#fff"/>
 </svg>
-'''
-
-with open("spirale-perfekt-rund-v3.svg", "w", encoding="utf-8") as f:
-    f.write(svg_point)
-
-print("Saved spirale-perfekt-rund-v3.svg")
