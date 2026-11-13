@@ -194,7 +194,7 @@
             .carousel-wrapper {
                 position: relative;
                 width: 100%;
-                max-width: 340px;
+                max-width: 520px;
                 margin: 15px auto 10px;
                 overflow: hidden;
                 border-radius: 8px;
@@ -207,41 +207,85 @@
             .carousel-stage {
                 position: relative;
                 width: 100%;
+                min-height: 220px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background: var(--bg-solid);
-                min-height: 220px;
             }
             .carousel-slide {
                 position: absolute;
                 inset: 0;
+                width: 100%;
+                height: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 opacity: 0;
+                visibility: hidden;
                 transition: opacity 0.35s ease;
                 pointer-events: none;
             }
             .carousel-slide.active {
                 opacity: 1;
+                visibility: visible;
                 pointer-events: auto;
                 position: relative;
-            }
-            .carousel-slide img {
                 width: 100%;
                 height: auto;
+                min-height: 220px;
+            }
+            .carousel-slide img {
                 display: block;
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+                max-height: min(72vh, 720px);
                 object-fit: contain;
+                object-position: center;
+                margin: 0 auto;
+            }
+            .project-zoom-btn {
+                position: absolute;
+                right: 12px;
+                bottom: 12px;
+                z-index: 8;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 46px;
+                height: 46px;
+                border: 1px solid rgba(255,255,255,0.55);
+                border-radius: 50%;
+                background: rgba(8, 9, 12, 0.82);
+                color: #fff;
+                font-size: 22px;
+                line-height: 1;
+                box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+                cursor: zoom-in;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .project-zoom-btn:hover,
+            .project-zoom-btn:focus-visible {
+                background: var(--strip-active);
+                color: #111;
+                outline: 2px solid #fff;
+                outline-offset: 2px;
+            }
+            @media (max-width: 480px) {
+                .carousel-wrapper { max-width: 100%; }
+                .project-zoom-btn { width: 42px; height: 42px; right: 9px; bottom: 9px; }
             }
 
             /* 3D-Modell-Slide */
             .carousel-slide.is-model {
                 aspect-ratio: 1 / 1;
-                width: 100%;
+                width: min(100%, 320px);
+                height: 320px;
                 max-width: 320px;
                 max-height: 320px;
-                margin: 0 auto;
+                margin: auto;
             }
             .carousel-slide model-viewer {
                 width: 100%;
@@ -628,6 +672,22 @@
                                 img.loading = 'lazy';
                                 img.decoding = 'async';
                                 slide.appendChild(img);
+
+                                const zoomButton = document.createElement('button');
+                                zoomButton.type = 'button';
+                                zoomButton.className = 'project-zoom-btn';
+                                zoomButton.textContent = '🔍';
+                                zoomButton.setAttribute('aria-label', `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
+                                zoomButton.title = 'Bild vergrößern';
+                                zoomButton.addEventListener('click', (event) => {
+                                    event.stopPropagation();
+                                    if (typeof window.__lhuOpenImageLightbox === 'function') {
+                                        window.__lhuOpenImageLightbox(img.currentSrc || img.src, img.alt);
+                                    } else {
+                                        window.open(img.currentSrc || img.src, '_blank', 'noopener,noreferrer');
+                                    }
+                                });
+                                slide.appendChild(zoomButton);
                             }
                             stage.appendChild(slide);
                         });

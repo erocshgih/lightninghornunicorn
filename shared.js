@@ -119,15 +119,77 @@
                5. KATEGORIE-LADEN
                -------------------------------------------------------- */
             const categoryPages = {
-                'ABOUT':         '01_about.html',
-                'VHS MULTIVERSE':'02_vhsmultiverse.html',
-                'HUMANART':      '03_humanart.html',
-                'PROJECTS':      '04_projects.html',
-                'STORYTIME':     '05_storytime.html',
-                'MUSIC':         '06_music.html',
-                'CONTACT':       '07_contact.html',
-                'DONATE':        '08_donate.html'
+                'ABOUT':          '01_about.html',
+                'VHS MULTIVERSE': '02_vhsmultiverse.html',
+                'HUMANART':       '03_humanart.html',
+                'PROJECTS':       '04_projects.html',
+                'STORYTIME':      '05_storytime.html',
+                'MUSIC':          '06_music.html',
+                'CONTACT':        '07_contact.html',
+                'DONATE':         '08_donate.html'
             };
+            // GitHub Pages: flache Dateistruktur mit echten, lesbaren Kategoriepfaden.
+            // 404.html leitet unbekannte Pfade kurz über /?__lhu_route=... um;
+            // diese Funktion stellt danach die gewünschte saubere URL wieder her.
+            const categoryPaths = {
+                'ABOUT': '/about',
+                'VHS MULTIVERSE': '/vhsmultiverse',
+                'HUMANART': '/humanart',
+                'PROJECTS': '/projects',
+                'STORYTIME': '/storytime',
+                'MUSIC': '/music',
+                'CONTACT': '/contact',
+                'DONATE': '/donate'
+            };
+            const routeCategories = Object.fromEntries(
+                Object.entries(categoryPaths).map(([category, route]) => [route, category])
+            );
+            const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
+
+            function restoreGithubPagesRoute() {
+                const encodedRoute = new URLSearchParams(window.location.search).get('__lhu_route');
+                if (!encodedRoute) return null;
+                try {
+                    const requested = new URL(encodedRoute, window.location.origin);
+                    if (requested.origin !== window.location.origin) return null;
+                    const category = routeCategories[normalizePath(requested.pathname)];
+                    if (!category) return null;
+                    const cleanUrl = categoryPaths[category] + requested.search + requested.hash;
+                    window.history.replaceState({ lhuCategory: category }, '', cleanUrl);
+                    return category;
+                } catch (error) {
+                    console.warn('[LHU] Ungültige Route aus GitHub-Pages-Fallback:', error);
+                    return null;
+                }
+            }
+
+            function categoryFromHash(hash = window.location.hash) {
+                const normalized = hash ? (hash.startsWith('#/') ? hash : '#/' + hash.slice(1).replace(/^\//, '')) : '';
+                const legacyHashRoutes = Object.fromEntries(
+                    Object.entries(categoryPaths).map(([category, route]) => [route.replace(/^\//, '#/'), category])
+                );
+                return legacyHashRoutes[normalized.replace(/\/+$/, '')] || null;
+            }
+
+            function categoryFromLocation() {
+                const restored = restoreGithubPagesRoute();
+                if (restored) return restored;
+                return routeCategories[normalizePath(window.location.pathname)] || categoryFromHash();
+            }
+
+            function writeCategoryRoute(category, replace = false) {
+                const route = categoryPaths[category];
+                if (!route) return;
+                const currentPath = normalizePath(window.location.pathname);
+                if (currentPath === route) {
+                    if (window.location.pathname !== route) {
+                        window.history.replaceState({ lhuCategory: category }, '', route + window.location.search + window.location.hash);
+                    }
+                    return;
+                }
+                const method = replace ? 'replaceState' : 'pushState';
+                window.history[method]({ lhuCategory: category }, '', route);
+            }
             const CAT_COLORS = {
                 'ABOUT':         'var(--accent)',
                 'VHS MULTIVERSE':'var(--accent-red)',
@@ -137,6 +199,64 @@
                 'MUSIC':         'var(--accent-red)',
                 'CONTACT':       'var(--accent-blue)',
                 'DONATE':        'var(--accent)'
+            };
+
+            // Shared image lightbox for galleries such as PROJECTS.
+            let imageLightbox = null;
+            let lightboxPreviousFocus = null;
+            function ensureImageLightbox() {
+                if (imageLightbox) return imageLightbox;
+                const overlay = document.createElement('div');
+                overlay.className = 'lhu-lightbox';
+                overlay.hidden = true;
+                overlay.setAttribute('role', 'dialog');
+                overlay.setAttribute('aria-modal', 'true');
+                overlay.setAttribute('aria-label', 'Bildansicht');
+
+                const close = document.createElement('button');
+                close.type = 'button';
+                close.className = 'lhu-lightbox__close';
+                close.setAttribute('aria-label', 'Bildansicht schließen');
+                close.textContent = '×';
+
+                const image = document.createElement('img');
+                image.className = 'lhu-lightbox__image';
+                image.alt = '';
+                image.decoding = 'async';
+
+                overlay.append(close, image);
+                document.body.appendChild(overlay);
+
+                const closeLightbox = () => {
+                    overlay.hidden = true;
+                    image.removeAttribute('src');
+                    if (lightboxPreviousFocus && lightboxPreviousFocus.isConnected) {
+                        lightboxPreviousFocus.focus();
+                    }
+                    lightboxPreviousFocus = null;
+                };
+                close.addEventListener('click', closeLightbox);
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) closeLightbox();
+                });
+                document.addEventListener('keydown', (event) => {
+                    if (!overlay.hidden && event.key === 'Escape') {
+                        event.preventDefault();
+                        closeLightbox();
+                    }
+                });
+
+                imageLightbox = { overlay, image, close, closeLightbox };
+                return imageLightbox;
+            }
+            window.__lhuOpenImageLightbox = (src, alt = 'Vergrößerte Ansicht') => {
+                if (!src) return;
+                const box = ensureImageLightbox();
+                lightboxPreviousFocus = document.activeElement;
+                box.image.src = src;
+                box.image.alt = alt;
+                box.overlay.hidden = false;
+                box.close.focus();
             };
 
             const mainContent = document.getElementById('mainContent');
@@ -165,11 +285,30 @@
                 });
             }
 
-            async function triggerCategoryChange(cat) {
-                if (cat === currentCategory) return;
-                currentCategory = cat;
+            let categoryLoadToken = 0;
+            let categoryTransitionTimer = null;
+            let categoryFetchController = null;
 
-                // Cleanup vor Swap
+            async function triggerCategoryChange(cat, options = {}) {
+                if (!categoryPages[cat]) return;
+                if (options.updateHistory !== false) writeCategoryRoute(cat, false);
+                if (cat === currentCategory) return;
+
+                const loadToken = ++categoryLoadToken;
+                if (categoryTransitionTimer !== null) {
+                    clearTimeout(categoryTransitionTimer);
+                    categoryTransitionTimer = null;
+                }
+                if (categoryFetchController) {
+                    categoryFetchController.abort();
+                    categoryFetchController = null;
+                }
+                if (vhsImageObserver) {
+                    vhsImageObserver.disconnect();
+                    vhsImageObserver = null;
+                }
+
+                currentCategory = cat;
                 runCleanups();
 
                 const door = document.getElementById('door-overlay');
@@ -179,40 +318,43 @@
                 door.classList.remove('open');
                 door.classList.add('closed');
 
-                // Aktive Kategorie markieren
                 document.querySelectorAll('.cat-item').forEach(item => {
                     const isActive = item.getAttribute('data-cat') === cat;
                     item.classList.toggle('active', isActive);
-                    item.setAttribute('aria-current', isActive ? 'true' : 'false');
+                    item.setAttribute('aria-current', isActive ? 'page' : 'false');
                 });
 
                 showLoading(true);
 
-                setTimeout(async () => {
+                categoryTransitionTimer = window.setTimeout(async () => {
+                    if (loadToken !== categoryLoadToken) return;
                     const targetPage = categoryPages[cat];
-                    if (!targetPage) { showLoading(false); return; }
+                    if (!targetPage) {
+                        if (loadToken === categoryLoadToken) showLoading(false);
+                        return;
+                    }
+
+                    const controller = new AbortController();
+                    categoryFetchController = controller;
 
                     try {
-                        const response = await fetch(targetPage);
+                        const response = await fetch(targetPage, { signal: controller.signal });
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
                         const htmlText = await response.text();
+                        if (loadToken !== categoryLoadToken) return;
+
                         const doc = new DOMParser().parseFromString(htmlText, 'text/html');
                         const fetchedMain = doc.querySelector('main') || doc.body;
-
                         if (!fetchedMain) throw new Error('Kein <main> gefunden');
 
-                        // Content SWAP
                         mainContent.innerHTML = fetchedMain.innerHTML;
 
-                        // Sprache anwenden
                         const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
                         mainContent.querySelectorAll('[data-lang-en]').forEach(el => {
                             const text = el.getAttribute(`data-lang-${lang}`);
                             if (text) el.innerHTML = text;
                         });
 
-                        // Scripts re-executieren
                         Array.from(mainContent.querySelectorAll('script')).forEach(oldScript => {
                             const newScript = document.createElement('script');
                             Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
@@ -222,45 +364,37 @@
 
                         applyGlobalMute();
 
-                        // Zoom-Wrapper
-                        const noZoomCats = ['HUMANART', 'STORYTIME', 'MUSIC', 'CONTACT', 'DONATE'];
-                        if (!noZoomCats.includes(cat)) {
+                        // ABOUT uses the generic image zoom; other categories own their galleries.
+                        if (cat === 'ABOUT') {
                             mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
-                                if (img) { img.loading = 'lazy'; img.decoding = 'async'; }
+                                img.loading = 'lazy';
+                                img.decoding = 'async';
                                 if (img.parentElement.tagName !== 'A') {
                                     const wrapper = document.createElement('a');
-                                    wrapper.href = img.src;
+                                    wrapper.href = img.currentSrc || img.src;
                                     wrapper.target = '_blank';
                                     wrapper.rel = 'noopener noreferrer';
                                     wrapper.className = 'zoom-wrapper';
                                     img.parentNode.insertBefore(wrapper, img);
                                     wrapper.appendChild(img);
-                                } else {
-                                    img.parentElement.classList.add('zoom-wrapper');
-                                    if (!img.parentElement.target) img.parentElement.target = '_blank';
                                 }
                             });
                         }
 
-                        // VHS-Glitch
                         if (cat === 'VHS MULTIVERSE') {
-                            const imgEl = mainContent.querySelector('.zoom-wrapper img') || mainContent.querySelector('img');
+                            const imgEl = mainContent.querySelector('#vhs-preview-img');
                             if (imgEl) {
-                                const wrapper = imgEl.closest('.zoom-wrapper') || imgEl.parentElement;
+                                const wrapper = imgEl.parentElement;
                                 if (wrapper) {
                                     wrapper.classList.add('vhs-zoom-wrapper');
                                     imgEl.classList.add('vhs-wobble-img');
-
                                     const crtOverlay = document.createElement('div');
                                     crtOverlay.className = 'vhs-crt-overlay';
                                     wrapper.appendChild(crtOverlay);
 
-                                    let isGlitching = false, glitchTimeout = null;
+                                    let isGlitching = false;
+                                    let glitchTimeout = null;
                                     const vhsTrigger = () => {
-                                        const currentImg = wrapper.querySelector('img');
-                                        if (currentImg && !currentImg.classList.contains('vhs-wobble-img')) {
-                                            currentImg.classList.add('vhs-wobble-img');
-                                        }
                                         if (isGlitching) return;
                                         isGlitching = true;
                                         crtOverlay.classList.remove('active');
@@ -275,40 +409,53 @@
                                             wrapper.classList.remove('glitching');
                                         }, 850);
                                     };
+
                                     vhsImageObserver = new MutationObserver((mutations) => {
-                                        let should = false;
-                                        for (const m of mutations) {
-                                            if (m.type === 'attributes' && m.attributeName === 'src') should = true;
-                                            if (m.type === 'childList') {
-                                                for (const n of m.addedNodes) {
-                                                    if (n.nodeType === 1 && (n.tagName === 'IMG' || (n.querySelector && n.querySelector('img')))) should = true;
-                                                }
-                                            }
-                                        }
-                                        if (should) vhsTrigger();
+                                        const sourceChanged = mutations.some(m =>
+                                            (m.type === 'attributes' && m.attributeName === 'src') ||
+                                            (m.type === 'childList' && [...m.addedNodes].some(n =>
+                                                n.nodeType === 1 && (n.tagName === 'IMG' || n.querySelector?.('img'))
+                                            ))
+                                        );
+                                        if (sourceChanged) vhsTrigger();
                                     });
                                     vhsImageObserver.observe(wrapper, {
-                                        attributes: true, attributeFilter: ['src'],
-                                        childList: true, subtree: true
+                                        attributes: true,
+                                        attributeFilter: ['src'],
+                                        childList: true,
+                                        subtree: true
+                                    });
+                                    window.__lhuRegisterCleanup(() => {
+                                        if (vhsImageObserver) vhsImageObserver.disconnect();
+                                        vhsImageObserver = null;
+                                        clearTimeout(glitchTimeout);
                                     });
                                     setTimeout(vhsTrigger, 250);
                                 }
                             }
                         }
 
+                        if (loadToken !== categoryLoadToken) return;
                         announceCategory(cat);
 
                     } catch (err) {
-                        console.warn('[LHU] load error', err);
-                        showError(cat, targetPage);
+                        if (err?.name !== 'AbortError' && loadToken === categoryLoadToken) {
+                            console.warn('[LHU] load error', err);
+                            showError(cat, targetPage);
+                        }
                     } finally {
-                        showLoading(false);
-                        window.scrollTo(0, 0);
-                        setTimeout(() => {
-                            measure();
-                            door.classList.remove('closed');
-                            door.classList.add('open');
-                        }, 150);
+                        if (loadToken === categoryLoadToken) {
+                            categoryFetchController = null;
+                            categoryTransitionTimer = null;
+                            showLoading(false);
+                            window.scrollTo(0, 0);
+                            setTimeout(() => {
+                                if (loadToken !== categoryLoadToken) return;
+                                measure();
+                                door.classList.remove('closed');
+                                door.classList.add('open');
+                            }, 150);
+                        }
                     }
                 }, 1200);
             }
@@ -613,9 +760,12 @@
                index.html is now the shell host; ABOUT is the first view.
                -------------------------------------------------------- */
             let appEntered = false;
-            window.__lhuEnterMainSite = function() {
+            window.__lhuEnterMainSite = function(options = {}) {
                 if (appEntered) return;
                 appEntered = true;
+                const entryCategory = options.category || categoryFromLocation() || 'ABOUT';
+                // The root URL is the visual intro. Once the user enters, normalize it to /about.
+                writeCategoryRoute(entryCategory, true);
 
                 if (typeof window.__lhuStopIntro === 'function') window.__lhuStopIntro(true);
                 if (typeof window.__lhuPauseIndexExperience === 'function') window.__lhuPauseIndexExperience();
@@ -638,7 +788,23 @@
 
                 applyGlobalMute();
                 startLoop();
-                triggerCategoryChange('ABOUT');
+                triggerCategoryChange(entryCategory, { updateHistory: false });
             };
+
+            // Direct links such as /projects load the requested content without requiring a menu page.
+            const directCategory = categoryFromLocation();
+            if (directCategory) window.__lhuEnterMainSite({ category: directCategory });
+
+            function restoreCategoryFromLocation() {
+                const targetCategory = categoryFromLocation();
+                if (!targetCategory) return;
+                if (!appEntered) {
+                    window.__lhuEnterMainSite({ category: targetCategory });
+                } else {
+                    triggerCategoryChange(targetCategory, { updateHistory: false });
+                }
+            }
+            window.addEventListener('popstate', restoreCategoryFromLocation);
+            window.addEventListener('hashchange', restoreCategoryFromLocation);
         });
     

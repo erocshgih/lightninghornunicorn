@@ -110,34 +110,6 @@
             #vhs-preview-error.show { display: flex; }
             #vhs-preview-error .err-icon { font-size: 32px; }
 
-            /* Zoom-Button */
-            .zoom-btn {
-                position: absolute;
-                bottom: 12px;
-                right: 12px;
-                width: 40px;
-                height: 40px;
-                background: var(--card-bg);
-                border: 2px solid var(--border-soft, #444);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-decoration: none;
-                font-size: 16px;
-                color: inherit;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-                transition: all 0.2s ease;
-                z-index: 5;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-            .zoom-btn:hover,
-            .zoom-btn:focus-visible {
-                transform: scale(1.12) rotate(8deg);
-                background: var(--dot-active);
-                outline: none;
-            }
 
             /* View-Toggles */
             #vhs-view-toggles {
@@ -235,7 +207,6 @@
                     <span class="err-icon">⚠</span>
                     <span>Cover konnte nicht geladen werden</span>
                 </div>
-                <a href="#" target="_blank" rel="noopener noreferrer" class="zoom-btn" id="vhs-zoom-btn" title="Bild in neuem Tab öffnen">🔍</a>
                 <button class="vhs-nav-btn" id="vhs-next" type="button" aria-label="Nächstes Cover">&#9654;</button>
             </div>
 
@@ -300,7 +271,6 @@
                 ];
 
                 const preview = document.getElementById('vhs-preview-img');
-                const zoomBtn = document.getElementById('vhs-zoom-btn');
                 const dotsContainer = document.getElementById('vhs-dots');
                 const viewBtns = document.querySelectorAll('.view-btn');
                 const errorBox = document.getElementById('vhs-preview-error');
@@ -308,6 +278,25 @@
 
                 let activeIdx = -1;
                 let currentView = 'front';
+
+                preview.setAttribute('role', 'button');
+                preview.setAttribute('tabindex', '0');
+                preview.setAttribute('aria-label', 'Aktuelles VHS-Cover vergrößern');
+                preview.style.cursor = 'zoom-in';
+                const openActiveCover = () => {
+                    if (preview.getAttribute('aria-disabled') === 'true') return;
+                    const src = preview.currentSrc || preview.src;
+                    if (src && typeof window.__lhuOpenImageLightbox === 'function') {
+                        window.__lhuOpenImageLightbox(src, preview.alt || 'VHS-Cover');
+                    }
+                };
+                preview.addEventListener('click', openActiveCover);
+                preview.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openActiveCover();
+                    }
+                });
 
                 function renderImage(idx, view) {
                     const item = vhsData[idx];
@@ -328,15 +317,19 @@
                     // Reset Fehler
                     if (errorBox) errorBox.classList.remove('show');
                     preview.classList.remove('visible');
-                    preview.onload = () => preview.classList.add('visible');
+                    preview.setAttribute('aria-disabled', 'true');
+                    preview.alt = `${item.title} – ${safeView}`;
+                    preview.setAttribute('aria-label', `Cover vergrößern: ${item.title}, ${safeView}`);
+                    preview.onload = () => {
+                        preview.classList.add('visible');
+                        preview.removeAttribute('aria-disabled');
+                    };
                     preview.onerror = () => {
                         preview.classList.remove('visible');
+                        preview.setAttribute('aria-disabled', 'true');
                         if (errorBox) errorBox.classList.add('show');
                     };
                     preview.src = url;
-                    preview.alt = `${item.title} – ${safeView}`;
-
-                    if (zoomBtn) zoomBtn.href = url;
                 }
 
                 viewBtns.forEach(btn => {

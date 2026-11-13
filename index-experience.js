@@ -121,7 +121,8 @@
             { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/obesewarrior.glb" },
             { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" },
             { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" },
-            { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" }
+            { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" },
+            { label: "grasscowschmeckicore", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/grasscowschmeckicore.glb" }
         ];
 
         const loadingEl = document.getElementById("index-loading");
@@ -142,7 +143,10 @@
         const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 5); scene.add(fill);
         const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(-3, 5, -5); scene.add(rim);
 
-        const dracoLoader = new DRACOLoader(); dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
+        dracoLoader.setDecoderConfig({ type: "js" }); // Avoid WASM eval paths under restrictive CSP.
+        dracoLoader.setWorkerLimit(1);
         const loader = new GLTFLoader(); loader.setDRACOLoader(dracoLoader);
 
         const hitEnterSlot = document.getElementById("lhu-image-slot");

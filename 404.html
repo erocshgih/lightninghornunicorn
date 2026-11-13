@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Loading Lightning Horn Unicorn…</title>
+</head>
+<body>
+  <p>Returning to Lightning Horn Unicorn…</p>
+  <script>
+    (() => {
+      const requestedPath = window.location.pathname || '/';
+      const normalizedPath = requestedPath.toLowerCase().replace(/\/+$/, '') || '/';
+      const knownRoutes = new Set([
+        '/about', '/vhsmultiverse', '/humanart', '/projects',
+        '/storytime', '/music', '/contact', '/donate'
+      ]);
+
+      if (!knownRoutes.has(normalizedPath)) {
+        window.location.replace('/');
+        return;
+      }
+
+      const requestedUrl = requestedPath + window.location.search + window.location.hash;
+      const fallbackUrl = '/?__lhu_route=' + encodeURIComponent(requestedUrl);
+      window.location.replace(fallbackUrl);
+    })();
+  </script>
+</body>
+</html>
