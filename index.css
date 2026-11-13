@@ -226,7 +226,18 @@
         /* --- LOADING & MODALS --- */
         #index-loading { position: fixed; inset: 0; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; pointer-events: none; color: var(--text-intro); font-family: var(--font-display); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; }
         #index-loading.show { display: flex; }
-        .spinner { width: 54px; height: 54px; background: conic-gradient(from 0deg, transparent, #8fd9fb); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0); animation: spin 0.9s linear infinite; }
+        #index-loading .hypnoload-intro {
+            display: block;
+            width: clamp(64px, 10vw, 92px);
+            height: auto;
+            max-width: none;
+            animation: introHypnoRotate 2.8s linear infinite;
+            filter: drop-shadow(0 0 12px rgba(0, 217, 255, .22));
+        }
+        @keyframes introHypnoRotate { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            #index-loading .hypnoload-intro { animation-duration: 12s; }
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #rainbow-aura { left: 50%; top: 50%; width: min(48vw, 360px); height: min(48vw, 360px); transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, #ff3030, #ffd52e, #40ff70, #30d8ff, #7655ff, #ff35b8, #ff3030); opacity: 0.15; }
