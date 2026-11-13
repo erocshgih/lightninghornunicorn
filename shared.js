@@ -266,15 +266,14 @@
             const headerEl = document.getElementById('headerEl');
             let categoriesOpen = false;
             const categoryPanel = document.getElementById('categorySpherePanel');
-            const duckMenuLabel = collapseBtn?.querySelector('.duck-menu-label');
             function setCategoryMenuOpen(open) {
                 categoriesOpen = Boolean(open);
+                stripWrapper?.classList.toggle('categories-open', categoriesOpen);
                 categoryPanel?.classList.toggle('is-closed', !categoriesOpen);
                 categoryPanel?.setAttribute('aria-hidden', String(!categoriesOpen));
                 collapseBtn.setAttribute('aria-expanded', String(categoriesOpen));
-                collapseBtn.setAttribute('aria-label', categoriesOpen ? 'Kategorien schließen' : 'Kategorien öffnen');
-                collapseBtn.title = categoriesOpen ? 'Close categories' : 'Click for categories';
-                if (duckMenuLabel) duckMenuLabel.textContent = categoriesOpen ? 'CLOSE CATEGORIES' : 'CLICK FOR CATEGORIES';
+                collapseBtn.setAttribute('aria-label', categoriesOpen ? 'Kategorieauswahl schließen' : 'Kategorieauswahl öffnen');
+                collapseBtn.title = 'Kategorieauswahl';
             }
 
             const quackFiles = ['quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3'];
@@ -851,6 +850,7 @@
                     const isActive = item.getAttribute('data-cat') === cat;
                     item.classList.toggle('active', isActive);
                     item.setAttribute('aria-current', isActive ? 'page' : 'false');
+                    item.closest('.sphere-option')?.classList.toggle('is-active', isActive);
                 });
                 const categoryLabel = document.getElementById('categorySphereLabel');
                 if (categoryLabel) categoryLabel.textContent = cat;
@@ -1031,13 +1031,17 @@
             const sphereLabel = document.getElementById('categorySphereLabel');
             if (sphereGrid) {
                 CATS.forEach((cat, index) => {
+                    const option = document.createElement('div');
+                    option.className = 'sphere-option';
                     const sphere = document.createElement('button');
                     sphere.type = 'button';
                     sphere.className = `sphere-category sphere-material-${index + 1}`;
                     sphere.dataset.cat = cat;
                     sphere.setAttribute('aria-label', `Kategorie ${cat} öffnen`);
                     sphere.setAttribute('aria-current', 'false');
-                    sphere.innerHTML = `<span class="sphere-category-name">${cat}</span>`;
+                    const name = document.createElement('span');
+                    name.className = 'sphere-category-name';
+                    name.textContent = cat;
                     const showName = () => { if (sphereLabel) sphereLabel.textContent = cat; };
                     sphere.addEventListener('pointerenter', showName);
                     sphere.addEventListener('focus', showName);
@@ -1045,7 +1049,8 @@
                         showName();
                         triggerCategoryChange(cat);
                     });
-                    sphereGrid.appendChild(sphere);
+                    option.append(sphere, name);
+                    sphereGrid.appendChild(option);
                 });
                 sphereGrid.addEventListener('pointerleave', () => {
                     if (sphereLabel) sphereLabel.textContent = currentCategory || 'SELECT YOUR CATEGORY';

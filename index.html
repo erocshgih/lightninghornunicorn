@@ -103,20 +103,21 @@
 <div class="door-panel"></div>
 </div><header class="header" id="headerEl">
 <div class="strip-wrapper sphere-nav-toolbar" id="stripWrapper">
+<div class="nav-toolbar-row">
 <button aria-label="Farbmodus wechseln" class="theme-btn" id="themeToggle" title="Farbmodus" type="button">☀</button>
 <div class="nav-toolbar-spacer" aria-hidden="true"></div>
 <button aria-label="Audio Sound An/Aus" class="audio-btn" id="audioToggle" title="Audio Sound An/Aus" type="button">
 <img alt="" src="duck.png"/>
 </button>
-<button aria-label="Kategorien öffnen" aria-expanded="false" aria-controls="categorySpherePanel" class="collapse-btn" id="collapseToggle" title="Click for categories" type="button">
+<button aria-label="Kategorien öffnen" aria-expanded="false" aria-controls="categorySpherePanel" class="collapse-btn" id="collapseToggle" title="Kategorieauswahl" type="button">
 <img alt="" src="duck.png"/>
-<span class="duck-menu-label">CLICK FOR CATEGORIES</span>
 </button>
 </div>
 <section aria-label="Kategorieauswahl" aria-hidden="true" class="sphere-menu is-closed" id="categorySpherePanel">
 <div aria-live="polite" class="sphere-category-label" id="categorySphereLabel">SELECT YOUR CATEGORY</div>
 <div class="sphere-category-grid" id="categorySphereGrid"></div>
 </section>
+</div>
 <div aria-hidden="true" class="legacy-nav-runtime">
 <div aria-label="Kategorien" class="cat-strip" id="catStrip" role="list" tabindex="-1"><div class="cat-track" id="catTrack"></div></div>
 <div class="slider-container-wrap" id="sliderWrap"><div class="slider-track" id="sliderTrack"><div class="slider-thumb" id="sliderThumb"></div></div></div>
