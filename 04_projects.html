@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects - LHU Content</title>
+</head>
+<body>
+    <main>
+        <style>
+            /* ============================================
+               PROJECTS — spezifische Styles
+               (Globale Tokens kommen aus shared.css)
+               ============================================ */
+            :root {
+                /* Fallbacks für Direkt-Aufruf ohne shared.css */
+                --accent-red:  #e02424;
+                --accent-blue: #1a73e8;
+                --dot:         #d5d0ca;
+                --dot-active:  #b33;
+                --text:        #14120f;
+                --text-muted:  #57504a;
+                --text-soft:   #8a8078;
+                --card-bg:     #ffffff;
+                --bg-solid:    #ffffff;
+                --border-soft: #e3ddd2;
+                --radius:      10px;
+                --fs-xs:       0.65rem;
+                --fs-sm:       0.8rem;
+            }
+            html[data-theme="dark"]        { --dot: #4a4540; --dot-active: #ff8c22; }
+            html[data-theme="mono-gray"]   { --dot: #555555; --dot-active: #dddddd; }
+            html[data-theme="mono-green"]  { --dot: #1b5e20; --dot-active: #69f0ae; }
+            html[data-theme="crt"]         { --dot: #2a4a2a; --dot-active: #99ff99; }
+
+            /* SECTION WRAPPER */
+            section#PROJECTS {
+                width: 100%;
+                max-width: 920px;
+                margin: 0 auto;
+                box-sizing: border-box;
+            }
+
+            /* ---------- ACCORDION (Kategorie) ---------- */
+            .cat-group {
+                border: 2px solid var(--border-soft);
+                border-radius: var(--radius);
+                margin-bottom: 12px;
+                overflow: hidden;
+                background: var(--card-bg);
+                transition: border-color 0.3s, box-shadow 0.3s;
+                width: 100%;
+            }
+            .cat-group.open {
+                border-color: var(--strip-active);
+                box-shadow: 0 0 16px rgba(255, 154, 60, 0.18);
+            }
+
+            .cat-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 16px 20px;
+                cursor: pointer;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                transition: background 0.2s;
+                background: none;
+                border: none;
+                font: inherit;
+                color: inherit;
+                text-align: left;
+                min-height: 54px;
+                touch-action: manipulation;
+            }
+            .cat-header:hover { background: rgba(255, 154, 60, 0.05); }
+            .cat-header:focus-visible {
+                outline: 2px solid var(--strip-active);
+                outline-offset: -3px;
+            }
+            .cat-header .cat-label {
+                font-family: var(--font-display, 'Press Start 2P', monospace);
+                font-size: var(--fs-xs);
+                color: var(--strip-active);
+                letter-spacing: 0.1em;
+            }
+            .cat-header .arrow {
+                display: inline-block;
+                font-size: 14px;
+                color: var(--strip-active);
+                transition: transform 0.3s ease;
+                margin-left: 10px;
+                flex-shrink: 0;
+            }
+            .cat-group.open > .cat-header .arrow { transform: rotate(90deg); }
+
+            /* ---------- GRID-ROWS-COLLAPSE (Kategorie) ---------- */
+            .cat-body {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows 0.38s cubic-bezier(0.3, 0.9, 0.4, 1);
+            }
+            .cat-group.open > .cat-body { grid-template-rows: 1fr; }
+            .cat-body-inner {
+                overflow: hidden;
+                min-height: 0;
+            }
+
+            /* ---------- ACCORDION (Produkt) ---------- */
+            .prod-item { border-top: 1px solid var(--border-soft); }
+            .prod-item:first-child { border-top: none; }
+
+            .prod-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 14px 22px;
+                cursor: pointer;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                transition: background 0.2s;
+                background: none;
+                border: none;
+                font: inherit;
+                color: inherit;
+                text-align: left;
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+            .prod-header:hover { background: rgba(255, 154, 60, 0.04); }
+            .prod-header:focus-visible {
+                outline: 2px solid var(--strip-active);
+                outline-offset: -3px;
+            }
+            .prod-header .prod-name {
+                font-family: var(--font-display, 'Press Start 2P', monospace);
+                font-size: var(--fs-xs);
+                color: var(--text-muted);
+                letter-spacing: 0.05em;
+                line-height: 1.5;
+                padding-right: 8px;
+            }
+            .prod-header .prod-arrow {
+                display: inline-block;
+                font-size: 12px;
+                color: var(--strip-active);
+                transition: transform 0.3s ease;
+                margin-left: 10px;
+                flex-shrink: 0;
+            }
+            .prod-item.open > .prod-header .prod-arrow { transform: rotate(90deg); }
+
+            /* ---------- GRID-ROWS-COLLAPSE (Produkt) ---------- */
+            .prod-body {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows 0.38s cubic-bezier(0.3, 0.9, 0.4, 1);
+            }
+            .prod-item.open > .prod-body { grid-template-rows: 1fr; }
+
+            .prod-body-inner {
+                overflow: hidden;
+                min-height: 0;
+                padding: 0 24px 24px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            /* ---------- BESCHREIBUNG ---------- */
+            .prod-desc {
+                font-family: var(--font-body, 'VT323', monospace);
+                font-size: var(--fs-body-content, 1.1rem);
+                color: var(--text-muted);
+                line-height: 1.55;
+                margin-top: 20px;
+                margin-bottom: 16px;
+                text-align: left;
+                white-space: pre-line;
+                width: 100%;
+                max-width: 65ch;
+            }
+            .prod-desc strong {
+                color: var(--text);
+                display: inline;
+                font-weight: 600;
+                font-family: var(--font-display, 'Press Start 2P', monospace);
+                font-size: 0.85em;
+                letter-spacing: 0.02em;
+            }
+
+            /* ---------- CAROUSEL ---------- */
+            .carousel-wrapper {
+                position: relative;
+                width: 100%;
+                max-width: 520px;
+                margin: 15px auto 10px;
+                overflow: hidden;
+                border-radius: 8px;
+                box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+                background: var(--card-bg);
+                box-sizing: border-box;
+                border: 2px solid var(--border-soft);
+                contain: layout paint;
+            }
+            .carousel-stage {
+                position: relative;
+                width: 100%;
+                min-height: 220px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg-solid);
+            }
+            .carousel-slide {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.35s ease;
+                pointer-events: none;
+            }
+            .carousel-slide.active {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                position: relative;
+                width: 100%;
+                height: auto;
+                min-height: 220px;
+            }
+            .carousel-slide img {
+                display: block;
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+                max-height: min(72vh, 720px);
+                object-fit: contain;
+                object-position: center;
+                margin: 0 auto;
+            }
+            @media (max-width: 480px) {
+                .carousel-wrapper { max-width: 100%; }
+            }
+
+            /* 3D-Modell-Slide */
+            .carousel-slide.is-model {
+                aspect-ratio: 1 / 1;
+                width: min(100%, 320px);
+                height: 320px;
+                max-width: 320px;
+                max-height: 320px;
+                margin: auto;
+            }
+            .carousel-slide model-viewer {
+                width: 100%;
+                height: 100%;
+                background: transparent;
+                --poster-color: transparent;
+                display: block;
+            }
+
+            /* Model-Loading-Overlay */
+            .model-loading {
+                position: absolute;
+                inset: 0;
+                z-index: 6;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                background: var(--bg-solid);
+                pointer-events: none;
+            }
+            .model-loading .spinner {
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                border: 4px solid rgba(128, 128, 128, 0.18);
+                border-top-color: var(--strip-active, #ff7a00);
+                animation: modelSpin 0.9s linear infinite;
+            }
+            .model-loading .hypnoload-model {
+                width: 48px;
+                height: 48px;
+                display: block;
+                animation: modelSpin 2.8s linear infinite;
+                filter: drop-shadow(0 0 8px rgba(0, 217, 255, .2));
+            }
+            .model-loading .label {
+                font-family: var(--font-display, 'Press Start 2P', monospace);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--text-soft);
+            }
+            @keyframes modelSpin { to { transform: rotate(360deg); } }
+
+            /* ---------- DOTS ---------- */
+            .carousel-dots {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin: 12px 0 6px;
+                padding: 4px 0;
+            }
+            .carousel-dot {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: var(--dot);
+                cursor: pointer;
+                transition: background 0.25s, transform 0.25s;
+                -webkit-tap-highlight-color: transparent;
+                border: none;
+                padding: 0;
+                touch-action: manipulation;
+            }
+            .carousel-dot:hover,
+            .carousel-dot:focus-visible { transform: scale(1.25); }
+            .carousel-dot:focus-visible {
+                outline: 2px solid var(--strip-active);
+                outline-offset: 3px;
+            }
+            .carousel-dot.active {
+                background: var(--dot-active);
+                transform: scale(1.25);
+            }
+
+            @media (max-width: 480px) {
+                .carousel-dot { width: 24px; height: 24px; }
+                .prod-body-inner { padding: 0 16px 20px; }
+            }
+
+            /* ---------- REDUCED MOTION ---------- */
+            @media (prefers-reduced-motion: reduce) {
+                .cat-body,
+                .prod-body { transition-duration: 0.01ms; }
+                .cat-header .arrow,
+                .prod-header .prod-arrow { transition-duration: 0.01ms; }
+                .model-loading .spinner { animation-duration: 2s; }
+                .model-loading .hypnoload-model { animation-duration: 12s; }
+            }
+        </style>
+
+        <section id="PROJECTS">
+            <h2 data-lang-en="PROJECTS" data-lang-de="PROJECTS">PROJECTS</h2>
+            <p data-lang-en="Mechanical prototypes, 3D designs &amp; physical concepts"
+               data-lang-de="Mechanische Prototypen, 3D Designs &amp; physische Konzepte">Mechanical prototypes, 3D designs &amp; physical concepts</p>
+
+            <div id="projects-accordion"></div>
+        </section>
+
+        <script>
+            /* ============================================================
+               PROJECTS — Akkordeon & Carousel (v2.0)
+               ============================================================ */
+            (function initProjects() {
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+
+                /* ------------------------------------------------
+                   Model-Viewer lazy-loading (einmalig, mit Guard)
+                   ------------------------------------------------ */
+                function ensureModelViewer() {
+                    if (customElements.get('model-viewer')) return Promise.resolve();
+                    if (!document.querySelector('script[data-lhu-mv-loader]')) {
+                        const s = document.createElement('script');
+                        s.type = 'module';
+                        s.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js';
+                        s.setAttribute('data-lhu-mv-loader', '1');
+                        document.head.appendChild(s);
+                    }
+                    return customElements.whenDefined('model-viewer').catch(() => {});
+                }
+                // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
+                ensureModelViewer();
+
+                /* ------------------------------------------------
+                   Datenmodell
+                   ------------------------------------------------ */
+                const projects = [
+                    {
+                        cat: 'GLASSES',
+                        products: [{
+                            name: 'DUCKPARADA: THUNDERBOLT',
+                            desc: {
+                                en: `Inspired by Bauhaus, aircraft carriers, ducks, and Japanese superheroes, Thunderbolt 1 was born after over two years of development and more than 30 self-made drafts in Blender 3D.\n\nA modular glasses structure with optical lenses and genuine everyday utility.\n\nThe idea was simple: Grab the lightning from the sky and wear it as eyewear.\n\nZeus: Who the fuck stole my glasses?\nNarrator: For risks and side effects, bargain with feta cheese.`,
+                                de: `Inspiriert von Bauhaus, Flugzeugträgern, Enten und japanischen Superhelden, entstand Thunderbolt 1 nach über zwei Jahren Entwicklung und mehr als 30 selbstgemachten Entwürfen in Blender 3D.\n\nEine modulare Brillenstruktur mit optischen Linsen und echtem Alltagsnutzen.\n\nDie Idee war simpel: Greif dir den Blitz vom Himmel und trag ihn als Brille.\n\nZeus: Wer zur Hölle hat meine Brille geklaut?\nErzähler: Zu Risiken und Nebenwirkungen feilschen Sie mit Feta-Käse.`
+                            },
+                            images: [
+                                { src: 'projects/projects_glasses_duckparada_thunderbolt1vedran.webp' },
+                                { src: 'projects/projects_glasses_duckparada_thunderbolt2package.webp' },
+                                { src: 'projects/projects_glasses_duckparada_thunderbolt3comic.webp' },
+                                { src: 'projects/projects_glasses_duckparada_thunderbolt4squat.webp' }
+                            ]
+                        }]
+                    },
+                    {
+                        cat: 'HELMET',
+                        products: [{
+                            name: 'DUCKPARADA: DUCKLIGHT',
+                            desc: {
+                                en: `Began as a decorative duck from a flea market. After removing the plastic bottom, it was defined as headgear.\n\nThis resulted in the first unlicensed Duckparada helmet.\n\nUltralight, striking, and completely uncontrollable. A prototype and proof that good ideas sometimes show up when your mind is open for illegal usage of all day objects.`,
+                                de: `Begann als dekorative Ente vom Flohmarkt. Nachdem der Plastikboden entfernt wurde, definierte man es kurzerhand als Kopfbedeckung.\n\nDas war die Geburtsstunde des ersten unlizenzierten Duckparada-Helms.\n\nUltraleicht, auffällig und völlig unkontrollierbar. Ein Prototyp und der Beweis dafür, dass gute Ideen manchmal dann entstehen, wenn man bereit ist, Alltagsgegenstände zweckzuentfremden.`
+                            },
+                            images: [
+                                { src: 'projects/projects_helmet_duckparada_ducklight_package1.webp' },
+                                { src: 'projects/projects_helmet_duckparada_mark123comic.webp' },
+                                { src: 'projects/projects_helmet_duckparada_mark12goldmine.webp' }
+                            ]
+                        }]
+                    },
+                    {
+                        cat: 'RINGS',
+                        products: [{
+                            name: 'TURN ME ON RING',
+                            desc: {
+                                en: `One ring to give them all… emotional confusion.\n\nBuilt around a grotesque sculptural form with a tongue, staring eyes, tail, and a small mechanical-looking button marked "ON".\n\nAt the top sits a simple message:\n\nLOVE ME.\nLOVE. ME.\nYES WE CAN.\n\nPart wearable object, part miniature character. Lickable? …rusty and risk-obvious.\n\nA ring with no purpose.\nExcept perhaps turning something on.`,
+                                de: `Ein Ring, um sie alle... in emotionale Verwirrung zu stürzen.\n\nGebaut um eine groteske skulpturale Form mit einer Zunge, starrenden Augen, einem Schwanz und einem kleinen mechanisch aussehenden Knopf mit der Aufschrift "ON".\n\nOben prangt eine einfache Botschaft:\n\nLOVE ME.\nLOVE. ME.\nYES WE CAN.\n\nTeils tragbares Objekt, teils Miniatur-Charakter. Kann man ihn ablecken? …er ist rostig und birgt offensichtliche Risiken.\n\nEin Ring ohne Zweck.\nAußer vielleicht, irgendetwas "anzuschalten".`
+                            },
+                            images: [
+                                { model: 'glb/turnmeonring.glb' },
+                                { src: 'projects/projects_rings_turnmeonring_1package.webp' },
+                                { src: 'projects/projects_rings_turnmeonring_2comic.webp' },
+                                { src: 'projects/projects_rings_turnmeonring_3ad.webp' }
+                            ]
+                        }]
+                    },
+                    {
+                        cat: 'FIGURINE',
+                        products: [
+                            {
+                                name: 'BERTA',
+                                desc: {
+                                    en: `Berta was developed for a future in which vegetables became necessary weapons.\n\nA pink goat equipped with two of the juiciest hi-tek cucumbers… in Dolby surround ASMR. Maybe.\n\nAfter the battle, there is only one thing left to do:\n\nEat your weapons, Berta.`,
+                                    de: `Berta wurde für eine Zukunft entwickelt, in der Gemüse zu notwendigen Waffen wurde.\n\nA rosa Ziege, ausgerüstet mit zwei der saftigsten Hi-Tek-Gurken… in Dolby Surround ASMR. Vielleicht.\n\nNach der Schlacht bleibt nur noch eines zu tun:\n\nFriss deine Waffen, Berta.`
+                                },
+                                images: [
+                                    { model: 'glb/berta.glb' },
+                                    { src: 'projects/projects_figurine_berta1package.webp' },
+                                    { src: 'projects/projects_figurine_berta3drawing.webp' },
+                                    { src: 'projects/projects_figurine_berta4newspaper.webp' }
+                                ]
+                            },
+                            {
+                                name: 'DUDDHA',
+                                desc: {
+                                    en: `Duddha was created. Yes.\n\nA sculptural duck combining bullshitery, retro science fiction, and the unmistakable attitude of… flipping the bird.\n\nHe's obese. He may eat your last pretzel from your lunchbox.\n\nEnlightenment is just a digital hero in neonspandex throwing up in a meditation room.\n\nThis whole package is the most disrespectful, glorious, motherlovin' spiritual awakening you've ever seen. You don't meditate with this thing — you put it on your desk, stare at it, and suddenly every corporate meeting, every traffic jam, every "live laugh love" sign in the world just feels a little more… fuckable.\n\nForget the red pill. Forget the blue pill. He ate both of 'em and now we're stuck here while he waves his hands, politely asking for the next sandwich.`,
+                                    de: `Duddha wurde erschaffen. Ja.\n\nEine skulpturale Ente, die Bullshit, Retro-Science-Fiction und die unverkennbare Attitüde des... Mittelfingers kombiniert.\n\nEr ist fettleibig. Er könnte dir die letzte Brezel aus deiner Brotdose klauen.\n\nErleuchtung ist einfach nur digitaler Held in Neonstreifen, der in einem Meditationsraum kotzt.\n\nDieses ganze Paket ist das respektloseste, glorreichste, verfickteste spirituelle Erwachen, das du je gesehen hast. Man meditiert nicht mit diesem Ding – man stellt es auf den Schreibtisch, starrt es an und plötzlich fühlt sich jedes Firmenmeeting, jeder Stau und jedes "Live Laugh Love"-Schild auf der Welt ein bisschen... fickbarer an.\n\nVergiss die rote Pille. Vergiss die blaue Pille. Er hat beide gefressen und jetzt sitzen wir hier fest, während er mit den Händen wedelt und höflich nach dem nächsten Sandwich fragt.`
+                                },
+                                images: [
+                                    { model: 'glb/duddha.glb' },
+                                    { src: 'projects/projects_figurine_duddha1package.webp' },
+                                    { src: 'projects/projects_figurine_duddha2figurine.webp' }
+                                ]
+                            },
+                            {
+                                name: 'COMMISSIONER WURSTINGER',
+                                desc: {
+                                    en: `After eating the evidence, German Shepherd Wurstinger was suspended from crime-solving duties. The name was changed by the editorial team.\n\nINTERROGATION ROOM\n\nThe suspect is a Leberkäse.\n\nIs the Leberkäse pregnant?\n\nA juicy crime.\n\nVIENNA, 2:32 PM\n\nSomewhere in Vienna, something suspiciously suspicious is happening. (According to every retiree here.)\n\nThe police are on the scene.\n\nWurstinger too.\n\nAt the sausage stand, of course.\n\nSuddenly Wurstinger leaps through a glass pane.\n\nEven though there are no glass panes at this open-air sausage stand.\n\nHopsboing.\n\nAfter his career as a law enforcer, Wurstinger tries to extort protection money from the dog groomer.\n\nHe gets no money.\n\nBut a new hairstyle.\nAnd a leather jacket.\n\nWURSTINGER\n\nA DIGESTIVE TRACT WITHOUT CUSTOMS CONTROL...\n\n...Based on a possible true story.`,
+                                    de: `Nachdem er die Beweismittel gegessen hatte, wurde Schäferhund Wurstinger vom Dienst zur Verbrechenslösung suspendiert. Der Name wurde von der Redaktion geändert.\n\nVERHÖRRAUM\n\nDer Verdächtige ist ein Leberkäse.\n\nDer Leberkäse ist schwanger?\n\nEin saftiges Vergehen.\n\nWIEN, 14:32 UHR\n\nIrgendwo in Wien passiert etwas verdächtig Verdächtiges. (Sagt jeder Pensionist hier.)\n\nDie Polizei ist vor Ort.\n\nWurstinger auch.\n\nAm Würstelstand natürlich.\n\nPlötzlich springt Wurstinger durch eine Glasscheibe.\n\nObwohl es an diesem offenen Würstelstand überhaupt keine Glasscheiben gibt.\n\nHopsboing.\n\nNach seiner Karriere als Ordnungshüter versucht Wurstinger, beim Hundefriseur Schutzgeld zu erpressen.\n\nEr bekommt kein Geld.\n\nAber eine neue Frisur.\nUnd eine Lederjacke.\n\nWURSTINGER\n\nEIN VERDAUUNGSTRAKT OHNE ZOLLKONTROLLE...\n\n...Basierend auf einer möglichen Geschichte.`
+                                },
+                                images: [
+                                    { model: 'glb/commissionerwurstinger.glb' },
+                                    { src: 'projects/projects_figurine_commissionerwurstinger_leatherjacket.webp' },
+                                    { src: 'projects/projects_figurine_commissionerwurstinger_pregnant.webp' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        cat: 'ACCESSOIRE',
+                        products: [
+                            {
+                                name: 'DUCK ARMOR: BACKPACK',
+                                desc: {
+                                    en: `Duck Armor began as a simple question:\nWhat if a backpack had armor...\n...\n...\n...\n...\n...\nAnd duck faces obviously...?\nIt looks like a backpack designed by a medieval knight who had only seen ducks.\nImagine a riot shield, but instead of protecting you, it asks for bread.\nDon't feed the armor.\nBuilt around a sculptural duck-shaped shell with integrated... well fuck this explanational summary...\nDesigned for everyday movement through streets, crowds, and questionable adventures.\nIt carries your stuff.\nWHAT! DO... YOU... WANT... MORE!\nUGH.\nIt’s not fashion.\nIt’s a tactical misunderstanding.\nThe only thing more powerful than two duck heads on your chest is three duck heads on your chest.\nUnfortunately...\nTHAT'S TOO POWERFUL.`,
+                                    de: `Duck Armor begann mit einer einfachen Frage:\nWas wäre, wenn ein Rucksack eine Rüstung hätte...\n...\n...\n...\n...\n...\nUnd natürlich Entengesichter...?\nEs sieht aus wie ein Rucksack, entworfen von einem mittelalterlichen Ritter, der in seinem Leben nur Enten gesehen hat.\nStell dir ein Schutzschild vor, das dich nicht beschützt, sondern nach Brot fragt.\nBitte die Rüstung nicht füttern.\nGebaut um eine skulpturale entenförmige Schale mit integriertem... ach, scheiß auf diese Erklärung...\nEntwickelt für die tägliche Bewegung durch Straßen, Menschenmassen und fragwürdige Abenteuer.\nEr trägt dein Zeug.\nWAS! WILLST... DU... MEHR!\nUGH.\nEs ist keine Mode.\nEs ist ein taktisches Missverständnis.\nDas Einzige, was mächtiger ist als zwei Entenköpfe auf der Brust, sind drei Entenköpfe auf der Brust.\nLeider...\nIST DAS ZU MÄCHTIG.`
+                                },
+                                images: [
+                                    { model: 'glb/duckarmorbackpack.glb' },
+                                    { src: 'projects/projects_accessoire_duckarmorbackpack_vernissage.webp' },
+                                    { src: 'projects/projects_accessoire_duckarmorbackpack_big.webp' },
+                                    { src: 'projects/projects_accessoire_duckarmorbackpack_man.webp' },
+                                    { src: 'projects/projects_accessoire_duckarmorbackpack_woman.webp' },
+                                    { src: 'projects/projects_accessoire_duckarmorbackpack_poster.webp' }
+                                ]
+                            },
+                            {
+                                name: 'NOT PLUG',
+                                desc: {
+                                    en: `Designed as a playful attachment for headphones, the glossy black cat ears transform an ordinary pair into something less ordinary. *slurp*\n\nInspired by the strange intersection of consumer electronics, fashion, cosplay, and the approval of your local OnlyFans artist.\n\nEasy to attach. Explanations are discussable.`,
+                                    de: `Als verspieltes Zubehör für Kopfhörer entworfen, verwandeln die glänzend schwarzen Katzenohren ein gewöhnliches Paar in etwas weniger Gewöhnliches. *schlürf*\n\nInspiriert von der seltsamen Schnittmenge aus Unterhaltungselektronik, Mode, Cosplay und der Zustimmung deines lokalen OnlyFans-Artists.\n\nEinfach zu befestigen. Erklärungen sind verhandelbar.`
+                                },
+                                images: [
+                                    { src: 'projects/projects_accessoire_notplug1package.webp' },
+                                    { src: 'projects/projects_accessoire_notplug2comic.webp' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        cat: 'TSHIRTS',
+                        products: [
+                            {
+                                name: 'BALKAN PARK',
+                                desc: {
+                                    en: `The T-shirt that makes you the ruler.\n(Well... or at least the undisputed king of the next medieval festival. Or it annoys the security standing there wordlessly in heavy knight armor and helmets.)\n\n'Do these pigs have a stage pass?'\n\n<strong>Look:</strong>\nWell... it looks a bit like a race with a mushroom-slurping plumber who took the route into the swamp.\n\nYou put it on, and your body says:\n'Yes. Yes man. Tonight we ride wild boars into the mosh pit. Tradition is tradition.'\n\n⚔️ <strong>Why is this shirt special?</strong>\nThis is the shirt of the uncle who cuts the wedding cake with his fist at family celebrations. Because it's the official uniform of men who keep their Oakley sunglasses on at night in the bathtub.\n\nWe at Lightning Horn Unicorn cannot offer a guarantee for this garment, but with every purchase comes a roll of duct tape. Maybe. 50/50.`,
+                                    de: `Das T-Shirt, das dich zum Herrscher macht.\n(Naja… oder zumindest zum unangefochtenen König des nächsten Mittelalterfests. Oder es verärgert die Security, die wortlos in schweren Ritterrüstungen und Helmen dasteht.)\n\n„Haben diese Schweine einen Stagepass?“\n\n<strong>Optik:</strong>\nNaja… es sieht ein bisschen wie ein Rennen mit einem pilzschlabbernden Klempner aus, der die Route in den Sumpf genommen hat.\n\nDu ziehst es an, und dein Körper sagt:\n„Ja. Ja, Mann. Heute Nacht reiten wir auf Wildsäuen in den Moshpit. Tradition is Tradition.“\n\n⚔️ <strong>Warum dieses Shirt besonders ist?</strong>\nDas ist das Shirt von dem Onkel, der auf Familienfeiern die Hochzeitstorte mit der Faust anschneidet. Weil es die offizielle Uniform von Männern, die ihre Oakley-Sonnenbrille auch nachts in der Badewanne aufbehalten.\n\nWir bei Lightning Horn Unicorn können für dieses Kleidungsstück keine Garantie anbieten, aber bei jedem Kauf gibt es eine Rolle Panzertape dazu. Vielleicht. 50/50.`
+                                },
+                                images: [
+                                    { src: 'projects/projects_tshirts_balkanparkband.webp' },
+                                    { src: 'projects/projects_tshirts_balkanparkmodel.webp' }
+                                ]
+                            },
+                            {
+                                name: 'BARK PILLS',
+                                desc: {
+                                    en: `A T-shirt for people who somehow ended up in possession of too many dog treats.\nThe “bad boy” version of the classic Three Wolf Moon shirt. More power. Less wolves.\nA T-shirt so intense, it barks when you wash it, and you stop and ask yourself if the washing machine makes... ..........sounds........\n\nA shirt designed to make your own dog slightly confused.\n\nIf you are a cat owner... reconsider buying.\nWe noticed that cats of owners who purchased this shirt went malicious and robbed a bank afterwards.\n\nWoop woop.`,
+                                    de: `Ein T-Shirt für Leute, die irgendwie in den Besitz von viel zu vielen Hundeleckerlis gelangt sind.\nDie „Bad Boy“-Version des klassischen Three-Wolf-Moon-Shirts. Mehr Power. Weniger Wölfe.\nEin T-Shirt, das so intensiv ist, dass es beim Waschen bellt, sodass du innehalten musst und dich fragst, ob die Waschmaschine gerade... ..........Geräusche macht........\n\nEin Shirt, das entwickelt wurde, um den eigenen Hund leicht zu verwirren.\n\nWenn du Katzenbesitzer bist... überlege dir den Kauf lieber noch einmal.\nWir haben festgestellt, dass Katzen von Besitzern, die dieses Shirt gekauft haben, bösartig wurden und danach eine Bank ausgeraubt haben.\n\nWoop woop.`
+                                },
+                                images: [
+                                    { src: 'projects/projects_tshirts_barkpills.webp' },
+                                    { src: 'projects/projects_tshirts_barkpills_model.webp' }
+                                ]
+                            },
+                            {
+                                name: 'BOTCOP IS OBESE',
+                                desc: {
+                                    en: `Yes. We received your rejected LEGO bricks and from them, we created something new.\nIntroducing BOTCOP.\n\nHe's heavy. He's green. He's clinically optimized for couch-lock.\n\nWatch in awe as his glowing green visor locks onto the nearest midnight bakery, bypassing all prime directives in favor of raw carbohydrate acquisition.\n\nHe is the very definition of:\n“Protect and Serve... Some Snacks.”\n\nHe took Botox for a chin lift.\nHis skull lifted.\n\nForget the kind of security guard who locks himself inside the safe just to be close to your snacks.\n\nBetrayal.\n\nBut none of this happens with BOTCOP.\nHe doesn't judge your snacks.\nHe protects them.\nUntil he eats them.\n\nORDER NOW.`,
+                                    de: `Ja. Wir haben deine ausgemusterten LEGO-Steine erhalten und daraus etwas Neues erschaffen.\nWir präsentieren: BOTCOP.\n\nEr ist schwer. Er ist grün. Er ist klinisch auf Couch-Lock optimiert.\n\nBeobachte staunend, wie sich sein leuchtend grünes Visier auf die nächste Mitternachts-Bäckerei fixiert und alle Kernrichtlinien zugunsten roher Kohlenhydratbeschaffung ignoriert.\n\nEr ist die Definition von:\n„Beschützen und Dienen... ein paar Snacks.“\n\nEr hat sich Botoxinjektionen für ein Kinnlifting geben lassen.\nSein Schädel hat sich gehoben.\n\nVergiss die Sorte Wachmann, die sich im Tresor einschließt, nur um deinen Snacks nah zu sein.\n\nVerrat.\n\nAber mit BOTCOP passiert das nicht.\nEr verurteilt deine Snacks nicht.\nEr beschützt sie.\nBis er sie auffrisst.\n\nJETZT BESTELLEN.`
+                                },
+                                images: [
+                                    { src: 'projects/projects_tshirts_botcop_poster1.webp' },
+                                    { src: 'projects/projects_tshirts_botcop_poster2.webp' },
+                                    { src: 'projects/projects_tshirts_botcop_model.webp' }
+                                ]
+                            },
+                            {
+                                name: "A LITTLE BIT GAY BUT THAT'S OK",
+                                desc: {
+                                    en: `From the makers of "How to Split-Jump Your Legs in High Heels for Man"\nTwo friends who don't want anything serious, but unfortunately nobody ever explained to them how to act snugly.\n\nYou play as a stud accompanied by his humanoid mermaid shark-man friend as they attempt to navigate gyms, gothic mansions (why this), questionable fashion decisions, and the terrifying emotional complexity of Dracula talking about his social anxiety. And he talks a lot...\n\nExplore strange places. Study color theory or how each color reacts to the naked eye. Draculla likes red oviously...\n\nNext they’re gonna teach you how to do a backflip while balancing a martini on your ass and calling it “core gameplay.”\n\nAt some point, you may have to determine whether pink is a masculine color.\nPress X.\n\nAnd, naturally, learn how to open doors more snugly.\n\nThere is no game but we have the tshirt to it.`,
+                                    de: `Von den Machern von „How to Split-Jump Your Legs in High Heels for Man“\nZwei Freunde, die nichts Ernstes wollen, denen aber leider nie jemand erklärt hat, wie man sich kuschelig verhält.\n\nDu spielst einen Typen, begleitet von seinem humanoiden Meerjungfrauen-Hai-Mann-Freund, während sie versuchen, Fitnessstudios, gothische Herrenhäuser (warum auch immer), fragwürdige Modeentscheidungen und die furchterregende emotionale Komplexität von Dracula zu meistern, der über seine soziale Angst spricht. Und er redet viel...\n\nErkunde seltsame Orte. Studiere Farbtheorie oder wie jede Farbe auf das bloße Auge reagiert. Dracula mag Rot, natürlich...\n\nAls Nächstes bringen sie dir bei, wie man einen Salto rückwärts macht, während man einen Martini auf dem Hintern balanciert und das „Core-Gameplay“ nennt.\n\nIrgendwann musst du vielleicht herausfinden, ob Pink eine maskuline Farbe ist.\nDrücke X.\n\nUnd natürlich lernst du, Türen gemütlicher zu öffnen.\n\nEs gibt kein Spiel, aber wir haben das T-Shirt dazu.`
+                                },
+                                images: [
+                                    { src: 'projects/projects_tshirts_alittlebitgay_poster.webp' },
+                                    { src: 'projects/projects_tshirts_alittlebitgay_model.webp' }
+                                ]
+                            }
+                        ]
+                    }
+                ];
+
+                const accordion = document.getElementById('projects-accordion');
+                if (!accordion) return;
+
+                const state = {};
+                let gIdx = 0;
+                const activeModelViewers = new Set();
+
+                /* ------------------------------------------------
+                   Cleanup (registriert beim Menü)
+                   ------------------------------------------------ */
+                function projectsCleanup() {
+                    activeModelViewers.forEach(mv => {
+                        try {
+                            if (mv.pause) mv.pause();
+                            mv.removeAttribute('src');
+                        } catch (e) { /* ignore */ }
+                    });
+                    activeModelViewers.clear();
+                }
+
+                if (typeof window.__lhuRegisterCleanup === 'function') {
+                    window.__lhuRegisterCleanup(projectsCleanup);
+                } else {
+                    window.addEventListener('pagehide', projectsCleanup, { once: true });
+                }
+
+                /* ------------------------------------------------
+                   DOM-Aufbau
+                   ------------------------------------------------ */
+                projects.forEach((group) => {
+                    const catEl = document.createElement('div');
+                    catEl.className = 'cat-group';
+
+                    const catHeader = document.createElement('button');
+                    catHeader.type = 'button';
+                    catHeader.className = 'cat-header';
+                    catHeader.setAttribute('aria-expanded', 'false');
+                    catHeader.innerHTML = `
+                        <span class="cat-label">${group.cat}</span>
+                        <span class="arrow" aria-hidden="true">&#9654;</span>
+                    `;
+                    catHeader.addEventListener('click', () => toggleCat(catEl));
+                    catEl.appendChild(catHeader);
+
+                    const catBody = document.createElement('div');
+                    catBody.className = 'cat-body';
+
+                    const catBodyInner = document.createElement('div');
+                    catBodyInner.className = 'cat-body-inner';
+
+                    group.products.forEach((prod) => {
+                        const prodEl = document.createElement('div');
+                        prodEl.className = 'prod-item';
+
+                        const prodHeader = document.createElement('button');
+                        prodHeader.type = 'button';
+                        prodHeader.className = 'prod-header';
+                        prodHeader.setAttribute('aria-expanded', 'false');
+                        const has3DModel = Array.isArray(prod.images) && prod.images.some(item => typeof item.model === 'string' && item.model.toLowerCase().endsWith('.glb'));
+                        prodHeader.innerHTML = `
+                            <span class="prod-name-wrap"><span class="prod-name">${prod.name}</span>${has3DModel ? '<span class="prod-3d-badge" aria-label="Enthält ein interaktives 3D-Modell">3D</span>' : ''}</span>
+                            <span class="prod-arrow" aria-hidden="true">&#9654;</span>
+                        `;
+                        prodHeader.addEventListener('click', () => toggleProd(prodEl));
+                        prodEl.appendChild(prodHeader);
+
+                        const prodBody = document.createElement('div');
+                        prodBody.className = 'prod-body';
+
+                        const inner = document.createElement('div');
+                        inner.className = 'prod-body-inner';
+
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'carousel-wrapper';
+
+                        const stage = document.createElement('div');
+                        stage.className = 'carousel-stage';
+                        stage.setAttribute('data-gidx', gIdx);
+
+                        prod.images.forEach((item, i) => {
+                            const slide = document.createElement('div');
+                            slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+                            if (item.model) {
+                                slide.setAttribute('data-model', item.model);
+                                slide.classList.add('is-model');
+                            } else {
+                                const img = document.createElement('img');
+                                img.src = item.src;
+                                img.alt = `${prod.name} – Ansicht ${i + 1}`;
+                                img.loading = 'lazy';
+                                img.decoding = 'async';
+                                slide.appendChild(img);
+
+                                if (typeof window.__lhuAttachImageZoom === 'function') {
+                                    window.__lhuAttachImageZoom(slide, img, `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
+                                }
+                            }
+                            stage.appendChild(slide);
+                        });
+                        wrapper.appendChild(stage);
+                        inner.appendChild(wrapper);
+
+                        // Dots als echte Buttons
+                        const dots = document.createElement('div');
+                        dots.className = 'carousel-dots';
+                        dots.id = 'dots-' + gIdx;
+                        dots.setAttribute('role', 'tablist');
+                        dots.setAttribute('aria-label', `${prod.name} – Ansichten`);
+
+                        prod.images.forEach((_, i) => {
+                            const dot = document.createElement('button');
+                            dot.type = 'button';
+                            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                            dot.setAttribute('role', 'tab');
+                            dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+                            dot.setAttribute('aria-label', `${prod.name} – Ansicht ${i + 1} von ${prod.images.length}`);
+                            const di = gIdx;
+                            dot.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                goToSlide(di, i);
+                            });
+                            dots.appendChild(dot);
+                        });
+                        inner.appendChild(dots);
+
+                        if (prod.desc) {
+                            const desc = document.createElement('div');
+                            desc.className = 'prod-desc';
+                            desc.innerHTML = prod.desc[lang] || prod.desc['en'];
+                            inner.appendChild(desc);
+                        }
+
+                        prodBody.appendChild(inner);
+                        prodEl.appendChild(prodBody);
+                        catBodyInner.appendChild(prodEl);
+
+                        state[gIdx] = { idx: 0, total: prod.images.length };
+                        gIdx++;
+                    });
+
+                    catBody.appendChild(catBodyInner);
+                    catEl.appendChild(catBody);
+                    accordion.appendChild(catEl);
+                });
+
+                // Erste Kategorie + erstes Produkt vorab öffnen (wie im Original)
+                const firstCat = accordion.querySelector('.cat-group');
+                if (firstCat) {
+                    const header = firstCat.querySelector('.cat-header');
+                    firstCat.classList.add('open');
+                    if (header) header.setAttribute('aria-expanded', 'true');
+                    const firstProd = firstCat.querySelector('.prod-item');
+                    if (firstProd) {
+                        firstProd.classList.add('open');
+                        const prodHeader = firstProd.querySelector('.prod-header');
+                        if (prodHeader) prodHeader.setAttribute('aria-expanded', 'true');
+                    }
+                }
+
+                // Nach dem Start-Layout: Modell-Viewer für aktive Slides initialisieren
+                requestAnimationFrame(() => updateStageManager());
+
+                /* ------------------------------------------------
+                   Toggle-Logik
+                   ------------------------------------------------ */
+                function toggleCat(el) {
+                    const isOpen = el.classList.contains('open');
+                    document.querySelectorAll('.cat-group').forEach(c => {
+                        c.classList.remove('open');
+                        const h = c.querySelector('.cat-header');
+                        if (h) h.setAttribute('aria-expanded', 'false');
+                    });
+                    if (!isOpen) {
+                        el.classList.add('open');
+                        const header = el.querySelector('.cat-header');
+                        if (header) header.setAttribute('aria-expanded', 'true');
+                    }
+                    requestAnimationFrame(() => updateStageManager());
+                }
+
+                function toggleProd(el) {
+                    const isOpen = el.classList.contains('open');
+                    el.parentElement.querySelectorAll('.prod-item').forEach(p => {
+                        p.classList.remove('open');
+                        const h = p.querySelector('.prod-header');
+                        if (h) h.setAttribute('aria-expanded', 'false');
+                    });
+                    if (!isOpen) {
+                        el.classList.add('open');
+                        const header = el.querySelector('.prod-header');
+                        if (header) header.setAttribute('aria-expanded', 'true');
+                    }
+                    requestAnimationFrame(() => updateStageManager());
+                }
+
+                function goToSlide(gi, i) {
+                    if (!state[gi]) return;
+                    state[gi].idx = i;
+                    renderSlide(gi);
+                }
+
+                function renderSlide(gi) {
+                    const s = state[gi];
+                    if (!s) return;
+                    const stage = document.querySelector(`.carousel-stage[data-gidx="${gi}"]`);
+                    if (!stage) return;
+                    stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
+                        sl.classList.toggle('active', i === s.idx);
+                    });
+                    document.querySelectorAll(`#dots-${gi} .carousel-dot`).forEach((d, i) => {
+                        d.classList.toggle('active', i === s.idx);
+                        d.setAttribute('aria-selected', i === s.idx ? 'true' : 'false');
+                    });
+                    updateStageManager();
+                }
+
+                /* ------------------------------------------------
+                   Model-Viewer-Management
+                   ------------------------------------------------ */
+                function mountModel(slide, modelSrc) {
+                    if (slide.querySelector('model-viewer')) return;
+                    ensureModelViewer();
+
+                    const autoRotate = reduceMotion ? '' : 'auto-rotate';
+                    slide.innerHTML = `
+                        <model-viewer
+                            src="${modelSrc}"
+                            camera-controls
+                            ${autoRotate}
+                            auto-rotate-delay="0"
+                            rotation-per-second="30deg"
+                            shadow-intensity="1"
+                            exposure="1"
+                            loading="eager"
+                            reveal="auto"
+                            alt="3D-Modell"
+                            style="width:100%;height:100%;background:transparent;--poster-color:transparent;display:block;">
+                        </model-viewer>
+                        <div class="model-loading" aria-hidden="true">
+                            <img class="hypnoload-model" src="hypnoload.svg" alt="" width="48" height="48">
+                            <div class="label">Loading 3D</div>
+                        </div>
+                    `;
+                    const mv = slide.querySelector('model-viewer');
+                    const loader = slide.querySelector('.model-loading');
+                    activeModelViewers.add(mv);
+
+                    const hideLoader = () => {
+                        if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+                    };
+                    mv.addEventListener('load', hideLoader, { once: true });
+                    mv.addEventListener('error', hideLoader, { once: true });
+                    // Sicherheitsnetz, falls weder load noch error feuert
+                    setTimeout(hideLoader, 15000);
+                }
+
+                function unmountModel(slide) {
+                    const mv = slide.querySelector('model-viewer');
+                    if (!mv) return;
+                    activeModelViewers.delete(mv);
+                    try {
+                        if (mv.pause) mv.pause();
+                        mv.removeAttribute('src');
+                    } catch (e) { /* ignore */ }
+                    slide.innerHTML = '';
+                }
+
+                function updateStageManager() {
+                    document.querySelectorAll('.carousel-stage').forEach(stage => {
+                        const gi = +stage.dataset.gidx;
+                        const s = state[gi];
+                        const isOpen = !!(stage.closest('.cat-group.open') && stage.closest('.prod-item.open'));
+
+                        stage.querySelectorAll('.carousel-slide').forEach((sl, i) => {
+                            const modelSrc = sl.dataset.model;
+                            if (!modelSrc) return;
+
+                            const shouldBeActive = isOpen && s && s.idx === i;
+
+                            if (shouldBeActive) {
+                                mountModel(sl, modelSrc);
+                                const mv = sl.querySelector('model-viewer');
+                                if (mv) {
+                                    mv.setAttribute('auto-rotate', reduceMotion ? '' : 'auto-rotate');
+                                    try { if (mv.play) mv.play(); } catch (e) { /* ignore */ }
+                                }
+                            } else {
+                                unmountModel(sl);
+                            }
+                        });
+                    });
+                }
+            })();
+        </script>
+    </main>
+</body>
+</html>
