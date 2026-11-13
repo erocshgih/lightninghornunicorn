@@ -277,8 +277,16 @@
 
                 let activeIdx = -1;
                 let currentView = 'front';
+                let previewLoadRelease = null;
+                let previewLoadToken = 0;
 
                 preview.style.cursor = 'default';
+                if (typeof window.__lhuRegisterCleanup === 'function') {
+                    window.__lhuRegisterCleanup(() => {
+                        previewLoadToken += 1;
+                        if (previewLoadRelease) { previewLoadRelease(); previewLoadRelease = null; }
+                    });
+                }
 
                 function renderImage(idx, view) {
                     const item = vhsData[idx];
@@ -296,22 +304,34 @@
                     const safeView = item.views.includes(view) ? view : 'front';
                     const url = baseUrl + `vhsmultiverse_${item.id}_${safeView}.webp`;
 
-                    // Reset Fehler
+                    // Reset Fehler und vorherigen Bild-Ladevorgang sauber beenden.
+                    const loadToken = ++previewLoadToken;
+                    if (previewLoadRelease) { previewLoadRelease(); previewLoadRelease = null; }
+                    const releasePreview = window.LHU?.Loader?.show('VHS-COVER WIRD GELADEN', { delay: 140, minVisible: 220 }) || null;
+                    previewLoadRelease = releasePreview;
+                    const finishPreviewLoad = () => {
+                        if (loadToken !== previewLoadToken) return;
+                        if (previewLoadRelease === releasePreview) previewLoadRelease = null;
+                        if (releasePreview) releasePreview();
+                    };
                     if (errorBox) errorBox.classList.remove('show');
                     preview.classList.remove('visible');
                     preview.setAttribute('aria-disabled', 'true');
                     preview.alt = `${item.title} – ${safeView}`;
                     preview.setAttribute('aria-label', `Cover vergrößern: ${item.title}, ${safeView}`);
                     preview.onload = () => {
+                        finishPreviewLoad();
                         preview.classList.add('visible');
                         preview.removeAttribute('aria-disabled');
                     };
                     preview.onerror = () => {
+                        finishPreviewLoad();
                         preview.classList.remove('visible');
                         preview.setAttribute('aria-disabled', 'true');
                         if (errorBox) errorBox.classList.add('show');
                     };
                     preview.src = url;
+                    if (preview.complete) finishPreviewLoad();
                 }
 
                 viewBtns.forEach(btn => {

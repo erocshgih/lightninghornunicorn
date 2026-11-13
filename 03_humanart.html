@@ -61,6 +61,11 @@
                 from { opacity: 0.45; }
                 to   { opacity: 1; }
             }
+            #three-loader { display: flex; align-items: center; justify-content: center; min-width: 0; }
+            #three-loader .lhu-loader-inline { color: var(--text-muted, #a9a094); }
+            #three-loader .lhu-loader-svg { width: 52px; height: 52px; }
+            #three-loader .lhu-loader-text { font-size: 0.52rem; }
+
             .loading-text.is-error {
                 color: var(--accent-red, #e02424);
                 text-shadow: 0 0 12px rgba(224, 36, 36, 0.55);
@@ -212,12 +217,14 @@
             (function initHumanart3D() {
                 const container  = document.getElementById('three-container');
                 const loaderText = document.getElementById('three-loader');
+                if (loaderText && window.LHU?.Loader) loaderText.innerHTML = window.LHU.Loader.markup('LADE 3D UMGEBUNG…');
+                const loaderStatus = loaderText?.querySelector('.lhu-loader-text') || loaderText;
                 if (!container) return;
 
                 // Guard: THREE global vorhanden?
                 if (typeof THREE === 'undefined') {
                     if (loaderText) {
-                        loaderText.innerText = '⚠ 3D ENGINE NICHT VERFÜGBAR';
+                        if (loaderStatus) loaderStatus.textContent = '⚠ 3D ENGINE NICHT VERFÜGBAR';
                         loaderText.classList.add('is-error');
                     }
                     console.warn('[HUMANART] THREE ist nicht global verfügbar.');
@@ -349,7 +356,7 @@
                     if (!loaderText || isDestroyed) return;
                     const done = loadedCount + failedCount;
                     if (done < total) {
-                        loaderText.textContent = `RENDERING ${done}/${total}`;
+                        loaderStatus.textContent = `RENDERING ${done}/${total}`;
                     } else {
                         loaderText.style.display = 'none';
                         // Hint einblenden
@@ -572,7 +579,7 @@
 
                     // Loading-Text zurücksetzen (falls noch sichtbar)
                     if (loaderText) {
-                        loaderText.textContent = '';
+                        if (loaderStatus) loaderStatus.textContent = '';
                         loaderText.style.display = 'none';
                     }
                 });

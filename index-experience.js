@@ -25,7 +25,7 @@
         document.getElementById("music-toggle").textContent = t.playMusic;
         document.getElementById("navigate-to-main").textContent = t.mainPage;
         document.getElementById("lhu-intro-hint").textContent = t.introHint;
-        document.querySelector(".loading-text").textContent = t.loading;
+        // Loading-Beschriftung kommt jetzt zentral aus window.LHU.Loader.
 
         const dailyWisdom = {
             en: [
@@ -125,9 +125,22 @@
             { label: "grasscowschmeckicore", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/grasscowschmeckicore.glb" }
         ];
 
-        const loadingEl = document.getElementById("index-loading");
-        function startLoading() { loadingEl.classList.add("show"); }
-        function stopLoading() { loadingEl.classList.remove("show"); }
+        let activeHeadLoaderRelease = null;
+        let headLoadVersion = 0;
+        function startLoading(label = '3D-KOPF WIRD GELADEN') {
+            headLoadVersion += 1;
+            if (activeHeadLoaderRelease) activeHeadLoaderRelease();
+            activeHeadLoaderRelease = window.LHU?.Loader?.show(label, { delay: 120, minVisible: 320 }) || null;
+            return headLoadVersion;
+        }
+        function stopLoading(version) {
+            if (version !== headLoadVersion) return;
+            if (activeHeadLoaderRelease) {
+                const release = activeHeadLoaderRelease;
+                activeHeadLoaderRelease = null;
+                release();
+            }
+        }
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000); camera.position.set(2.6, 0, 2.6);
@@ -195,7 +208,9 @@
             hitEnterCamera.position.set(0, maxSize * 0.08, Math.max(distance, 0.35)); hitEnterCamera.lookAt(0, size.y * 0.02, 0); hitEnterCamera.near = Math.max(0.01, maxSize / 100); hitEnterCamera.far = Math.max(10, maxSize * 20); hitEnterCamera.updateProjectionMatrix();
         }
 
+        const releaseHitEnterLoader = window.LHU?.Loader?.show('INTRO-MODELL WIRD GELADEN', { delay: 120, minVisible: 260 }) || (() => {});
         loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hitenter.glb", (g) => {
+            releaseHitEnterLoader();
             hitEnterObject = g.scene;
             hitEnterObject.traverse((child) => {
                 if (!child.isMesh || !child.material) return;
@@ -214,6 +229,9 @@
             });
             hitEnterScene.add(hitEnterObject); fitHitEnterModel(hitEnterObject);
             if (g.animations.length) { hitEnterMixer = new THREE.AnimationMixer(hitEnterObject); g.animations.forEach(clip => hitEnterMixer.clipAction(clip).play()); }
+        }, undefined, (error) => {
+            releaseHitEnterLoader();
+            console.warn("[LHU] Intro-Modell konnte nicht geladen werden:", error);
         });
 
         const hitEnterResizeObserver = new ResizeObserver(() => {
@@ -246,13 +264,17 @@
         }
 
         function loadHead(url) {
-            startLoading(); 
+            const requestVersion = startLoading('3D-KOPF WIRD GELADEN');
             if (object) { scene.remove(object); disposeObject(object); object = null; } 
             if (mixer) { mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot()); mixer = null; }
 
             loader.load(
                 url, 
-                (g) => { 
+                (g) => {
+                    if (requestVersion !== headLoadVersion) {
+                        disposeObject(g.scene);
+                        return;
+                    }
                     object = g.scene; 
                     scene.add(object); 
                     object.userData.emissiveMats = [];
@@ -272,12 +294,13 @@
                         mixer = new THREE.AnimationMixer(object); 
                         g.animations.forEach(clip => mixer.clipAction(clip).play()); 
                     } 
-                    stopLoading(); 
+                    stopLoading(requestVersion); 
                 },
                 undefined,
                 (error) => {
                     console.error("Fehler beim Laden von " + url + ":", error);
-                    stopLoading();
+                    stopLoading(requestVersion);
+                    if (requestVersion !== headLoadVersion) return;
                     const container = document.getElementById("container3D");
                     const errDiv = document.createElement("div");
                     errDiv.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff4d4d;font-family:'Press Start 2P',monospace;text-align:center;background:rgba(0,0,0,0.8);padding:20px;border-radius:10px;";

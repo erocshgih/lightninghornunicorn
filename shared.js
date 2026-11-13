@@ -581,6 +581,7 @@
                 button.textContent = '🔍';
                 button.setAttribute('aria-label', label);
                 button.title = label;
+                if (window.LHU?.Loader) window.LHU.Loader.watchImage(img, frame, 'BILD WIRD GELADEN');
                 const syncButton = () => {
                     const loaded = Boolean(img.currentSrc || img.src) && img.complete && img.naturalWidth > 0 && img.getAttribute('aria-disabled') !== 'true';
                     button.disabled = !loaded;
@@ -603,12 +604,22 @@
             };
 
             const mainContent = document.getElementById('mainContent');
-            const loadingEl = document.getElementById('loading');
             const a11yStatus = document.getElementById('a11yStatus');
             let currentCategory = '';
             let vhsImageObserver = null;
 
-            function showLoading(show) { loadingEl.classList.toggle('show', show); }
+            let categoryLoaderRelease = null;
+            function showLoading(show, label = 'KATEGORIE WIRD GELADEN') {
+                if (show) {
+                    if (!categoryLoaderRelease && window.LHU?.Loader) {
+                        categoryLoaderRelease = window.LHU.Loader.show(label, { delay: 110, minVisible: 300 });
+                    }
+                } else if (categoryLoaderRelease) {
+                    const release = categoryLoaderRelease;
+                    categoryLoaderRelease = null;
+                    release();
+                }
+            }
             function announceCategory(cat) {
                 if (a11yStatus) a11yStatus.textContent = `Kategorie ${cat} geladen`;
             }
@@ -668,10 +679,9 @@
                     item.setAttribute('aria-current', isActive ? 'page' : 'false');
                 });
 
-                showLoading(true);
-
                 categoryTransitionTimer = window.setTimeout(async () => {
                     if (loadToken !== categoryLoadToken) return;
+                    showLoading(true, `${cat} WIRD GELADEN`);
                     const targetPage = categoryPages[cat];
                     if (!targetPage) {
                         if (loadToken === categoryLoadToken) showLoading(false);
@@ -692,6 +702,12 @@
                         if (!fetchedMain) throw new Error('Kein <main> gefunden');
 
                         mainContent.innerHTML = fetchedMain.innerHTML;
+                        if (window.LHU?.Loader) {
+                            mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
+                                const host = img.closest('.lhu-image-frame, .carousel-slide, a, figure') || img.parentElement;
+                                if (host) window.LHU.Loader.watchImage(img, host, 'BILD WIRD GELADEN');
+                            });
+                        }
 
                         const lang = (navigator.language || 'en').startsWith('de') ? 'de' : 'en';
                         mainContent.querySelectorAll('[data-lang-en]').forEach(el => {

@@ -14,7 +14,144 @@
 <meta content="#04050a" name="theme-color"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="shared.css" rel="stylesheet"/><link href="index.css" rel="stylesheet"/></head>
+<link href="shared.css" rel="stylesheet"/><link href="index.css" rel="stylesheet"/><script>
+/* LHU GLOBAL LOADER — shared by the intro and every content category. */
+window.LHU = window.LHU || {};
+window.LHU.Loader = (() => {
+    const SVG = `
+      <svg class="lhu-loader-svg" viewBox="0 0 88 88" aria-hidden="true" focusable="false">
+        <circle class="lhu-loader-track" cx="44" cy="44" r="34"></circle>
+        <g class="lhu-loader-spin">
+          <circle class="lhu-loader-arc lhu-loader-arc--cyan" cx="44" cy="44" r="34" stroke-dasharray="62 152"></circle>
+          <circle class="lhu-loader-arc lhu-loader-arc--magenta" cx="44" cy="44" r="34" stroke-dasharray="38 176" transform="rotate(128 44 44)"></circle>
+          <circle class="lhu-loader-arc lhu-loader-arc--orange" cx="44" cy="44" r="34" stroke-dasharray="24 190" transform="rotate(252 44 44)"></circle>
+        </g>
+        <path class="lhu-loader-core" d="M49 17 29 48h15l-5 23 22-34H46z"></path>
+      </svg>`;
+    let overlay = null;
+    let labelNode = null;
+    let sequence = 0;
+    let visibleSince = 0;
+    let showTimer = null;
+    let hideTimer = null;
+    const active = new Map();
+
+    const escapeHtml = value => String(value ?? 'LÄDT').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+
+    function ensureOverlay() {
+        if (overlay && overlay.isConnected) return;
+        overlay = document.getElementById('lhu-global-loader');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'lhu-global-loader';
+            overlay.className = 'lhu-global-loader';
+            overlay.hidden = true;
+            overlay.setAttribute('aria-hidden', 'true');
+            overlay.innerHTML = `<div class="lhu-global-loader__content" role="status" aria-live="polite">${SVG}<span class="lhu-loader-label">LÄDT</span></div>`;
+            (document.body || document.documentElement).appendChild(overlay);
+        }
+        labelNode = overlay.querySelector('.lhu-loader-label');
+    }
+
+    function updateLabel() {
+        if (!active.size) return;
+        const latest = [...active.values()].at(-1);
+        if (labelNode && latest) labelNode.textContent = latest.label;
+    }
+
+    function show(label = 'LÄDT', options = {}) {
+        ensureOverlay();
+        const id = ++sequence;
+        const entry = {
+            label: String(label || 'LÄDT'),
+            minVisible: Number.isFinite(options.minVisible) ? Math.max(0, options.minVisible) : 280
+        };
+        active.set(id, entry);
+        if (hideTimer !== null) { clearTimeout(hideTimer); hideTimer = null; }
+        updateLabel();
+
+        if (!overlay.classList.contains('is-visible') && showTimer === null) {
+            const delay = Number.isFinite(options.delay) ? Math.max(0, options.delay) : 160;
+            showTimer = window.setTimeout(() => {
+                showTimer = null;
+                if (!active.size) return;
+                ensureOverlay();
+                updateLabel();
+                overlay.hidden = false;
+                overlay.setAttribute('aria-hidden', 'false');
+                overlay.classList.add('is-visible');
+                visibleSince = performance.now();
+                document.body?.setAttribute('aria-busy', 'true');
+            }, delay);
+        } else if (overlay.classList.contains('is-visible')) {
+            overlay.hidden = false;
+            overlay.setAttribute('aria-hidden', 'false');
+            updateLabel();
+        }
+
+        let released = false;
+        return function release() {
+            if (released) return;
+            released = true;
+            active.delete(id);
+            if (active.size) { updateLabel(); return; }
+
+            if (showTimer !== null) { clearTimeout(showTimer); showTimer = null; }
+            if (!overlay || !overlay.classList.contains('is-visible')) return;
+
+            const minVisible = entry.minVisible;
+            const remaining = Math.max(0, minVisible - (performance.now() - visibleSince));
+            hideTimer = window.setTimeout(() => {
+                hideTimer = null;
+                if (active.size || !overlay) return;
+                overlay.classList.remove('is-visible');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body?.removeAttribute('aria-busy');
+                window.setTimeout(() => {
+                    if (overlay && !overlay.classList.contains('is-visible') && !active.size) overlay.hidden = true;
+                }, 220);
+            }, remaining);
+        };
+    }
+
+    function markup(label = 'LÄDT') {
+        return `<span class="lhu-loader-inline" role="status" aria-live="polite">${SVG}<span class="lhu-loader-text">${escapeHtml(label)}</span></span>`;
+    }
+
+    function watchImage(img, host, label = 'BILD WIRD GELADEN') {
+        if (!img || !host || img.__lhuImageLoaderBound) return () => {};
+        if (img.complete && img.naturalWidth > 0) return () => {};
+        if (!(img.currentSrc || img.getAttribute('src') || img.getAttribute('srcset'))) return () => {};
+        img.__lhuImageLoaderBound = true;
+
+        if (window.getComputedStyle(host).position === 'static') host.classList.add('lhu-image-loading-host');
+        const indicator = document.createElement('div');
+        indicator.className = 'lhu-image-loading';
+        indicator.innerHTML = markup(label);
+        host.appendChild(indicator);
+        let done = false;
+        const finish = () => {
+            if (done) return;
+            done = true;
+            indicator.remove();
+            img.removeEventListener('load', finish);
+            img.removeEventListener('error', finish);
+        };
+        img.addEventListener('load', finish, { once: true });
+        img.addEventListener('error', finish, { once: true });
+        if (img.complete) finish();
+        return finish;
+    }
+
+    async function during(label, task, options = {}) {
+        const release = show(label, options);
+        try { return await task(); }
+        finally { release(); }
+    }
+
+    return { show, markup, watchImage, during, get activeCount() { return active.size; } };
+})();
+</script></head>
 <body class="intro-mode"><audio id="quackAudio" preload="auto"></audio>
 <audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
 <audio crossorigin="anonymous" id="background-music" loop="" preload="auto">
@@ -60,7 +197,7 @@
 <div id="rainbow-aura"></div>
 <div id="container3D"></div>
 <p class="sr-only">Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.</p>
-<div id="index-loading"><div class="spinner"></div><span class="loading-text">LÄDT</span></div>
+
 <div id="ui-layer">
 <div class="ui-top">
 <div id="ui-wrapper">
@@ -121,10 +258,5 @@
 <h2>WELCOME TO LHU</h2>
 <p>Wähle eine Kategorie aus dem Menü, um die Inhalte direkt hier in die Seite zu laden.</p>
 </div>
-</main><div id="loading">
-<div class="loader-dots">
-<span></span><span></span><span></span>
-</div>
-<span class="loading-text">lädt</span>
-</div><p aria-live="polite" class="sr-only" id="a11yStatus" role="status"></p></div><script defer="defer" src="index-background.js"></script><script src="index-experience.js" type="module"></script><script defer="defer" src="shared.js"></script></body>
+</main><p aria-live="polite" class="sr-only" id="a11yStatus" role="status"></p></div><script defer="defer" src="index-background.js"></script><script src="index-experience.js" type="module"></script><script defer="defer" src="shared.js"></script></body>
 </html>

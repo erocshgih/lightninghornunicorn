@@ -169,7 +169,7 @@
 
             <div class="text-reader-container">
                 <div id="text-content" aria-live="polite">
-                    <span class="loading-text">SCANNING ARCHIVE DIRECTORY...</span>
+                    <span class="loading-text" id="storytime-scan-loader">SCANNING ARCHIVE DIRECTORY...</span>
                 </div>
             </div>
         </section>
@@ -187,6 +187,8 @@
                 const btnDe = document.getElementById('lang-de');
 
                 if (!contentDiv || !navDiv || !btnEn || !btnDe) return;
+                const scanLoader = document.getElementById('storytime-scan-loader');
+                if (scanLoader && window.LHU?.Loader) scanLoader.outerHTML = window.LHU.Loader.markup('SCANNING ARCHIVE DIRECTORY...');
 
                 // Sprache initialisieren
                 if (currentLang === 'de') {
@@ -324,7 +326,7 @@
                         else btn.removeAttribute('aria-current');
                     });
 
-                    contentDiv.innerHTML = '<span class="loading-text">LOADING FILE...</span>';
+                    contentDiv.innerHTML = window.LHU?.Loader?.markup('LOADING FILE...') || '<span class="loading-text">LOADING FILE...</span>';
                     
                     let numStr = num.toString().padStart(6, '0');
                     

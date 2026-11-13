@@ -279,22 +279,9 @@
                 background: var(--bg-solid);
                 pointer-events: none;
             }
-            .model-loading .spinner {
-                width: 46px;
-                height: 46px;
-                border-radius: 50%;
-                border: 4px solid rgba(128, 128, 128, 0.18);
-                border-top-color: var(--strip-active, #ff7a00);
-                animation: modelSpin 0.9s linear infinite;
-            }
-            .model-loading .label {
-                font-family: var(--font-display, 'Press Start 2P', monospace);
-                font-size: 11px;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                color: var(--text-soft);
-            }
-            @keyframes modelSpin { to { transform: rotate(360deg); } }
+            .model-loading .lhu-loader-inline { color: var(--text-soft); }
+            .model-loading .lhu-loader-svg { width: 48px; height: 48px; }
+            .model-loading .lhu-loader-text { font-size: 0.5rem; }
 
             /* ---------- DOTS ---------- */
             .carousel-dots {
@@ -339,7 +326,7 @@
                 .prod-body { transition-duration: 0.01ms; }
                 .cat-header .arrow,
                 .prod-header .prod-arrow { transition-duration: 0.01ms; }
-                .model-loading .spinner { animation-duration: 2s; }
+                .model-loading .lhu-loader-svg { opacity: 0.85; }
             }
         </style>
 
@@ -790,8 +777,7 @@
                             style="width:100%;height:100%;background:transparent;--poster-color:transparent;display:block;">
                         </model-viewer>
                         <div class="model-loading" aria-hidden="true">
-                            <div class="spinner"></div>
-                            <div class="label">Loading 3D</div>
+                            ${window.LHU?.Loader?.markup('LOADING 3D MODEL') || 'LOADING 3D MODEL'}
                         </div>
                     `;
                     const mv = slide.querySelector('model-viewer');
