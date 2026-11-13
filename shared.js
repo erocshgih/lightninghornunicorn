@@ -201,11 +201,16 @@
                 'DONATE':        'var(--accent)'
             };
 
-            // Shared image lightbox for galleries such as PROJECTS.
+            // One shared, pointer-driven image viewer for ABOUT, VHS MULTIVERSE and PROJECTS.
             let imageLightbox = null;
             let lightboxPreviousFocus = null;
+            let lightboxRequestToken = 0;
+            const LHU_ZOOM_MIN = 1;
+            const LHU_ZOOM_MAX = 5;
+
             function ensureImageLightbox() {
                 if (imageLightbox) return imageLightbox;
+
                 const overlay = document.createElement('div');
                 overlay.className = 'lhu-lightbox';
                 overlay.hidden = true;
@@ -217,46 +222,290 @@
                 close.type = 'button';
                 close.className = 'lhu-lightbox__close';
                 close.setAttribute('aria-label', 'Bildansicht schließen');
+                close.title = 'Schließen';
                 close.textContent = '×';
+
+                const stage = document.createElement('div');
+                stage.className = 'lhu-lightbox__stage';
+                stage.tabIndex = 0;
+                stage.setAttribute('aria-label', 'Bildbereich. Mausrad zum Zoomen, ziehen zum Verschieben. Auf Touchgeräten mit zwei Fingern zoomen.');
 
                 const image = document.createElement('img');
                 image.className = 'lhu-lightbox__image';
                 image.alt = '';
+                image.draggable = false;
                 image.decoding = 'async';
+                stage.appendChild(image);
 
-                overlay.append(close, image);
+                const controls = document.createElement('div');
+                controls.className = 'lhu-lightbox__controls';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.className = 'lhu-lightbox__zoom-button';
+                minus.textContent = '−';
+                minus.setAttribute('aria-label', 'Verkleinern');
+                minus.title = 'Verkleinern';
+
+                const readout = document.createElement('output');
+                readout.className = 'lhu-lightbox__zoom-value';
+                readout.setAttribute('aria-live', 'polite');
+                readout.textContent = '100%';
+
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.className = 'lhu-lightbox__zoom-button';
+                plus.textContent = '+';
+                plus.setAttribute('aria-label', 'Vergrößern');
+                plus.title = 'Vergrößern';
+
+                const reset = document.createElement('button');
+                reset.type = 'button';
+                reset.className = 'lhu-lightbox__zoom-button lhu-lightbox__reset';
+                reset.textContent = '↺';
+                reset.setAttribute('aria-label', 'Zoom zurücksetzen');
+                reset.title = 'Zoom zurücksetzen';
+
+                controls.append(minus, readout, plus, reset);
+                const hint = document.createElement('p');
+                hint.className = 'lhu-lightbox__hint';
+                hint.textContent = 'Mausrad: Zoom · Ziehen: Verschieben · Touch: Zwei Finger zum Zoomen';
+
+                overlay.append(close, stage, controls, hint);
                 document.body.appendChild(overlay);
 
-                const closeLightbox = () => {
-                    overlay.hidden = true;
-                    image.removeAttribute('src');
-                    if (lightboxPreviousFocus && lightboxPreviousFocus.isConnected) {
-                        lightboxPreviousFocus.focus();
-                    }
-                    lightboxPreviousFocus = null;
-                };
+                let zoom = 1;
+                let panX = 0;
+                let panY = 0;
+                const pointers = new Map();
+                let dragStart = null;
+                let pinchStart = null;
+
+                const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+                const stageCenter = () => ({ x: stage.clientWidth / 2, y: stage.clientHeight / 2 });
+
+                function clampPan() {
+                    const center = stageCenter();
+                    const maxX = Math.max(0, (image.offsetWidth * zoom - stage.clientWidth) / 2);
+                    const maxY = Math.max(0, (image.offsetHeight * zoom - stage.clientHeight) / 2);
+                    panX = clamp(panX, -maxX, maxX);
+                    panY = clamp(panY, -maxY, maxY);
+                }
+
+                function render() {
+                    clampPan();
+                    image.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${zoom})`;
+                    image.classList.toggle('is-zoomed', zoom > 1.01);
+                    readout.textContent = `${Math.round(zoom * 100)}%`;
+                    minus.disabled = zoom <= LHU_ZOOM_MIN + 0.001;
+                    plus.disabled = zoom >= LHU_ZOOM_MAX - 0.001;
+                }
+
+                function setZoom(nextZoom, anchorClientX, anchorClientY) {
+                    const oldZoom = zoom;
+                    const newZoom = clamp(nextZoom, LHU_ZOOM_MIN, LHU_ZOOM_MAX);
+                    if (Math.abs(newZoom - oldZoom) < 0.001) return;
+                    const rect = stage.getBoundingClientRect();
+                    const center = stageCenter();
+                    const anchorX = (anchorClientX == null ? rect.left + center.x : anchorClientX) - rect.left - center.x;
+                    const anchorY = (anchorClientY == null ? rect.top + center.y : anchorClientY) - rect.top - center.y;
+                    const ratio = newZoom / oldZoom;
+                    panX = anchorX - (anchorX - panX) * ratio;
+                    panY = anchorY - (anchorY - panY) * ratio;
+                    zoom = newZoom;
+                    render();
+                }
+
+                function resetView() {
+                    zoom = 1;
+                    panX = 0;
+                    panY = 0;
+                    render();
+                }
+
+                function pointerMidpoint(a, b) {
+                    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+                }
+                function pointerDistance(a, b) {
+                    return Math.hypot(a.x - b.x, a.y - b.y);
+                }
+                function beginPinch() {
+                    const points = [...pointers.values()];
+                    if (points.length < 2) return;
+                    const mid = pointerMidpoint(points[0], points[1]);
+                    const rect = stage.getBoundingClientRect();
+                    pinchStart = {
+                        distance: Math.max(1, pointerDistance(points[0], points[1])),
+                        zoom,
+                        panX,
+                        panY,
+                        midX: mid.x,
+                        midY: mid.y,
+                        localX: mid.x - rect.left - stage.clientWidth / 2,
+                        localY: mid.y - rect.top - stage.clientHeight / 2
+                    };
+                    dragStart = null;
+                }
+
                 close.addEventListener('click', closeLightbox);
+                minus.addEventListener('click', () => setZoom(zoom / 1.25));
+                plus.addEventListener('click', () => setZoom(zoom * 1.25));
+                reset.addEventListener('click', resetView);
+
                 overlay.addEventListener('click', (event) => {
                     if (event.target === overlay) closeLightbox();
                 });
-                document.addEventListener('keydown', (event) => {
-                    if (!overlay.hidden && event.key === 'Escape') {
-                        event.preventDefault();
-                        closeLightbox();
+
+                stage.addEventListener('wheel', (event) => {
+                    if (overlay.hidden) return;
+                    event.preventDefault();
+                    const factor = event.deltaY < 0 ? 1.12 : 1 / 1.12;
+                    setZoom(zoom * factor, event.clientX, event.clientY);
+                }, { passive: false });
+
+                stage.addEventListener('pointerdown', (event) => {
+                    if (overlay.hidden || event.target.closest('button')) return;
+                    if (event.pointerType === 'mouse' && event.button !== 0) return;
+                    stage.setPointerCapture?.(event.pointerId);
+                    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                    if (pointers.size === 2) {
+                        beginPinch();
+                    } else if (pointers.size === 1 && zoom > 1.01) {
+                        dragStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, panX, panY };
                     }
                 });
 
-                imageLightbox = { overlay, image, close, closeLightbox };
+                stage.addEventListener('pointermove', (event) => {
+                    if (!pointers.has(event.pointerId)) return;
+                    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+                    if (pointers.size >= 2) {
+                        if (!pinchStart) beginPinch();
+                        const points = [...pointers.values()];
+                        const mid = pointerMidpoint(points[0], points[1]);
+                        const rect = stage.getBoundingClientRect();
+                        const nextZoom = clamp(
+                            pinchStart.zoom * pointerDistance(points[0], points[1]) / pinchStart.distance,
+                            LHU_ZOOM_MIN,
+                            LHU_ZOOM_MAX
+                        );
+                        const ratio = nextZoom / pinchStart.zoom;
+                        panX = pinchStart.localX - (pinchStart.localX - pinchStart.panX) * ratio + (mid.x - pinchStart.midX);
+                        panY = pinchStart.localY - (pinchStart.localY - pinchStart.panY) * ratio + (mid.y - pinchStart.midY);
+                        zoom = nextZoom;
+                        render();
+                    } else if (dragStart && dragStart.pointerId === event.pointerId && zoom > 1.01) {
+                        panX = dragStart.panX + event.clientX - dragStart.x;
+                        panY = dragStart.panY + event.clientY - dragStart.y;
+                        render();
+                    }
+                });
+
+                function finishPointer(event) {
+                    pointers.delete(event.pointerId);
+                    if (pointers.size < 2) pinchStart = null;
+                    if (pointers.size === 1 && zoom > 1.01) {
+                        const [id, point] = [...pointers.entries()][0];
+                        dragStart = { pointerId: id, x: point.x, y: point.y, panX, panY };
+                    } else {
+                        dragStart = null;
+                    }
+                }
+                stage.addEventListener('pointerup', finishPointer);
+                stage.addEventListener('pointercancel', finishPointer);
+                stage.addEventListener('lostpointercapture', finishPointer);
+
+                stage.addEventListener('keydown', (event) => {
+                    const step = 48;
+                    if (event.key === '+' || event.key === '=') { event.preventDefault(); setZoom(zoom * 1.25); }
+                    else if (event.key === '-') { event.preventDefault(); setZoom(zoom / 1.25); }
+                    else if (event.key === '0') { event.preventDefault(); resetView(); }
+                    else if (zoom > 1.01 && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+                        event.preventDefault();
+                        if (event.key === 'ArrowLeft') panX += step;
+                        if (event.key === 'ArrowRight') panX -= step;
+                        if (event.key === 'ArrowUp') panY += step;
+                        if (event.key === 'ArrowDown') panY -= step;
+                        render();
+                    }
+                });
+
+                const onKeyDown = (event) => {
+                    if (overlay.hidden) return;
+                    if (event.key === 'Escape') {
+                        event.preventDefault();
+                        closeLightbox();
+                    }
+                };
+                document.addEventListener('keydown', onKeyDown);
+
+                function closeLightbox() {
+                    overlay.hidden = true;
+                    lightboxRequestToken++;
+                    image.removeAttribute('src');
+                    pointers.clear();
+                    dragStart = null;
+                    pinchStart = null;
+                    resetView();
+                    if (lightboxPreviousFocus && lightboxPreviousFocus.isConnected) lightboxPreviousFocus.focus();
+                    lightboxPreviousFocus = null;
+                }
+
+                imageLightbox = { overlay, stage, image, close, closeLightbox, resetView, render };
                 return imageLightbox;
             }
+
             window.__lhuOpenImageLightbox = (src, alt = 'Vergrößerte Ansicht') => {
                 if (!src) return;
                 const box = ensureImageLightbox();
+                const requestToken = ++lightboxRequestToken;
                 lightboxPreviousFocus = document.activeElement;
-                box.image.src = src;
+                box.resetView();
+                box.image.onload = () => {
+                    if (requestToken !== lightboxRequestToken) return;
+                    box.render();
+                    box.stage.focus({ preventScroll: true });
+                };
                 box.image.alt = alt;
                 box.overlay.hidden = false;
-                box.close.focus();
+                box.image.src = src;
+                box.close.focus({ preventScroll: true });
+            };
+
+            window.__lhuAttachImageZoom = (frame, img, label = 'Bild vergrößern', extraClass = '') => {
+                if (!frame || !img) return null;
+                let button = frame.querySelector(':scope > .lhu-image-zoom');
+                if (button) return button;
+                button = document.createElement('button');
+                button.type = 'button';
+                button.className = `lhu-image-zoom ${extraClass}`.trim();
+                button.textContent = '🔍';
+                button.setAttribute('aria-label', label);
+                button.title = label;
+                const syncButton = () => {
+                    const loaded = Boolean(img.currentSrc || img.src) && img.complete && img.naturalWidth > 0 && img.getAttribute('aria-disabled') !== 'true';
+                    button.disabled = !loaded;
+                };
+                img.addEventListener('load', syncButton);
+                img.addEventListener('error', syncButton);
+                const sourceObserver = new MutationObserver(syncButton);
+                sourceObserver.observe(img, { attributes: true, attributeFilter: ['src', 'aria-disabled'] });
+                if (typeof window.__lhuRegisterCleanup === 'function') {
+                    window.__lhuRegisterCleanup(() => sourceObserver.disconnect());
+                }
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    syncButton();
+                    if (button.disabled) return;
+                    window.__lhuOpenImageLightbox(img.currentSrc || img.src, img.alt || label);
+                });
+                frame.appendChild(button);
+                syncButton();
+                return button;
+            };
+            window.__lhuCloseImageLightbox = () => {
+                if (imageLightbox && !imageLightbox.overlay.hidden) imageLightbox.closeLightbox();
             };
 
             const mainContent = document.getElementById('mainContent');
@@ -309,6 +558,7 @@
                 }
 
                 currentCategory = cat;
+                window.__lhuCloseImageLightbox?.();
                 runCleanups();
 
                 const door = document.getElementById('door-overlay');
@@ -364,20 +614,27 @@
 
                         applyGlobalMute();
 
-                        // ABOUT uses the generic image zoom; other categories own their galleries.
+                        // ABOUT keeps all profile/story layouts, but uses the shared image viewer.
                         if (cat === 'ABOUT') {
                             mainContent.querySelectorAll('img:not(.transparent-sticker)').forEach(img => {
                                 img.loading = 'lazy';
                                 img.decoding = 'async';
-                                if (img.parentElement.tagName !== 'A') {
-                                    const wrapper = document.createElement('a');
-                                    wrapper.href = img.currentSrc || img.src;
-                                    wrapper.target = '_blank';
-                                    wrapper.rel = 'noopener noreferrer';
-                                    wrapper.className = 'zoom-wrapper';
-                                    img.parentNode.insertBefore(wrapper, img);
-                                    wrapper.appendChild(img);
+                                let frame = img.closest('.lhu-image-frame');
+                                if (!frame) {
+                                    if (img.parentElement?.classList.contains('carousel-slide')) {
+                                        frame = img.parentElement;
+                                        frame.classList.add('lhu-image-frame', 'lhu-image-frame--carousel');
+                                    } else if (img.parentElement?.tagName === 'A') {
+                                        frame = img.parentElement;
+                                        frame.classList.add('lhu-image-frame');
+                                    } else {
+                                        frame = document.createElement('div');
+                                        frame.className = 'lhu-image-frame';
+                                        img.parentNode.insertBefore(frame, img);
+                                        frame.appendChild(img);
+                                    }
                                 }
+                                window.__lhuAttachImageZoom(frame, img, `Bild vergrößern: ${img.alt || 'ABOUT'}`);
                             });
                         }
 
@@ -387,6 +644,7 @@
                                 const wrapper = imgEl.parentElement;
                                 if (wrapper) {
                                     wrapper.classList.add('vhs-zoom-wrapper');
+                                    window.__lhuAttachImageZoom(wrapper, imgEl, 'VHS-Cover vergrößern');
                                     imgEl.classList.add('vhs-wobble-img');
                                     const crtOverlay = document.createElement('div');
                                     crtOverlay.className = 'vhs-crt-overlay';

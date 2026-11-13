@@ -245,37 +245,8 @@
                 object-position: center;
                 margin: 0 auto;
             }
-            .project-zoom-btn {
-                position: absolute;
-                right: 12px;
-                bottom: 12px;
-                z-index: 8;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 46px;
-                height: 46px;
-                border: 1px solid rgba(255,255,255,0.55);
-                border-radius: 50%;
-                background: rgba(8, 9, 12, 0.82);
-                color: #fff;
-                font-size: 22px;
-                line-height: 1;
-                box-shadow: 0 3px 14px rgba(0,0,0,0.4);
-                cursor: zoom-in;
-                touch-action: manipulation;
-                -webkit-tap-highlight-color: transparent;
-            }
-            .project-zoom-btn:hover,
-            .project-zoom-btn:focus-visible {
-                background: var(--strip-active);
-                color: #111;
-                outline: 2px solid #fff;
-                outline-offset: 2px;
-            }
             @media (max-width: 480px) {
                 .carousel-wrapper { max-width: 100%; }
-                .project-zoom-btn { width: 42px; height: 42px; right: 9px; bottom: 9px; }
             }
 
             /* 3D-Modell-Slide */
@@ -673,21 +644,9 @@
                                 img.decoding = 'async';
                                 slide.appendChild(img);
 
-                                const zoomButton = document.createElement('button');
-                                zoomButton.type = 'button';
-                                zoomButton.className = 'project-zoom-btn';
-                                zoomButton.textContent = '🔍';
-                                zoomButton.setAttribute('aria-label', `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
-                                zoomButton.title = 'Bild vergrößern';
-                                zoomButton.addEventListener('click', (event) => {
-                                    event.stopPropagation();
-                                    if (typeof window.__lhuOpenImageLightbox === 'function') {
-                                        window.__lhuOpenImageLightbox(img.currentSrc || img.src, img.alt);
-                                    } else {
-                                        window.open(img.currentSrc || img.src, '_blank', 'noopener,noreferrer');
-                                    }
-                                });
-                                slide.appendChild(zoomButton);
+                                if (typeof window.__lhuAttachImageZoom === 'function') {
+                                    window.__lhuAttachImageZoom(slide, img, `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
+                                }
                             }
                             stage.appendChild(slide);
                         });

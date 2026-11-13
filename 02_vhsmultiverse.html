@@ -189,7 +189,6 @@
             @media (max-width: 480px) {
                 #vhs-dots .vhs-dot { width: 14px; height: 14px; }
                 .vhs-nav-btn { width: 36px; height: 36px; margin: 0 4px; }
-                .zoom-btn { width: 36px; height: 36px; font-size: 14px; }
             }
 
             @media (prefers-reduced-motion: reduce) {
@@ -279,24 +278,7 @@
                 let activeIdx = -1;
                 let currentView = 'front';
 
-                preview.setAttribute('role', 'button');
-                preview.setAttribute('tabindex', '0');
-                preview.setAttribute('aria-label', 'Aktuelles VHS-Cover vergrößern');
-                preview.style.cursor = 'zoom-in';
-                const openActiveCover = () => {
-                    if (preview.getAttribute('aria-disabled') === 'true') return;
-                    const src = preview.currentSrc || preview.src;
-                    if (src && typeof window.__lhuOpenImageLightbox === 'function') {
-                        window.__lhuOpenImageLightbox(src, preview.alt || 'VHS-Cover');
-                    }
-                };
-                preview.addEventListener('click', openActiveCover);
-                preview.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        openActiveCover();
-                    }
-                });
+                preview.style.cursor = 'default';
 
                 function renderImage(idx, view) {
                     const item = vhsData[idx];
