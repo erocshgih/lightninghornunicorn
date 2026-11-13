@@ -1,652 +1,4 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Lightning Horn Unicorn — Menu</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-
-    <link rel="icon" href="lhu_favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="lhu_favicon.png" type="image/png">
-
-    <link rel="preload" href="pixelart/pixelart_vedran.png" as="image">
-    <link rel="preload" href="duck.png" as="image">
-
-    <!-- Three.js global für Content-Seiten (03_humanart braucht es) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
-    <meta name="description" content="Lightning Horn Unicorn is the independent creative universe of Vienna-based artist Vedran Lukic.">
-    <meta name="theme-color" content="#04050a">
-
-    <!-- Neues Design-System -->
-    <link rel="stylesheet" href="shared.css">
-
-    <style>
-        /* ============================================
-           MENU-SPEZIFISCH
-           (alles, was nur auf der Shell-Seite lebt)
-           ============================================ */
-
-        /* ---------- HEADER ---------- */
-        .header {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: var(--space-sm) var(--space-sm);
-            background: var(--header-bg);
-            box-shadow: 0 1px 0 var(--border-soft), var(--shadow-sm);
-            position: sticky; top: 0; z-index: 1000;
-            width: 100%;
-            transition: background 0.4s ease, box-shadow 0.4s ease;
-        }
-        .header.collapsed {
-            background: transparent !important;
-            box-shadow: none !important;
-            pointer-events: none;
-        }
-
-        .strip-wrapper {
-            display: flex; align-items: stretch; width: 100%; max-width: 980px; margin: 0 auto;
-            border: 2px solid var(--border-strong);
-            border-radius: var(--radius);
-            overflow: hidden;
-            height: clamp(56px, 8.5vw, 76px);
-            background: var(--header-bg);
-            transition: all 0.55s var(--ease-out);
-            pointer-events: all;
-            box-shadow: var(--shadow-pixel);
-        }
-        .strip-wrapper.collapsed {
-            max-width: clamp(48px, 9vw, 64px) !important;
-            margin-left: auto !important;
-            margin-right: 0 !important;
-            border-color: transparent !important;
-            background: transparent !important;
-            box-shadow: none !important;
-        }
-        .strip-wrapper.collapsed .theme-btn,
-        .strip-wrapper.collapsed .audio-btn { opacity: 0; pointer-events: none; width: 0; border: none; }
-        .strip-wrapper.collapsed .cat-strip { opacity: 0; pointer-events: none; flex: 0 0 0; }
-
-        .theme-btn, .audio-btn, .collapse-btn {
-            flex: 0 0 auto;
-            width: clamp(42px, 8vw, 56px);
-            border: none;
-            background: var(--card-bg);
-            color: var(--text);
-            font-family: inherit;
-            cursor: pointer;
-            z-index: 3;
-            transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
-            display: flex; align-items: center; justify-content: center;
-            touch-action: manipulation;
-        }
-        .theme-btn { border-right: 2px solid var(--border-soft); font-size: clamp(0.9rem, 2.4vw, 1.1rem); }
-        .audio-btn, .collapse-btn { border-left: 2px solid var(--border-soft); }
-        .theme-btn:hover, .audio-btn:hover, .collapse-btn:hover {
-            background: var(--accent);
-            color: #111;
-        }
-        .audio-btn img, .collapse-btn img {
-            width: 75%; height: 75%; object-fit: contain;
-            image-rendering: pixelated;
-            transition: transform 0.2s ease;
-        }
-        .audio-btn:not(.muted) img {
-            filter: hue-rotate(var(--dynamic-hue)) saturate(2);
-            will-change: filter;
-        }
-        .audio-btn:hover img, .collapse-btn:hover img { transform: scale(1.1); }
-        .audio-btn.muted img { filter: grayscale(100%) opacity(0.4) brightness(0.8); }
-
-        /* ---------- KATEGORIE STRIP ---------- */
-        .cat-strip {
-            flex: 1 1 auto; overflow: hidden; position: relative;
-            contain: paint;
-            cursor: grab;
-            transition: opacity 0.3s ease, flex 0.55s var(--ease-out);
-        }
-        .cat-strip:active { cursor: grabbing; }
-        .cat-strip::before, .cat-strip::after {
-            content: ""; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2;
-            pointer-events: none;
-        }
-        .cat-strip::before {
-            left: 0;
-            background: linear-gradient(90deg, var(--strip-fade), var(--strip-fade-end));
-        }
-        .cat-strip::after {
-            right: 0;
-            background: linear-gradient(270deg, var(--strip-fade), var(--strip-fade-end));
-        }
-
-        .cat-track {
-            display: inline-flex; align-items: center;
-            white-space: nowrap; height: 100%;
-            will-change: transform;
-            backface-visibility: hidden;
-            font-family: var(--font-display);
-            font-size: var(--fs-sm);
-            letter-spacing: 0.08em;
-        }
-        .cat-item {
-            display: flex; align-items: center; justify-content: center;
-            padding: 0 clamp(6px, 1.5vw, 14px);
-            cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .cat-item span {
-            display: inline-block;
-            padding: 10px 18px;
-            background: var(--card-bg);
-            color: var(--text);
-            border: 2px solid var(--border-medium);
-            border-radius: var(--radius-sm);
-            box-shadow:
-                0 3px 0 var(--border-medium),
-                0 5px 10px rgba(0,0,0,0.04);
-            transition:
-                transform 0.15s ease,
-                box-shadow 0.15s ease,
-                background 0.2s ease,
-                border-color 0.2s ease;
-            line-height: 1.2;
-            font-size: var(--fs-sm);
-        }
-        .cat-item:hover span {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 0 var(--border-medium), 0 8px 14px rgba(0,0,0,0.06);
-            border-color: var(--accent);
-        }
-        .cat-item.active span {
-            background: var(--accent);
-            color: #111;
-            border-color: var(--border-strong);
-            box-shadow: 0 0 0 transparent;
-            transform: translateY(3px);
-        }
-
-        /* ---------- SLIDER ---------- */
-        .slider-container-wrap {
-            width: 100%; max-width: 1600px;
-            margin: 8px auto 0;
-            transition: all 0.55s var(--ease-out);
-            overflow: hidden;
-            pointer-events: all;
-        }
-        .slider-container-wrap.collapsed {
-            opacity: 0; max-height: 0; margin-top: 0; pointer-events: none;
-        }
-        .slider-track {
-            width: 100%; height: 16px;
-            background: var(--border-soft);
-            border: 2px solid var(--border-medium);
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            cursor: grab;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);
-        }
-        .slider-track:active { cursor: grabbing; }
-        .slider-thumb {
-            position: absolute; top: 0; left: 0; height: 100%;
-            width: clamp(50px, 15vw, 90px);
-            border-radius: 5px;
-            border: 2px solid var(--border-strong);
-            pointer-events: none;
-            will-change: transform, background-color;
-            background-color: #ff0000;
-            box-shadow: 0 0 8px rgba(255,0,0,0.4);
-        }
-
-
-        /* ---------- DESKTOP: KOMPAKTE NAVIGATION ---------- */
-        @media (min-width: 900px) {
-            .header {
-                padding: 10px 18px 8px;
-            }
-            .strip-wrapper {
-                width: min(100%, 1080px);
-                max-width: 1080px;
-                height: 62px;
-                margin: 0 auto;
-            }
-            .theme-btn, .audio-btn, .collapse-btn {
-                width: 46px;
-            }
-            .cat-strip {
-                min-width: 0;
-            }
-            .cat-track {
-                font-size: 11px;
-                letter-spacing: 0.045em;
-            }
-            .cat-item {
-                padding: 0 5px;
-            }
-            .cat-item span {
-                padding: 7px 11px;
-                font-size: 11px;
-                line-height: 1.1;
-                white-space: nowrap;
-            }
-            .slider-container-wrap {
-                width: min(100%, 1080px);
-                max-width: 1080px;
-                margin: 6px auto 0;
-            }
-            .slider-track {
-                height: 9px;
-                border-width: 1px;
-            }
-            .slider-thumb {
-                width: 64px;
-                border-width: 1px;
-            }
-            main#mainContent {
-                min-height: calc(100vh - 90px);
-                padding: 26px 24px var(--space-xl);
-            }
-        }
-
-        @media (min-width: 900px) and (max-width: 1200px) {
-            .strip-wrapper, .slider-container-wrap {
-                width: calc(100% - 24px);
-            }
-            .cat-item span {
-                padding: 6px 8px;
-                font-size: 10px;
-            }
-        }
-
-        /* ---------- CONTENT ---------- */
-        main#mainContent {
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            width: 100%; max-width: 100vw;
-            min-height: calc(100vh - 90px);
-            padding: clamp(90px, 12vw, 130px) var(--space-sm) var(--space-xl);
-            z-index: 1;
-            box-sizing: border-box;
-            overflow-x: hidden;
-            background: transparent;
-            position: relative;
-        }
-        main#mainContent section,
-        main#mainContent div {
-            width: 100%; max-width: 100%;
-            box-sizing: border-box;
-            overflow-x: hidden;
-        }
-        main#mainContent p, main#mainContent h2,
-        main#mainContent h3, main#mainContent h4 {
-            word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;
-            max-width: 100%;
-        }
-
-        /* Lesbarkeit: Fließtext bekommt VT323 + breiter Zeilenabstand */
-        main#mainContent p {
-            font-family: var(--font-body);
-            font-size: var(--fs-body-content);
-            line-height: 1.65;
-            letter-spacing: 0.005em;
-            margin: var(--space-sm) auto;
-            text-align: left;
-            max-width: 70ch;
-        }
-        main#mainContent h2 {
-            font-family: var(--font-display);
-            font-size: var(--fs-xl);
-            margin: var(--space-md) auto var(--space-sm);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-        main#mainContent h3 {
-            font-family: var(--font-display);
-            font-size: var(--fs-md);
-            margin: var(--space-lg) 0 var(--space-sm);
-            letter-spacing: 0.03em;
-        }
-
-        main#mainContent img {
-            display: block;
-            width: 100% !important;
-            max-width: 320px !important;
-            height: auto !important;
-            margin: var(--space-md) auto;
-            box-sizing: border-box;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-        }
-        main#mainContent hr {
-            border: 0; height: 1px;
-            background: var(--border-soft);
-            margin: var(--space-lg) auto;
-            width: min(100%, 640px);
-        }
-
-        /* Section-Reveal-Animation */
-        @keyframes sectionFadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        main#mainContent > section { animation: sectionFadeIn 0.5s var(--ease-out); }
-
-        @media (min-width: 900px) {
-            main#mainContent section { max-width: 960px; padding: var(--space-md) var(--space-lg); }
-            main#mainContent h2 { font-size: var(--fs-2xl); }
-            main#mainContent img { max-width: 620px !important; }
-        }
-
-        /* ---------- WELCOME / LOADING STATES ---------- */
-        .welcome-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-medium);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            max-width: 640px;
-            width: 100%;
-            box-shadow: var(--shadow-md);
-            animation: sectionFadeIn 0.4s var(--ease-out);
-        }
-        .welcome-card h2 {
-            color: var(--accent);
-            font-size: var(--fs-lg);
-            margin-bottom: var(--space-sm);
-        }
-        .welcome-card p {
-            font-family: var(--font-body);
-            font-size: var(--fs-body-content);
-            color: var(--text-muted);
-            text-align: center;
-            line-height: 1.6;
-        }
-
-        /* ---------- LOADING INDICATOR (Pixel-Dots) ---------- */
-        /* Kein Lade-Schleier über der Türanimation. */
-        #loading,
-        #loading.show {
-            display: none !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background: transparent !important;
-        }
-        .loader-dots {
-            display: flex; gap: 10px;
-        }
-        .loader-dots span {
-            width: 12px; height: 12px;
-            background: var(--accent);
-            border-radius: 2px;
-            animation: dotBounce 1.2s ease-in-out infinite;
-            box-shadow: 0 0 10px rgba(255,122,0,0.4);
-        }
-        .loader-dots span:nth-child(2) { animation-delay: 0.15s; }
-        .loader-dots span:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes dotBounce {
-            0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
-            40% { transform: translateY(-12px); opacity: 1; }
-        }
-        #loading .loading-text {
-            font-family: var(--font-display);
-            font-size: var(--fs-xs);
-            letter-spacing: 0.22em;
-            color: var(--text);
-            text-transform: uppercase;
-        }
-
-        /* ========== METALLTÜR & KACHELN ========== */
-        #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
-        #door-overlay.closed { pointer-events: all; }
-        
-        #door-overlay .door-panel { 
-            position: absolute; inset: 0; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1) !important; will-change: transform; backface-visibility: hidden; 
-            background-color: var(--door-bg); 
-            display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(4, 1fr); padding: 2vw; gap: 1.5vw;   
-        }
-
-        .door-tile {
-            background-image: url('pixelart/pixelart_vedran.png'); background-size: contain; background-position: center center; background-repeat: no-repeat; width: 100%; height: 100%;
-            transform: perspective(400px) translate(var(--t-tx, 0px), var(--t-ty, 0px)) rotate(var(--t-rot, 0deg)) rotateY(var(--t-rotY, 0deg)) skewX(var(--t-skx, 0deg)) scale(var(--t-sx, 1), var(--t-sy, 1));
-            filter: var(--t-fil, none);
-            will-change: transform, filter;
-        }
-        
-        @media (max-width: 768px) {
-            #door-overlay .door-panel { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); padding: 4vw; gap: 3vw; }
-            .door-tile:nth-child(n+9) { display: none; }
-        }
-
-        #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
-        #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
-
-
-        /* ---------- PROJECTS: BILDER STABIL ZENTRIERT ---------- */
-        main#mainContent #projects-accordion .carousel-stage {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            min-height: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        main#mainContent #projects-accordion .carousel-slide,
-        main#mainContent #projects-accordion .carousel-slide.active {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-        main#mainContent #projects-accordion .carousel-slide img {
-            display: block;
-            width: 100% !important;
-            height: 100% !important;
-            max-width: 100% !important;
-            max-height: 100% !important;
-            object-fit: contain;
-            object-position: center center;
-            margin: 0 !important;
-            border-radius: 0;
-            box-shadow: none;
-        }
-
-        /* ---------- ERROR STATE ---------- */
-        .error-card {
-            background: var(--card-bg);
-            border: 2px solid var(--accent-red);
-            border-radius: var(--radius);
-            padding: var(--space-lg);
-            max-width: 520px;
-            width: 100%;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-        }
-        .error-card h3 {
-            color: var(--accent-red);
-            font-size: var(--fs-md);
-            margin-bottom: var(--space-sm);
-        }
-        .error-card p {
-            font-family: var(--font-body);
-            font-size: var(--fs-body-content);
-            color: var(--text-muted);
-            text-align: center;
-        }
-        .error-card button {
-            margin-top: var(--space-md);
-            padding: 12px 24px;
-            background: var(--accent);
-            color: #111;
-            border: 2px solid var(--border-strong);
-            border-radius: var(--radius-sm);
-            font-family: var(--font-display);
-            font-size: var(--fs-sm);
-            cursor: pointer;
-            box-shadow: 0 3px 0 var(--border-strong);
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-        }
-        .error-card button:active {
-            transform: translateY(3px);
-            box-shadow: 0 0 0 transparent;
-        }
-
-        /* ---------- ZOOM WRAPPER ---------- */
-        main#mainContent a.zoom-wrapper {
-            display: inline-block; position: relative;
-            max-width: 100%; margin: var(--space-md) auto;
-            cursor: zoom-in;
-            text-decoration: none;
-            transition: transform 0.2s ease;
-        }
-        main#mainContent a.zoom-wrapper:hover { transform: scale(1.02); }
-        main#mainContent a.zoom-wrapper img { margin: 0 !important; }
-        main#mainContent a.zoom-wrapper::after {
-            content: '🔍';
-            position: absolute; bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.78);
-            color: #fff;
-            padding: 5px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            pointer-events: none;
-            opacity: 0.85;
-            transition: opacity 0.2s ease;
-        }
-        main#mainContent a.zoom-wrapper:hover::after { opacity: 1; }
-
-        /* ---------- STICKER ---------- */
-        main#mainContent a.sticker-link {
-            display: inline-block;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0;
-            transition: transform 0.2s ease;
-        }
-        main#mainContent a.sticker-link:hover { transform: scale(1.05); }
-        main#mainContent a.sticker-link img.transparent-sticker {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            max-width: 300px !important;
-            margin: 0 auto;
-        }
-
-        /* ---------- VHS MULTIVERSE ---------- */
-        .vhs-zoom-wrapper {
-            overflow: hidden !important;
-            border-radius: var(--radius);
-            transform: none !important;
-            contain: paint;
-            position: relative;
-        }
-        .vhs-wobble-img { animation: vhsIdleWobble 4.5s ease-in-out infinite; will-change: transform; }
-        .vhs-zoom-wrapper.glitching .vhs-wobble-img { animation: vhsGlitch 0.75s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        @keyframes vhsIdleWobble {
-            0%,100% { transform: translateX(0) skewX(0); filter: saturate(1) contrast(1.02); }
-            25%     { transform: translateX(1.5px) skewX(-0.3deg); filter: saturate(1.15) contrast(1.04); }
-            50%     { transform: translateX(-1.5px) skewX(0.25deg); filter: saturate(1) contrast(1.02); }
-            75%     { transform: translateX(0.8px) skewX(-0.15deg); filter: saturate(1.08) contrast(1.03); }
-        }
-        @keyframes vhsGlitch {
-            0%   { transform: translateX(0) skewX(0); filter: none; }
-            8%   { transform: translateX(-10px) skewX(4deg); filter: hue-rotate(90deg) saturate(3) contrast(1.5); }
-            16%  { transform: translateX(8px) skewX(-5deg); filter: hue-rotate(-60deg) saturate(2.5) contrast(1.3); }
-            28%  { transform: translateX(-6px) skewX(3deg); filter: hue-rotate(45deg) saturate(2); }
-            42%  { transform: translateX(4px) skewX(-2deg); filter: none; }
-            58%  { transform: translateX(-3px) skewX(1.5deg); filter: hue-rotate(-30deg) saturate(1.8); }
-            75%  { transform: translateX(1.5px) skewX(-0.5deg); filter: saturate(1.4); }
-            100% { transform: translateX(0) skewX(0); filter: none; }
-        }
-        .vhs-crt-overlay {
-            position: absolute; inset: 0;
-            pointer-events: none; opacity: 0; z-index: 3;
-            border-radius: var(--radius);
-            background: linear-gradient(to bottom,
-                rgba(255,255,255,0.95) 0%,
-                rgba(0,255,255,0.35) 30%,
-                rgba(255,0,255,0.15) 60%,
-                transparent 100%);
-            mix-blend-mode: overlay;
-        }
-        .vhs-crt-overlay::before {
-            content: ''; position: absolute; inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.35) 3px, transparent 4px);
-            opacity: 0.6;
-        }
-        .vhs-crt-overlay.active { animation: crtImagePowerOn 0.8s ease-out forwards; }
-        @keyframes crtImagePowerOn {
-            0%   { opacity: 0; transform: scaleY(0.02); filter: brightness(6); }
-            15%  { opacity: 1; transform: scaleY(1.15); filter: brightness(3.5) hue-rotate(180deg) saturate(2); }
-            30%  { opacity: 1; transform: scaleY(0.98); filter: brightness(2) hue-rotate(90deg); }
-            50%  { opacity: 0.85; transform: scaleY(1); filter: brightness(1.3) hue-rotate(30deg); }
-            75%  { opacity: 0.4; filter: brightness(1) hue-rotate(0deg); }
-            100% { opacity: 0; filter: brightness(1); }
-        }
-
-        /* ---------- REDUCED MOTION ---------- */
-        @media (prefers-reduced-motion: reduce) {
-            html[data-theme="crt"]::after { display: none; }
-            .vhs-wobble-img { animation: none !important; }
-            .door-panel { transition-duration: 0.2s !important; }
-        }
-    </style>
-</head>
-<body>
-
-    <audio id="quackAudio" preload="auto"></audio>
-
-    <div id="door-overlay" class="closed" data-category="ABOUT">
-        <div class="door-panel"></div>
-    </div>
-
-    <header class="header" id="headerEl">
-        <div class="strip-wrapper" id="stripWrapper">
-            <button id="themeToggle" class="theme-btn" type="button" title="Farbmodus" aria-label="Farbmodus wechseln">☀</button>
-            <div id="catStrip" class="cat-strip" tabindex="0" role="list" aria-label="Kategorien">
-                <div id="catTrack" class="cat-track"></div>
-            </div>
-            <button id="audioToggle" class="audio-btn" type="button" title="Audio Sound An/Aus" aria-label="Audio Sound An/Aus">
-                <img src="duck.png" alt="">
-            </button>
-            <button id="collapseToggle" class="collapse-btn" type="button" title="Menü öffnen/schließen" aria-label="Menü öffnen/schließen">
-                <img src="duck.png" alt="">
-            </button>
-        </div>
-
-        <div class="slider-container-wrap" id="sliderWrap">
-            <div class="slider-track" id="sliderTrack">
-                <div class="slider-thumb" id="sliderThumb"></div>
-            </div>
-        </div>
-    </header>
-
-    <main id="mainContent" aria-label="Inhalt">
-        <div class="welcome-card">
-            <h2>WELCOME TO LHU</h2>
-            <p>Wähle eine Kategorie aus dem Menü, um die Inhalte direkt hier in die Seite zu laden.</p>
-        </div>
-    </main>
-
-    <div id="loading">
-        <div class="loader-dots">
-            <span></span><span></span><span></span>
-        </div>
-        <span class="loading-text">lädt</span>
-    </div>
-
-    <p class="sr-only" id="a11yStatus" role="status" aria-live="polite"></p>
-
-    <script>
         /* ============================================================
            MENU SCRIPT v2.0
            ============================================================ */
@@ -974,9 +326,17 @@
                     const el = document.createElement('div');
                     el.className = 'cat-item';
                     el.setAttribute('data-cat', cat);
-                    el.setAttribute('role', 'listitem');
+                    el.setAttribute('role', 'button');
+                    el.setAttribute('tabindex', '0');
+                    el.setAttribute('aria-label', `Kategorie ${cat} öffnen`);
                     el.innerHTML = `<span>${cat}</span>`;
                     el.addEventListener('click', () => triggerCategoryChange(cat));
+                    el.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            triggerCategoryChange(cat);
+                        }
+                    });
                     trackFragment.appendChild(el);
                 });
             }
@@ -1175,7 +535,7 @@
             function loop(time) {
                 animationFrame = null;
                 if (!time) time = performance.now();
-                if (!isTabVisible) return;
+                if (!isTabVisible || !document.body.classList.contains('site-mode')) return;
 
                 let dt = time - lastTime;
                 lastTime = time;
@@ -1231,8 +591,12 @@
 
             document.addEventListener('visibilitychange', () => {
                 isTabVisible = !document.hidden;
-                if (isTabVisible) { lastTime = performance.now(); startLoop(); }
-                else stopLoop();
+                if (isTabVisible) {
+                    lastTime = performance.now();
+                    if (document.body.classList.contains('site-mode')) startLoop();
+                } else {
+                    stopLoop();
+                }
             });
 
             let resizeTimeout;
@@ -1243,20 +607,38 @@
 
             if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
             else measure();
-            startLoop();
 
             /* --------------------------------------------------------
-               11. INITIAL START
+               SINGLE-PAGE APP ENTRY
+               index.html is now the shell host; ABOUT is the first view.
                -------------------------------------------------------- */
-            setTimeout(() => {
-                const door = document.getElementById('door-overlay');
-                if (door) {
-                    door.classList.remove('closed');
-                    door.classList.add('open');
-                    triggerCategoryChange('ABOUT');
-                }
-            }, 100);
+            let appEntered = false;
+            window.__lhuEnterMainSite = function() {
+                if (appEntered) return;
+                appEntered = true;
+
+                if (typeof window.__lhuStopIntro === 'function') window.__lhuStopIntro(true);
+                if (typeof window.__lhuPauseIndexExperience === 'function') window.__lhuPauseIndexExperience();
+                if (typeof window.__lhuPauseMatrixBackground === 'function') window.__lhuPauseMatrixBackground();
+
+                const indexExperience = document.getElementById('lhu-index-experience');
+                if (indexExperience) indexExperience.hidden = true;
+
+                const intro = document.getElementById('lhu-intro');
+                if (intro) intro.remove();
+
+                const indexMusic = document.getElementById('background-music');
+                if (indexMusic) indexMusic.pause();
+
+                document.body.classList.remove('intro-mode');
+                document.body.classList.add('site-mode');
+
+                const shell = document.getElementById('site-shell');
+                if (shell) shell.hidden = false;
+
+                applyGlobalMute();
+                startLoop();
+                triggerCategoryChange('ABOUT');
+            };
         });
-    </script>
-</body>
-</html>
+    
