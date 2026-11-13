@@ -499,7 +499,7 @@
                 e.className = "fast-rise-emoji"; e.textContent = char; 
                 e.style.setProperty("--left", `${Math.random() * 100}%`); 
                 e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`); 
-                e.style.setProperty("--dur", `${0.15 + Math.random() * 0.25}s`); 
+                e.style.setProperty("--dur", `${1.6 + Math.random() * 1.1}s`); 
                 e.style.setProperty("--delay", `${-Math.random() * 2}s`); 
                 e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`); 
                 container.appendChild(e);

@@ -342,11 +342,11 @@
             .lhu-3d-lightbox__tools { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
             .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
 
-            /* Loading field: 40 moving LOADING rows; after the GLB loads, its own render appears as ASCII for 2 seconds. */
-            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.58); color: #f3f3f3; opacity: 1; visibility: visible; transition: opacity .58s ease, visibility .58s ease; pointer-events: none; font-family: 'Courier New', monospace; }
-            .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; }
+            /* Loading field: 20 moving LOADING rows; after the GLB loads, its own render appears as ASCII for 3 seconds. */
+            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.58); color: #f3f3f3; opacity: 1; visibility: visible; transition: none; pointer-events: none; font-family: 'Courier New', monospace; }
+            .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; transition: none !important; }
             .lhu-3d-loading-frame.has-error { background: rgba(0,0,0,.82); color: #ffbaba; }
-            .lhu-3d-loading-model-ascii { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; transition: opacity .28s ease; }
+            .lhu-3d-loading-model-ascii { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; transition: none; }
             .lhu-3d-loading-frame.is-ascii-model .lhu-3d-loading-model-ascii { opacity: 1; }
             .lhu-3d-loading-frame.has-error .lhu-3d-loading-model-ascii { opacity: 0; }
             .lhu-3d-loading-lines { position: absolute; inset: 1.2% 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
@@ -360,6 +360,18 @@
             .carousel-dot-3d:hover, .carousel-dot-3d:focus-visible { background: var(--dot-active); color: #fff; }
             @media (max-width: 600px) { .lhu-3d-lightbox__panel { width: 100%; height: 88vh; border-radius: 12px; } }
 
+            /* The GLB loading typography is intentionally animated on desktop and mobile,
+               even when the OS requests reduced motion. Other page animations still respect it. */
+            @media (prefers-reduced-motion: reduce) {
+                .lhu-3d-loading-row__track {
+                    animation-name: lhuLoadingRowFlow !important;
+                    animation-duration: var(--row-speed, 7s) !important;
+                    animation-delay: var(--row-delay, 0s) !important;
+                    animation-timing-function: linear !important;
+                    animation-iteration-count: infinite !important;
+                }
+            }
+
             /* ---------- REDUCED MOTION ---------- */
             @media (prefers-reduced-motion: reduce) {
                 .cat-body,
@@ -367,7 +379,6 @@
                 .cat-header .arrow,
                 .prod-header .prod-arrow { transition-duration: 0.01ms; }
                 .model-loading .spinner { animation-duration: 2s; }
-                .lhu-3d-loading-row__track { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
             }
         </style>
 
@@ -406,7 +417,7 @@
 
                 /* Actual-GLB ASCII preview:
                    model-viewer loads the real asset. Its live render is sampled via toDataURL()
-                   and converted into a fixed monospace ASCII image for two seconds. The 40 LOADING
+                   and converted into a fixed monospace ASCII image for three seconds. The 20 LOADING
                    rows remain behind it. The already-loaded textured model is revealed by fading
                    out the overlay. */
                 function stopLoadingAscii(loader) {
@@ -418,7 +429,7 @@
                     loader.__lhuAsciiRuntime = null;
                 }
 
-                function startLoadingAscii(loader, viewer, duration = 2000) {
+                function startLoadingAscii(loader, viewer, duration = 3000) {
                     stopLoadingAscii(loader);
                     const canvas = loader.querySelector('.lhu-3d-loading-model-ascii');
                     if (!canvas || !viewer || typeof viewer.toDataURL !== 'function') return false;
@@ -733,9 +744,9 @@
                     </div>`;
                     const loadingLines = modelLightbox.querySelector('.lhu-3d-loading-lines');
                     const lineText = 'LOADING LOADING LOADING LOADING LOADING LOADING LOADING LOADING ';
-                    loadingLines.innerHTML = Array.from({ length: 40 }, (_, i) => {
-                        const speed = 10.5 + (i % 6) * 1.15;
-                        const delay = -(i * 0.27).toFixed(2);
+                    loadingLines.innerHTML = Array.from({ length: 20 }, (_, i) => {
+                        const speed = 6.2 + (i % 5) * 0.65;
+                        const delay = -(i * 0.19).toFixed(2);
                         const direction = i % 2 === 0 ? '' : ' is-reversed';
                         return `<div class="lhu-3d-loading-row${direction}" style="--row-speed:${speed}s;--row-delay:${delay}s"><div class="lhu-3d-loading-row__track"><span>${lineText}</span><span aria-hidden="true">${lineText}</span><span aria-hidden="true">${lineText}</span></div></div>`;
                     }).join('');
@@ -783,7 +794,7 @@
 
                     viewer.addEventListener('load', () => {
                         if (modelLightboxViewer !== viewer) return;
-                        if (!startLoadingAscii(loader, viewer, 2000)) loader.classList.add('is-loaded');
+                        if (!startLoadingAscii(loader, viewer, 3000)) loader.classList.add('is-loaded');
                     }, { once: true });
                     viewer.addEventListener('error', () => {
                         if (modelLightboxViewer !== viewer) return;
