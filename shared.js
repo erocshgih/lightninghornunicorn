@@ -266,7 +266,7 @@
             const headerEl = document.getElementById('headerEl');
             let isCollapsed = false;
 
-            const quackFiles = ['quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3', 'quack/quack04.mp3'];
+            const quackFiles = ['quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3'];
             let quackQueue = [];
             function getNextQuack() {
                 if (quackQueue.length === 0) {

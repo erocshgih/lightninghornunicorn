@@ -342,11 +342,13 @@
             .lhu-3d-lightbox__tools { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
             .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
 
-            /* Minimal loading field: 40 moving LOADING rows over a fluid Marching-Cubes shape. */
-            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.48); color: #f3f3f3; opacity: 1; visibility: visible; transition: opacity .42s ease, visibility .42s ease; pointer-events: none; font-family: 'Courier New', monospace; }
+            /* Loading field: 40 moving LOADING rows; after the GLB loads, its own render appears as ASCII for 2 seconds. */
+            .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.58); color: #f3f3f3; opacity: 1; visibility: visible; transition: opacity .58s ease, visibility .58s ease; pointer-events: none; font-family: 'Courier New', monospace; }
             .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; }
-            .lhu-3d-loading-frame.has-error { background: rgba(0,0,0,.72); color: #ffbaba; }
-            .lhu-3d-loading-fluid { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; opacity: .95; pointer-events: none; mix-blend-mode: screen; }
+            .lhu-3d-loading-frame.has-error { background: rgba(0,0,0,.82); color: #ffbaba; }
+            .lhu-3d-loading-model-ascii { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; transition: opacity .28s ease; }
+            .lhu-3d-loading-frame.is-ascii-model .lhu-3d-loading-model-ascii { opacity: 1; }
+            .lhu-3d-loading-frame.has-error .lhu-3d-loading-model-ascii { opacity: 0; }
             .lhu-3d-loading-lines { position: absolute; inset: 1.2% 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
             .lhu-3d-loading-row { display: flex; align-items: center; flex: 1 1 0; min-height: 0; width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(8px, 1.02vw, 13px); line-height: 1; font-weight: 600; letter-spacing: .055em; text-shadow: 0 0 5px rgba(255,255,255,.2); opacity: .48; }
             .lhu-3d-loading-row__track { display: inline-flex; flex: 0 0 auto; width: max-content; will-change: transform; animation: lhuLoadingRowFlow var(--row-speed, 13s) linear var(--row-delay, 0s) infinite; }
@@ -402,76 +404,133 @@
                 // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
                 ensureModelViewer();
 
-                /* Fluid-ASCII-Loading: 2D metaball field translated directly into LOADING glyphs.
-                   No WebGL, no 3D mesh: the fluid exists only as a moving ASCII luminance field. */
-                function stopLoadingFluid(loader) {
-                    const runtime = loader && loader.__lhuFluidRuntime;
+                /* Actual-GLB ASCII preview:
+                   model-viewer loads the real asset. Its live render is sampled via toDataURL()
+                   and converted into a fixed monospace ASCII image for two seconds. The 40 LOADING
+                   rows remain behind it. The already-loaded textured model is revealed by fading
+                   out the overlay. */
+                function stopLoadingAscii(loader) {
+                    const runtime = loader && loader.__lhuAsciiRuntime;
                     if (!runtime) return;
                     runtime.stopped = true;
                     if (runtime.raf) cancelAnimationFrame(runtime.raf);
                     if (runtime.resizeObserver) runtime.resizeObserver.disconnect();
-                    loader.__lhuFluidRuntime = null;
+                    loader.__lhuAsciiRuntime = null;
                 }
 
-                function startLoadingFluid(loader) {
-                    stopLoadingFluid(loader);
-                    const canvas = loader.querySelector('.lhu-3d-loading-fluid');
-                    if (!canvas) return;
+                function startLoadingAscii(loader, viewer, duration = 2000) {
+                    stopLoadingAscii(loader);
+                    const canvas = loader.querySelector('.lhu-3d-loading-model-ascii');
+                    if (!canvas || !viewer || typeof viewer.toDataURL !== 'function') return false;
                     const ctx = canvas.getContext('2d', { alpha: true });
-                    if (!ctx) return;
-                    const runtime = { stopped: false, raf: 0, lastFrame: 0 };
-                    loader.__lhuFluidRuntime = runtime;
+                    if (!ctx) return false;
+
+                    const runtime = { stopped: false, raf: 0, started: performance.now(), lastCapture: 0, busy: false };
+                    loader.__lhuAsciiRuntime = runtime;
+                    loader.classList.add('is-ascii-model');
+
+                    let cssWidth = 0, cssHeight = 0, dpr = 1;
                     const resize = () => {
                         const rect = loader.getBoundingClientRect();
-                        const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-                        canvas.width = Math.max(1, Math.round(rect.width * dpr));
-                        canvas.height = Math.max(1, Math.round(rect.height * dpr));
+                        cssWidth = Math.max(1, rect.width);
+                        cssHeight = Math.max(1, rect.height);
+                        dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+                        canvas.width = Math.max(1, Math.round(cssWidth * dpr));
+                        canvas.height = Math.max(1, Math.round(cssHeight * dpr));
                         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                     };
                     resize();
                     if (typeof ResizeObserver !== 'undefined') {
                         runtime.resizeObserver = new ResizeObserver(resize);
                         runtime.resizeObserver.observe(loader);
-                    } else {
-                        window.addEventListener('resize', resize, { passive: true });
-                        runtime.resizeObserver = { disconnect: () => window.removeEventListener('resize', resize) };
                     }
-                    const glyphs = ' .:LOADING';
-                    const render = now => {
-                        if (runtime.stopped || !loader.isConnected || !modelLightbox || modelLightbox.hidden || loader.classList.contains('is-loaded') || loader.classList.contains('has-error')) {
-                            stopLoadingFluid(loader); return;
-                        }
-                        if (!runtime.lastFrame || now - runtime.lastFrame >= 1000 / 24) {
-                            const width = Math.max(1, loader.clientWidth), height = Math.max(1, loader.clientHeight);
-                            ctx.clearRect(0, 0, width, height);
-                            const cellW = 8, cellH = 12;
-                            const cols = Math.ceil(width / cellW), rows = Math.ceil(height / cellH);
-                            const time = now * .00045;
-                            ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                            for (let gy = 0; gy < rows; gy++) {
-                                for (let gx = 0; gx < cols; gx++) {
-                                    const nx = (gx + .5) / cols, ny = (gy + .5) / rows;
-                                    let field = 0;
-                                    for (let b = 0; b < 5; b++) {
-                                        const phase = b * 1.2566;
-                                        const bx = .5 + Math.sin(time * (1.0 + b * .09) + phase) * .20;
-                                        const by = .5 + Math.cos(time * (.78 + b * .07) + phase * 1.37) * .22;
-                                        const dx = (nx - bx) * 1.05, dy = (ny - by) * .78;
-                                        field += .010 / (dx * dx + dy * dy + .0035);
-                                    }
-                                    const density = Math.max(0, Math.min(1, (field - 1.05) / 2.25));
-                                    if (density < .08) continue;
-                                    const glyphIndex = Math.min(glyphs.length - 1, Math.floor(density * (glyphs.length - 1)));
-                                    const char = glyphs[glyphIndex];
-                                    ctx.fillStyle = `rgba(245,245,245,${(.12 + density * .78).toFixed(3)})`;
-                                    ctx.fillText(char, gx * cellW + cellW / 2, gy * cellH + cellH / 2);
-                                }
+
+                    const sourceCanvas = document.createElement('canvas');
+                    const sourceCtx = sourceCanvas.getContext('2d', { willReadFrequently: true });
+                    const glyphs = ' .,:-=+*#%@';
+                    const drawAscii = image => {
+                        if (runtime.stopped || !loader.isConnected) return;
+                        const maxCols = Math.max(48, Math.min(112, Math.floor(cssWidth / 6.2)));
+                        const maxRows = Math.max(24, Math.min(58, Math.floor(cssHeight / 10.5)));
+                        sourceCanvas.width = maxCols;
+                        sourceCanvas.height = maxRows;
+                        sourceCtx.clearRect(0, 0, maxCols, maxRows);
+
+                        const imageRatio = image.naturalWidth / Math.max(1, image.naturalHeight);
+                        const gridRatio = (maxCols * 0.58) / maxRows;
+                        let drawW = maxCols, drawH = maxRows;
+                        if (imageRatio > gridRatio) drawH = maxCols * 0.58 / imageRatio;
+                        else drawW = maxRows * imageRatio / 0.58;
+                        sourceCtx.drawImage(image, (maxCols - drawW) / 2, (maxRows - drawH) / 2, drawW, drawH);
+
+                        let pixels;
+                        try { pixels = sourceCtx.getImageData(0, 0, maxCols, maxRows).data; }
+                        catch (err) { return; }
+                        const cornerIds = [0, (maxCols - 1) * 4, ((maxRows - 1) * maxCols) * 4, (maxRows * maxCols - 1) * 4];
+                        let bgR = 0, bgG = 0, bgB = 0, bgA = 0;
+                        cornerIds.forEach(i => { bgR += pixels[i]; bgG += pixels[i + 1]; bgB += pixels[i + 2]; bgA += pixels[i + 3]; });
+                        bgR /= 4; bgG /= 4; bgB /= 4; bgA /= 4;
+
+                        ctx.clearRect(0, 0, cssWidth, cssHeight);
+                        const fontSize = Math.max(7, Math.min(10, cssWidth / 100));
+                        const cellW = fontSize * 0.62, cellH = fontSize * 1.12;
+                        const totalW = maxCols * cellW, totalH = maxRows * cellH;
+                        const offX = (cssWidth - totalW) / 2, offY = (cssHeight - totalH) / 2;
+                        ctx.font = `${fontSize}px "Courier New", monospace`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(255,255,255,.24)';
+                        ctx.shadowBlur = 2;
+                        for (let y = 0; y < maxRows; y++) {
+                            for (let x = 0; x < maxCols; x++) {
+                                const i = (y * maxCols + x) * 4;
+                                const alpha = pixels[i + 3] / 255;
+                                if (alpha < .08) continue;
+                                const dr = pixels[i] - bgR, dg = pixels[i + 1] - bgG, db = pixels[i + 2] - bgB;
+                                const contrast = Math.sqrt(dr * dr + dg * dg + db * db) * Math.min(1, alpha + bgA / 1020);
+                                if (contrast < 24) continue;
+                                const level = Math.max(0, Math.min(1, (contrast - 18) / 190));
+                                const gi = Math.max(1, Math.min(glyphs.length - 1, Math.round(level * (glyphs.length - 1))));
+                                ctx.fillStyle = `rgba(255,255,255,${(.42 + level * .58).toFixed(2)})`;
+                                ctx.fillText(glyphs[gi], offX + x * cellW + cellW / 2, offY + y * cellH + cellH / 2);
                             }
-                            runtime.lastFrame = now;
                         }
-                        runtime.raf = requestAnimationFrame(render);
+                        ctx.shadowBlur = 0;
                     };
-                    runtime.raf = requestAnimationFrame(render);
+
+                    const capture = () => {
+                        if (runtime.stopped || runtime.busy) return;
+                        runtime.busy = true;
+                        try {
+                            const dataUrl = viewer.toDataURL('image/png');
+                            const image = new Image();
+                            image.onload = () => { drawAscii(image); runtime.busy = false; };
+                            image.onerror = () => { runtime.busy = false; };
+                            image.src = dataUrl;
+                        } catch (err) {
+                            runtime.busy = false;
+                        }
+                    };
+
+                    const tick = now => {
+                        if (runtime.stopped || !loader.isConnected || !modelLightbox || modelLightbox.hidden) {
+                            stopLoadingAscii(loader); return;
+                        }
+                        if (now - runtime.started >= duration) {
+                            stopLoadingAscii(loader);
+                            loader.classList.remove('is-ascii-model');
+                            loader.classList.add('is-loaded');
+                            return;
+                        }
+                        if (!runtime.lastCapture || now - runtime.lastCapture >= 115) {
+                            runtime.lastCapture = now;
+                            capture();
+                        }
+                        runtime.raf = requestAnimationFrame(tick);
+                    };
+                    runtime.raf = requestAnimationFrame(tick);
+                    capture();
+                    return true;
                 }
 
                 /* ------------------------------------------------
@@ -666,7 +725,7 @@
                     modelLightbox.setAttribute('aria-label', 'Interaktive 3D-Modellansicht');
                     modelLightbox.innerHTML = `<div class="lhu-3d-lightbox__panel">
                         <div class="lhu-3d-loading-frame" role="status" aria-label="3D-Modell wird geladen" aria-live="polite">
-                            <canvas class="lhu-3d-loading-fluid" aria-hidden="true"></canvas>
+                            <canvas class="lhu-3d-loading-model-ascii" aria-hidden="true"></canvas>
                             <div class="lhu-3d-loading-lines" aria-hidden="true"></div>
                         </div>
                         <button type="button" class="lhu-3d-lightbox__close" aria-label="3D-Ansicht schließen">×</button>
@@ -683,7 +742,7 @@
                     document.body.appendChild(modelLightbox);
                     const close = () => {
                         const loadingFrame = modelLightbox.querySelector('.lhu-3d-loading-frame');
-                        stopLoadingFluid(loadingFrame);
+                        stopLoadingAscii(loadingFrame);
                         modelLightbox.hidden = true;
                         if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
                     };
@@ -709,9 +768,8 @@
                     const lineText = 'LOADING LOADING LOADING LOADING LOADING LOADING LOADING LOADING ';
 
                     if (modelLightboxViewer) modelLightboxViewer.remove();
-                    loader.classList.remove('is-loaded', 'has-error', 'fluid-unavailable');
+                    loader.classList.remove('is-loaded', 'has-error', 'fluid-unavailable', 'is-ascii-model');
                     lineTracks.forEach(span => { span.textContent = lineText; });
-                    startLoadingFluid(loader);
 
                     const viewer = document.createElement('model-viewer');
                     viewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
@@ -725,12 +783,12 @@
 
                     viewer.addEventListener('load', () => {
                         if (modelLightboxViewer !== viewer) return;
-                        stopLoadingFluid(loader);
-                        loader.classList.add('is-loaded');
+                        if (!startLoadingAscii(loader, viewer, 2000)) loader.classList.add('is-loaded');
                     }, { once: true });
                     viewer.addEventListener('error', () => {
                         if (modelLightboxViewer !== viewer) return;
-                        stopLoadingFluid(loader);
+                        stopLoadingAscii(loader);
+                        loader.classList.remove('is-ascii-model');
                         loader.classList.add('has-error');
                         lineTracks.forEach(span => { span.textContent = 'MODEL COULD NOT BE LOADED · MODEL COULD NOT BE LOADED · '; });
                     }, { once: true });
@@ -753,7 +811,7 @@
                    ------------------------------------------------ */
                 function projectsCleanup() {
                     if (modelLightbox) {
-                        stopLoadingFluid(modelLightbox.querySelector('.lhu-3d-loading-frame'));
+                        stopLoadingAscii(modelLightbox.querySelector('.lhu-3d-loading-frame'));
                         modelLightbox.hidden = true;
                     }
                     if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
