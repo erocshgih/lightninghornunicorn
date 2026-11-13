@@ -17,6 +17,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
     <link rel="stylesheet" href="shared.css">
 
     <style>
@@ -537,10 +546,10 @@
     </script>
 
     <script type="module">
-        import * as THREE from "https://esm.sh/three@0.160.0";
-        import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-        import { GLTFLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
-        import { DRACOLoader } from "https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
+        import * as THREE from "three";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+        import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+        import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
         const getDPR = () => {
             const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
@@ -675,8 +684,13 @@
         const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 5); scene.add(fill);
         const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(-3, 5, -5); scene.add(rim);
 
-        const dracoLoader = new DRACOLoader(); dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
-        const loader = new GLTFLoader(); loader.setDRACOLoader(dracoLoader);
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/");
+        // Prefer the JavaScript decoder to avoid the WebAssembly eval/CSP restriction.
+        // Draco decoding is a one-time model-load cost; this keeps the site's CSP strict.
+        dracoLoader.setDecoderConfig({ type: "js" });
+        const loader = new GLTFLoader();
+        loader.setDRACOLoader(dracoLoader);
 
         const hitEnterSlot = document.getElementById("lhu-image-slot");
         const hitEnterScene = new THREE.Scene();
@@ -1083,16 +1097,20 @@
             function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; if(gl) gl.viewport(0, 0, W, H); }
 
             let introCleanedUp = false;
-            function cleanupIntro() {
+            function cleanupIntro(stopAudio = false) {
                 if (introCleanedUp) return;
                 introCleanedUp = true;
                 if (introAnimId !== null) cancelAnimationFrame(introAnimId);
                 introAnimId = null;
                 window.removeEventListener("resize", resizeIntro);
-                if (audio) {
+
+                // The intro animation and its sample have separate lifecycles.
+                // Natural animation completion must not cut the selected sample.
+                if (stopAudio && audio) {
                     audio.pause();
                     audio.currentTime = 0;
                 }
+
                 if (intro && intro.isConnected) intro.remove();
                 if (gl) {
                     const loseContext = gl.getExtension("WEBGL_lose_context");
@@ -1100,8 +1118,11 @@
                 }
             }
 
-            if (btnSkipHeads) btnSkipHeads.addEventListener("click", cleanupIntro);
-            if (btnSkipMain) btnSkipMain.addEventListener("click", () => { location.href = "menu.html"; });
+            if (btnSkipHeads) btnSkipHeads.addEventListener("click", () => cleanupIntro(true));
+            if (btnSkipMain) btnSkipMain.addEventListener("click", () => {
+                cleanupIntro(true);
+                location.href = "menu.html";
+            });
 
             function easeOutElastic(x) {
                 const c4 = (2 * Math.PI) / 3;
@@ -1233,7 +1254,8 @@
                 }
 
                 if (timeOffset >= 3.5) {
-                    cleanupIntro();
+                    // Remove the visual intro; let the selected audio sample finish naturally.
+                    cleanupIntro(false);
                     return;
                 }
             introAnimId = requestAnimationFrame(animateIntro);
