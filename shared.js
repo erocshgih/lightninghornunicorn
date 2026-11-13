@@ -4,98 +4,206 @@
            ============================================================ */
         document.addEventListener('DOMContentLoaded', () => {
 
-            /* HYPNO ASCII OVERLAY: fixed character grid, rotating SVG source. */
+            /* HYPNO ASCII OVERLAY: stationary character grid, rotating SVG texture. */
             (() => {
-                const loaderImages = Array.from(document.querySelectorAll('#loading .hypnoload-asset, #index-loading .hypnoload-intro'));
+                const loaderImages = Array.from(document.querySelectorAll(
+                    '#loading .hypnoload-asset, #index-loading .hypnoload-intro'
+                ));
                 if (!loaderImages.length) return;
+
                 const active = img => {
                     const root = img.closest('#loading, #index-loading');
                     return !!root && root.classList.contains('show') && getComputedStyle(root).display !== 'none';
                 };
+
                 const items = loaderImages.map(img => {
                     const stage = document.createElement('span');
                     stage.className = 'hypnoload-stage';
                     img.parentNode.insertBefore(stage, img);
                     stage.appendChild(img);
-                    stage.style.width = 'clamp(190px, 30vw, 276px)';
-                    stage.style.height = 'clamp(190px, 30vw, 276px)';
-                    stage.style.position = 'relative';
-                    stage.style.display = 'block';
-                    stage.style.flex = '0 0 auto';
                     img.classList.add('hypnoload-fallback-spin');
-                    return { img, stage, effect: null, renderer: null, scene: null, camera: null, plane: null, raf: 0, started: false, ready: false, last: 0 };
+                    return {
+                        img, stage, effect: null, renderer: null, texture: null,
+                        scene: null, camera: null, plane: null,
+                        raf: 0, started: false, ready: false, starting: false, last: 0
+                    };
                 });
+
+                /*
+                 * AsciiEffect.js imports the bare module name "three".
+                 * index.html provides an import map for this exact version.
+                 * Using the same Three.js revision as the intro avoids mismatched addons.
+                 */
                 let threePromise = null;
                 const loadThree = () => threePromise || (threePromise = Promise.all([
-                    import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js'),
-                    import('https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/effects/AsciiEffect.js')
+                    import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'),
+                    import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/effects/AsciiEffect.js')
                 ]).then(([THREE, ascii]) => ({ THREE, AsciiEffect: ascii.AsciiEffect })).catch(err => {
-                    console.warn('LHU ASCII overlay unavailable; rotating SVG fallback remains active.', err);
+                    console.warn('LHU ASCII overlay could not load. The rotating SVG fallback remains active.', err);
+                    threePromise = null;
                     return null;
                 }));
-                async function start(item) {
-                    if (item.started || !active(item.img)) return;
-                    item.started = true;
+
+                async function prepare(item) {
                     const libs = await loadThree();
-                    if (!libs || !active(item.img)) { item.started = false; return; }
-                    const { THREE, AsciiEffect } = libs;
-                    try {
-                        if (!item.img.complete || !item.img.naturalWidth) await new Promise((resolve, reject) => {
+                    if (!libs || !active(item.img)) return false;
+
+                    if (typeof item.img.decode === 'function') {
+                        try { await item.img.decode(); } catch (_) { /* load event / naturalWidth below is authoritative */ }
+                    }
+                    if (!item.img.complete || !item.img.naturalWidth) {
+                        await new Promise((resolve, reject) => {
                             item.img.addEventListener('load', resolve, { once: true });
                             item.img.addEventListener('error', reject, { once: true });
                         });
-                        const size = Math.max(190, Math.min(276, Math.round(item.stage.getBoundingClientRect().width || 276)));
-                        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
-                        renderer.setPixelRatio(1);
-                        renderer.setSize(size, size, false);
-                        renderer.setClearColor(0x000000, 0);
-                        const scene = new THREE.Scene();
-                        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
-                        camera.position.z = 2;
-                        const texture = new THREE.Texture(item.img);
-                        texture.colorSpace = THREE.SRGBColorSpace;
-                        texture.needsUpdate = true;
-                        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
-                        const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
-                        scene.add(plane);
-                        const effect = new AsciiEffect(renderer, ' .:-=+*#%@', { invert: true, resolution: 0.13, scale: 1, color: false, alpha: true });
-                        effect.setSize(size, size);
-                        const asciiSurface = effect.domElement;
-                        asciiSurface.className = 'hypnoload-ascii-surface';
-                        Object.assign(asciiSurface.style, {
-                            position: 'absolute', inset: '0', width: '100%', height: '100%',
-                            overflow: 'hidden', color: '#fff', backgroundColor: 'transparent',
-                            font: '3px/0.72 monospace', textAlign: 'center', pointerEvents: 'none',
-                            transform: 'none', animation: 'none'
+                    }
+
+                    const { THREE, AsciiEffect } = libs;
+                    const rect = item.stage.getBoundingClientRect();
+                    const size = Math.max(190, Math.min(276, Math.round(rect.width || 276)));
+                    const renderer = new THREE.WebGLRenderer({
+                        alpha: true,
+                        antialias: false,
+                        powerPreference: 'low-power',
+                        preserveDrawingBuffer: true
+                    });
+                    renderer.setPixelRatio(1);
+                    renderer.setClearColor(0x000000, 0);
+                    renderer.domElement.style.backgroundColor = 'transparent';
+                    renderer.domElement.style.color = '#fff';
+
+                    const scene = new THREE.Scene();
+                    scene.background = null;
+                    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+                    camera.position.z = 2;
+
+                    const texture = new THREE.Texture(item.img);
+                    texture.colorSpace = THREE.SRGBColorSpace;
+                    texture.minFilter = THREE.LinearFilter;
+                    texture.magFilter = THREE.LinearFilter;
+                    texture.needsUpdate = true;
+
+                    const material = new THREE.MeshBasicMaterial({
+                        map: texture,
+                        transparent: true,
+                        alphaTest: 0.001,
+                        depthWrite: false,
+                        side: THREE.DoubleSide
+                    });
+                    const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+                    scene.add(plane);
+
+                    const effect = new AsciiEffect(renderer, ' .:-=+*#%@', {
+                        invert: false,
+                        resolution: 0.20,
+                        scale: 1,
+                        color: false,
+                        alpha: true
+                    });
+                    effect.setSize(size, size);
+
+                    const asciiSurface = effect.domElement;
+                    asciiSurface.className = 'hypnoload-ascii-surface';
+                    Object.assign(asciiSurface.style, {
+                        position: 'absolute',
+                        inset: '0',
+                        display: 'block',
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'hidden',
+                        color: '#fff',
+                        backgroundColor: 'transparent',
+                        fontFamily: '"Courier New", monospace',
+                        textAlign: 'center',
+                        pointerEvents: 'none',
+                        transform: 'none',
+                        animation: 'none',
+                        zIndex: '2'
+                    });
+                    const table = asciiSurface.querySelector('table');
+                    if (table) {
+                        Object.assign(table.style, {
+                            borderCollapse: 'collapse',
+                            borderSpacing: '0',
+                            margin: '0',
+                            padding: '0',
+                            color: '#fff',
+                            backgroundColor: 'transparent'
                         });
-                        item.stage.appendChild(asciiSurface);
-                        item.renderer = renderer; item.scene = scene; item.camera = camera; item.effect = effect; item.plane = plane;
-                        item.stage.classList.add('ascii-ready');
-                        item.ready = true;
-                        const draw = now => {
-                            if (!active(item.img)) { item.raf = 0; item.started = false; return; }
-                            const delta = item.last ? Math.min((now - item.last) / 1000, 0.05) : 0;
-                            item.last = now;
-                            // Only the SVG texture plane rotates. The ASCII surface/layout never transforms.
-                            plane.rotation.z += delta * (Math.PI * 2 / 0.65);
-                            effect.render(scene, camera);
-                            item.raf = requestAnimationFrame(draw);
-                        };
-                        item.raf = requestAnimationFrame(draw);
-                    } catch (err) {
+                    }
+
+                    item.stage.appendChild(asciiSurface);
+                    item.renderer = renderer;
+                    item.texture = texture;
+                    item.scene = scene;
+                    item.camera = camera;
+                    item.plane = plane;
+                    item.effect = effect;
+                    item.ready = true;
+                    item.stage.classList.add('ascii-ready');
+                    return true;
+                }
+
+                function draw(item, now) {
+                    if (!active(item.img)) {
+                        item.raf = 0;
                         item.started = false;
+                        item.last = 0;
+                        return;
+                    }
+                    const delta = item.last ? Math.min((now - item.last) / 1000, 0.05) : 0;
+                    item.last = now;
+                    // Rotate only the SVG plane. The ASCII DOM/table is never transformed.
+                    if (item.plane) item.plane.rotation.z += delta * (Math.PI * 2 / 0.65);
+                    if (item.effect) item.effect.render(item.scene, item.camera);
+                    item.raf = requestAnimationFrame(t => draw(item, t));
+                }
+
+                async function start(item) {
+                    if (item.started || item.starting || !active(item.img)) return;
+                    item.starting = true;
+                    try {
+                        if (!item.ready) {
+                            const ok = await prepare(item);
+                            if (!ok) { item.starting = false; return; }
+                        }
+                        if (!active(item.img)) { item.starting = false; return; }
+                        item.last = 0;
+                        item.started = true;
+                        item.raf = requestAnimationFrame(t => draw(item, t));
+                    } catch (err) {
                         item.stage.classList.remove('ascii-ready');
-                        console.warn('LHU ASCII overlay failed; rotating SVG fallback remains active.', err);
+                        item.started = false;
+                        console.warn('LHU ASCII rendering failed. The rotating SVG fallback remains active.', err);
+                    } finally {
+                        item.starting = false;
                     }
                 }
+
                 const update = () => items.forEach(item => {
-                    if (active(item.img)) start(item);
-                    else if (item.raf) { cancelAnimationFrame(item.raf); item.raf = 0; item.started = false; item.last = 0; }
+                    if (active(item.img)) {
+                        start(item);
+                    } else if (item.raf) {
+                        cancelAnimationFrame(item.raf);
+                        item.raf = 0;
+                        item.started = false;
+                        item.last = 0;
+                    }
                 });
+
                 const observer = new MutationObserver(update);
-                document.querySelectorAll('#loading, #index-loading').forEach(el => observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] }));
+                document.querySelectorAll('#loading, #index-loading').forEach(el => {
+                    observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
+                });
                 document.addEventListener('visibilitychange', update);
-                window.addEventListener('resize', update);
+                window.addEventListener('resize', () => {
+                    items.forEach(item => {
+                        if (!item.ready || !item.effect || !active(item.img)) return;
+                        const rect = item.stage.getBoundingClientRect();
+                        const size = Math.max(190, Math.min(276, Math.round(rect.width || 276)));
+                        item.effect.setSize(size, size);
+                    });
+                });
                 update();
             })();
 
