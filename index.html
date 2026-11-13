@@ -17,10 +17,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
     <link rel="stylesheet" href="shared.css">
 
     <style>
@@ -326,7 +322,7 @@
     <audio id="snd-rizz" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rizz-sound-effect.mp3"></audio>
     <audio id="snd-rainbow" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow.mp3"></audio>
 
-    <div id="lhu-intro" aria-hidden="true">
+    <div id="lhu-intro" aria-hidden="false">
         <canvas id="lhu-intro-canvas"></canvas>
         <div id="lhu-intro-vignette"></div>
         <div id="lhu-enter-panel">
@@ -391,7 +387,7 @@
         </div>
         
         <div class="ui-bottom">
-            <select id="head-select" class="glass"></select>
+            <select id="head-select" class="glass" aria-label="3D-Modell auswählen"></select>
             <div style="display: flex; gap: 10px; align-items: center; pointer-events: auto;">
                 <button id="quote-btn" aria-label="Zitat Vorschlagen" title="Zitat vorschlagen">💬</button>
                 <button id="disclaimer-btn" aria-label="Legal Disclaimer" title="Legal Disclaimer">⚠️</button>
@@ -463,9 +459,13 @@
             document.getElementById("bg-prev").addEventListener("click", () => { currentBgIndex = (currentBgIndex - 1 + 3) % 3; window.setMatrixTheme(currentBgIndex); });
             document.getElementById("bg-next").addEventListener("click", () => { currentBgIndex = (currentBgIndex + 1) % 3; window.setMatrixTheme(currentBgIndex); });
 
+            let bgAnimationFrameId = null;
+
             function drawBg() {
-                requestAnimationFrame(drawBg);
-                if (document.hidden) return;
+                if (document.hidden) {
+                    bgAnimationFrameId = null;
+                    return;
+                }
 
                 mctx.fillStyle = "#04050a";
                 mctx.fillRect(0, 0, W, H);
@@ -508,9 +508,30 @@
                         }
                     }
                 }
+
+                bgAnimationFrameId = requestAnimationFrame(drawBg);
             }
 
-            initTheme(); drawBg();
+            function startBackgroundLoop() {
+                if (bgAnimationFrameId === null && !document.hidden) {
+                    bgAnimationFrameId = requestAnimationFrame(drawBg);
+                }
+            }
+
+            function stopBackgroundLoop() {
+                if (bgAnimationFrameId !== null) {
+                    cancelAnimationFrame(bgAnimationFrameId);
+                    bgAnimationFrameId = null;
+                }
+            }
+
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) stopBackgroundLoop();
+                else startBackgroundLoop();
+            });
+
+            initTheme();
+            startBackgroundLoop();
             window.addEventListener("resize", () => { clearTimeout(window._resizeT); window._resizeT = setTimeout(initTheme, 200); });
         })();
     </script>
@@ -731,37 +752,59 @@
         hitEnterResizeObserver.observe(hitEnterSlot);
 
         let object = null, mixer = null; const clock = new THREE.Clock();
+        let headLoadSequence = 0;
 
         function disposeObject(obj) {
             if (!obj) return;
+
+            const disposedGeometries = new Set();
+            const disposedMaterials = new Set();
+            const disposedTextures = new Set();
+
             obj.traverse((child) => {
-                if (child.isMesh) {
-                    if (child.geometry) child.geometry.dispose();
-                    if (child.material) {
-                        if (Array.isArray(child.material)) { child.material.forEach(m => disposeMaterial(m)); } else { disposeMaterial(child.material); }
-                    }
+                if (!child.isMesh) return;
+
+                if (child.geometry && !disposedGeometries.has(child.geometry)) {
+                    child.geometry.dispose();
+                    disposedGeometries.add(child.geometry);
                 }
+
+                if (!child.material) return;
+                const materials = Array.isArray(child.material) ? child.material : [child.material];
+                materials.forEach((mat) => {
+                    if (!mat || disposedMaterials.has(mat)) return;
+                    disposeMaterial(mat, disposedTextures);
+                    disposedMaterials.add(mat);
+                });
             });
         }
-        function disposeMaterial(mat) {
-            if (mat.map) mat.map.dispose();
-            if (mat.lightMap) mat.lightMap.dispose();
-            if (mat.bumpMap) mat.bumpMap.dispose();
-            if (mat.normalMap) mat.normalMap.dispose();
-            if (mat.specularMap) mat.specularMap.dispose();
-            if (mat.envMap) mat.envMap.dispose();
+
+        function disposeMaterial(mat, disposedTextures) {
+            // GLTF materials can own maps beyond map/normalMap (e.g. emissiveMap,
+            // roughnessMap, metalnessMap and aoMap). Dispose each texture once.
+            Object.values(mat).forEach((value) => {
+                if (value && value.isTexture && !disposedTextures.has(value)) {
+                    value.dispose();
+                    disposedTextures.add(value);
+                }
+            });
             mat.dispose();
         }
 
         function loadHead(url) {
-            startLoading(); 
+            const requestId = ++headLoadSequence;
+            startLoading();
             if (object) { scene.remove(object); disposeObject(object); object = null; } 
             if (mixer) { mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot()); mixer = null; }
 
             loader.load(
                 url, 
-                (g) => { 
-                    object = g.scene; 
+                (g) => {
+                    if (requestId !== headLoadSequence) {
+                        disposeObject(g.scene);
+                        return;
+                    }
+                    object = g.scene;
                     scene.add(object); 
                     object.userData.emissiveMats = [];
                     object.traverse((child) => {
@@ -784,12 +827,14 @@
                 },
                 undefined,
                 (error) => {
+                    if (requestId !== headLoadSequence) return;
                     console.error("Fehler beim Laden von " + url + ":", error);
                     stopLoading();
                     const container = document.getElementById("container3D");
                     const errDiv = document.createElement("div");
-                    errDiv.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff4d4d;font-family:'Press Start 2P',monospace;text-align:center;background:rgba(0,0,0,0.8);padding:20px;border-radius:10px;";
-                    errDiv.innerHTML = "FEHLER BEIM LADEN DES 3D-MODELLS.<br><br>BITTE NETZWERK PRÜFEN.";
+                    errDiv.setAttribute("role", "alert");
+                    errDiv.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff4d4d;font-family:'Press Start 2P',monospace;text-align:center;white-space:pre-line;background:rgba(0,0,0,0.8);padding:20px;border-radius:10px;";
+                    errDiv.textContent = "FEHLER BEIM LADEN DES 3D-MODELLS.\n\nBITTE NETZWERK PRÜFEN.";
                     container.appendChild(errDiv);
                     setTimeout(() => errDiv.remove(), 4000);
                 }
@@ -850,7 +895,15 @@
         };
 
         function endGag() {
-            if (gagBase) object.position.copy(gagBase); object.rotation.set(0,0,0); gagActive = false; document.getElementById("heart-emojis").classList.remove("active"); document.getElementById("matrix-bg").style.opacity = "1"; tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+            if (!gagActive) return;
+            if (object) {
+                if (gagBase) object.position.copy(gagBase);
+                object.rotation.set(0, 0, 0);
+            }
+            gagActive = false;
+            document.getElementById("heart-emojis").classList.remove("active");
+            document.getElementById("matrix-bg").style.opacity = "1";
+            tweenCamera(new THREE.Vector3(2.6, 0, 2.6), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
         }
 
         document.getElementById("rainbow-btn").onclick = () => {
@@ -986,9 +1039,6 @@
             const btnSkipHeads = document.getElementById("btn-skip-heads");
             const btnSkipMain = document.getElementById("btn-skip-main");
 
-            if(btnSkipHeads) btnSkipHeads.addEventListener("click", () => { if (intro) intro.remove(); });
-            if(btnSkipMain) btnSkipMain.addEventListener("click", () => { location.href = "menu.html"; });
-
             const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
             const word = document.getElementById("lhu-intro-word");
             
@@ -1031,6 +1081,27 @@
             }
 
             function resizeIntro() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; if(gl) gl.viewport(0, 0, W, H); }
+
+            let introCleanedUp = false;
+            function cleanupIntro() {
+                if (introCleanedUp) return;
+                introCleanedUp = true;
+                if (introAnimId !== null) cancelAnimationFrame(introAnimId);
+                introAnimId = null;
+                window.removeEventListener("resize", resizeIntro);
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+                if (intro && intro.isConnected) intro.remove();
+                if (gl) {
+                    const loseContext = gl.getExtension("WEBGL_lose_context");
+                    if (loseContext) loseContext.loseContext();
+                }
+            }
+
+            if (btnSkipHeads) btnSkipHeads.addEventListener("click", cleanupIntro);
+            if (btnSkipMain) btnSkipMain.addEventListener("click", () => { location.href = "menu.html"; });
 
             function easeOutElastic(x) {
                 const c4 = (2 * Math.PI) / 3;
@@ -1162,11 +1233,9 @@
                 }
 
                 if (timeOffset >= 3.5) {
-                intro.remove();
-                introAnimId = null;
-                window.removeEventListener("resize", resizeIntro);
-                return;
-            }
+                    cleanupIntro();
+                    return;
+                }
             introAnimId = requestAnimationFrame(animateIntro);
             }
 
@@ -1218,7 +1287,10 @@
                     introVariant = chosenVariant;
 
                     if (introHint) introHint.textContent = "";
-                    document.getElementById("lhu-enter-panel").classList.add("hidden");
+                    const enterPanel = document.getElementById("lhu-enter-panel");
+                    enterPanel.classList.add("hidden");
+                    enterPanel.setAttribute("aria-hidden", "true");
+                    enterPanel.inert = true;
 
                     if (audio) {
                         audio.pause();
@@ -1237,20 +1309,40 @@
             });
         })();
 
-        let isTabVisible = true;
+        let isTabVisible = !document.hidden;
+        let mainAnimationFrameId = null;
+
+        function startMainAnimationLoop() {
+            if (isTabVisible && mainAnimationFrameId === null) {
+                mainAnimationFrameId = requestAnimationFrame(animate);
+            }
+        }
+
+        function stopMainAnimationLoop() {
+            if (mainAnimationFrameId !== null) {
+                cancelAnimationFrame(mainAnimationFrameId);
+                mainAnimationFrameId = null;
+            }
+        }
+
         document.addEventListener("visibilitychange", () => {
             isTabVisible = !document.hidden;
             if (isTabVisible) {
                 clock.getDelta();
-                if (musicOn && music.paused) music.play().catch(()=>{});
+                if (musicOn && music.paused) music.play().catch(() => {});
+                startMainAnimationLoop();
             } else {
                 if (musicOn) music.pause();
+                stopMainAnimationLoop();
             }
         });
 
         function animate() {
-            requestAnimationFrame(animate);
-            if (!isTabVisible) return;
+            if (!isTabVisible || document.hidden) {
+                mainAnimationFrameId = null;
+                return;
+            }
+            mainAnimationFrameId = requestAnimationFrame(animate);
 
             const delta = clock.getDelta();
             if (mixer) mixer.update(delta);
@@ -1370,7 +1462,7 @@
             }
             hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
         }
-        animate();
+        startMainAnimationLoop();
 
         let resizeTimeout;
         window.addEventListener("resize", () => {
