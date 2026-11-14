@@ -182,10 +182,40 @@
                 .profile-content-box { transition-duration: 0.01ms; }
                 .profile-carousel .carousel-slide { transition-duration: 0.01ms; }
             }
+            /* FIX: Team-Schaltflächen sind keine Scrollfläche. */
+            #ABOUT .profile-toggle-container {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 14px !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
+                max-height: none !important;
+                overflow: visible !important;
+                overflow-x: visible !important;
+                overflow-y: visible !important;
+                scrollbar-width: none !important;
+            }
+            #ABOUT .profile-toggle-container::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+            #ABOUT .profile-toggle-container > .profile-btn {
+                flex: 0 0 auto !important;
+            }
+            @media (max-width: 560px) {
+                #ABOUT .profile-toggle-container {
+                    flex-wrap: wrap !important;
+                }
+            }
         </style>
 
         <section id="ABOUT">
-            <h2 class="category-opening-title" data-lang-en="LIGHTNING HORN UNICORN" data-lang-de="LIGHTNING HORN UNICORN">LIGHTNING HORN UNICORN</h2>
+            <h2 data-lang-en="LIGHTNING HORN UNICORN" data-lang-de="LIGHTNING HORN UNICORN">LIGHTNING HORN UNICORN</h2>
 
             <div class="team-intro">
                 <h3 data-lang-en="TEAM" data-lang-de="TEAM">TEAM</h3>
@@ -301,15 +331,11 @@
                             <div class="carousel-slide"><img src="about/about_aether2.webp" alt="Aether Veylan – Portrait 2" loading="lazy" decoding="async"></div>
                             <div class="carousel-slide"><img src="about/about_aether3.webp" alt="Aether Veylan – Portrait 3" loading="lazy" decoding="async"></div>
                             <div class="carousel-slide"><img src="about/about_aether4.webp" alt="Aether Veylan – Portrait 4" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether5.webp" alt="Aether Veylan – Portrait 5" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether6.webp" alt="Aether Veylan – Portrait 6" loading="lazy" decoding="async"></div>
                             <div class="carousel-dots">
-                                <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1 von 6"></button>
-                                <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2 von 6"></button>
-                                <button class="carousel-dot" data-index="2" type="button" aria-label="Bild 3 von 6"></button>
-                                <button class="carousel-dot" data-index="3" type="button" aria-label="Bild 4 von 6"></button>
-                                <button class="carousel-dot" data-index="4" type="button" aria-label="Bild 5 von 6"></button>
-                                <button class="carousel-dot" data-index="5" type="button" aria-label="Bild 6 von 6"></button>
+                                <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1 von 4"></button>
+                                <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2 von 4"></button>
+                                <button class="carousel-dot" data-index="2" type="button" aria-label="Bild 3 von 4"></button>
+                                <button class="carousel-dot" data-index="3" type="button" aria-label="Bild 4 von 4"></button>
                             </div>
                         </div>
 
