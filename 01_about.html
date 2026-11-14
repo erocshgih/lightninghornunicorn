@@ -212,10 +212,38 @@
                     flex-wrap: wrap !important;
                 }
             }
+            /* ABOUT heading: visible RGB chromatic aberration, slowly orbiting behind fixed letters. */
+            #ABOUT > h2.category-opening-title,
+            main#mainContent #ABOUT > h2.category-opening-title {
+                position: relative !important;
+                isolation: isolate !important;
+                color: #f4f1e9 !important;
+                font-size: clamp(2.5rem, 6.4vw, 5.2rem) !important;
+                font-weight: 900 !important;
+                letter-spacing: .055em !important;
+                line-height: 1.12 !important;
+                text-shadow: 6px 0 2px rgba(255,22,22,.94), -3px 5px 2px rgba(255,205,20,.9), -3px -5px 2px rgba(24,92,255,.94) !important;
+                animation: lhu-about-title-rgb-orbit 12s linear infinite !important;
+                will-change: text-shadow;
+            }
+            @keyframes lhu-about-title-rgb-orbit {
+                0%, 100% { text-shadow: 6px 0 2px rgba(255,22,22,.94), -3px 5px 2px rgba(255,205,20,.9), -3px -5px 2px rgba(24,92,255,.94); }
+                16.666% { text-shadow: 4px 4px 2px rgba(255,22,22,.94), -5px 2px 2px rgba(255,205,20,.9), 1px -6px 2px rgba(24,92,255,.94); }
+                33.333% { text-shadow: 0 6px 2px rgba(255,22,22,.94), -6px -1px 2px rgba(255,205,20,.9), 6px -4px 2px rgba(24,92,255,.94); }
+                50% { text-shadow: -5px 3px 2px rgba(255,22,22,.94), -2px -5px 2px rgba(255,205,20,.9), 6px 2px 2px rgba(24,92,255,.94); }
+                66.666% { text-shadow: -6px -2px 2px rgba(255,22,22,.94), 4px -4px 2px rgba(255,205,20,.9), 2px 6px 2px rgba(24,92,255,.94); }
+                83.333% { text-shadow: -2px -6px 2px rgba(255,22,22,.94), 6px 1px 2px rgba(255,205,20,.9), -4px 4px 2px rgba(24,92,255,.94); }
+            }
+            @media (max-width: 600px) {
+                #ABOUT > h2.category-opening-title { font-size: clamp(2rem, 8vw, 3rem) !important; }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                #ABOUT > h2.category-opening-title { animation: none !important; }
+            }
         </style>
 
         <section id="ABOUT">
-            <h2 data-lang-en="LIGHTNING HORN UNICORN" data-lang-de="LIGHTNING HORN UNICORN">LIGHTNING HORN UNICORN</h2>
+            <h2 class="category-opening-title" data-lang-en="ABOUT" data-lang-de="ABOUT">ABOUT</h2>
 
             <div class="team-intro">
                 <h3 data-lang-en="TEAM" data-lang-de="TEAM">TEAM</h3>
