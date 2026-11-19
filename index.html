@@ -2924,7 +2924,7 @@ document.getElementById("music-toggle").onclick = async () => {
   }
   musicButton.textContent = musicOn ? t.stopMusic : t.playMusic;
 };
-document.getElementById("navigate-to-main").onclick = () => { window.__lhuEnterMainSite?.(); };
+// MAIN PAGE navigation is bound once by the shared site controller below.
 
 let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
 let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null;
@@ -3157,10 +3157,7 @@ loadHead(initialHead.url);
   document.getElementById("btn-skip-heads")?.addEventListener("click", () => {
     window.__lhuStopIntro?.(true);
   });
-  document.getElementById("btn-skip-main")?.addEventListener("click", () => {
-    window.__lhuStopIntro?.(true);
-    window.__lhuEnterMainSite?.();
-  });
+  // MAIN PAGE navigation is bound once by the shared site controller below.
 
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
   const word = document.getElementById("lhu-intro-word");
@@ -4246,7 +4243,11 @@ window.addEventListener("resize", () => {
   goBackBtn?.addEventListener("click", () => closeKoboStudio(true));
   mainPageBtn?.addEventListener("click", () => {
     closeKoboStudio(false);
-    window.__lhuEnterMainSite?.();
+    if (typeof window.__lhuNavigateToMainPage === "function") {
+      window.__lhuNavigateToMainPage();
+    } else {
+      window.__lhuEnterMainSite?.({ category: "ABOUT" });
+    }
   });
 
   // Tab switching
@@ -5216,37 +5217,44 @@ document.addEventListener('DOMContentLoaded', () => {
   /* 9. Single-Page App Entry */
   let appEntered = false;
   window.__lhuEnterMainSite = function(options = {}) {
-    if (appEntered) return;
-    appEntered = true;
-    const entryCategory = options.category || categoryFromLocation() || 'ABOUT';
-    writeCategoryRoute(entryCategory, true);
+    // A repeated call must still navigate. Only the expensive intro teardown
+    // is one-shot; the old early return made MAIN PAGE appear completely dead
+    // after the first entry into the site.
+    const firstEntry = !appEntered;
+    const entryCategory = options.category || 'ABOUT';
 
-    window.__lhuStopIntro?.(true);
-    window.__lhuDisposeKoboStudio?.();
-    window.__lhuPauseIndexExperience?.();
-    window.__lhuPauseMatrixBackground?.();
+    if (firstEntry) {
+      appEntered = true;
+      window.__lhuStopIntro?.(true);
+      window.__lhuDisposeKoboStudio?.();
+      window.__lhuPauseIndexExperience?.();
+      window.__lhuPauseMatrixBackground?.();
 
-    const indexExperience = document.getElementById('lhu-index-experience');
-    if (indexExperience) indexExperience.hidden = true;
-    document.getElementById('lhu-intro')?.remove();
-    document.getElementById('background-music')?.pause();
+      const indexExperience = document.getElementById('lhu-index-experience');
+      if (indexExperience) indexExperience.hidden = true;
+      document.getElementById('lhu-intro')?.remove();
+      document.getElementById('background-music')?.pause();
+    }
 
+    // Keep the site shell active even when the button is used a second time.
     document.body.classList.remove('intro-mode');
     document.body.classList.add('site-mode');
-
     const shell = document.getElementById('site-shell');
     if (shell) shell.hidden = false;
 
+    writeCategoryRoute(entryCategory, firstEntry);
     applyGlobalMute();
     if (animationFrame === null) animationFrame = requestAnimationFrame(loop);
     triggerCategoryChange(entryCategory, { updateHistory: false });
   };
 
-  // Navigation fallback: MAIN PAGE must work even if the optional Three.js
-  // module fails to download or initialize. The SPA entry point is owned by
-  // this shared script, so bind the buttons here rather than relying on the
-  // 3D module to attach their click handlers.
-  const enterMainPage = () => window.__lhuEnterMainSite({ category: 'ABOUT' });
+  // One canonical action for every MAIN PAGE control. MAIN PAGE always means
+  // the ABOUT landing page, including when the SPA has already been entered.
+  window.__lhuNavigateToMainPage = () => window.__lhuEnterMainSite({ category: 'ABOUT' });
+  const enterMainPage = () => window.__lhuNavigateToMainPage();
+
+  // Bind these controls only here. Duplicate module-level listeners previously
+  // made the navigation order-dependent and obscured the actual route change.
   document.getElementById('navigate-to-main')?.addEventListener('click', enterMainPage);
   document.getElementById('btn-skip-main')?.addEventListener('click', () => {
     window.__lhuStopIntro?.(true);
