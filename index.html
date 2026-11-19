@@ -3681,6 +3681,74 @@ window.addEventListener("resize", () => {
   }, 150);
 });
 
+
+
+
+
+</script>
+
+<script id="lhu-kobo-error-reporter">
+(() => {
+  const report = (message) => {
+    const status = document.getElementById("kobo-load-status");
+    if (!status) return;
+    status.textContent = "KŌBŌ / SCRIPT-FEHLER: " + String(message || "Unbekannter Fehler");
+    status.hidden = false;
+    status.dataset.error = "true";
+  };
+  window.addEventListener("error", (event) => {
+    const message = event?.message || event?.target?.src || "Script- oder Ressourcenfehler";
+    if (/three|module|import|webgl|kobo|script|failed|loading/i.test(String(message))) report(message);
+  }, true);
+  window.addEventListener("unhandledrejection", (event) => {
+    const reason = event?.reason;
+    report(reason?.message || reason || "Nicht abgefangener Promise-Fehler");
+  });
+})();
+</script>
+
+<script id="lhu-kobo-standalone-js" type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+
+const koboDracoLoader = new DRACOLoader();
+koboDracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/gltf/");
+koboDracoLoader.setDecoderConfig({ type: "js" });
+koboDracoLoader.setWorkerLimit(1);
+const koboLoader = new GLTFLoader();
+koboLoader.setDRACOLoader(koboDracoLoader);
+
+function disposeKoboMaterial(material) {
+  if (!material) return;
+  for (const key of ["map", "lightMap", "bumpMap", "normalMap", "specularMap", "envMap", "emissiveMap", "roughnessMap", "metalnessMap", "alphaMap"]) {
+    const texture = material[key];
+    if (texture && typeof texture.dispose === "function") texture.dispose();
+  }
+  if (typeof material.dispose === "function") material.dispose();
+}
+function disposeKoboObject(root) {
+  if (!root) return;
+  root.traverse((child) => {
+    if (!child.isMesh) return;
+    child.geometry?.dispose?.();
+    const mats = Array.isArray(child.material) ? child.material : [child.material];
+    mats.forEach(disposeKoboMaterial);
+  });
+}
+
+const KOBO_MODELS = [
+  { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
+  { label: "uniturnoeyeballhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/uniturnoeyeballhorn.glb" },
+  { label: "duckybulbywaterhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/duckybulbywaterhorn.glb" },
+  { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/obesewarrior.glb" },
+  { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" },
+  { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" },
+  { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" },
+  { label: "grasscowschmeckicore", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/grasscowschmeckicore.glb" }
+];
+
 /* ============================================================================
    [JS] KŌBŌ 3D STUDIO GLB VIEWER (BRAND-FREE, X-RAY, SHADERS, OPTICS, FX)
    ============================================================================ */
@@ -3696,7 +3764,7 @@ window.addEventListener("resize", () => {
 
   if (!overlay || !canvasWrap || !openBtn) return;
 
-  MODELS.forEach((m) => {
+  KOBO_MODELS.forEach((m) => {
     const opt = document.createElement("option");
     opt.value = m.url;
     opt.textContent = m.label;
@@ -4137,7 +4205,7 @@ window.addEventListener("resize", () => {
 
     if (kModel) {
       kScene.remove(kModel);
-      disposeObject(kModel);
+      disposeKoboObject(kModel);
       kModel = null;
     }
     if (kMixer) {
@@ -4149,11 +4217,11 @@ window.addEventListener("resize", () => {
     updateKoboTelemetry();
 
     try {
-      loader.load(
+      koboLoader.load(
         url,
         (gltf) => {
           if (requestId !== kLoadSequence) {
-            disposeObject(gltf.scene);
+            disposeKoboObject(gltf.scene);
             return;
           }
           try {
@@ -4213,7 +4281,7 @@ window.addEventListener("resize", () => {
 
   function animateKobo(now) {
     if (!kActive) return;
-    kRAF = requestAnimationFrame(animateKobo);
+    koboRAF = requestAnimationFrame(animateKobo);
 
     if (kMaxFps < 120) {
       const minInterval = 1000 / kMaxFps;
@@ -4300,7 +4368,7 @@ window.addEventListener("resize", () => {
   }
 
   function openKoboStudio() {
-    interruptWisdom();
+    window.__lhuInterruptWisdom?.();
     window.__lhuSetIndexExperienceSuspended?.(true);
     overlay.hidden = false;
     koboActive = true;
@@ -4308,21 +4376,21 @@ window.addEventListener("resize", () => {
     if (!initKoboStudio()) return;
     applyKoboResolution();
 
-    const activeHeadUrl = document.getElementById("head-select")?.value || MODELS[0].url;
+    const activeHeadUrl = document.getElementById("head-select")?.value || KOBO_MODELS[0].url;
     if (kCurrentUrl !== activeHeadUrl || !kModel) {
       loadKoboModel(activeHeadUrl);
     }
     kClock.getDelta();
-    cancelAnimationFrame(kRAF);
-    kRAF = requestAnimationFrame(animateKobo);
+    cancelAnimationFrame(koboRAF);
+    koboRAF = requestAnimationFrame(animateKobo);
   }
 
   function closeKoboStudio(resumeHeads = true) {
     koboActive = false;
     kLoadSequence += 1;
     setKoboStatus("");
-    cancelAnimationFrame(kRAF);
-    kRAF = 0;
+    cancelAnimationFrame(koboRAF);
+    koboRAF = 0;
     overlay.hidden = true;
     if (resumeHeads) {
       window.__lhuSetIndexExperienceSuspended?.(false);
@@ -4556,12 +4624,11 @@ window.addEventListener("resize", () => {
 
   window.__lhuDisposeKoboStudio = () => {
     closeKoboStudio(false);
-    if (kModel) { kScene?.remove(kModel); disposeObject(kModel); kModel = null; }
+    if (kModel) { kScene?.remove(kModel); disposeKoboObject(kModel); kModel = null; }
     disposeKoboCustomMaterials();
     try { kRenderer?.dispose(); kRenderer?.forceContextLoss(); } catch (e) {}
   };
 })();
-
 </script>
 
 <!-- ====================================================================== -->
