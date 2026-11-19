@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f1e6d8">
+<title>KŌBŌ 3D Studio · Lightning Horn Unicorn</title>
+<style>
+:root { --font-sans: Inter, ui-sans-serif, system-ui, sans-serif; --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+body { background: #f1e6d8; }
+button, select, a { -webkit-tap-highlight-color: transparent; }
+a { text-decoration: none; }
+.kobo-folder-status { font: 500 9px/1.3 var(--font-mono); opacity: .7; white-space: nowrap; }
+.kobo-chip:disabled { opacity: .45; cursor: wait; }
+#kobo-3d-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100050;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 38%, #fbf7f2 0%, #f1e6d8 58%, #e4d3c0 100%);
+  color: #241914;
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity 0.28s ease;
+}
+#kobo-3d-overlay[hidden] {
+  display: none !important;
+}
+#kobo-3d-overlay[data-mood="apricot"] {
+  background: radial-gradient(circle at 50% 38%, #fff1e2 0%, #f7d6b8 58%, #ebb993 100%);
+  color: #26150d;
+}
+#kobo-3d-overlay[data-mood="midnight"] {
+  background: radial-gradient(circle at 50% 38%, #19161d 0%, #0e0d12 62%, #07070a 100%);
+  color: #f6efe8;
+}
+
+#kobo-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  touch-action: none;
+}
+#kobo-canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+#kobo-canvas-wrap.is-pixelated canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Subtle Marble & Rose Aura Frame */
+#kobo-marble-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 18% 14%, rgba(255, 138, 82, 0.14), transparent 44%),
+    radial-gradient(ellipse at 84% 82%, rgba(232, 93, 117, 0.14), transparent 46%);
+}
+
+/* Top Navigation Bar */
+.kobo-topbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: calc(12px + env(safe-area-inset-top)) clamp(12px, 3vw, 28px) 8px;
+  pointer-events: none;
+}
+.kobo-topbar > * {
+  pointer-events: auto;
+}
+
+.kobo-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(62, 40, 28, 0.18);
+  background: rgba(255, 251, 246, 0.82);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  color: #241914;
+  font: 600 11px/1 var(--font-mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(45, 26, 16, 0.10);
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.kobo-pill-btn:hover {
+  background: #ffffff;
+  border-color: rgba(232, 93, 117, 0.55);
+  transform: translateY(-1px);
+}
+.kobo-pill-btn:active {
+  transform: scale(0.95);
+}
+.kobo-pill-btn.is-active {
+  background: linear-gradient(135deg, #ff7e47, #e85d75);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(232, 93, 117, 0.35);
+}
+.kobo-pill-btn.kobo-btn-main {
+  background: #241914;
+  color: #fff8f1;
+  border-color: #241914;
+}
+.kobo-pill-btn.kobo-btn-main:hover {
+  background: #e85d75;
+  border-color: #e85d75;
+  color: #ffffff;
+}
+
+#kobo-3d-overlay[data-mood="midnight"] .kobo-pill-btn {
+  background: rgba(26, 23, 32, 0.82);
+  color: #f6efe8;
+  border-color: rgba(255, 210, 185, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-pill-btn:hover {
+  background: rgba(44, 38, 54, 0.95);
+  border-color: #ff8c5a;
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-pill-btn.is-active {
+  background: linear-gradient(135deg, #ff7e47, #e85d75);
+  color: #ffffff;
+  border-color: transparent;
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-pill-btn.kobo-btn-main {
+  background: #f6efe8;
+  color: #141118;
+  border-color: #f6efe8;
+}
+
+.kobo-brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(62, 40, 28, 0.15);
+  background: rgba(255, 251, 246, 0.76);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 6px 20px rgba(45, 26, 16, 0.08);
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-brand-cluster {
+  background: rgba(24, 21, 30, 0.78);
+  border-color: rgba(255, 210, 185, 0.16);
+}
+.kobo-title-badge {
+  font: 700 11px/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, #e8642c, #d94668);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.kobo-telemetry-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 10px/1 var(--font-mono);
+  opacity: 0.78;
+}
+
+/* Bottom Studio Control Dock */
+.kobo-dock-wrap {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 clamp(10px, 2.5vw, 24px) calc(12px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+.kobo-dock-wrap > * {
+  pointer-events: auto;
+}
+
+.kobo-panel-card {
+  width: min(100%, 860px);
+  padding: 12px 14px;
+  border-radius: 26px;
+  border: 1px solid rgba(62, 40, 28, 0.16);
+  background: rgba(255, 250, 244, 0.84);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 16px 42px rgba(45, 26, 16, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-panel-card {
+  background: rgba(20, 18, 26, 0.84);
+  border-color: rgba(255, 210, 185, 0.16);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+}
+.kobo-panel-card[hidden] {
+  display: none !important;
+}
+
+.kobo-tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: min(100%, 860px);
+}
+
+.kobo-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.kobo-row-label {
+  font: 700 9.5px/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.62;
+  min-width: 68px;
+}
+
+.kobo-chip-scroll {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 auto;
+}
+
+.kobo-chip {
+  min-height: 32px;
+  padding: 0 13px;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(62, 40, 28, 0.16);
+  background: rgba(255, 255, 255, 0.65);
+  color: inherit;
+  font: 600 10px/1 var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.16s ease;
+}
+.kobo-chip:hover {
+  border-color: #e85d75;
+  background: #ffffff;
+}
+.kobo-chip.is-active {
+  background: linear-gradient(135deg, #ff7e47, #e85d75);
+  color: #ffffff;
+  border-color: transparent;
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-chip {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-chip:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ff8c5a;
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-chip.is-active {
+  background: linear-gradient(135deg, #ff7e47, #e85d75);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.kobo-select {
+  min-height: 34px;
+  padding: 0 28px 0 14px;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(62, 40, 28, 0.2);
+  background: rgba(255, 255, 255, 0.78);
+  color: inherit;
+  font: 600 11px/1 var(--font-mono);
+  cursor: pointer;
+}
+#kobo-3d-overlay[data-mood="midnight"] .kobo-select {
+  background: rgba(34, 30, 44, 0.9);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #f6efe8;
+}
+
+.kobo-slider-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(128, 96, 78, 0.08);
+  font: 600 10px/1 var(--font-mono);
+}
+.kobo-slider-group input[type="range"] {
+  width: 88px;
+  accent-color: #e85d75;
+  cursor: pointer;
+}
+
+@media (max-width: 680px) {
+  .kobo-topbar {
+    padding: calc(10px + env(safe-area-inset-top)) 10px 6px;
+  }
+  .kobo-pill-btn {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 9.5px;
+  }
+  .kobo-telemetry-strip {
+    display: none;
+  }
+  .kobo-panel-card {
+    padding: 10px 12px;
+    border-radius: 22px;
+    max-height: 36dvh;
+    overflow-y: auto;
+  }
+  .kobo-row-label {
+    min-width: 56px;
+    font-size: 9px;
+  }
+  .kobo-chip {
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 9.5px;
+  }
+  .kobo-slider-group input[type="range"] {
+    width: 72px;
+  }
+</style>
+</head>
+<body>
+<div id="kobo-3d-overlay" data-mood="daylight" role="application" aria-label="Kobo 3D Studio">
+  <div id="kobo-canvas-wrap"></div>
+  <div id="kobo-marble-sheen" aria-hidden="true"></div>
+
+  <div class="kobo-topbar">
+    <a class="kobo-pill-btn" href="https://www.lightninghornunicorn.com/about#container3D">← 3D HEADS</a>
+
+    <div class="kobo-brand-cluster">
+      <span class="kobo-title-badge">KŌBŌ 3D</span>
+      <div class="kobo-telemetry-strip" id="kobo-telemetry">
+        <span id="kobo-stat-meshes">MESH 0</span>
+        <span>·</span>
+        <span id="kobo-stat-tris">TRIS 0</span>
+        <span>·</span>
+        <span id="kobo-stat-fps">60 FPS</span>
+      </div>
+    </div>
+
+    <a class="kobo-pill-btn kobo-btn-main" href="https://www.lightninghornunicorn.com/about">MAIN</a>
+  </div>
+
+  <div class="kobo-dock-wrap">
+    <!-- TAB 1: SURFACE & X-RAY -->
+    <div class="kobo-panel-card" id="kobo-panel-surface">
+      <div class="kobo-row">
+        <span class="kobo-row-label">MODEL</span>
+        <select class="kobo-select" id="kobo-model-select" aria-label="Select 3D model"></select>
+        <button class="kobo-chip" id="kobo-scan-folder" type="button">↻ SCAN FOLDER</button>
+        <span class="kobo-folder-status" id="kobo-folder-status" role="status">CONNECTING TO GLB FOLDER…</span>
+        <button class="kobo-chip" id="kobo-upload-btn" type="button">+ GLB</button>
+        <input type="file" id="kobo-file-input" accept=".glb,.gltf" hidden />
+        <button class="kobo-chip" id="kobo-anim-toggle" type="button">ANIM: ON</button>
+      </div>
+      <div class="kobo-row">
+        <span class="kobo-row-label">SHADER</span>
+        <div class="kobo-chip-scroll" id="kobo-shader-modes">
+          <button class="kobo-chip is-active" data-mode="texture" type="button">TEXTURE</button>
+          <button class="kobo-chip" data-mode="xray" type="button">X-RAY</button>
+          <button class="kobo-chip" data-mode="solid" type="button">SOLID</button>
+          <button class="kobo-chip" data-mode="wire" type="button">WIRE</button>
+          <button class="kobo-chip" data-mode="holo" type="button">HOLO</button>
+          <button class="kobo-chip" data-mode="granite" type="button">GRANITE</button>
+          <button class="kobo-chip" data-mode="gold" type="button">GOLD</button>
+          <button class="kobo-chip" data-mode="chrome" type="button">CHROME</button>
+          <button class="kobo-chip" data-mode="glitch" type="button">GLITCH</button>
+          <button class="kobo-chip" data-mode="normals" type="button">NORMALS</button>
+        </div>
+      </div>
+      <div class="kobo-row">
+        <span class="kobo-row-label">MOOD</span>
+        <div class="kobo-chip-scroll" id="kobo-mood-modes">
+          <button class="kobo-chip is-active" data-mood-btn="daylight" type="button">DAYLIGHT</button>
+          <button class="kobo-chip" data-mood-btn="apricot" type="button">APRICOT</button>
+          <button class="kobo-chip" data-mood-btn="midnight" type="button">MIDNIGHT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: CAMERA & OPTICS -->
+    <div class="kobo-panel-card" id="kobo-panel-optics" hidden>
+      <div class="kobo-row">
+        <span class="kobo-row-label">ANGLES</span>
+        <div class="kobo-chip-scroll" id="kobo-cam-angles">
+          <button class="kobo-chip" data-angle="front" type="button">FRONT</button>
+          <button class="kobo-chip" data-angle="threequarter" type="button">3/4</button>
+          <button class="kobo-chip" data-angle="side" type="button">SIDE</button>
+          <button class="kobo-chip" data-angle="top" type="button">TOP</button>
+          <button class="kobo-chip" data-angle="reset" type="button">RESET</button>
+          <button class="kobo-chip is-active" id="kobo-turntable-btn" type="button">TURNTABLE</button>
+          <button class="kobo-chip" id="kobo-zoom-in" type="button">ZOOM +</button>
+          <button class="kobo-chip" id="kobo-zoom-out" type="button">ZOOM −</button>
+        </div>
+      </div>
+      <div class="kobo-row">
+        <span class="kobo-row-label">OPTICS</span>
+        <label class="kobo-slider-group">
+          <span>FOV <strong id="kobo-fov-val">42°</strong></span>
+          <input type="range" id="kobo-fov-slider" min="24" max="85" step="1" value="42" />
+        </label>
+        <label class="kobo-slider-group">
+          <span>SLICE <strong id="kobo-clip-val">0.02</strong></span>
+          <input type="range" id="kobo-clip-slider" min="0.02" max="2.4" step="0.02" value="0.02" />
+        </label>
+      </div>
+    </div>
+
+    <!-- TAB 3: GRAPHICS ENGINE -->
+    <div class="kobo-panel-card" id="kobo-panel-engine" hidden>
+      <div class="kobo-row">
+        <span class="kobo-row-label">PRESETS</span>
+        <div class="kobo-chip-scroll" id="kobo-presets">
+          <button class="kobo-chip" data-preset="potato" type="button">POTATO</button>
+          <button class="kobo-chip" data-preset="portable" type="button">PORTABLE</button>
+          <button class="kobo-chip is-active" data-preset="studio" type="button">STUDIO</button>
+          <button class="kobo-chip" data-preset="overkill" type="button">OVERKILL</button>
+        </div>
+      </div>
+      <div class="kobo-row">
+        <span class="kobo-row-label">RENDER</span>
+        <label class="kobo-slider-group">
+          <span>RES <strong id="kobo-res-val">1.00×</strong></span>
+          <input type="range" id="kobo-res-slider" min="0.35" max="1.5" step="0.05" value="1.0" />
+        </label>
+        <button class="kobo-chip" id="kobo-fps-btn" type="button">FPS: 60</button>
+        <button class="kobo-chip is-active" id="kobo-shadow-btn" type="button">SHADOWS: ON</button>
+        <button class="kobo-chip" id="kobo-vertex-snap-btn" type="button">VERTEX SNAP: OFF</button>
+        <button class="kobo-chip" id="kobo-pixel-btn" type="button">PIXEL: OFF</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: SPAWN FX & EXPORT -->
+    <div class="kobo-panel-card" id="kobo-panel-fx" hidden>
+      <div class="kobo-row">
+        <span class="kobo-row-label">SPAWN</span>
+        <div class="kobo-chip-scroll" id="kobo-spawn-modes">
+          <button class="kobo-chip" data-spawn="pop" type="button">POP</button>
+          <button class="kobo-chip" data-spawn="push" type="button">PUSH</button>
+          <button class="kobo-chip" data-spawn="pew" type="button">PEW</button>
+          <button class="kobo-chip" data-spawn="noodly" type="button">NOODLY</button>
+          <button class="kobo-chip" data-spawn="boing" type="button">BOING</button>
+          <button class="kobo-chip" data-spawn="dong" type="button">DONG</button>
+        </div>
+      </div>
+      <div class="kobo-row">
+        <span class="kobo-row-label">STUDIO</span>
+        <button class="kobo-chip" id="kobo-glitch-pulse" type="button">⚡ GLITCH PULSE</button>
+        <button class="kobo-chip" id="kobo-snap-studio" type="button">📷 SNAPSHOT</button>
+        <button class="kobo-chip" id="kobo-snap-alpha" type="button">🖼️ ALPHA PNG</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM PILL TABS -->
+    <div class="kobo-tab-bar" role="tablist" aria-label="Kobo 3D Studio Controls">
+      <button class="kobo-pill-btn is-active" data-kobo-tab="surface" type="button">SURFACE &amp; X-RAY</button>
+      <button class="kobo-pill-btn" data-kobo-tab="optics" type="button">OPTICS</button>
+      <button class="kobo-pill-btn" data-kobo-tab="engine" type="button">ENGINE</button>
+      <button class="kobo-pill-btn" data-kobo-tab="fx" type="button">SPAWN &amp; SNAP</button>
+      <button class="kobo-pill-btn" id="kobo-dock-collapse" type="button" title="Toggle controls">▾</button>
+    </div>
+  </div>
+</div>
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
+
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/");
+dracoLoader.setDecoderConfig({ type: "js" });
+dracoLoader.setWorkerLimit(1);
+const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader);
+
+function disposeObject(root) {
+  if (!root) return;
+  root.traverse?.((node) => {
+    if (node.geometry) node.geometry.dispose?.();
+    const mats = Array.isArray(node.material) ? node.material : (node.material ? [node.material] : []);
+    for (const mat of mats) {
+      for (const value of Object.values(mat || {})) {
+        if (value && value.isTexture) value.dispose?.();
+      }
+      mat?.dispose?.();
+    }
+  });
+}
+
+(() => {
+  const overlay = document.getElementById("kobo-3d-overlay");
+  const canvasWrap = document.getElementById("kobo-canvas-wrap");
+  const modelSelect = document.getElementById("kobo-model-select");
+  if (!overlay || !canvasWrap || !modelSelect) return;
+  const folderStatus = document.getElementById("kobo-folder-status");
+  const scanFolderBtn = document.getElementById("kobo-scan-folder");
+  const uploadBtn = document.getElementById("kobo-upload-btn");
+  const fileInput = document.getElementById("kobo-file-input");
+
+  let koboInitialized = false;
+  let koboActive = false;
+  let koboRAF = 0;
+  let kScene, kCamera, kRenderer, kControls, kClock;
+  let kKeyLight, kFillLight, kRimLight, kHemiLight, kGrid;
+  let kModel = null, kMixer = null;
+  let kAnimEnabled = true;
+  let kShaderMode = "texture";
+  let kMood = "daylight";
+  let kResScale = 1.0;
+  let kMaxFps = 60;
+  let kShadowsOn = true;
+  let kVertexSnap = false;
+  let kPixelMode = "off"; // off | coarse | fine
+  let kLastRenderTime = 0;
+  let kFpsFrames = 0, kFpsLast = performance.now();
+  let kGlitchPulseUntil = 0;
+  let kSpawnState = null;
+  let kOriginalStates = new WeakMap();
+  let kCustomMaterials = [];
+  let kCurrentUrl = "";
+
+  // Web Audio Synth for Spawn Choreographies & Glitch Pulse
+  let audioCtx = null;
+  function playKoboSynth(type) {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === "pop") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.exponentialRampToValueAtTime(680, now + 0.09);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+        osc.start(now); osc.stop(now + 0.15);
+      } else if (type === "push") {
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(52, now + 0.22);
+        gain.gain.setValueAtTime(0.24, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+        osc.start(now); osc.stop(now + 0.25);
+      } else if (type === "pew") {
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(1180, now);
+        osc.frequency.exponentialRampToValueAtTime(180, now + 0.24);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now); osc.stop(now + 0.26);
+      } else if (type === "noodly") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.linearRampToValueAtTime(490, now + 0.12);
+        osc.frequency.linearRampToValueAtTime(260, now + 0.26);
+        osc.frequency.linearRampToValueAtTime(420, now + 0.40);
+        gain.gain.setValueAtTime(0.16, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.44);
+        osc.start(now); osc.stop(now + 0.45);
+      } else if (type === "boing") {
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.exponentialRampToValueAtTime(520, now + 0.14);
+        osc.frequency.exponentialRampToValueAtTime(210, now + 0.28);
+        osc.frequency.exponentialRampToValueAtTime(410, now + 0.42);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.46);
+        osc.start(now); osc.stop(now + 0.47);
+      } else if (type === "dong") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(196, now);
+        osc.frequency.exponentialRampToValueAtTime(146.8, now + 0.65);
+        gain.gain.setValueAtTime(0.26, now);
+        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.75);
+        osc.start(now); osc.stop(now + 0.78);
+      } else if (type === "glitch") {
+        osc.type = "square";
+        osc.frequency.setValueAtTime(95, now);
+        osc.frequency.setValueAtTime(640, now + 0.05);
+        osc.frequency.setValueAtTime(140, now + 0.11);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.start(now); osc.stop(now + 0.22);
+      }
+    } catch (e) {}
+  }
+
+  function initKoboStudio() {
+    if (koboInitialized) return;
+    koboInitialized = true;
+
+    kScene = new THREE.Scene();
+    kCamera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.02, 200);
+    kCamera.position.set(2.2, 0.9, 2.6);
+
+    kRenderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      preserveDrawingBuffer: true,
+      powerPreference: "high-performance"
+    });
+    kRenderer.outputColorSpace = THREE.SRGBColorSpace;
+    kRenderer.shadowMap.enabled = true;
+    kRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    canvasWrap.appendChild(kRenderer.domElement);
+
+    kControls = new OrbitControls(kCamera, kRenderer.domElement);
+    kControls.enableDamping = true;
+    kControls.dampingFactor = 0.07;
+    kControls.enablePan = true;
+    kControls.minDistance = 0.12;
+    kControls.maxDistance = 18;
+    kControls.autoRotate = true;
+    kControls.autoRotateSpeed = 1.1;
+
+    kHemiLight = new THREE.HemisphereLight(0xfff7ee, 0xd8bfa8, 1.35);
+    kScene.add(kHemiLight);
+
+    kKeyLight = new THREE.DirectionalLight(0xfff2e2, 1.65);
+    kKeyLight.position.set(4, 6, 5);
+    kKeyLight.castShadow = true;
+    kKeyLight.shadow.mapSize.set(1024, 1024);
+    kScene.add(kKeyLight);
+
+    kFillLight = new THREE.DirectionalLight(0xffd7c2, 0.95);
+    kFillLight.position.set(-5, 2, 4);
+    kScene.add(kFillLight);
+
+    kRimLight = new THREE.DirectionalLight(0xff6b8b, 1.15);
+    kRimLight.position.set(-2, 4, -5);
+    kScene.add(kRimLight);
+
+    kGrid = new THREE.GridHelper(8, 24, 0xe85d75, 0xd8c3b0);
+    kGrid.position.y = -1.15;
+    if (Array.isArray(kGrid.material)) {
+      kGrid.material.forEach(m => { m.transparent = true; m.opacity = 0.28; });
+    } else {
+      kGrid.material.transparent = true;
+      kGrid.material.opacity = 0.28;
+    }
+    kScene.add(kGrid);
+
+    kClock = new THREE.Clock();
+    applyKoboMood("daylight");
+    applyKoboResolution();
+  }
+
+  function applyKoboResolution() {
+    if (!kRenderer || !kCamera) return;
+    const pixelFactor = kPixelMode === "coarse" ? 0.28 : kPixelMode === "fine" ? 0.52 : 1.0;
+    const effectiveDpr = Math.max(0.25, Math.min(window.devicePixelRatio || 1, 2) * kResScale * pixelFactor);
+    kCamera.aspect = innerWidth / innerHeight;
+    kCamera.updateProjectionMatrix();
+    kRenderer.setPixelRatio(effectiveDpr);
+    kRenderer.setSize(innerWidth, innerHeight);
+    canvasWrap.classList.toggle("is-pixelated", kPixelMode !== "off");
+  }
+
+  function applyKoboMood(mood) {
+    kMood = mood;
+    overlay.setAttribute("data-mood", mood);
+    overlay.querySelectorAll("[data-mood-btn]").forEach(btn => {
+      btn.classList.toggle("is-active", btn.dataset.moodBtn === mood);
+    });
+    if (!kKeyLight) return;
+    if (mood === "daylight") {
+      kHemiLight.color.setHex(0xfff9f2);
+      kHemiLight.groundColor.setHex(0xd9c2ad);
+      kKeyLight.color.setHex(0xfff4e6);
+      kRimLight.color.setHex(0xe85d75);
+    } else if (mood === "apricot") {
+      kHemiLight.color.setHex(0xffe6cc);
+      kHemiLight.groundColor.setHex(0xd49b72);
+      kKeyLight.color.setHex(0xffb570);
+      kRimLight.color.setHex(0xff4f79);
+    } else {
+      kHemiLight.color.setHex(0xc9d6ff);
+      kHemiLight.groundColor.setHex(0x1a1522);
+      kKeyLight.color.setHex(0xff9e6d);
+      kRimLight.color.setHex(0xff5277);
+    }
+  }
+
+  function disposeKoboCustomMaterials() {
+    kCustomMaterials.forEach(m => { try { m.dispose(); } catch (e) {} });
+    kCustomMaterials = [];
+  }
+
+  function createKoboXrayMaterial(origMat) {
+    const baseColor = origMat && origMat.color ? origMat.color.clone() : new THREE.Color(0xf6ede4);
+    const map = origMat && origMat.map ? origMat.map : null;
+    const hasVertexColors = Boolean(origMat && origMat.vertexColors);
+    const mat = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+      blending: THREE.NormalBlending,
+      uniforms: {
+        uColor: { value: baseColor },
+        uRimColor: { value: new THREE.Color(0xff8c5a) },
+        uCoreTint: { value: new THREE.Color(0x5ce1e6) },
+        uMap: { value: map },
+        uHasMap: { value: map ? 1.0 : 0.0 },
+        uTime: { value: 0.0 }
+      },
+      vertexShader: `
+        varying vec3 vNormalView;
+        varying vec3 vViewPos;
+        varying vec2 vUv;
+        varying vec3 vColor;
+        void main() {
+          vUv = uv;
+          #ifdef USE_COLOR
+            vColor = color;
+          #else
+            vColor = vec3(1.0);
+          #endif
+          vec3 safeNormal = length(normal) > 0.0001 ? normalize(normal) : vec3(0.0, 1.0, 0.0);
+          vNormalView = normalize(normalMatrix * safeNormal);
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          vViewPos = -mvPosition.xyz;
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor;
+        uniform vec3 uRimColor;
+        uniform vec3 uCoreTint;
+        uniform sampler2D uMap;
+        uniform float uHasMap;
+        uniform float uTime;
+        varying vec3 vNormalView;
+        varying vec3 vViewPos;
+        varying vec2 vUv;
+        varying vec3 vColor;
+        void main() {
+          vec3 N = gl_FrontFacing ? normalize(vNormalView) : -normalize(vNormalView);
+          vec3 V = normalize(vViewPos);
+          float fresnel = pow(1.0 - clamp(abs(dot(N, V)), 0.0, 1.0), 2.1);
+          vec4 texSample = uHasMap > 0.5 ? texture2D(uMap, vUv) : vec4(1.0);
+          vec3 surfaceCol = clamp(uColor * texSample.rgb * vColor, 0.0, 1.0);
+          float scan = 0.92 + 0.08 * sin(vViewPos.y * 28.0 - uTime * 3.0);
+          vec3 edgeGlow = mix(uCoreTint, uRimColor, fresnel);
+          vec3 finalCol = clamp(mix(surfaceCol * 0.85, edgeGlow, fresnel * 0.78) * scan, 0.0, 1.25);
+          float alpha = clamp(0.18 + fresnel * 0.68, 0.16, 0.88);
+          gl_FragColor = vec4(finalCol, alpha);
+        }
+      `
+    });
+    if (hasVertexColors) mat.vertexColors = true;
+    kCustomMaterials.push(mat);
+    return mat;
+  }
+
+  function applyKoboShaderMode(mode) {
+    kShaderMode = mode;
+    overlay.querySelectorAll("[data-mode]").forEach(btn => {
+      btn.classList.toggle("is-active", btn.dataset.mode === mode);
+    });
+    if (!kModel) return;
+    disposeKoboCustomMaterials();
+
+    kModel.traverse((child) => {
+      if (!child.isMesh) return;
+      const orig = kOriginalStates.get(child);
+      if (!orig) return;
+
+      if (mode === "texture") {
+        child.material = orig.material;
+        return;
+      }
+
+      const origFirst = Array.isArray(orig.material) ? orig.material[0] : orig.material;
+
+      if (mode === "xray") {
+        if (Array.isArray(orig.material)) {
+          child.material = orig.material.map(m => createKoboXrayMaterial(m));
+        } else {
+          child.material = createKoboXrayMaterial(origFirst);
+        }
+        return;
+      }
+
+      let mat;
+      if (mode === "solid") {
+        mat = new THREE.MeshStandardMaterial({
+          color: 0xf4e6d8,
+          roughness: 0.52,
+          metalness: 0.06,
+          flatShading: kVertexSnap
+        });
+      } else if (mode === "wire") {
+        mat = new THREE.MeshBasicMaterial({
+          color: 0xe85d75,
+          wireframe: true
+        });
+      } else if (mode === "holo") {
+        mat = new THREE.MeshPhysicalMaterial({
+          color: 0x8ef6ff,
+          emissive: 0x2b6cb0,
+          emissiveIntensity: 0.55,
+          roughness: 0.18,
+          metalness: 0.25,
+          iridescence: 1.0,
+          transparent: true,
+          opacity: 0.78
+        });
+      } else if (mode === "granite") {
+        mat = new THREE.MeshStandardMaterial({
+          color: 0xb9afa6,
+          roughness: 0.88,
+          metalness: 0.04,
+          bumpMap: origFirst && origFirst.map ? origFirst.map : null,
+          bumpScale: 0.025
+        });
+      } else if (mode === "gold") {
+        mat = new THREE.MeshStandardMaterial({
+          color: 0xffcf56,
+          emissive: 0x3a2200,
+          emissiveIntensity: 0.22,
+          roughness: 0.2,
+          metalness: 0.94
+        });
+      } else if (mode === "chrome") {
+        mat = new THREE.MeshStandardMaterial({
+          color: 0xf5f7fa,
+          roughness: 0.08,
+          metalness: 0.98
+        });
+      } else if (mode === "glitch") {
+        mat = new THREE.MeshStandardMaterial({
+          color: 0xff6b4a,
+          emissive: 0xe85d75,
+          emissiveIntensity: 0.75,
+          roughness: 0.3,
+          metalness: 0.4,
+          wireframe: false
+        });
+      } else if (mode === "normals") {
+        mat = new THREE.MeshNormalMaterial({ flatShading: kVertexSnap });
+      } else {
+        mat = orig.material;
+      }
+
+      if (mat && mat !== orig.material) kCustomMaterials.push(mat);
+      child.material = mat;
+    });
+  }
+
+  function updateKoboTelemetry() {
+    let meshes = 0, tris = 0;
+    if (kModel) {
+      kModel.traverse((c) => {
+        if (c.isMesh && c.geometry) {
+          meshes++;
+          const idx = c.geometry.index;
+          const pos = c.geometry.attributes.position;
+          if (idx) tris += Math.round(idx.count / 3);
+          else if (pos) tris += Math.round(pos.count / 3);
+        }
+      });
+    }
+    const mEl = document.getElementById("kobo-stat-meshes");
+    const tEl = document.getElementById("kobo-stat-tris");
+    if (mEl) mEl.textContent = `MESH ${meshes}`;
+    if (tEl) tEl.textContent = `TRIS ${tris.toLocaleString()}`;
+  }
+
+  function fitKoboModel(root) {
+    const box = new THREE.Box3().setFromObject(root);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z, 0.01);
+    const normScale = 2.0 / maxDim;
+    root.scale.setScalar(normScale);
+    root.position.sub(center.multiplyScalar(normScale));
+    root.userData.baseScale = normScale;
+    root.userData.basePos = root.position.clone();
+    root.userData.baseRot = root.rotation.clone();
+  }
+
+  function loadKoboModel(url, labelOverride = null) {
+    initKoboStudio();
+    kCurrentUrl = url;
+    if (labelOverride) {
+      let customOpt = modelSelect.querySelector('option[data-custom="1"]');
+      if (!customOpt) {
+        customOpt = document.createElement("option");
+        customOpt.dataset.custom = "1";
+        modelSelect.appendChild(customOpt);
+      }
+      customOpt.value = url;
+      customOpt.textContent = labelOverride;
+      modelSelect.value = url;
+    } else if ([...modelSelect.options].some(o => o.value === url)) {
+      modelSelect.value = url;
+    }
+
+    if (kModel) {
+      kScene.remove(kModel);
+      disposeObject(kModel);
+      kModel = null;
+    }
+    if (kMixer) {
+      kMixer.stopAllAction();
+      kMixer = null;
+    }
+    disposeKoboCustomMaterials();
+
+    loader.load(url, (gltf) => {
+      kModel = gltf.scene;
+      kOriginalStates = new WeakMap();
+      kModel.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          kOriginalStates.set(child, { material: child.material });
+        }
+      });
+      fitKoboModel(kModel);
+      kScene.add(kModel);
+      if (gltf.animations && gltf.animations.length) {
+        kMixer = new THREE.AnimationMixer(kModel);
+        gltf.animations.forEach(clip => {
+          const action = kMixer.clipAction(clip);
+          action.play();
+          action.paused = !kAnimEnabled;
+        });
+      }
+      updateKoboTelemetry();
+      applyKoboShaderMode(kShaderMode);
+      triggerKoboSpawn("pop", true);
+    }, undefined, (error) => {
+      console.error("Kobo model load failed:", error);
+      if (folderStatus) folderStatus.textContent = `COULD NOT LOAD: ${labelOverride || "MODEL"}`;
+    });
+  }
+
+  function triggerKoboSpawn(type, silent = false) {
+    if (!kModel) return;
+    kSpawnState = { type, start: performance.now(), dur: 680 };
+    if (!silent) playKoboSynth(type);
+  }
+
+  function animateKobo(now) {
+    if (!koboActive) return;
+    koboRAF = requestAnimationFrame(animateKobo);
+
+    if (kMaxFps < 120) {
+      const minInterval = 1000 / kMaxFps;
+      if (now - kLastRenderTime < minInterval) return;
+    }
+    kLastRenderTime = now;
+
+    const dt = kClock.getDelta();
+    if (kMixer && kAnimEnabled) kMixer.update(dt);
+    kControls.update();
+
+    if (kModel) {
+      const baseScale = kModel.userData.baseScale || 1;
+      const basePos = kModel.userData.basePos || new THREE.Vector3();
+      const baseRot = kModel.userData.baseRot || new THREE.Euler();
+
+      // Update X-ray time uniform
+      kCustomMaterials.forEach(m => {
+        if (m.uniforms && m.uniforms.uTime) m.uniforms.uTime.value = now * 0.001;
+      });
+
+      // Vertex Snap / Glitch Pulse
+      const glitchActive = now < kGlitchPulseUntil || kShaderMode === "glitch";
+      if (glitchActive) {
+        kModel.position.x = basePos.x + (Math.random() - 0.5) * 0.06;
+        kModel.position.y = basePos.y + (Math.random() - 0.5) * 0.04;
+      } else if (kVertexSnap) {
+        const snap = 0.035;
+        kModel.rotation.y = Math.round(kModel.rotation.y / snap) * snap;
+      }
+
+      // Spawn Choreographies
+      if (kSpawnState) {
+        const tNorm = Math.min(1, (now - kSpawnState.start) / kSpawnState.dur);
+        const easeOut = 1 - Math.pow(1 - tNorm, 3);
+        const wave = Math.sin(tNorm * Math.PI * 3) * (1 - tNorm);
+
+        if (kSpawnState.type === "pop") {
+          const s = baseScale * (0.35 + 0.65 * easeOut + wave * 0.24);
+          kModel.scale.setScalar(s);
+          kModel.position.copy(basePos);
+        } else if (kSpawnState.type === "push") {
+          kModel.scale.setScalar(baseScale);
+          kModel.position.set(basePos.x, basePos.y, basePos.z + wave * 0.65);
+        } else if (kSpawnState.type === "pew") {
+          kModel.scale.setScalar(baseScale * (0.85 + 0.15 * easeOut));
+          kModel.rotation.y = baseRot.y + (1 - easeOut) * Math.PI * 2;
+        } else if (kSpawnState.type === "noodly") {
+          kModel.scale.set(
+            baseScale * (1 + wave * 0.28),
+            baseScale * (1 - wave * 0.22),
+            baseScale * (1 + wave * 0.28)
+          );
+          kModel.rotation.z = wave * 0.28;
+        } else if (kSpawnState.type === "boing") {
+          const squash = Math.sin(tNorm * Math.PI * 4) * (1 - tNorm) * 0.32;
+          kModel.scale.set(baseScale * (1 - squash * 0.5), baseScale * (1 + squash), baseScale * (1 - squash * 0.5));
+          kModel.position.set(basePos.x, basePos.y + Math.abs(wave) * 0.42, basePos.z);
+        } else if (kSpawnState.type === "dong") {
+          kModel.scale.setScalar(baseScale);
+          kModel.rotation.z = Math.sin(tNorm * Math.PI * 3.5) * (1 - tNorm) * 0.42;
+          kModel.position.set(basePos.x, basePos.y - Math.abs(wave) * 0.12, basePos.z);
+        }
+
+        if (tNorm >= 1) {
+          kModel.scale.setScalar(baseScale);
+          kModel.position.copy(basePos);
+          kModel.rotation.z = baseRot.z;
+          kSpawnState = null;
+        }
+      }
+    }
+
+    kRenderer.render(kScene, kCamera);
+
+    kFpsFrames++;
+    if (now - kFpsLast >= 500) {
+      const fps = Math.round((kFpsFrames * 1000) / (now - kFpsLast));
+      const fpsEl = document.getElementById("kobo-stat-fps");
+      if (fpsEl) fpsEl.textContent = `${fps} FPS`;
+      kFpsFrames = 0;
+      kFpsLast = now;
+    }
+  }
+
+  function openKoboStudio() {
+    overlay.hidden = false;
+    koboActive = true;
+    initKoboStudio();
+    applyKoboResolution();
+
+    kClock.getDelta();
+    cancelAnimationFrame(koboRAF);
+    koboRAF = requestAnimationFrame(animateKobo);
+  }
+
+  function closeKoboStudio(resumeHeads = true) {
+    koboActive = false;
+    cancelAnimationFrame(koboRAF);
+    koboRAF = 0;
+    overlay.hidden = true;
+  }
+
+
+  // Tab switching
+  let dockCollapsed = false;
+  const tabPanels = {
+    surface: document.getElementById("kobo-panel-surface"),
+    optics: document.getElementById("kobo-panel-optics"),
+    engine: document.getElementById("kobo-panel-engine"),
+    fx: document.getElementById("kobo-panel-fx")
+  };
+  let activeTab = "surface";
+  overlay.querySelectorAll("[data-kobo-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeTab = btn.dataset.koboTab;
+      dockCollapsed = false;
+      document.getElementById("kobo-dock-collapse").textContent = "▾";
+      overlay.querySelectorAll("[data-kobo-tab]").forEach(b => b.classList.toggle("is-active", b === btn));
+      Object.entries(tabPanels).forEach(([key, panel]) => {
+        if (panel) panel.hidden = key !== activeTab;
+      });
+    });
+  });
+
+  document.getElementById("kobo-dock-collapse")?.addEventListener("click", (e) => {
+    dockCollapsed = !dockCollapsed;
+    e.currentTarget.textContent = dockCollapsed ? "▴" : "▾";
+    Object.entries(tabPanels).forEach(([key, panel]) => {
+      if (panel) panel.hidden = dockCollapsed ? true : key !== activeTab;
+    });
+  });
+
+  // Model selector & local GLB upload
+  modelSelect?.addEventListener("change", (e) => loadKoboModel(e.target.value));
+  uploadBtn?.addEventListener("click", () => fileInput?.click());
+  fileInput?.addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const blobUrl = URL.createObjectURL(file);
+    loadKoboModel(blobUrl, file.name.replace(/\.(glb|gltf)$/i, ""));
+  });
+
+  // Animation toggle
+  document.getElementById("kobo-anim-toggle")?.addEventListener("click", (e) => {
+    kAnimEnabled = !kAnimEnabled;
+    e.currentTarget.textContent = `ANIM: ${kAnimEnabled ? "ON" : "OFF"}`;
+    e.currentTarget.classList.toggle("is-active", kAnimEnabled);
+    if (kMixer) {
+      kMixer._actions?.forEach(a => { a.paused = !kAnimEnabled; });
+    }
+  });
+
+  // Shader modes (including X-Ray)
+  overlay.querySelectorAll("[data-mode]").forEach(btn => {
+    btn.addEventListener("click", () => applyKoboShaderMode(btn.dataset.mode));
+  });
+
+  // Lighting moods
+  overlay.querySelectorAll("[data-mood-btn]").forEach(btn => {
+    btn.addEventListener("click", () => applyKoboMood(btn.dataset.moodBtn));
+  });
+
+  // Camera angles & zoom
+  overlay.querySelectorAll("[data-angle]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!kCamera || !kControls) return;
+      const a = btn.dataset.angle;
+      kControls.target.set(0, 0, 0);
+      if (a === "front") kCamera.position.set(0, 0.15, 3.1);
+      else if (a === "threequarter") kCamera.position.set(2.1, 0.85, 2.35);
+      else if (a === "side") kCamera.position.set(3.1, 0.15, 0);
+      else if (a === "top") kCamera.position.set(0, 3.2, 0.15);
+      else kCamera.position.set(2.2, 0.9, 2.6);
+      kCamera.lookAt(0, 0, 0);
+      kControls.update();
+    });
+  });
+
+  document.getElementById("kobo-turntable-btn")?.addEventListener("click", (e) => {
+    if (!kControls) return;
+    kControls.autoRotate = !kControls.autoRotate;
+    e.currentTarget.classList.toggle("is-active", kControls.autoRotate);
+  });
+
+  document.getElementById("kobo-zoom-in")?.addEventListener("click", () => {
+    if (!kCamera || !kControls) return;
+    const dir = kCamera.position.clone().sub(kControls.target);
+    dir.multiplyScalar(0.8);
+    if (dir.length() >= kControls.minDistance) {
+      kCamera.position.copy(kControls.target).add(dir);
+      kControls.update();
+    }
+  });
+
+  document.getElementById("kobo-zoom-out")?.addEventListener("click", () => {
+    if (!kCamera || !kControls) return;
+    const dir = kCamera.position.clone().sub(kControls.target);
+    dir.multiplyScalar(1.25);
+    if (dir.length() <= kControls.maxDistance) {
+      kCamera.position.copy(kControls.target).add(dir);
+      kControls.update();
+    }
+  });
+
+  document.getElementById("kobo-fov-slider")?.addEventListener("input", (e) => {
+    const val = Number(e.target.value);
+    document.getElementById("kobo-fov-val").textContent = `${val}°`;
+    if (kCamera) { kCamera.fov = val; kCamera.updateProjectionMatrix(); }
+  });
+
+  document.getElementById("kobo-clip-slider")?.addEventListener("input", (e) => {
+    const val = Number(e.target.value);
+    document.getElementById("kobo-clip-val").textContent = val.toFixed(2);
+    if (kCamera) { kCamera.near = val; kCamera.updateProjectionMatrix(); }
+  });
+
+  // Graphics Engine Presets & Controls (Brand-Free)
+  const PRESET_CONFIGS = {
+    potato:   { res: 0.45, fps: 24, shadows: false, snap: true,  pixel: "coarse" },
+    portable: { res: 0.75, fps: 30, shadows: true,  snap: false, pixel: "fine" },
+    studio:   { res: 1.00, fps: 60, shadows: true,  snap: false, pixel: "off" },
+    overkill: { res: 1.50, fps: 120, shadows: true, snap: false, pixel: "off" }
+  };
+
+  overlay.querySelectorAll("[data-preset]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.preset;
+      const cfg = PRESET_CONFIGS[key];
+      if (!cfg) return;
+      overlay.querySelectorAll("[data-preset]").forEach(b => b.classList.toggle("is-active", b === btn));
+      kResScale = cfg.res;
+      kMaxFps = cfg.fps;
+      kShadowsOn = cfg.shadows;
+      kVertexSnap = cfg.snap;
+      kPixelMode = cfg.pixel;
+
+      document.getElementById("kobo-res-slider").value = String(cfg.res);
+      document.getElementById("kobo-res-val").textContent = `${cfg.res.toFixed(2)}×`;
+      document.getElementById("kobo-fps-btn").textContent = `FPS: ${cfg.fps >= 120 ? "MAX" : cfg.fps}`;
+      const shBtn = document.getElementById("kobo-shadow-btn");
+      shBtn.textContent = `SHADOWS: ${kShadowsOn ? "ON" : "OFF"}`;
+      shBtn.classList.toggle("is-active", kShadowsOn);
+      const snBtn = document.getElementById("kobo-vertex-snap-btn");
+      snBtn.textContent = `VERTEX SNAP: ${kVertexSnap ? "ON" : "OFF"}`;
+      snBtn.classList.toggle("is-active", kVertexSnap);
+      const pxBtn = document.getElementById("kobo-pixel-btn");
+      pxBtn.textContent = `PIXEL: ${kPixelMode.toUpperCase()}`;
+      pxBtn.classList.toggle("is-active", kPixelMode !== "off");
+
+      if (kRenderer) kRenderer.shadowMap.enabled = kShadowsOn;
+      applyKoboResolution();
+      applyKoboShaderMode(kShaderMode);
+    });
+  });
+
+  document.getElementById("kobo-res-slider")?.addEventListener("input", (e) => {
+    kResScale = Number(e.target.value);
+    document.getElementById("kobo-res-val").textContent = `${kResScale.toFixed(2)}×`;
+    applyKoboResolution();
+  });
+
+  const FPS_STEPS = [15, 24, 30, 60, 120];
+  document.getElementById("kobo-fps-btn")?.addEventListener("click", (e) => {
+    const idx = FPS_STEPS.indexOf(kMaxFps);
+    kMaxFps = FPS_STEPS[(idx + 1) % FPS_STEPS.length];
+    e.currentTarget.textContent = `FPS: ${kMaxFps >= 120 ? "MAX" : kMaxFps}`;
+  });
+
+  document.getElementById("kobo-shadow-btn")?.addEventListener("click", (e) => {
+    kShadowsOn = !kShadowsOn;
+    e.currentTarget.textContent = `SHADOWS: ${kShadowsOn ? "ON" : "OFF"}`;
+    e.currentTarget.classList.toggle("is-active", kShadowsOn);
+    if (kRenderer) kRenderer.shadowMap.enabled = kShadowsOn;
+  });
+
+  document.getElementById("kobo-vertex-snap-btn")?.addEventListener("click", (e) => {
+    kVertexSnap = !kVertexSnap;
+    e.currentTarget.textContent = `VERTEX SNAP: ${kVertexSnap ? "ON" : "OFF"}`;
+    e.currentTarget.classList.toggle("is-active", kVertexSnap);
+    applyKoboShaderMode(kShaderMode);
+  });
+
+  const PIXEL_STEPS = ["off", "coarse", "fine"];
+  document.getElementById("kobo-pixel-btn")?.addEventListener("click", (e) => {
+    const idx = PIXEL_STEPS.indexOf(kPixelMode);
+    kPixelMode = PIXEL_STEPS[(idx + 1) % PIXEL_STEPS.length];
+    e.currentTarget.textContent = `PIXEL: ${kPixelMode.toUpperCase()}`;
+    e.currentTarget.classList.toggle("is-active", kPixelMode !== "off");
+    applyKoboResolution();
+  });
+
+  // Spawn FX & Glitch Pulse & Snapshots
+  overlay.querySelectorAll("[data-spawn]").forEach(btn => {
+    btn.addEventListener("click", () => triggerKoboSpawn(btn.dataset.spawn, false));
+  });
+
+  document.getElementById("kobo-glitch-pulse")?.addEventListener("click", () => {
+    kGlitchPulseUntil = performance.now() + 450;
+    playKoboSynth("glitch");
+  });
+
+  function captureKoboPng(transparentBg) {
+    if (!kRenderer || !kScene || !kCamera) return;
+    const prevGridVis = kGrid ? kGrid.visible : false;
+    if (transparentBg && kGrid) kGrid.visible = false;
+    kRenderer.render(kScene, kCamera);
+    const dataUrl = kRenderer.domElement.toDataURL("image/png");
+    if (kGrid) kGrid.visible = prevGridVis;
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = transparentBg ? "kobo-3d-alpha.png" : "kobo-3d-studio.png";
+    a.click();
+  }
+
+  document.getElementById("kobo-snap-studio")?.addEventListener("click", () => captureKoboPng(false));
+  document.getElementById("kobo-snap-alpha")?.addEventListener("click", () => captureKoboPng(true));
+
+  window.addEventListener("resize", () => {
+    if (koboActive) applyKoboResolution();
+  });
+
+  window.disposeKoboStudio = () => {
+    closeKoboStudio(false);
+    if (kModel) { kScene?.remove(kModel); disposeObject(kModel); kModel = null; }
+    disposeKoboCustomMaterials();
+    try { kRenderer?.dispose(); kRenderer?.forceContextLoss(); } catch (e) {}
+  };
+  // Discover every GLB directly from the repository folder on each page visit.
+  const GITHUB_FOLDER_API = "https://api.github.com/repos/erocshgih/lightninghornunicorn/contents/glb?ref=main";
+  let discoveredModels = [];
+  let scanInProgress = false;
+
+  async function scanGitHubFolder(autoLoad = false) {
+    if (scanInProgress) return;
+    scanInProgress = true;
+    if (scanFolderBtn) scanFolderBtn.disabled = true;
+    if (folderStatus) folderStatus.textContent = "SCANNING GITHUB FOLDER…";
+    try {
+      const response = await fetch(GITHUB_FOLDER_API, {
+        headers: { "Accept": "application/vnd.github+json" },
+        cache: "no-store"
+      });
+      if (!response.ok) throw new Error(`GitHub API: ${response.status} ${response.statusText}`);
+      const entries = await response.json();
+      const files = entries
+        .filter(item => item && item.type === "file" && /\.glb$/i.test(item.name) && item.download_url)
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+      const previousValue = modelSelect.value;
+      discoveredModels = files.map(item => ({
+        name: item.name.replace(/\.glb$/i, ""),
+        fileName: item.name,
+        url: item.download_url
+      }));
+      modelSelect.replaceChildren();
+      discoveredModels.forEach(model => {
+        const option = document.createElement("option");
+        option.value = model.url;
+        option.textContent = model.name;
+        modelSelect.appendChild(option);
+      });
+      if (folderStatus) folderStatus.textContent = `${discoveredModels.length} GLB FILE${discoveredModels.length === 1 ? "" : "S"} FOUND · LIVE FOLDER`;
+      const selected = discoveredModels.find(model => model.url === previousValue) || discoveredModels[0];
+      if (selected) {
+        modelSelect.value = selected.url;
+        if (autoLoad || !kModel || !discoveredModels.some(model => model.url === kCurrentUrl)) {
+          loadKoboModel(selected.url, selected.name);
+        }
+      } else if (folderStatus) {
+        folderStatus.textContent = "NO .GLB FILES FOUND IN /glb";
+      }
+    } catch (error) {
+      console.error("Kobo folder scan failed:", error);
+      if (folderStatus) folderStatus.textContent = "FOLDER SCAN FAILED · CHECK CONNECTION / GITHUB API";
+    } finally {
+      scanInProgress = false;
+      if (scanFolderBtn) scanFolderBtn.disabled = false;
+    }
+  }
+
+  scanFolderBtn?.addEventListener("click", () => scanGitHubFolder(false));
+
+  // Standalone page: start the studio immediately, then refresh the GitHub
+  // folder periodically so newly committed GLB files appear without a reload.
+  openKoboStudio();
+  scanGitHubFolder(true);
+  const GITHUB_SCAN_INTERVAL = 120000; // 2 minutes, mindful of the unauthenticated API rate limit
+  const folderScanTimer = window.setInterval(() => scanGitHubFolder(false), GITHUB_SCAN_INTERVAL);
+  window.addEventListener("pagehide", () => {
+    window.clearInterval(folderScanTimer);
+    closeKoboStudio(false);
+  }, { once: true });
+
+})();
+</script>
+</body>
+</html>
