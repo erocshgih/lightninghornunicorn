@@ -1,0 +1,77 @@
+[
+  {
+    "path": "01_about.html",
+    "bytes": 49756,
+    "sha256": "3c24b4694dc9937a117f94df040d9bdaee2b7028d8036d4499fa4d67ac146d55"
+  },
+  {
+    "path": "02_vhsmultiverse.html",
+    "bytes": 22444,
+    "sha256": "2fb99819142102762019a26104a0127fa0e719cfaeeb60179e4879d23282bcf8"
+  },
+  {
+    "path": "03_humanart.html",
+    "bytes": 26765,
+    "sha256": "75fd15a34a37d0ccc29f4c4b3ff1a4a1532e2d6d085db045680c412a267095d4"
+  },
+  {
+    "path": "04_projects.html",
+    "bytes": 64187,
+    "sha256": "bf3a085a65454866a10d33102c718cc3529b820a8c944fa8f3086a9743ac50f9"
+  },
+  {
+    "path": "05_storytime.html",
+    "bytes": 19376,
+    "sha256": "0b4b443da61a8e88c48c050ce97e2bca4d5a62fdb057fd793146b535fac8ba37"
+  },
+  {
+    "path": "06_music.html",
+    "bytes": 28303,
+    "sha256": "5c17f882808b4f64a25c1fb3cd927c1a555074cb5b9a424ddef8641e581b0fe6"
+  },
+  {
+    "path": "07_contact.html",
+    "bytes": 4915,
+    "sha256": "4404d1d901c701d89b0b56be761b82a52a6f911c9c2554d52f2f0175403450de"
+  },
+  {
+    "path": "08_donate.html",
+    "bytes": 4556,
+    "sha256": "531d4a7a95aad544362c6c92a2d301669dc0ef95b7b10b01a906dee366f87c3d"
+  },
+  {
+    "path": "404.html",
+    "bytes": 984,
+    "sha256": "b8972d47390b65813ffb97d50b1c5b1d495d877894f7be6f0a159438a6caf7a0"
+  },
+  {
+    "path": "README_REPAIRED.txt",
+    "bytes": 2042,
+    "sha256": "db3879b0665943a669009d8ca9f17eaeafde0f930595cf4f85dc053c428ca0b8"
+  },
+  {
+    "path": "index.html",
+    "bytes": 205270,
+    "sha256": "f8dc3774424ec9680e74d83f83dd059ab60af227535a71b17a1a5f0e4853445b"
+  },
+  {
+    "path": "legacy/script.js",
+    "bytes": 14971,
+    "sha256": "ce5dd002b80a92b43a3592bed4d58f3e0b512b8278397ef72961a6fce203a427"
+  },
+  {
+    "path": "legacy/shared.css",
+    "bytes": 73914,
+    "sha256": "c3bf6708657382e5a7e9ba03232149251630b95beb10684d6d1443aa6399c3f7"
+  },
+  {
+    "path": "legacy/shared.js",
+    "bytes": 68907,
+    "sha256": "166677e8a660a1306cd356fe02af9f5f3783fd1bf4332595e812e9179a3e4c72"
+  },
+  {
+    "path": "legacy/styles.css",
+    "bytes": 23826,
+    "sha256": "cfb68b9541c5ccd91b9d04d6202e109e09de3ef68586696b3686c56149905f2c"
+  }
+]

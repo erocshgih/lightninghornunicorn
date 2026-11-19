@@ -109,8 +109,9 @@
 
         <script>
             (function initContact() {
-                const lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
-                document.querySelectorAll('[data-lang-en]').forEach(el => {
+                const lang = (window.LHU_LANGUAGE || navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+                const contentRoot = document.getElementById('mainContent') || document;
+                contentRoot.querySelectorAll('[data-lang-en]').forEach(el => {
                     const text = el.getAttribute(`data-lang-${lang}`);
                     if (text) el.innerHTML = text;
                 });
