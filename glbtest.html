@@ -6,29 +6,27 @@
   <title>KŌBŌ // 3D GLB Studio Inspector</title>
   <style>
     :root {
-      /* Cream, Marble, Frosted Glass & Rosé Palette */
-      --bg-stage: #f2ece6;
-      --cream-base: rgba(251, 248, 244, 0.80);
-      --cream-solid: #faf7f3;
-      --marble-tint: rgba(244, 236, 233, 0.72);
-      --glass-card: rgba(255, 252, 249, 0.56);
-      --glass-hover: rgba(255, 255, 255, 0.85);
+      /* Warm Cream-Yellow, Marble, Frosted Glass & Rosé Palette */
+      --bg-stage: #efe1c2;
+      --cream-base: rgba(252, 246, 234, 0.80);
+      --cream-solid: #fcf6ea;
+      --glass-card: rgba(255, 251, 242, 0.58);
+      --glass-hover: rgba(255, 253, 248, 0.88);
 
       --rose-primary: #c47684;
       --rose-deep: #9e5462;
-      --rose-soft: rgba(196, 118, 132, 0.14);
+      --rose-soft: rgba(196, 118, 132, 0.15);
       --rose-glow: rgba(196, 118, 132, 0.28);
-      --rose-gold: #cfa097;
 
-      --ink-primary: #221c1f;
-      --ink-secondary: #5c5056;
-      --ink-muted: #8c7d84;
+      --ink-primary: #241d1f;
+      --ink-secondary: #5d5053;
+      --ink-muted: #8c7c7e;
 
-      --hairline: rgba(164, 122, 130, 0.22);
-      --hairline-strong: rgba(164, 122, 130, 0.42);
+      --hairline: rgba(166, 126, 124, 0.24);
+      --hairline-strong: rgba(166, 126, 124, 0.44);
 
       /* Procedural Subtle Marble Veining (Pure Surface Texture, Zero Illustration) */
-      --marble-veins: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.72  0 0 0 0 0.54  0 0 0 0 0.58  0 0 0 0.065 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+      --marble-veins: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.72  0 0 0 0 0.55  0 0 0 0 0.52  0 0 0 0.065 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 
       --radius-panel: 12px;
       --radius-card: 7px;
@@ -93,7 +91,7 @@
 
     .brand-bar {
       background-color: var(--cream-base);
-      background-image: var(--marble-veins), linear-gradient(135deg, rgba(255,255,255,0.65), rgba(245,234,232,0.45));
+      background-image: var(--marble-veins), linear-gradient(135deg, rgba(255,253,247,0.72), rgba(246,234,224,0.48));
       backdrop-filter: blur(22px) saturate(135%);
       -webkit-backdrop-filter: blur(22px) saturate(135%);
       border: 1px solid var(--hairline);
@@ -103,7 +101,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 8px 24px rgba(58, 38, 44, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 24px rgba(64, 44, 38, 0.07), inset 0 1px 0 rgba(255, 253, 248, 0.88);
     }
 
     .brand-mark {
@@ -141,8 +139,8 @@
       padding: 0 16px;
       border-radius: var(--radius-panel);
       background: linear-gradient(135deg, var(--rose-primary), var(--rose-deep));
-      color: #fffdfb;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #fffdf9;
+      border: 1px solid rgba(255, 252, 245, 0.38);
       font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.8px;
@@ -180,12 +178,12 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 8px 24px rgba(58, 38, 44, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 24px rgba(64, 44, 38, 0.06), inset 0 1px 0 rgba(255, 253, 248, 0.85);
       transition: all 0.15s ease;
     }
 
     .tool-btn:hover {
-      background-color: rgba(255, 253, 250, 0.94);
+      background-color: rgba(255, 252, 245, 0.95);
       border-color: var(--hairline-strong);
       color: var(--ink-primary);
     }
@@ -193,7 +191,7 @@
     .tool-btn.active {
       border-color: var(--rose-primary);
       color: var(--rose-deep);
-      background-color: rgba(253, 245, 246, 0.9);
+      background-color: rgba(254, 246, 244, 0.92);
     }
 
     /* =========================================================
@@ -205,12 +203,12 @@
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       z-index: 30;
-      background-color: rgba(252, 248, 246, 0.92);
+      background-color: rgba(253, 248, 240, 0.94);
       background-image: var(--marble-veins);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--rose-primary);
-      box-shadow: 0 10px 28px rgba(158, 84, 98, 0.18), inset 0 1px 0 #fff;
+      box-shadow: 0 10px 28px rgba(158, 84, 98, 0.18), inset 0 1px 0 #fffdf9;
       padding: 7px 16px;
       border-radius: 999px;
       font-size: 11.5px;
@@ -250,7 +248,7 @@
       background-color: var(--cream-base);
       background-image:
         var(--marble-veins),
-        linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(246, 236, 234, 0.58) 100%);
+        linear-gradient(165deg, rgba(255, 252, 245, 0.76) 0%, rgba(247, 236, 226, 0.60) 100%);
       backdrop-filter: blur(26px) saturate(140%);
       -webkit-backdrop-filter: blur(26px) saturate(140%);
       border: 1px solid var(--hairline);
@@ -261,15 +259,15 @@
       flex-direction: column;
       gap: 10px;
       box-shadow:
-        0 18px 44px rgba(54, 34, 40, 0.10),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        0 18px 44px rgba(64, 44, 38, 0.10),
+        inset 0 1px 0 rgba(255, 253, 248, 0.92);
       transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
     }
 
     #inspector::-webkit-scrollbar { width: 4px; }
     #inspector::-webkit-scrollbar-track { background: transparent; }
     #inspector::-webkit-scrollbar-thumb {
-      background: rgba(164, 122, 130, 0.28);
+      background: rgba(166, 126, 124, 0.30);
       border-radius: 99px;
     }
 
@@ -309,7 +307,7 @@
       border: 1px solid var(--hairline);
       border-radius: var(--radius-card);
       padding: 10px 11px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+      box-shadow: inset 0 1px 0 rgba(255, 253, 248, 0.78);
     }
 
     .card-header {
@@ -363,7 +361,7 @@
     }
 
     .mode-btn {
-      background: rgba(255, 253, 250, 0.62);
+      background: rgba(255, 252, 245, 0.66);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-control);
       padding: 6px 8px;
@@ -385,10 +383,10 @@
     }
 
     .mode-btn.active {
-      background: linear-gradient(135deg, rgba(255, 246, 247, 0.96), rgba(245, 226, 230, 0.88));
+      background: linear-gradient(135deg, rgba(255, 247, 245, 0.96), rgba(246, 227, 229, 0.88));
       border-color: var(--rose-primary);
       color: var(--ink-primary);
-      box-shadow: 0 2px 8px rgba(196, 118, 132, 0.16), inset 0 1px 0 #fff;
+      box-shadow: 0 2px 8px rgba(196, 118, 132, 0.16), inset 0 1px 0 #fffdf9;
     }
 
     .swatch {
@@ -396,7 +394,7 @@
       height: 8px;
       border-radius: 2px;
       flex-shrink: 0;
-      border: 1px solid rgba(34, 28, 31, 0.15);
+      border: 1px solid rgba(36, 29, 31, 0.16);
     }
 
     /* =========================================================
@@ -425,7 +423,7 @@
       height: 30px;
       padding: 0 8px;
       margin-bottom: 8px;
-      background: rgba(255, 253, 250, 0.85);
+      background: rgba(255, 252, 245, 0.88);
       color: var(--ink-primary);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-control);
@@ -444,7 +442,7 @@
       flex: 1;
       max-width: 150px;
       height: 2px;
-      background: rgba(164, 122, 130, 0.3);
+      background: rgba(166, 126, 124, 0.32);
       border-radius: 2px;
       outline: none;
       cursor: pointer;
@@ -458,7 +456,7 @@
       border-radius: 50%;
       background: var(--cream-solid);
       border: 2px solid var(--rose-primary);
-      box-shadow: 0 1px 4px rgba(54, 34, 40, 0.22);
+      box-shadow: 0 1px 4px rgba(64, 44, 38, 0.22);
       transition: transform 0.1s ease;
     }
 
@@ -480,7 +478,7 @@
       height: 15px;
       border-radius: 3px;
       border: 1px solid var(--hairline-strong);
-      background: rgba(255, 253, 250, 0.85);
+      background: rgba(255, 252, 245, 0.88);
       cursor: pointer;
       display: grid;
       place-content: center;
@@ -496,8 +494,8 @@
       content: "";
       width: 7px;
       height: 4px;
-      border-left: 1.5px solid #fff;
-      border-bottom: 1.5px solid #fff;
+      border-left: 1.5px solid #fffdf9;
+      border-bottom: 1.5px solid #fffdf9;
       transform: rotate(-45deg) translate(0.5px, -0.5px);
     }
 
@@ -507,7 +505,7 @@
       border: 1px solid var(--hairline-strong);
       border-radius: 4px;
       padding: 1px;
-      background: #fff;
+      background: #fffdf9;
       cursor: pointer;
     }
 
@@ -519,7 +517,7 @@
     .btn-sub {
       flex: 1;
       height: 28px;
-      background: rgba(255, 253, 250, 0.75);
+      background: rgba(255, 252, 245, 0.78);
       color: var(--ink-primary);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-control);
@@ -531,7 +529,7 @@
     }
 
     .btn-sub:hover:not(:disabled) {
-      background: #fff;
+      background: #fffdf9;
       border-color: var(--hairline-strong);
     }
 
@@ -552,7 +550,7 @@
 
     .sfx-chip {
       height: 25px;
-      background: rgba(255, 253, 250, 0.7);
+      background: rgba(255, 252, 245, 0.74);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-control);
       color: var(--ink-secondary);
@@ -564,7 +562,7 @@
     }
 
     .sfx-chip:hover {
-      background: #fff;
+      background: #fffdf9;
       border-color: var(--rose-primary);
       color: var(--rose-deep);
       transform: translateY(-1px);
@@ -578,7 +576,7 @@
     }
 
     .stat-box {
-      background: rgba(255, 253, 250, 0.65);
+      background: rgba(255, 252, 245, 0.68);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-control);
       padding: 6px 8px;
@@ -609,7 +607,7 @@
       inset: 14px;
       z-index: 50;
       border-radius: var(--radius-panel);
-      background-color: rgba(250, 246, 243, 0.88);
+      background-color: rgba(249, 239, 218, 0.90);
       background-image: var(--marble-veins);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -696,7 +694,7 @@
       </div>
       <div class="mode-grid" id="modeGrid">
         <button class="mode-btn active" data-mode="texture"><span class="swatch" style="background:#c47684;"></span>Texture</button>
-        <button class="mode-btn" data-mode="solid"><span class="swatch" style="background:#ece6df;"></span>Solid</button>
+        <button class="mode-btn" data-mode="solid"><span class="swatch" style="background:#f3e6c8;"></span>Solid</button>
         <button class="mode-btn" data-mode="wireframe"><span class="swatch" style="background:#4a3f45;"></span>Wireframe</button>
         <button class="mode-btn" data-mode="holographic"><span class="swatch" style="background:#67e8f9;"></span>Holographic</button>
         <button class="mode-btn" data-mode="granite"><span class="swatch" style="background:#8c8580;"></span>Granite</button>
@@ -780,7 +778,7 @@
       </div>
       <div class="row">
         <label for="bgColor">Stage Tone</label>
-        <input type="color" id="bgColor" value="#f2ece6" />
+        <input type="color" id="bgColor" value="#efe1c2" />
       </div>
     </div>
 
@@ -995,7 +993,7 @@
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#f2ece6');
+    scene.background = new THREE.Color('#efe1c2');
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -1007,18 +1005,24 @@
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
 
-    // Fine architectural grid tuned to Cream & Rosé stage
-    const gridHelper = new THREE.GridHelper(10, 24, 0xc9b4b8, 0xe3dad4);
+    // Warm cream-yellow & muted rose architectural grid
+    const gridHelper = new THREE.GridHelper(10, 24, 0xc4a49c, 0xdfd0b2);
     scene.add(gridHelper);
 
-    const composer = new EffectComposer(renderer);
+    // Multisampled HalfFloat render target prevents bloom banding and NaN artifacts
+    const rt = new THREE.WebGLRenderTarget(
+      Math.max(container.clientWidth, 1),
+      Math.max(container.clientHeight, 1),
+      { type: THREE.HalfFloatType, samples: 4 }
+    );
+    const composer = new EffectComposer(renderer, rt);
     composer.addPass(new RenderPass(scene, camera));
-    // Threshold > 1.0 ensures bright cream backdrop never blooms, only HDR emissives
+
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(container.clientWidth, container.clientHeight),
       0.55,
       0.35,
-      1.02
+      1.05
     );
     bloomPass.enabled = true;
     composer.addPass(bloomPass);
@@ -1035,7 +1039,7 @@
     resizeObserver.observe(container);
 
     // =========================================================
-    // 3. CUSTOM SHADER & SURFACE MODES
+    // 3. CUSTOM SHADER & SURFACE MODES (NaN-SAFE FOR BLOOM)
     // =========================================================
     let currentMode = 'texture';
     let currentModel = null;
@@ -1057,7 +1061,7 @@
     function createModeMaterial(mode, origMat) {
       if (mode === 'solid') {
         const m = new THREE.MeshStandardMaterial({
-          color: 0xf6f1eb,
+          color: 0xfbf5ea,
           roughness: 0.58,
           metalness: 0.04
         });
@@ -1125,8 +1129,10 @@
               #include <skinning_vertex>
               vec4 wp = modelMatrix * vec4(transformed, 1.0);
               vWorldPos = wp.xyz;
-              vNormalW = normalize(mat3(modelMatrix) * objectNormal);
-              vViewDir = normalize(cameraPosition - wp.xyz);
+              vec3 wn = mat3(modelMatrix) * objectNormal;
+              vNormalW = length(wn) > 0.0001 ? normalize(wn) : vec3(0.0, 1.0, 0.0);
+              vec3 vd = cameraPosition - wp.xyz;
+              vViewDir = length(vd) > 0.0001 ? normalize(vd) : vec3(0.0, 0.0, 1.0);
               gl_Position = projectionMatrix * viewMatrix * wp;
             }
           `,
@@ -1136,13 +1142,16 @@
             varying vec3 vViewDir;
             varying vec3 vWorldPos;
             void main() {
-              float fresnel = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.0);
+              vec3 n = length(vNormalW) > 0.0001 ? normalize(vNormalW) : vec3(0.0, 1.0, 0.0);
+              vec3 v = length(vViewDir) > 0.0001 ? normalize(vViewDir) : vec3(0.0, 0.0, 1.0);
+              float ndotv = clamp(abs(dot(n, v)), 0.0, 1.0);
+              float fresnel = pow(max(1.0 - ndotv, 0.0001), 2.0);
               float scan = 0.65 + 0.35 * sin(vWorldPos.y * 95.0 - uTime * 6.0);
               float sweep = smoothstep(0.85, 1.0, sin(vWorldPos.y * 4.0 - uTime * 2.2));
               float flicker = 0.92 + 0.08 * sin(uTime * 37.0);
               vec3 baseCol = mix(vec3(0.05, 0.58, 0.85), vec3(0.45, 0.92, 1.0), fresnel);
               float alpha = clamp((fresnel * 0.85 + 0.18 + sweep * 0.35) * scan * flicker, 0.12, 0.94);
-              gl_FragColor = vec4(baseCol * (1.35 + sweep * 1.1), alpha);
+              gl_FragColor = vec4(baseCol * (1.25 + sweep * 0.9), alpha);
             }
           `
         });
@@ -1170,8 +1179,10 @@
               #include <morphtarget_vertex>
               #include <skinning_vertex>
               vec4 wp = modelMatrix * vec4(transformed, 1.0);
-              vNormalW = normalize(mat3(modelMatrix) * objectNormal);
-              vViewDir = normalize(cameraPosition - wp.xyz);
+              vec3 wn = mat3(modelMatrix) * objectNormal;
+              vNormalW = length(wn) > 0.0001 ? normalize(wn) : vec3(0.0, 1.0, 0.0);
+              vec3 vd = cameraPosition - wp.xyz;
+              vViewDir = length(vd) > 0.0001 ? normalize(vd) : vec3(0.0, 0.0, 1.0);
               gl_Position = projectionMatrix * viewMatrix * wp;
             }
           `,
@@ -1179,9 +1190,13 @@
             varying vec3 vNormalW;
             varying vec3 vViewDir;
             void main() {
-              float edge = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.3);
+              vec3 n = length(vNormalW) > 0.0001 ? normalize(vNormalW) : vec3(0.0, 1.0, 0.0);
+              vec3 v = length(vViewDir) > 0.0001 ? normalize(vViewDir) : vec3(0.0, 0.0, 1.0);
+              float ndotv = clamp(abs(dot(n, v)), 0.0, 1.0);
+              float edge = pow(max(1.0 - ndotv, 0.0001), 2.2);
               vec3 col = mix(vec3(0.76, 0.46, 0.52), vec3(0.24, 0.16, 0.20), edge);
-              gl_FragColor = vec4(col, 0.10 + edge * 0.78);
+              float alpha = clamp(0.10 + edge * 0.78, 0.05, 0.92);
+              gl_FragColor = vec4(col, alpha);
             }
           `
         });
