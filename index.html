@@ -1514,23 +1514,18 @@ body.intro-mode {
 }
 </style>
 <style id="index-all-controls-pill">
-/* Unified capsule geometry for every interactive control in the index.
-   Preserve intentionally circular signal buttons and 3D category spheres. */
-button:not(.lhu-pill):not(.sphere-category),
+/* One capsule shape for every clickable control throughout index.html.
+   Only the three colored intro signal selectors remain circular. */
+button:not(.lhu-pill),
 select,
 input[type="button"],
 input[type="submit"],
-input[type="reset"] {
+input[type="reset"],
+a.btn {
   border-radius: 9999px !important;
 }
-/* The three intro signal selectors and the 3D category spheres stay circular. */
-.lhu-pill,
-.sphere-category {
+.lhu-pill {
   border-radius: 50% !important;
-}
-/* Keep native select controls visually consistent with the capsule buttons. */
-#head-select {
-  border-radius: 9999px !important;
 }
 </style>
 </head>
