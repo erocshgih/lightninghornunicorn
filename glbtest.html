@@ -26,14 +26,14 @@
       --hairline: rgba(154, 108, 102, 0.26);
       --hairline-strong: rgba(154, 108, 102, 0.46);
 
-      /* Procedural Subtle Marble Veining (Pure Surface Texture, Zero Illustration) */
+      /* Procedural Subtle Marble Veining */
       --marble-veins: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.76  0 0 0 0 0.52  0 0 0 0 0.48  0 0 0 0.065 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 
       --radius-panel: 12px;
       --radius-card: 7px;
       --radius-control: 5px;
 
-      /* Dynamic Layout Metrics (Updated via ResizeObserver) */
+      /* Dynamic Layout Metrics */
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
@@ -78,8 +78,15 @@
       outline: none;
     }
 
+    canvas.pixelated {
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
     /* =========================================================
-       TOP ARCHITECTURAL HEADER BAR (DESKTOP & MOBILE ADAPTIVE)
+       TOP ARCHITECTURAL HEADER BAR
        ========================================================= */
     #topbar {
       position: fixed;
@@ -222,7 +229,7 @@
       top: calc(var(--topbar-h) + 18px);
       right: calc(14px + var(--safe-right));
       bottom: calc(14px + var(--safe-bottom));
-      left: calc(344px + var(--safe-left));
+      left: calc(348px + var(--safe-left));
       z-index: 5;
       pointer-events: none;
       transition: inset 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
@@ -250,15 +257,15 @@
       right: 8px;
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 1.1px;
+      letter-spacing: 1.0px;
       font-variant-numeric: tabular-nums;
-      color: rgba(110, 62, 70, 0.78);
-      background: rgba(253, 245, 237, 0.48);
+      color: rgba(110, 62, 70, 0.82);
+      background: rgba(253, 245, 237, 0.56);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       padding: 3px 8px;
       border-radius: 4px;
-      border: 1px solid rgba(154, 108, 102, 0.20);
+      border: 1px solid rgba(154, 108, 102, 0.22);
     }
 
     /* =========================================================
@@ -363,7 +370,7 @@
       top: calc(var(--topbar-h) + 18px);
       left: calc(12px + var(--safe-left));
       bottom: calc(12px + var(--safe-bottom));
-      width: 318px;
+      width: 324px;
       z-index: 15;
       background-color: var(--cream-base);
       background-image:
@@ -400,7 +407,7 @@
     }
 
     /* =========================================================
-       RESPONSIVE BREAKPOINTS: PORTRAIT, COMPACT MOBILE & LANDSCAPE
+       RESPONSIVE BREAKPOINTS
        ========================================================= */
     @media (max-width: 720px) {
       .brand-divider, .brand-sub, .hide-mobile {
@@ -441,7 +448,7 @@
         right: calc(10px + var(--safe-right));
         bottom: calc(10px + var(--safe-bottom));
         width: auto;
-        max-height: min(41dvh, calc(100dvh - var(--topbar-h) - 135px));
+        max-height: min(42dvh, calc(100dvh - var(--topbar-h) - 135px));
         padding: 10px;
         gap: 8px;
       }
@@ -482,13 +489,13 @@
       }
 
       #inspector {
-        width: 268px;
+        width: 274px;
         padding: 8px;
         gap: 7px;
       }
 
       #viewfinder {
-        left: calc(290px + var(--safe-left));
+        left: calc(296px + var(--safe-left));
       }
 
       #cam-angles {
@@ -521,6 +528,7 @@
       padding-bottom: 6px;
       margin-bottom: 8px;
       border-bottom: 1px solid var(--hairline);
+      gap: 6px;
     }
 
     .card-title {
@@ -532,6 +540,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     .card-title::before {
@@ -540,6 +549,7 @@
       height: 10px;
       background: var(--rose-primary);
       border-radius: 1px;
+      flex-shrink: 0;
     }
 
     .card-meta {
@@ -547,30 +557,38 @@
       font-weight: 700;
       color: var(--rose-deep);
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     /* =========================================================
-       SEGMENTED PILL SWITCHERS (PEDESTAL & LIGHTING MOODS)
+       SEGMENTED PILL SWITCHERS
        ========================================================= */
     .seg-group {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 4px;
+      gap: 3px;
       background: rgba(154, 108, 102, 0.11);
       padding: 3px;
       border-radius: var(--radius-control);
       margin-bottom: 8px;
     }
 
+    .seg-group.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .seg-group.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .seg-group.cols-6 { grid-template-columns: repeat(6, 1fr); }
+    .seg-group.compact { margin-bottom: 0; flex: 1; max-width: 176px; }
+
     .seg-btn {
-      height: 25px;
+      height: 24px;
+      padding: 0 4px;
       border: 1px solid transparent;
       border-radius: 4px;
       background: transparent;
       color: var(--ink-secondary);
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       cursor: pointer;
+      white-space: nowrap;
       transition: all 0.13s ease;
     }
 
@@ -648,7 +666,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       font-size: 11.5px;
       font-weight: 500;
       color: var(--ink-secondary);
@@ -656,10 +674,30 @@
     }
     .row:last-child { margin-bottom: 0; }
 
+    .row-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .sub-dim {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
     .val-readout {
       font-variant-numeric: tabular-nums;
       color: var(--ink-primary);
       font-weight: 700;
+    }
+
+    .sub-divider {
+      height: 1px;
+      background: var(--hairline);
+      margin: 8px 0;
     }
 
     select {
@@ -684,7 +722,7 @@
       -webkit-appearance: none;
       appearance: none;
       flex: 1;
-      max-width: 155px;
+      max-width: 146px;
       height: 2px;
       background: rgba(154, 108, 102, 0.36);
       border-radius: 2px;
@@ -710,7 +748,7 @@
         height: 16px;
       }
       .mode-btn, .seg-btn, .btn-sub, .sfx-chip {
-        min-height: 30px;
+        min-height: 29px;
       }
     }
 
@@ -736,6 +774,7 @@
       cursor: pointer;
       display: grid;
       place-content: center;
+      flex-shrink: 0;
       transition: all 0.12s ease;
     }
 
@@ -933,7 +972,7 @@
     <div class="vf-corner vf-tr"></div>
     <div class="vf-corner vf-bl"></div>
     <div class="vf-corner vf-br"></div>
-    <div id="vf-telemetry">AZ 031° · EL +17°</div>
+    <div id="vf-telemetry">AZ 031° · EL +17° · FOV 45°</div>
   </div>
 
   <!-- Studio Camera Perspective Pills -->
@@ -1005,6 +1044,105 @@
         <button class="mode-btn" data-mode="normals"><span class="swatch" style="background:linear-gradient(135deg,#f43f5e,#34d399,#60a5fa);"></span>Normals</button>
       </div>
       <button id="glitchPulseBtn" class="btn-pulse" title="Trigger Glitch Surge [G]">⚡ Glitch Pulse [G]</button>
+    </div>
+
+    <!-- Engine, Resolution, Frame Limiter & Retro Hardware -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Engine & Graphics</span>
+        <span class="card-meta" id="enginePerfBadge">60 FPS · 16.7ms</span>
+      </div>
+
+      <!-- One-Click Hardware Presets -->
+      <div class="seg-group cols-4" id="gfxPresetGroup" title="One-Click Hardware & Retro Presets">
+        <button class="seg-btn" data-preset="potato">Potato</button>
+        <button class="seg-btn" data-preset="handheld">Handheld</button>
+        <button class="seg-btn active" data-preset="studio">Studio</button>
+        <button class="seg-btn" data-preset="overkill">Overkill</button>
+      </div>
+
+      <!-- Resolution Scale -->
+      <div class="row">
+        <span class="row-label">
+          <span>Res</span>
+          <span class="val-readout" id="resScaleLabel">100%</span>
+          <span class="sub-dim" id="resDimLabel"></span>
+        </span>
+        <input type="range" id="resScaleSlider" min="10" max="150" step="5" value="100" />
+      </div>
+
+      <!-- Crisp Nearest-Neighbor Pixel Scaling -->
+      <div class="row">
+        <label for="pixelFilterToggle">Pixel Filter (Crisp Scaling)</label>
+        <input type="checkbox" id="pixelFilterToggle" />
+      </div>
+
+      <!-- Frame Limiter -->
+      <div class="row">
+        <span>FPS Cap</span>
+        <div class="seg-group cols-6 compact" id="fpsCapGroup">
+          <button class="seg-btn" data-fps="12">12</button>
+          <button class="seg-btn" data-fps="15">15</button>
+          <button class="seg-btn" data-fps="24">24</button>
+          <button class="seg-btn" data-fps="30">30</button>
+          <button class="seg-btn" data-fps="60">60</button>
+          <button class="seg-btn active" data-fps="0">Max</button>
+        </div>
+      </div>
+
+      <!-- Shadow Map Resolution -->
+      <div class="row">
+        <span>Shadows</span>
+        <div class="seg-group cols-4 compact" id="shadowQualGroup">
+          <button class="seg-btn" data-shadow="off">Off</button>
+          <button class="seg-btn" data-shadow="256">256</button>
+          <button class="seg-btn" data-shadow="1024">1K</button>
+          <button class="seg-btn active" data-shadow="2048">2K</button>
+        </div>
+      </div>
+
+      <!-- Anti-Aliasing & Texture Filtering -->
+      <div class="row">
+        <span>MSAA</span>
+        <div class="seg-group cols-2 compact" id="msaaGroup">
+          <button class="seg-btn" data-msaa="0">Off</button>
+          <button class="seg-btn active" data-msaa="4">4x MSAA</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <span>Tex Filter</span>
+        <div class="seg-group cols-2 compact" id="texFilterGroup">
+          <button class="seg-btn active" data-texfilter="smooth">Smooth</button>
+          <button class="seg-btn" data-texfilter="nearest">Nearest</button>
+        </div>
+      </div>
+
+      <div class="sub-divider"></div>
+
+      <!-- PS1 Vertex Jitter & 16-Bit Color Depth -->
+      <div class="row">
+        <span>PS1 Jitter <span class="val-readout" id="jitterLabel">0%</span></span>
+        <input type="range" id="jitterSlider" min="0" max="100" step="1" value="0" />
+      </div>
+
+      <div class="row">
+        <label for="color16Toggle">16-Bit Color Dither</label>
+        <input type="checkbox" id="color16Toggle" />
+      </div>
+
+      <div class="sub-divider"></div>
+
+      <!-- Camera Optics: Field of View & Near-Clip Slicer -->
+      <div class="row">
+        <span>Lens FOV <span class="val-readout" id="fovLabel">045°</span></span>
+        <input type="range" id="fovSlider" min="20" max="110" step="1" value="45" />
+      </div>
+
+      <div class="row">
+        <span>Near Slicer <span class="val-readout" id="sliceLabel">0%</span></span>
+        <input type="range" id="sliceSlider" min="0" max="100" step="1" value="0" />
+      </div>
     </div>
 
     <!-- Pedestal & Studio Lighting -->
@@ -1127,6 +1265,7 @@
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
     import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
     // =========================================================
@@ -1304,7 +1443,6 @@
         osc.stop(now + 0.6);
         lfo.stop(now + 0.6);
       } else if (chosen === 'dong') {
-        // Deep resonant Japanese bronze temple bell (Bonsho)
         const mallet = audioCtx.createOscillator();
         const mGain = audioCtx.createGain();
         mallet.type = 'sine';
@@ -1317,11 +1455,11 @@
         mallet.stop(now + 0.1);
 
         const partials = [
-          { fStart: 103.5, fEnd: 98.0,  amp: 0.34, dur: 1.75, type: 'sine',     delay: 0.0 },
-          { fStart: 99.4,  fEnd: 99.4,  amp: 0.22, dur: 1.65, type: 'sine',     delay: 0.01 },
-          { fStart: 196.0, fEnd: 196.0, amp: 0.11, dur: 1.15, type: 'triangle', delay: 0.008 },
-          { fStart: 246.94,fEnd: 246.94,amp: 0.065,dur: 0.85, type: 'sine',     delay: 0.015 },
-          { fStart: 392.0, fEnd: 392.0, amp: 0.032,dur: 0.52, type: 'sine',     delay: 0.02 }
+          { fStart: 103.5, fEnd: 98.0,   amp: 0.34,  dur: 1.75, type: 'sine',     delay: 0.0 },
+          { fStart: 99.4,  fEnd: 99.4,   amp: 0.22,  dur: 1.65, type: 'sine',     delay: 0.01 },
+          { fStart: 196.0, fEnd: 196.0,  amp: 0.11,  dur: 1.15, type: 'triangle', delay: 0.008 },
+          { fStart: 246.94,fEnd: 246.94, amp: 0.065, dur: 0.85, type: 'sine',     delay: 0.015 },
+          { fStart: 392.0, fEnd: 392.0,  amp: 0.032, dur: 0.52, type: 'sine',     delay: 0.02 }
         ];
 
         partials.forEach((p) => {
@@ -1593,7 +1731,7 @@
       stageGroup.add(gridHelper);
     }
 
-    // Multisampled HalfFloat EffectComposer (Bloom OFF by default)
+    // Multisampled HalfFloat EffectComposer + 16-Bit Color Quantizer Pass
     const rt = new THREE.WebGLRenderTarget(
       Math.max(container.clientWidth, 1),
       Math.max(container.clientHeight, 1),
@@ -1610,21 +1748,290 @@
     );
     bloomPass.enabled = false;
     composer.addPass(bloomPass);
+
+    // Classic PS1 / Voodoo2 RGB555 16-Bit Color Quantizer + 4x4 Bayer Dither Pass
+    const color16Pass = new ShaderPass({
+      uniforms: {
+        tDiffuse: { value: null }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        varying vec2 vUv;
+
+        float bayer4(vec2 pos) {
+          int x = int(mod(pos.x, 4.0));
+          int y = int(mod(pos.y, 4.0));
+          int idx = y * 4 + x;
+          float m[16];
+          m[0]=0.0;  m[1]=8.0;  m[2]=2.0;  m[3]=10.0;
+          m[4]=12.0; m[5]=4.0;  m[6]=14.0; m[7]=6.0;
+          m[8]=3.0;  m[9]=11.0; m[10]=1.0; m[11]=9.0;
+          m[12]=15.0;m[13]=7.0; m[14]=13.0;m[15]=5.0;
+          for (int i = 0; i < 16; i++) {
+            if (i == idx) return (m[i] / 16.0) - 0.5;
+          }
+          return 0.0;
+        }
+
+        void main() {
+          vec4 tex = texture2D(tDiffuse, vUv);
+          vec3 lin = max(tex.rgb, vec3(0.0));
+          vec3 srgb = pow(lin, vec3(1.0 / 2.2));
+          float dither = bayer4(gl_FragCoord.xy) * (1.0 / 31.0);
+          vec3 quant = floor(clamp(srgb + dither, 0.0, 1.0) * 31.0 + 0.5) / 31.0;
+          gl_FragColor = vec4(pow(quant, vec3(2.2)), tex.a);
+        }
+      `
+    });
+    color16Pass.enabled = false;
+    composer.addPass(color16Pass);
     composer.addPass(new OutputPass());
+
+    // =========================================================
+    // 4. ENGINE & GRAPHICS CONTROLS (RESOLUTION, FPS, RETRO, OPTICS)
+    // =========================================================
+    let resolutionScale = 1.0;
+    let targetFps = 0;
+    let retroTexFilter = false;
+    let fovDeg = 45;
+    let slicePct = 0;
+    let msaaSamples = 4;
+
+    function updateResolutionReadout() {
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      const baseDpr = Math.min(window.devicePixelRatio || 1, 2);
+      const eff = Math.max(baseDpr * resolutionScale, 0.05);
+      const rw = Math.max(Math.round(w * eff), 1);
+      const rh = Math.max(Math.round(h * eff), 1);
+      document.getElementById('resScaleLabel').textContent = `${Math.round(resolutionScale * 100)}%`;
+      document.getElementById('resDimLabel').textContent = `(${rw}×${rh})`;
+    }
+
+    function applyResolutionScale() {
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      const baseDpr = Math.min(window.devicePixelRatio || 1, 2);
+      const effectiveRatio = Math.max(baseDpr * resolutionScale, 0.05);
+
+      renderer.setPixelRatio(effectiveRatio);
+      renderer.setSize(w, h, false);
+      composer.setPixelRatio(effectiveRatio);
+      composer.setSize(w, h);
+      bloomPass.resolution.set(Math.max(w * effectiveRatio, 1), Math.max(h * effectiveRatio, 1));
+      updateResolutionReadout();
+    }
+
+    function setPixelFilter(enabled) {
+      document.getElementById('pixelFilterToggle').checked = enabled;
+      renderer.domElement.classList.toggle('pixelated', enabled);
+    }
+
+    function setFpsCap(fps) {
+      targetFps = fps;
+      document.querySelectorAll('#fpsCapGroup .seg-btn').forEach((b) => {
+        b.classList.toggle('active', parseInt(b.dataset.fps, 10) === fps);
+      });
+    }
+
+    function setShadowQuality(mode) {
+      document.querySelectorAll('#shadowQualGroup .seg-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.shadow === mode);
+      });
+
+      if (mode === 'off') {
+        renderer.shadowMap.enabled = false;
+        keyLight.castShadow = false;
+        shadowPlane.visible = false;
+      } else {
+        const res = parseInt(mode, 10);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = res <= 256 ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
+        keyLight.castShadow = true;
+        shadowPlane.visible = true;
+        keyLight.shadow.mapSize.set(res, res);
+        if (keyLight.shadow.map) {
+          keyLight.shadow.map.dispose();
+          keyLight.shadow.map = null;
+        }
+        renderer.shadowMap.needsUpdate = true;
+      }
+    }
+
+    function setMsaaSamples(samples) {
+      msaaSamples = samples;
+      document.querySelectorAll('#msaaGroup .seg-btn').forEach((b) => {
+        b.classList.toggle('active', parseInt(b.dataset.msaa, 10) === samples);
+      });
+
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      const baseDpr = Math.min(window.devicePixelRatio || 1, 2);
+      const effectiveRatio = Math.max(baseDpr * resolutionScale, 0.05);
+      const newRt = new THREE.WebGLRenderTarget(
+        Math.max(Math.floor(w * effectiveRatio), 1),
+        Math.max(Math.floor(h * effectiveRatio), 1),
+        { type: THREE.HalfFloatType, samples }
+      );
+      composer.reset(newRt);
+      applyResolutionScale();
+    }
+
+    function applyTextureFiltering() {
+      if (!currentModel) return;
+      const texProps = ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap', 'alphaMap'];
+
+      currentModel.traverse((child) => {
+        if (!child.isMesh) return;
+        const mats = [];
+        const orig = child.userData.origMaterial;
+        if (Array.isArray(orig)) mats.push(...orig);
+        else if (orig) mats.push(orig);
+
+        if (Array.isArray(child.material)) mats.push(...child.material);
+        else if (child.material) mats.push(child.material);
+
+        mats.forEach((m) => {
+          if (!m) return;
+          texProps.forEach((prop) => {
+            const tex = m[prop];
+            if (!tex || !tex.isTexture) return;
+            if (!tex.userData.origFilter) {
+              tex.userData.origFilter = {
+                minFilter: tex.minFilter,
+                magFilter: tex.magFilter,
+                anisotropy: tex.anisotropy
+              };
+            }
+            if (retroTexFilter) {
+              tex.magFilter = THREE.NearestFilter;
+              tex.minFilter = THREE.NearestFilter;
+              tex.anisotropy = 1;
+            } else {
+              tex.magFilter = tex.userData.origFilter.magFilter;
+              tex.minFilter = tex.userData.origFilter.minFilter;
+              tex.anisotropy = tex.userData.origFilter.anisotropy;
+            }
+            tex.needsUpdate = true;
+          });
+        });
+      });
+    }
+
+    function setTextureFilterMode(mode) {
+      retroTexFilter = mode === 'nearest';
+      document.querySelectorAll('#texFilterGroup .seg-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.texfilter === mode);
+      });
+      applyTextureFiltering();
+    }
+
+    function updateCameraOptics() {
+      camera.fov = fovDeg;
+      const baseNear = Math.max(modelRadius / 500, 0.0001);
+      if (slicePct <= 0) {
+        camera.near = baseNear;
+      } else {
+        const distToCenter = camera.position.distanceTo(modelCenter);
+        const frontDist = Math.max(distToCenter - modelRadius * 0.65, baseNear);
+        const backDist = distToCenter + modelRadius * 0.65;
+        camera.near = THREE.MathUtils.lerp(frontDist, backDist, slicePct / 100);
+      }
+      camera.far = Math.max(modelRadius * 500, 100);
+      camera.updateProjectionMatrix();
+    }
+
+    function clearActivePresetHighlight() {
+      document.querySelectorAll('#gfxPresetGroup .seg-btn').forEach((b) => b.classList.remove('active'));
+    }
+
+    function applyGraphicsPreset(preset) {
+      document.querySelectorAll('#gfxPresetGroup .seg-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.preset === preset);
+      });
+
+      if (preset === 'potato') {
+        resolutionScale = 0.15;
+        document.getElementById('resScaleSlider').value = 15;
+        applyResolutionScale();
+        setPixelFilter(true);
+        setFpsCap(15);
+        setShadowQuality('off');
+        setMsaaSamples(0);
+        setTextureFilterMode('nearest');
+        setVertexJitter(35);
+        color16Pass.enabled = true;
+        document.getElementById('color16Toggle').checked = true;
+        bloomPass.enabled = false;
+        document.getElementById('bloomToggle').checked = false;
+        showSoundToast('POTATO MODE', '15% Res · 15 FPS · PS1 Retro');
+      } else if (preset === 'handheld') {
+        resolutionScale = 0.50;
+        document.getElementById('resScaleSlider').value = 50;
+        applyResolutionScale();
+        setPixelFilter(true);
+        setFpsCap(30);
+        setShadowQuality('256');
+        setMsaaSamples(0);
+        setTextureFilterMode('nearest');
+        setVertexJitter(0);
+        color16Pass.enabled = false;
+        document.getElementById('color16Toggle').checked = false;
+        bloomPass.enabled = false;
+        document.getElementById('bloomToggle').checked = false;
+        showSoundToast('HANDHELD', '50% Res · 30 FPS · 256px Shadows');
+      } else if (preset === 'studio') {
+        resolutionScale = 1.0;
+        document.getElementById('resScaleSlider').value = 100;
+        applyResolutionScale();
+        setPixelFilter(false);
+        setFpsCap(0);
+        setShadowQuality('2048');
+        setMsaaSamples(4);
+        setTextureFilterMode('smooth');
+        setVertexJitter(0);
+        color16Pass.enabled = false;
+        document.getElementById('color16Toggle').checked = false;
+        bloomPass.enabled = false;
+        document.getElementById('bloomToggle').checked = false;
+        showSoundToast('STUDIO', '100% Res · 4x MSAA · 2K Shadows');
+      } else if (preset === 'overkill') {
+        resolutionScale = 1.5;
+        document.getElementById('resScaleSlider').value = 150;
+        applyResolutionScale();
+        setPixelFilter(false);
+        setFpsCap(0);
+        setShadowQuality('2048');
+        setMsaaSamples(4);
+        setTextureFilterMode('smooth');
+        setVertexJitter(0);
+        color16Pass.enabled = false;
+        document.getElementById('color16Toggle').checked = false;
+        bloomPass.enabled = true;
+        document.getElementById('bloomToggle').checked = true;
+        showSoundToast('OVERKILL', '150% SSAA · Bloom · 2K Shadows');
+      }
+    }
 
     const resizeObserver = new ResizeObserver(() => {
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-      composer.setSize(w, h);
+      applyResolutionScale();
       syncLayoutMetrics();
     });
     resizeObserver.observe(container);
 
     // =========================================================
-    // 4. CUSTOM SHADER & SURFACE MODES (TEXTURED X-RAY + NaN-SAFE)
+    // 5. CUSTOM SHADER & SURFACE MODES (TEXTURED X-RAY + PS1 JITTER)
     // =========================================================
     let currentMode = 'texture';
     const modelPivot = new THREE.Group();
@@ -1641,7 +2048,8 @@
 
     const sharedUniforms = {
       uTime: { value: 0 },
-      uGlitchPulse: { value: 0 }
+      uGlitchPulse: { value: 0 },
+      uVertexJitter: { value: 0 }
     };
     let disposableModeMaterials = [];
 
@@ -1650,13 +2058,53 @@
       disposableModeMaterials = [];
     }
 
+    const PS1_JITTER_GLSL = `
+      if (uVertexJitter > 0.001) {
+        float snapGrid = mix(340.0, 44.0, uVertexJitter);
+        float wSafe = max(abs(gl_Position.w), 0.0001) * (gl_Position.w < 0.0 ? -1.0 : 1.0);
+        vec3 ndc = gl_Position.xyz / wSafe;
+        ndc.xy = floor(snapGrid * ndc.xy + 0.5) / snapGrid;
+        gl_Position.xyz = ndc * wSafe;
+      }
+    `;
+
+    function attachVertexJitterToShader(shader) {
+      shader.uniforms.uVertexJitter = sharedUniforms.uVertexJitter;
+      shader.vertexShader = 'uniform float uVertexJitter;\n' + shader.vertexShader.replace(
+        '#include <project_vertex>',
+        `#include <project_vertex>\n${PS1_JITTER_GLSL}`
+      );
+    }
+
+    function setVertexJitter(pct) {
+      const prev = sharedUniforms.uVertexJitter.value;
+      const next = pct / 100;
+      sharedUniforms.uVertexJitter.value = next;
+      document.getElementById('jitterSlider').value = pct;
+      document.getElementById('jitterLabel').textContent = `${pct}%`;
+
+      if (currentMode === 'texture' && ((prev === 0 && next > 0) || (prev > 0 && next === 0))) {
+        applyRenderMode('texture');
+      }
+    }
+
     function createModeMaterial(mode, origMat) {
+      if (mode === 'texture') {
+        const m = origMat ? origMat.clone() : new THREE.MeshStandardMaterial({ color: 0xcccccc });
+        m.onBeforeCompile = (shader) => attachVertexJitterToShader(shader);
+        m.customProgramCacheKey = () => 'kobo-tex-jitter-v1';
+        disposableModeMaterials.push(m);
+        return m;
+      }
+
       if (mode === 'solid') {
         const m = new THREE.MeshStandardMaterial({
           color: 0xfcf3ea,
           roughness: 0.56,
           metalness: 0.04
         });
+        m.onBeforeCompile = (shader) => attachVertexJitterToShader(shader);
+        m.customProgramCacheKey = () => 'kobo-solid-v2';
         disposableModeMaterials.push(m);
         return m;
       }
@@ -1666,6 +2114,8 @@
           color: currentMood === 'midnight' ? 0xf48fb1 : 0x964958,
           wireframe: true
         });
+        m.onBeforeCompile = (shader) => attachVertexJitterToShader(shader);
+        m.customProgramCacheKey = () => 'kobo-wire-v2';
         disposableModeMaterials.push(m);
         return m;
       }
@@ -1677,6 +2127,8 @@
           roughness: 0.16,
           envMapIntensity: 1.35
         });
+        m.onBeforeCompile = (shader) => attachVertexJitterToShader(shader);
+        m.customProgramCacheKey = () => 'kobo-gold-v2';
         disposableModeMaterials.push(m);
         return m;
       }
@@ -1688,24 +2140,32 @@
           roughness: 0.03,
           envMapIntensity: 1.45
         });
+        m.onBeforeCompile = (shader) => attachVertexJitterToShader(shader);
+        m.customProgramCacheKey = () => 'kobo-chrome-v2';
         disposableModeMaterials.push(m);
         return m;
       }
 
       if (mode === 'normals') {
         const m = new THREE.MeshNormalMaterial();
+        m.onBeforeCompile = (shader) => attachVertexJitterToShader(shader);
+        m.customProgramCacheKey = () => 'kobo-normals-v2';
         disposableModeMaterials.push(m);
         return m;
       }
 
       if (mode === 'holographic') {
         const m = new THREE.ShaderMaterial({
-          uniforms: { uTime: sharedUniforms.uTime },
+          uniforms: {
+            uTime: sharedUniforms.uTime,
+            uVertexJitter: sharedUniforms.uVertexJitter
+          },
           transparent: true,
           depthWrite: false,
           blending: THREE.NormalBlending,
           side: THREE.DoubleSide,
           vertexShader: `
+            uniform float uVertexJitter;
             varying vec3 vNormalW;
             varying vec3 vViewDir;
             varying vec3 vWorldPos;
@@ -1726,6 +2186,7 @@
               vec3 vd = cameraPosition - wp.xyz;
               vViewDir = length(vd) > 0.0001 ? normalize(vd) : vec3(0.0, 0.0, 1.0);
               gl_Position = projectionMatrix * viewMatrix * wp;
+              ${PS1_JITTER_GLSL}
             }
           `,
           fragmentShader: `
@@ -1752,7 +2213,6 @@
       }
 
       if (mode === 'xray') {
-        // Textured Radiographic X-Ray: preserves original albedo maps, base colors & vertex colors
         const m = new THREE.MeshStandardMaterial({
           map: origMat?.map || null,
           color: origMat?.color ? origMat.color.clone() : new THREE.Color(0xffffff),
@@ -1766,12 +2226,15 @@
         });
 
         m.onBeforeCompile = (shader) => {
+          shader.uniforms.uVertexJitter = sharedUniforms.uVertexJitter;
           shader.vertexShader = `
+            uniform float uVertexJitter;
             varying vec3 vXrayNormalW;
             varying vec3 vXrayViewDir;
           ` + shader.vertexShader.replace(
             '#include <project_vertex>',
             `#include <project_vertex>
+            ${PS1_JITTER_GLSL}
             vec4 xrayWp = modelMatrix * vec4(transformed, 1.0);
             vec3 xrayWn = mat3(modelMatrix) * objectNormal;
             vXrayNormalW = length(xrayWn) > 0.0001 ? normalize(xrayWn) : vec3(0.0, 1.0, 0.0);
@@ -1797,7 +2260,7 @@
             `
           );
         };
-        m.customProgramCacheKey = () => 'kobo-textured-xray-v1';
+        m.customProgramCacheKey = () => 'kobo-textured-xray-v2';
         disposableModeMaterials.push(m);
         return m;
       }
@@ -1809,9 +2272,13 @@
           metalness: 0.05
         });
         m.onBeforeCompile = (shader) => {
-          shader.vertexShader = 'varying vec3 vWorldPos;\n' + shader.vertexShader.replace(
+          shader.uniforms.uVertexJitter = sharedUniforms.uVertexJitter;
+          shader.vertexShader = 'uniform float uVertexJitter;\nvarying vec3 vWorldPos;\n' + shader.vertexShader.replace(
             '#include <begin_vertex>',
             '#include <begin_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;'
+          ).replace(
+            '#include <project_vertex>',
+            `#include <project_vertex>\n${PS1_JITTER_GLSL}`
           );
           shader.fragmentShader = `
             varying vec3 vWorldPos;
@@ -1852,6 +2319,7 @@
             `
           );
         };
+        m.customProgramCacheKey = () => 'kobo-granite-v2';
         disposableModeMaterials.push(m);
         return m;
       }
@@ -1864,9 +2332,11 @@
         base.onBeforeCompile = (shader) => {
           shader.uniforms.uTime = sharedUniforms.uTime;
           shader.uniforms.uGlitchPulse = sharedUniforms.uGlitchPulse;
+          shader.uniforms.uVertexJitter = sharedUniforms.uVertexJitter;
           shader.vertexShader = `
             uniform float uTime;
             uniform float uGlitchPulse;
+            uniform float uVertexJitter;
             varying vec3 vGlitchPos;
             float gHash(vec2 p) {
               return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -1882,6 +2352,9 @@
             transformed.x += shift;
             vGlitchPos = transformed;
             `
+          ).replace(
+            '#include <project_vertex>',
+            `#include <project_vertex>\n${PS1_JITTER_GLSL}`
           );
 
           shader.fragmentShader = `
@@ -1907,6 +2380,7 @@
             `
           );
         };
+        base.customProgramCacheKey = () => 'kobo-glitch-v2';
         disposableModeMaterials.push(base);
         return base;
       }
@@ -1926,12 +2400,14 @@
       if (!currentModel) return;
       clearModeMaterials();
 
+      const needsJitterWrapper = sharedUniforms.uVertexJitter.value > 0.001;
+
       currentModel.traverse((child) => {
         if (!child.isMesh) return;
         const orig = child.userData.origMaterial;
         if (!orig) return;
 
-        if (mode === 'texture') {
+        if (mode === 'texture' && !needsJitterWrapper) {
           child.material = orig;
         } else if (Array.isArray(orig)) {
           child.material = orig.map((m) => createModeMaterial(mode, m));
@@ -1939,6 +2415,8 @@
           child.material = createModeMaterial(mode, orig);
         }
       });
+
+      applyTextureFiltering();
     }
 
     function triggerGlitchPulse() {
@@ -1950,7 +2428,7 @@
     }
 
     // =========================================================
-    // 5. PHYSICAL SPAWN CHOREOGRAPHY & ASPECT-AWARE CAMERA
+    // 6. PHYSICAL SPAWN CHOREOGRAPHY & ASPECT-AWARE CAMERA
     // =========================================================
     const spawnState = { active: false, type: 'pop', t: 0, duration: 0.65 };
 
@@ -2053,7 +2531,7 @@
     }
 
     // =========================================================
-    // 6. GLTF / GLB LOADING & STUDIO PLACEHOLDER
+    // 7. GLTF / GLB LOADING & STUDIO PLACEHOLDER
     // =========================================================
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -2080,9 +2558,7 @@
       modelCenter.copy(framedBox.getCenter(new THREE.Vector3()));
       modelRadius = maxDim;
 
-      camera.near = Math.max(maxDim / 500, 0.0001);
-      camera.far = Math.max(maxDim * 500, 100);
-      camera.updateProjectionMatrix();
+      updateCameraOptics();
 
       const footprint = Math.max(framedSize.x, framedSize.z, maxDim * 0.5);
       plinthGroup.scale.setScalar(footprint * 0.78);
@@ -2283,9 +2759,10 @@
     }
 
     spawnDemoModel();
+    updateResolutionReadout();
 
     // =========================================================
-    // 7. STUDIO SNAPSHOT EXPORT (STAGE PNG & TRANSPARENT CUTOUT)
+    // 8. STUDIO SNAPSHOT EXPORT (STAGE PNG & TRANSPARENT CUTOUT)
     // =========================================================
     function captureSnapshot(transparentBg = false) {
       playTick();
@@ -2331,7 +2808,7 @@
     }
 
     // =========================================================
-    // 8. UI & INPUT WIRING
+    // 9. UI & INPUT WIRING
     // =========================================================
     function handleFile(file) {
       if (!file) return;
@@ -2356,6 +2833,87 @@
 
     document.getElementById('glitchPulseBtn').addEventListener('click', triggerGlitchPulse);
 
+    // Engine & Graphics Wiring
+    document.getElementById('gfxPresetGroup').addEventListener('click', (e) => {
+      const btn = e.target.closest('.seg-btn');
+      if (btn) {
+        playTick();
+        applyGraphicsPreset(btn.dataset.preset);
+      }
+    });
+
+    document.getElementById('resScaleSlider').addEventListener('input', (e) => {
+      clearActivePresetHighlight();
+      resolutionScale = parseInt(e.target.value, 10) / 100;
+      applyResolutionScale();
+    });
+
+    document.getElementById('pixelFilterToggle').addEventListener('change', (e) => {
+      playTick();
+      clearActivePresetHighlight();
+      setPixelFilter(e.target.checked);
+    });
+
+    document.getElementById('fpsCapGroup').addEventListener('click', (e) => {
+      const btn = e.target.closest('.seg-btn');
+      if (btn) {
+        playTick();
+        clearActivePresetHighlight();
+        setFpsCap(parseInt(btn.dataset.fps, 10));
+      }
+    });
+
+    document.getElementById('shadowQualGroup').addEventListener('click', (e) => {
+      const btn = e.target.closest('.seg-btn');
+      if (btn) {
+        playTick();
+        clearActivePresetHighlight();
+        setShadowQuality(btn.dataset.shadow);
+      }
+    });
+
+    document.getElementById('msaaGroup').addEventListener('click', (e) => {
+      const btn = e.target.closest('.seg-btn');
+      if (btn) {
+        playTick();
+        clearActivePresetHighlight();
+        setMsaaSamples(parseInt(btn.dataset.msaa, 10));
+      }
+    });
+
+    document.getElementById('texFilterGroup').addEventListener('click', (e) => {
+      const btn = e.target.closest('.seg-btn');
+      if (btn) {
+        playTick();
+        clearActivePresetHighlight();
+        setTextureFilterMode(btn.dataset.texfilter);
+      }
+    });
+
+    document.getElementById('jitterSlider').addEventListener('input', (e) => {
+      clearActivePresetHighlight();
+      setVertexJitter(parseInt(e.target.value, 10));
+    });
+
+    document.getElementById('color16Toggle').addEventListener('change', (e) => {
+      playTick();
+      clearActivePresetHighlight();
+      color16Pass.enabled = e.target.checked;
+    });
+
+    document.getElementById('fovSlider').addEventListener('input', (e) => {
+      fovDeg = parseInt(e.target.value, 10);
+      document.getElementById('fovLabel').textContent = String(fovDeg).padStart(3, '0') + '°';
+      updateCameraOptics();
+    });
+
+    document.getElementById('sliceSlider').addEventListener('input', (e) => {
+      slicePct = parseInt(e.target.value, 10);
+      document.getElementById('sliceLabel').textContent = `${slicePct}%`;
+      updateCameraOptics();
+    });
+
+    // Pedestal & Studio Lighting Wiring
     document.getElementById('pedestalGroup').addEventListener('click', (e) => {
       const btn = e.target.closest('.seg-btn');
       if (btn) {
@@ -2510,16 +3068,42 @@
     });
 
     // =========================================================
-    // 9. RENDER & TELEMETRY LOOP
+    // 10. FRAME-LIMITED RENDER & LIVE TELEMETRY LOOP
     // =========================================================
     const vfTelemetry = document.getElementById('vf-telemetry');
+    const enginePerfBadge = document.getElementById('enginePerfBadge');
     const offsetVec = new THREE.Vector3();
     const spherical = new THREE.Spherical();
-    const clock = new THREE.Clock();
 
-    function animate() {
+    let lastRenderTime = performance.now();
+    let fpsFrameCount = 0;
+    let fpsLastSample = performance.now();
+
+    function animate(now) {
       requestAnimationFrame(animate);
-      const delta = clock.getDelta();
+
+      const elapsedMs = now - lastRenderTime;
+      if (targetFps > 0) {
+        const minInterval = 1000 / targetFps;
+        if (elapsedMs < minInterval - 1.2) {
+          return;
+        }
+      }
+
+      const delta = Math.min(elapsedMs / 1000, 0.25);
+      lastRenderTime = now;
+
+      // Live FPS & Frame-Time Counter
+      fpsFrameCount++;
+      const sampleWindow = now - fpsLastSample;
+      if (sampleWindow >= 350) {
+        const fps = Math.round((fpsFrameCount * 1000) / sampleWindow);
+        const ms = sampleWindow / Math.max(fpsFrameCount, 1);
+        enginePerfBadge.textContent = `${fps} FPS · ${ms.toFixed(1)}ms`;
+        fpsFrameCount = 0;
+        fpsLastSample = now;
+      }
+
       sharedUniforms.uTime.value += delta;
 
       if (sharedUniforms.uGlitchPulse.value > 0) {
@@ -2550,15 +3134,19 @@
 
       controls.update();
 
+      if (slicePct > 0) {
+        updateCameraOptics();
+      }
+
       offsetVec.copy(camera.position).sub(controls.target);
       spherical.setFromVector3(offsetVec);
       const az = Math.round(((THREE.MathUtils.radToDeg(spherical.theta) % 360) + 360) % 360);
       const el = Math.round(90 - THREE.MathUtils.radToDeg(spherical.phi));
-      vfTelemetry.textContent = `AZ ${String(az).padStart(3, '0')}° · EL ${el >= 0 ? '+' : ''}${String(el).padStart(2, '0')}°`;
+      vfTelemetry.textContent = `AZ ${String(az).padStart(3, '0')}° · EL ${el >= 0 ? '+' : ''}${String(el).padStart(2, '0')}° · FOV ${String(fovDeg).padStart(2, '0')}°`;
 
       composer.render();
     }
-    animate();
+    requestAnimationFrame(animate);
   </script>
 </body>
 </html>
