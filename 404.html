@@ -13,6 +13,10 @@
       const requestedPath = window.location.pathname || '/';
       const normalizedPath = requestedPath.toLowerCase().replace(/\/+$/, '') || '/';
       const knownRoutes = new Set([
+        // Canonical routes matching the real content filenames.
+        '/01_about', '/02_vhsmultiverse', '/03_humanart', '/04_projects',
+        '/05_storytime', '/06_music', '/07_contact', '/08_donate',
+        // Legacy aliases remain supported for existing bookmarks.
         '/about', '/vhsmultiverse', '/humanart', '/projects',
         '/storytime', '/music', '/contact', '/donate'
       ]);

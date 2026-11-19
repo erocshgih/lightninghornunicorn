@@ -4629,6 +4629,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'CONTACT':        '07_contact.html',
     'DONATE':         '08_donate.html'
   };
+  // Canonical browser routes mirror the real HTML filenames (without .html).
+  // The shorter legacy routes remain accepted as aliases for old bookmarks.
   const categoryPaths = {
     'ABOUT': '/01_about',
     'VHS MULTIVERSE': '/02_vhsmultiverse',
@@ -4639,8 +4641,19 @@ document.addEventListener('DOMContentLoaded', () => {
     'CONTACT': '/07_contact',
     'DONATE': '/08_donate'
   };
+  const legacyCategoryPaths = {
+    'ABOUT': '/about',
+    'VHS MULTIVERSE': '/vhsmultiverse',
+    'HUMANART': '/humanart',
+    'PROJECTS': '/projects',
+    'STORYTIME': '/storytime',
+    'MUSIC': '/music',
+    'CONTACT': '/contact',
+    'DONATE': '/donate'
+  };
   const routeCategories = Object.fromEntries(
-    Object.entries(categoryPaths).map(([category, route]) => [route, category])
+    [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths)]
+      .map(([category, route]) => [route, category])
   );
   const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
 
@@ -4662,10 +4675,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function categoryFromHash(hash = window.location.hash) {
     const normalized = hash ? (hash.startsWith('#/') ? hash : '#/' + hash.slice(1).replace(/^\//, '')) : '';
-    const legacyHashRoutes = Object.fromEntries(
-      Object.entries(categoryPaths).map(([category, route]) => [route.replace(/^\//, '#/'), category])
+    const hashRoutes = Object.fromEntries(
+      Object.entries(routeCategories).map(([route, category]) => [route.replace(/^\//, '#/'), category])
     );
-    return legacyHashRoutes[normalized.replace(/\/+$/, '')] || null;
+    return hashRoutes[normalized.replace(/\/+$/, '')] || null;
   }
 
   function categoryFromLocation() {
