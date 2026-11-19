@@ -1,85 +1,434 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Three.js GLB & Glitch Tester</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AETHER // Universal 3D GLB Viewer</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0b111e;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, sans-serif;
-      overflow: hidden;
-      height: 100vh;
+    :root {
+      --bg-base: #090b10;
+      --panel-bg: rgba(15, 19, 28, 0.78);
+      --panel-border: rgba(255, 255, 255, 0.11);
+      --surface: rgba(255, 255, 255, 0.05);
+      --surface-hover: rgba(255, 255, 255, 0.11);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --pink: #f43f5e;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 7px;
     }
-    #ui {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      z-index: 10;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 14px 16px;
-      width: 300px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
-    h1 { font-size: 15px; margin-bottom: 10px; color: #ff2a85; }
-    .btn {
-      display: inline-block;
+
+    html, body {
       width: 100%;
-      padding: 9px 12px;
-      background: #ff2a85;
-      color: #fff;
-      font-weight: 600;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-base);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      user-select: none;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    /* Top Floating Header (Always accessible on Desktop & Mobile) */
+    #topbar {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .top-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .glass-pill {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .brand {
       font-size: 13px;
-      text-align: center;
-      border: none;
-      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      font-weight: 600;
       cursor: pointer;
-      margin-bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.4);
+      transition: transform 0.12s, filter 0.15s;
     }
-    .btn:hover { background: #e01e72; }
-    .btn-secondary {
-      background: #1e293b;
-      border: 1px solid rgba(255,255,255,0.15);
-      margin-top: 6px;
+
+    .btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .icon-btn {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--text-main);
+      border: 1px solid var(--panel-border);
+      border-radius: 999px;
+      height: 34px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      transition: background 0.15s, border-color 0.15s;
     }
-    .btn-secondary:hover { background: #334155; }
-    .row {
+
+    .icon-btn:hover { background: rgba(30, 41, 59, 0.9); border-color: rgba(255, 255, 255, 0.25); }
+    .icon-btn.active { border-color: var(--accent); color: var(--accent); }
+
+    /* Sound Toast Pop-up */
+    #sound-toast {
+      position: fixed;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-12px) scale(0.92);
+      z-index: 30;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 28px var(--accent-glow);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #sound-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    #sound-toast .sfx-word {
+      color: #38bdf8;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    /* Main Control Panel - Adaptive Landscape vs Portrait */
+    #inspector {
+      position: fixed;
+      top: 62px;
+      left: 14px;
+      bottom: 14px;
+      width: 316px;
+      z-index: 15;
+      background: var(--panel-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s;
+    }
+
+    #inspector::-webkit-scrollbar { width: 5px; }
+    #inspector::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
+
+    body.ui-collapsed #inspector {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-20px);
+    }
+
+    /* Portrait / Vertical Window Adaptation */
+    @media (max-aspect-ratio: 1/1), (max-width: 740px) {
+      #inspector {
+        top: auto;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        width: auto;
+        max-height: 44vh;
+        border-radius: var(--radius-lg);
+        padding: 12px;
+        gap: 12px;
+      }
+
+      body.ui-collapsed #inspector {
+        transform: translateY(24px);
+      }
+
+      .brand-sub { display: none; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 11px;
+    }
+
+    .card-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--text-muted);
+      margin-bottom: 9px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
-      margin-top: 8px;
-      color: #94a3b8;
     }
-    #status {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      font-size: 12px;
-      line-height: 1.5;
-      color: #cbd5e1;
+
+    /* Shader / Render Mode Grid */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
     }
-    #dropzone {
-      position: fixed;
-      inset: 0;
+
+    @media (max-aspect-ratio: 1/1), (max-width: 740px) {
+      .mode-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .mode-btn {
+      background: rgba(15, 23, 42, 0.65);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: var(--radius-sm);
+      padding: 7px 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      font-size: 20px;
-      font-weight: 600;
-      color: #ff2a85;
-      background: rgba(11, 17, 30, 0.75);
-      border: 3px dashed #ff2a85;
-      opacity: 0;
-      transition: opacity 0.15s;
-      z-index: 20;
+      gap: 6px;
+      transition: all 0.14s ease;
+      text-align: left;
     }
+
+    .mode-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text-main);
+    }
+
+    .mode-btn.active {
+      background: rgba(56, 189, 248, 0.16);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Controls & Sliders */
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    .row:last-child { margin-bottom: 0; }
+
+    select {
+      width: 100%;
+      background: rgba(9, 11, 16, 0.8);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-sm);
+      padding: 7px 9px;
+      font-size: 12px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      max-width: 150px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    input[type="color"] {
+      width: 28px;
+      height: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sub {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.14s;
+    }
+
+    .btn-sub:hover:not(:disabled) { background: rgba(255, 255, 255, 0.14); }
+    .btn-sub:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-sub.active { border-color: var(--accent); color: var(--accent); }
+
+    /* Soundboard Chips */
+    .sfx-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .sfx-chip {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      border-radius: 6px;
+      padding: 5px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.1s, border-color 0.15s, color 0.15s;
+    }
+
+    .sfx-chip:hover {
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      font-size: 11.5px;
+    }
+
+    .stat-box {
+      background: rgba(9, 11, 16, 0.55);
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-label { font-size: 10px; color: var(--text-muted); display: block; }
+    .stat-val { font-weight: 700; color: var(--text-main); }
+
+    /* Fullscreen Drag & Drop Overlay */
+    #dropzone {
+      position: fixed;
+      inset: 12px;
+      z-index: 50;
+      border-radius: 20px;
+      background: rgba(9, 11, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px dashed var(--accent);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.16s ease;
+    }
+
     body.dragging #dropzone { opacity: 1; }
+    #dropzone h2 { font-size: 22px; color: #fff; }
+    #dropzone p { font-size: 13px; color: var(--text-muted); }
   </style>
 
   <script type="importmap">
@@ -92,161 +441,899 @@
   </script>
 </head>
 <body>
-  <div id="ui">
-    <h1>GLB & Visor-Glitch Tester</h1>
-    <label class="btn">
-      .GLB Datei auswählen
-      <input type="file" id="fileInput" accept=".glb,.gltf" hidden />
-    </label>
-    <div style="font-size: 11px; color: #94a3b8; text-align: center;">
-      oder .glb einfach ins Fenster ziehen
+  <div id="canvas-container"></div>
+
+  <!-- Top Floating Bar -->
+  <header id="topbar">
+    <div class="top-group">
+      <div class="glass-pill">
+        <span class="brand">GLB LAB</span>
+        <span class="brand-sub" style="font-size: 11.5px; color: var(--text-muted);">3D Inspector</span>
+      </div>
+      <label class="btn-primary" title="Load .glb or .gltf file">
+        <span>+ Load GLB</span>
+        <input type="file" id="fileInput" accept=".glb,.gltf" hidden />
+      </label>
     </div>
 
-    <div class="row">
-      <label for="bloomToggle">Neon-Glow (Bloom)</label>
-      <input type="checkbox" id="bloomToggle" checked />
+    <div class="top-group">
+      <button id="soundToggleBtn" class="icon-btn active" title="Toggle Load Sound Effects">🔊 SFX On</button>
+      <button id="resetCamBtn" class="icon-btn" title="Reset Camera [R]">⌖ Reset</button>
+      <button id="toggleUiBtn" class="icon-btn active" title="Toggle Panel [H]">☰ Panel</button>
     </div>
-    <div class="row">
-      <label for="speedRange">Speed: <span id="speedVal">1.0x</span></label>
-      <input type="range" id="speedRange" min="0" max="2" step="0.1" value="1" style="width: 130px;" />
-    </div>
-    <button id="playPauseBtn" class="btn btn-secondary" disabled>Pause / Play</button>
+  </header>
 
-    <div id="status">Warte auf .glb Datei...</div>
+  <!-- Sound Feedback Pill -->
+  <div id="sound-toast">
+    <span>🔊</span>
+    <span class="sfx-word" id="toastWord">POP!</span>
+    <span id="toastFile" style="color: var(--text-muted); font-weight: 500;">model.glb</span>
   </div>
 
-  <div id="dropzone">.GLB hier loslassen</div>
+  <!-- Adaptive Inspector Sidebar / Bottom Drawer -->
+  <aside id="inspector">
+    <!-- Render / Shader Modes -->
+    <div class="card">
+      <div class="card-title">
+        <span>Render Mode</span>
+        <span id="activeModeBadge" style="color: var(--accent);">Texture</span>
+      </div>
+      <div class="mode-grid" id="modeGrid">
+        <button class="mode-btn active" data-mode="texture"><span class="dot" style="background:#38bdf8;"></span>Texture</button>
+        <button class="mode-btn" data-mode="solid"><span class="dot" style="background:#cbd5e1;"></span>Solid</button>
+        <button class="mode-btn" data-mode="wireframe"><span class="dot" style="background:#22d3ee;"></span>Wireframe</button>
+        <button class="mode-btn" data-mode="holographic"><span class="dot" style="background:#00f0ff; box-shadow:0 0 6px #00f0ff;"></span>Holographic</button>
+        <button class="mode-btn" data-mode="granite"><span class="dot" style="background:#78716c;"></span>Granite</button>
+        <button class="mode-btn" data-mode="gold"><span class="dot" style="background:#fbbf24;"></span>Gold</button>
+        <button class="mode-btn" data-mode="glitch"><span class="dot" style="background:#f43f5e; box-shadow:0 0 6px #f43f5e;"></span>Glitch</button>
+        <button class="mode-btn" data-mode="chrome"><span class="dot" style="background:#e2e8f0;"></span>Chrome</button>
+        <button class="mode-btn" data-mode="xray"><span class="dot" style="background:#818cf8;"></span>X-Ray</button>
+        <button class="mode-btn" data-mode="normals"><span class="dot" style="background:linear-gradient(135deg,#f43f5e,#22c55e,#3b82f6);"></span>Normals</button>
+      </div>
+    </div>
+
+    <!-- Animation Controls -->
+    <div class="card">
+      <div class="card-title">
+        <span>Animations</span>
+        <span id="timeLabel">0.00s</span>
+      </div>
+      <select id="animSelect" disabled>
+        <option>No animations in scene</option>
+      </select>
+      <div class="row">
+        <span>Timeline</span>
+        <input type="range" id="scrubber" min="0" max="1" step="0.001" value="0" disabled />
+      </div>
+      <div class="row">
+        <span>Speed (<span id="speedLabel">1.0x</span>)</span>
+        <input type="range" id="speedSlider" min="0" max="2.5" step="0.1" value="1" />
+      </div>
+      <div class="btn-row">
+        <button id="playBtn" class="btn-sub" disabled>Pause</button>
+        <button id="autoRotBtn" class="btn-sub">Auto-Rotate</button>
+      </div>
+    </div>
+
+    <!-- Load Sound FX Selector -->
+    <div class="card">
+      <div class="card-title">
+        <span>Load Sound Effect</span>
+        <span style="font-size:10px; color:var(--accent);">Click to test</span>
+      </div>
+      <select id="sfxModeSelect">
+        <option value="random" selected>🎲 Random (Pop / Push / Pew / Noodly / Boing / Dong)</option>
+        <option value="pop">Pop</option>
+        <option value="push">Push</option>
+        <option value="pew">Pew</option>
+        <option value="noodly">Noodly</option>
+        <option value="boing">Boing</option>
+        <option value="dong">Dong</option>
+      </select>
+      <div class="sfx-grid">
+        <button class="sfx-chip" data-sfx="pop">POP</button>
+        <button class="sfx-chip" data-sfx="push">PUSH</button>
+        <button class="sfx-chip" data-sfx="pew">PEW</button>
+        <button class="sfx-chip" data-sfx="noodly">NOODLY</button>
+        <button class="sfx-chip" data-sfx="boing">BOING</button>
+        <button class="sfx-chip" data-sfx="dong">DONG</button>
+      </div>
+    </div>
+
+    <!-- Scene & Lighting -->
+    <div class="card">
+      <div class="card-title"><span>Stage & Lighting</span></div>
+      <div class="row">
+        <span>Exposure (<span id="expLabel">1.0</span>)</span>
+        <input type="range" id="expSlider" min="0.2" max="2.5" step="0.1" value="1.0" />
+      </div>
+      <div class="row">
+        <label for="bloomToggle">Neon Bloom</label>
+        <input type="checkbox" id="bloomToggle" checked />
+      </div>
+      <div class="row">
+        <label for="gridToggle">Floor Grid</label>
+        <input type="checkbox" id="gridToggle" checked />
+      </div>
+      <div class="row">
+        <label for="bboxToggle">Bounding Box</label>
+        <input type="checkbox" id="bboxToggle" />
+      </div>
+      <div class="row">
+        <label for="bgColor">Backdrop Color</label>
+        <input type="color" id="bgColor" value="#090b10" />
+      </div>
+    </div>
+
+    <!-- Model Telemetry -->
+    <div class="card">
+      <div class="card-title">
+        <span>Telemetry</span>
+        <span id="fileNameBadge" style="color:var(--text-main); max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Demo Mesh</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><span class="stat-label">Meshes</span><span class="stat-val" id="statMeshes">1</span></div>
+        <div class="stat-box"><span class="stat-label">Triangles</span><span class="stat-val" id="statTris">0</span></div>
+        <div class="stat-box"><span class="stat-label">Materials</span><span class="stat-val" id="statMats">1</span></div>
+        <div class="stat-box"><span class="stat-label">Shape Keys</span><span class="stat-val" id="statMorphs">0</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Drag & Drop Overlay -->
+  <div id="dropzone">
+    <h2>Drop .GLB or .GLTF Here</h2>
+    <p>Supports PBR textures, Draco, Meshopt, Bones & Shape Keys</p>
+  </div>
 
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
     import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-    // 1. Renderer & Szene
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    // =========================================================
+    // 1. PROCEDURAL WEB AUDIO SYNTHESIZER (POP/PUSH/PEW/NOODLY/BOING/DONG)
+    // =========================================================
+    let audioCtx = null;
+    let sfxEnabled = true;
+    const SFX_LIST = ['pop', 'push', 'pew', 'noodly', 'boing', 'dong'];
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type, fileName = null) {
+      const chosen = type === 'random'
+        ? SFX_LIST[Math.floor(Math.random() * SFX_LIST.length)]
+        : type;
+
+      showSoundToast(chosen, fileName);
+      if (!sfxEnabled) return;
+
+      ensureAudio();
+      const now = audioCtx.currentTime;
+
+      if (chosen === 'pop') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(190, now);
+        osc.frequency.exponentialRampToValueAtTime(680, now + 0.075);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.45, now + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.095);
+      } else if (chosen === 'push') {
+        // Airy whoosh + soft low thud
+        const bufferSize = Math.floor(audioCtx.sampleRate * 0.22);
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = noiseBuffer;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(300, now);
+        filter.frequency.exponentialRampToValueAtTime(1400, now + 0.16);
+        filter.Q.value = 1.8;
+
+        const nGain = audioCtx.createGain();
+        nGain.gain.setValueAtTime(0.01, now);
+        nGain.gain.linearRampToValueAtTime(0.35, now + 0.05);
+        nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        noise.connect(filter).connect(nGain).connect(audioCtx.destination);
+        noise.start(now);
+
+        const sub = audioCtx.createOscillator();
+        const sGain = audioCtx.createGain();
+        sub.type = 'triangle';
+        sub.frequency.setValueAtTime(135, now);
+        sub.frequency.exponentialRampToValueAtTime(48, now + 0.18);
+        sGain.gain.setValueAtTime(0.35, now);
+        sGain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+        sub.connect(sGain).connect(audioCtx.destination);
+        sub.start(now);
+        sub.stop(now + 0.2);
+      } else if (chosen === 'pew') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(1450, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.24);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(3200, now);
+        filter.frequency.exponentialRampToValueAtTime(400, now + 0.24);
+
+        gain.gain.setValueAtTime(0.32, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(filter).connect(gain).connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.26);
+      } else if (chosen === 'noodly') {
+        const osc = audioCtx.createOscillator();
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(310, now);
+        osc.frequency.linearRampToValueAtTime(490, now + 0.18);
+        osc.frequency.linearRampToValueAtTime(270, now + 0.42);
+
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(18, now);
+        lfoGain.gain.setValueAtTime(55, now);
+
+        lfo.connect(lfoGain).connect(osc.frequency);
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.35, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(now);
+        lfo.start(now);
+        osc.stop(now + 0.46);
+        lfo.stop(now + 0.46);
+      } else if (chosen === 'boing') {
+        const osc = audioCtx.createOscillator();
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(145, now);
+        osc.frequency.exponentialRampToValueAtTime(430, now + 0.14);
+        osc.frequency.exponentialRampToValueAtTime(290, now + 0.55);
+
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(14, now);
+        lfoGain.gain.setValueAtTime(65, now);
+        lfoGain.gain.exponentialRampToValueAtTime(2, now + 0.55);
+
+        lfo.connect(lfoGain).connect(osc.frequency);
+        gain.gain.setValueAtTime(0.42, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.58);
+
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(now);
+        lfo.start(now);
+        osc.stop(now + 0.6);
+        lfo.stop(now + 0.6);
+      } else if (chosen === 'dong') {
+        const freqs = [196, 293.66, 466.16, 587.33];
+        freqs.forEach((f, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = idx === 0 ? 'sine' : 'triangle';
+          osc.frequency.setValueAtTime(f, now);
+          const amp = 0.28 / (idx + 1);
+          const dur = 1.35 - idx * 0.22;
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(amp, now + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0008, now + dur);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + dur + 0.02);
+        });
+      }
+    }
+
+    let toastTimer = null;
+    function showSoundToast(word, fileName) {
+      const toast = document.getElementById('sound-toast');
+      document.getElementById('toastWord').textContent = word.toUpperCase() + '!';
+      document.getElementById('toastFile').textContent = fileName ? `— ${fileName}` : '';
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2100);
+    }
+
+    // =========================================================
+    // 2. THREE.JS SCENE, RENDERER & ADAPTIVE VIEWPORT
+    // =========================================================
+    const container = document.getElementById('canvas-container');
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
-    document.body.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b111e);
+    scene.background = new THREE.Color('#090b10');
 
-    // Studio-Umgebung für realistische Glas- & Metall-Reflexionen
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100);
-    camera.position.set(0, 0.3, 1.5);
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.01, 1000);
+    camera.position.set(2.2, 1.5, 2.8);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
 
-    // 2. Post-Processing (Neon-Bloom)
+    const gridHelper = new THREE.GridHelper(10, 24, 0x334155, 0x161e2e);
+    scene.add(gridHelper);
+
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-
     const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.85,  // Stärke
-      0.35,  // Radius
-      0.85   // Threshold (nur helle Emission glüht)
+      new THREE.Vector2(container.clientWidth, container.clientHeight),
+      0.65,
+      0.35,
+      0.88
     );
+    bloomPass.enabled = true;
     composer.addPass(bloomPass);
     composer.addPass(new OutputPass());
 
-    // 3. GLB Loader & Animations-Status
-    const loader = new GLTFLoader();
+    // ResizeObserver handles both landscape/portrait rotation & window splits seamlessly
+    const resizeObserver = new ResizeObserver(() => {
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      composer.setSize(w, h);
+    });
+    resizeObserver.observe(container);
+
+    // =========================================================
+    // 3. CUSTOM SHADER & MATERIAL MODES
+    // =========================================================
+    let currentMode = 'texture';
     let currentModel = null;
+    let bboxHelper = null;
     let mixer = null;
+    let clips = [];
+    let activeActions = [];
     let isPlaying = true;
-    const clock = new THREE.Clock();
+    let defaultCamPos = new THREE.Vector3(2.2, 1.5, 2.8);
+    let defaultTarget = new THREE.Vector3(0, 0.6, 0);
+    const sharedUniforms = { uTime: { value: 0 } };
+    let disposableModeMaterials = [];
 
-    const statusEl = document.getElementById('status');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const bloomToggle = document.getElementById('bloomToggle');
-    const speedRange = document.getElementById('speedRange');
-    const speedVal = document.getElementById('speedVal');
+    function clearModeMaterials() {
+      disposableModeMaterials.forEach((m) => m.dispose());
+      disposableModeMaterials = [];
+    }
 
-    bloomToggle.addEventListener('change', () => {
-      bloomPass.enabled = bloomToggle.checked;
-    });
+    function createModeMaterial(mode, origMat) {
+      if (mode === 'solid') {
+        const m = new THREE.MeshStandardMaterial({
+          color: 0xd8dee9,
+          roughness: 0.62,
+          metalness: 0.06
+        });
+        disposableModeMaterials.push(m);
+        return m;
+      }
 
-    speedRange.addEventListener('input', () => {
-      const val = parseFloat(speedRange.value);
-      speedVal.textContent = val.toFixed(1) + 'x';
-      if (mixer) mixer.timeScale = val;
-    });
+      if (mode === 'wireframe') {
+        const m = new THREE.MeshBasicMaterial({
+          color: 0x38bdf8,
+          wireframe: true
+        });
+        disposableModeMaterials.push(m);
+        return m;
+      }
 
-    playPauseBtn.addEventListener('click', () => {
-      isPlaying = !isPlaying;
-    });
+      if (mode === 'gold') {
+        const m = new THREE.MeshStandardMaterial({
+          color: 0xffcf54,
+          metalness: 1.0,
+          roughness: 0.17,
+          envMapIntensity: 1.35
+        });
+        disposableModeMaterials.push(m);
+        return m;
+      }
 
-    function loadGLBBuffer(arrayBuffer, fileName) {
+      if (mode === 'chrome') {
+        const m = new THREE.MeshStandardMaterial({
+          color: 0xf8fafc,
+          metalness: 1.0,
+          roughness: 0.03,
+          envMapIntensity: 1.5
+        });
+        disposableModeMaterials.push(m);
+        return m;
+      }
+
+      if (mode === 'normals') {
+        const m = new THREE.MeshNormalMaterial();
+        disposableModeMaterials.push(m);
+        return m;
+      }
+
+      if (mode === 'holographic') {
+        const m = new THREE.ShaderMaterial({
+          uniforms: { uTime: sharedUniforms.uTime },
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          vertexShader: `
+            varying vec3 vNormalW;
+            varying vec3 vViewDir;
+            varying vec3 vWorldPos;
+            #include <morphtarget_pars_vertex>
+            #include <skinning_pars_vertex>
+            void main() {
+              #include <beginnormal_vertex>
+              #include <morphnormal_vertex>
+              #include <skinbase_vertex>
+              #include <skinnormal_vertex>
+              #include <begin_vertex>
+              #include <morphtarget_vertex>
+              #include <skinning_vertex>
+              vec4 wp = modelMatrix * vec4(transformed, 1.0);
+              vWorldPos = wp.xyz;
+              vNormalW = normalize(mat3(modelMatrix) * objectNormal);
+              vViewDir = normalize(cameraPosition - wp.xyz);
+              gl_Position = projectionMatrix * viewMatrix * wp;
+            }
+          `,
+          fragmentShader: `
+            uniform float uTime;
+            varying vec3 vNormalW;
+            varying vec3 vViewDir;
+            varying vec3 vWorldPos;
+            void main() {
+              float fresnel = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.2);
+              float scan = 0.65 + 0.35 * sin(vWorldPos.y * 95.0 - uTime * 6.0);
+              float sweep = smoothstep(0.85, 1.0, sin(vWorldPos.y * 4.0 - uTime * 2.2));
+              float flicker = 0.92 + 0.08 * sin(uTime * 37.0);
+              vec3 baseCol = mix(vec3(0.0, 0.72, 1.0), vec3(0.55, 0.95, 1.0), fresnel);
+              float alpha = clamp((fresnel * 0.85 + 0.14 + sweep * 0.35) * scan * flicker, 0.05, 0.95);
+              gl_FragColor = vec4(baseCol * (1.25 + sweep * 0.9), alpha);
+            }
+          `
+        });
+        disposableModeMaterials.push(m);
+        return m;
+      }
+
+      if (mode === 'xray') {
+        const m = new THREE.ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          vertexShader: `
+            varying vec3 vNormalW;
+            varying vec3 vViewDir;
+            #include <morphtarget_pars_vertex>
+            #include <skinning_pars_vertex>
+            void main() {
+              #include <beginnormal_vertex>
+              #include <morphnormal_vertex>
+              #include <skinbase_vertex>
+              #include <skinnormal_vertex>
+              #include <begin_vertex>
+              #include <morphtarget_vertex>
+              #include <skinning_vertex>
+              vec4 wp = modelMatrix * vec4(transformed, 1.0);
+              vNormalW = normalize(mat3(modelMatrix) * objectNormal);
+              vViewDir = normalize(cameraPosition - wp.xyz);
+              gl_Position = projectionMatrix * viewMatrix * wp;
+            }
+          `,
+          fragmentShader: `
+            varying vec3 vNormalW;
+            varying vec3 vViewDir;
+            void main() {
+              float edge = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.6);
+              vec3 col = mix(vec3(0.15, 0.25, 0.55), vec3(0.75, 0.88, 1.0), edge);
+              gl_FragColor = vec4(col * 1.15, 0.06 + edge * 0.78);
+            }
+          `
+        });
+        disposableModeMaterials.push(m);
+        return m;
+      }
+
+      if (mode === 'granite') {
+        const m = new THREE.MeshStandardMaterial({
+          color: 0x9ca3af,
+          roughness: 0.78,
+          metalness: 0.05
+        });
+        m.onBeforeCompile = (shader) => {
+          shader.vertexShader = 'varying vec3 vWorldPos;\n' + shader.vertexShader.replace(
+            '#include <begin_vertex>',
+            '#include <begin_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;'
+          );
+          shader.fragmentShader = `
+            varying vec3 vWorldPos;
+            float hash31(vec3 p) {
+              p = fract(p * 0.1031);
+              p += dot(p, p.yzx + 33.33);
+              return fract((p.x + p.y) * p.z);
+            }
+            float noise3(vec3 p) {
+              vec3 i = floor(p);
+              vec3 f = fract(p);
+              f = f * f * (3.0 - 2.0 * f);
+              return mix(
+                mix(mix(hash31(i), hash31(i + vec3(1,0,0)), f.x),
+                    mix(hash31(i + vec3(0,1,0)), hash31(i + vec3(1,1,0)), f.x), f.y),
+                mix(mix(hash31(i + vec3(0,0,1)), hash31(i + vec3(1,0,1)), f.x),
+                    mix(hash31(i + vec3(0,1,1)), hash31(i + vec3(1,1,1)), f.x), f.y), f.z
+              );
+            }
+          ` + shader.fragmentShader.replace(
+            '#include <color_fragment>',
+            `#include <color_fragment>
+            vec3 sp = vWorldPos * 55.0;
+            float n1 = noise3(sp);
+            float n2 = noise3(sp * 3.1 + 17.0);
+            float mica = step(0.76, n2);
+            float quartz = step(0.72, n1);
+            vec3 stoneCol = mix(vec3(0.46, 0.47, 0.49), vec3(0.68, 0.67, 0.65), n1);
+            stoneCol = mix(stoneCol, vec3(0.11, 0.12, 0.14), mica * 0.85);
+            stoneCol = mix(stoneCol, vec3(0.88, 0.89, 0.91), quartz * 0.55);
+            diffuseColor.rgb = stoneCol;
+            `
+          ).replace(
+            '#include <roughnessmap_fragment>',
+            `#include <roughnessmap_fragment>
+            float glint = step(0.84, noise3(vWorldPos * 170.0));
+            roughnessFactor = mix(0.82, 0.22, glint);
+            `
+          );
+        };
+        disposableModeMaterials.push(m);
+        return m;
+      }
+
+      if (mode === 'glitch') {
+        const base = (origMat && origMat.isMeshStandardMaterial)
+          ? origMat.clone()
+          : new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.7 });
+
+        base.onBeforeCompile = (shader) => {
+          shader.uniforms.uTime = sharedUniforms.uTime;
+          shader.vertexShader = `
+            uniform float uTime;
+            varying vec3 vGlitchPos;
+            float gHash(vec2 p) {
+              return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+            }
+          ` + shader.vertexShader.replace(
+            '#include <begin_vertex>',
+            `#include <begin_vertex>
+            float stepT = floor(uTime * 18.0);
+            float burst = step(0.72, gHash(vec2(stepT, 1.9)));
+            float slice = floor(transformed.y * 24.0);
+            float shift = (gHash(vec2(slice, stepT)) - 0.5) * 0.08 * burst;
+            transformed.x += shift;
+            vGlitchPos = transformed;
+            `
+          );
+
+          shader.fragmentShader = `
+            uniform float uTime;
+            varying vec3 vGlitchPos;
+            float fHash(vec2 p) {
+              return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+            }
+          ` + shader.fragmentShader.replace(
+            '#include <emissivemap_fragment>',
+            `#include <emissivemap_fragment>
+            float tStep = floor(uTime * 20.0);
+            float burst = step(0.68, fHash(vec2(tStep, 4.2)));
+            float band = floor(vGlitchPos.y * 32.0);
+            float bandNoise = fHash(vec2(band, tStep));
+            float scan = 0.75 + 0.25 * sin(vGlitchPos.y * 180.0);
+            vec3 neon = mix(vec3(1.0, 0.08, 0.52), vec3(0.05, 0.9, 1.0), step(0.5, bandNoise));
+            float mask = step(0.62, bandNoise) * burst;
+            diffuseColor.rgb *= scan;
+            totalEmissiveRadiance += neon * mask * 2.4;
+            `
+          );
+        };
+        disposableModeMaterials.push(base);
+        return base;
+      }
+
+      return origMat;
+    }
+
+    function applyRenderMode(mode) {
+      currentMode = mode;
+      document.getElementById('activeModeBadge').textContent =
+        mode.charAt(0).toUpperCase() + mode.slice(1);
+
+      document.querySelectorAll('.mode-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+
+      if (!currentModel) return;
+      clearModeMaterials();
+
+      currentModel.traverse((child) => {
+        if (!child.isMesh) return;
+        const orig = child.userData.origMaterial;
+        if (!orig) return;
+
+        if (mode === 'texture') {
+          child.material = orig;
+        } else if (Array.isArray(orig)) {
+          child.material = orig.map((m) => createModeMaterial(mode, m));
+        } else {
+          child.material = createModeMaterial(mode, orig);
+        }
+      });
+    }
+
+    // =========================================================
+    // 4. GLTF / GLB LOADING & DEMO MESH
+    // =========================================================
+    const loader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://unpkg.com/three@0.170.0/examples/jsm/libs/draco/gltf/');
+    loader.setDRACOLoader(dracoLoader);
+    loader.setMeshoptDecoder(MeshoptDecoder);
+
+    function fitCameraToModel(obj) {
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+
+      obj.position.x -= center.x;
+      obj.position.z -= center.z;
+      obj.position.y -= box.min.y;
+
+      const framedBox = new THREE.Box3().setFromObject(obj);
+      const framedCenter = framedBox.getCenter(new THREE.Vector3());
+      const dist = maxDim * 1.65;
+
+      camera.near = Math.max(maxDim / 500, 0.0001);
+      camera.far = Math.max(maxDim * 500, 100);
+      camera.updateProjectionMatrix();
+
+      defaultTarget.copy(framedCenter);
+      defaultCamPos.set(
+        framedCenter.x + dist * 0.52,
+        framedCenter.y + dist * 0.32,
+        framedCenter.z + dist * 0.88
+      );
+
+      camera.position.copy(defaultCamPos);
+      controls.target.copy(defaultTarget);
+      controls.update();
+
+      gridHelper.scale.setScalar(Math.max(maxDim * 0.35, 0.1));
+    }
+
+    function updateTelemetry(obj, name) {
+      let meshes = 0;
+      let tris = 0;
+      let morphs = 0;
+      const matSet = new Set();
+
+      obj.traverse((child) => {
+        if (child.isMesh) {
+          meshes++;
+          const g = child.geometry;
+          if (g) {
+            tris += g.index ? g.index.count / 3 : g.attributes.position.count / 3;
+          }
+          if (child.morphTargetDictionary) {
+            morphs += Object.keys(child.morphTargetDictionary).length;
+          }
+          const orig = child.userData.origMaterial;
+          const list = Array.isArray(orig) ? orig : [orig];
+          list.forEach((m) => m && matSet.add(m.uuid));
+        }
+      });
+
+      document.getElementById('fileNameBadge').textContent = name;
+      document.getElementById('statMeshes').textContent = meshes;
+      document.getElementById('statTris').textContent = Math.round(tris).toLocaleString('en-US');
+      document.getElementById('statMats').textContent = matSet.size;
+      document.getElementById('statMorphs').textContent = morphs;
+    }
+
+    function cleanupScene() {
+      clearModeMaterials();
+      if (bboxHelper) {
+        scene.remove(bboxHelper);
+        bboxHelper = null;
+      }
       if (currentModel) {
+        currentModel.traverse((child) => {
+          if (child.isMesh) {
+            child.geometry?.dispose();
+            const orig = child.userData.origMaterial;
+            const list = Array.isArray(orig) ? orig : [orig];
+            list.forEach((m) => m?.dispose());
+          }
+        });
         scene.remove(currentModel);
         currentModel = null;
       }
       mixer = null;
+      clips = [];
+      activeActions = [];
+    }
 
-      loader.parse(arrayBuffer, '', (gltf) => {
+    function setupAnimations(gltfAnimations) {
+      const animSelect = document.getElementById('animSelect');
+      const scrubber = document.getElementById('scrubber');
+      const playBtn = document.getElementById('playBtn');
+      const timeLabel = document.getElementById('timeLabel');
+
+      clips = gltfAnimations || [];
+      animSelect.innerHTML = '';
+
+      if (clips.length === 0) {
+        const opt = document.createElement('option');
+        opt.textContent = 'No animations in scene';
+        animSelect.appendChild(opt);
+        animSelect.disabled = true;
+        scrubber.disabled = true;
+        scrubber.value = 0;
+        timeLabel.textContent = '0.00s';
+        playBtn.disabled = true;
+        return;
+      }
+
+      mixer = new THREE.AnimationMixer(currentModel);
+      mixer.timeScale = parseFloat(document.getElementById('speedSlider').value);
+
+      if (clips.length > 1) {
+        const optAll = document.createElement('option');
+        optAll.value = 'all';
+        optAll.textContent = `Play All (${clips.length} clips)`;
+        animSelect.appendChild(optAll);
+      }
+
+      clips.forEach((clip, idx) => {
+        const opt = document.createElement('option');
+        opt.value = String(idx);
+        opt.textContent = `${clip.name || 'Clip ' + (idx + 1)} (${clip.duration.toFixed(2)}s)`;
+        animSelect.appendChild(opt);
+      });
+
+      animSelect.disabled = false;
+      scrubber.disabled = false;
+      playBtn.disabled = false;
+      playClipSelection(clips.length > 1 ? 'all' : '0');
+    }
+
+    function playClipSelection(val) {
+      if (!mixer || clips.length === 0) return;
+      mixer.stopAllAction();
+      activeActions = [];
+
+      if (val === 'all') {
+        clips.forEach((c) => {
+          const a = mixer.clipAction(c);
+          a.play();
+          activeActions.push(a);
+        });
+      } else {
+        const clip = clips[parseInt(val, 10)];
+        if (clip) {
+          const a = mixer.clipAction(clip);
+          a.play();
+          activeActions.push(a);
+        }
+      }
+
+      const maxDur = Math.max(...activeActions.map((a) => a.getClip().duration), 0.001);
+      const scrubber = document.getElementById('scrubber');
+      scrubber.max = maxDur;
+      scrubber.value = 0;
+      isPlaying = true;
+      document.getElementById('playBtn').textContent = 'Pause';
+    }
+
+    function loadGLBBuffer(buffer, fileName) {
+      cleanupScene();
+
+      loader.parse(buffer, '', (gltf) => {
         currentModel = gltf.scene;
-        scene.add(currentModel);
-
-        // Modell automatisch zentrieren & auf angenehme Größe skalieren
-        const box = new THREE.Box3().setFromObject(currentModel);
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z) || 1;
-        const scale = 1.0 / maxDim;
-
-        currentModel.scale.setScalar(scale);
-        currentModel.position.sub(center.multiplyScalar(scale));
-
-        camera.position.set(0, 0.15, 1.4);
-        controls.target.set(0, 0, 0);
-        controls.update();
-
-        // Prüfen auf Shape Keys (Morph Targets) & Animationen
-        let morphCount = 0;
         currentModel.traverse((child) => {
-          if (child.isMesh && child.morphTargetDictionary) {
-            morphCount += Object.keys(child.morphTargetDictionary).length;
+          if (child.isMesh) {
+            child.userData.origMaterial = child.material;
           }
         });
 
-        const animCount = gltf.animations.length;
-        if (animCount > 0) {
-          mixer = new THREE.AnimationMixer(currentModel);
-          mixer.timeScale = parseFloat(speedRange.value);
-          gltf.animations.forEach((clip) => {
-            mixer.clipAction(clip).play();
-          });
-          isPlaying = true;
-          playPauseBtn.disabled = false;
-        } else {
-          playPauseBtn.disabled = true;
-        }
+        scene.add(currentModel);
+        fitCameraToModel(currentModel);
 
-        statusEl.innerHTML = `
-          <strong>Datei:</strong> ${fileName}<br>
-          <strong>Animationen:</strong> ${animCount > 0 ? '✅ ' + animCount + ' aktiv' : '❌ Keine gefunden'}<br>
-          <strong>Shape Keys:</strong> ${morphCount > 0 ? '✅ ' + morphCount + ' erkannt' : '⚠️ 0 erkannt'}
-        `;
+        bboxHelper = new THREE.BoxHelper(currentModel, 0x38bdf8);
+        bboxHelper.visible = document.getElementById('bboxToggle').checked;
+        scene.add(bboxHelper);
+
+        applyRenderMode(currentMode);
+        setupAnimations(gltf.animations);
+        updateTelemetry(currentModel, fileName);
+
+        // Trigger the celebratory load sound effect!
+        const chosenSfx = document.getElementById('sfxModeSelect').value;
+        playSound(chosenSfx, fileName);
       }, (err) => {
         console.error(err);
-        statusEl.textContent = 'Fehler beim Laden der GLB-Datei.';
+        alert('Failed to load GLB/glTF file. Check console for details.');
       });
     }
 
+    // Spawn sleek default placeholder mesh on startup so modes & SFX work immediately
+    function spawnDemoModel() {
+      cleanupScene();
+      const group = new THREE.Group();
+      const geo = new THREE.TorusKnotGeometry(0.45, 0.16, 180, 32);
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        metalness: 0.45,
+        roughness: 0.25
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.userData.origMaterial = mat;
+      group.add(mesh);
+
+      currentModel = group;
+      scene.add(currentModel);
+      fitCameraToModel(currentModel);
+
+      bboxHelper = new THREE.BoxHelper(currentModel, 0x38bdf8);
+      bboxHelper.visible = false;
+      scene.add(bboxHelper);
+
+      setupAnimations([]);
+      updateTelemetry(currentModel, 'Demo Knot');
+    }
+
+    spawnDemoModel();
+
+    // =========================================================
+    // 5. UI & INPUT WIRING
+    // =========================================================
     function handleFile(file) {
       if (!file) return;
+      ensureAudio();
       const reader = new FileReader();
       reader.onload = (e) => loadGLBBuffer(e.target.result, file.name);
       reader.readAsArrayBuffer(file);
@@ -254,15 +1341,116 @@
 
     document.getElementById('fileInput').addEventListener('change', (e) => {
       handleFile(e.target.files[0]);
+      e.target.value = '';
     });
 
-    // Drag & Drop Events
+    document.getElementById('modeGrid').addEventListener('click', (e) => {
+      const btn = e.target.closest('.mode-btn');
+      if (btn) applyRenderMode(btn.dataset.mode);
+    });
+
+    document.querySelectorAll('.sfx-chip').forEach((chip) => {
+      chip.addEventListener('click', () => playSound(chip.dataset.sfx));
+    });
+
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    soundToggleBtn.addEventListener('click', () => {
+      sfxEnabled = !sfxEnabled;
+      soundToggleBtn.textContent = sfxEnabled ? '🔊 SFX On' : '🔇 Muted';
+      soundToggleBtn.classList.toggle('active', sfxEnabled);
+      if (sfxEnabled) ensureAudio();
+    });
+
+    const toggleUiBtn = document.getElementById('toggleUiBtn');
+    toggleUiBtn.addEventListener('click', () => {
+      const collapsed = document.body.classList.toggle('ui-collapsed');
+      toggleUiBtn.classList.toggle('active', !collapsed);
+    });
+
+    document.getElementById('resetCamBtn').addEventListener('click', () => {
+      camera.position.copy(defaultCamPos);
+      controls.target.copy(defaultTarget);
+      controls.update();
+    });
+
+    document.getElementById('animSelect').addEventListener('change', (e) => {
+      playClipSelection(e.target.value);
+    });
+
+    const playBtn = document.getElementById('playBtn');
+    playBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      playBtn.textContent = isPlaying ? 'Pause' : 'Play';
+    });
+
+    const autoRotBtn = document.getElementById('autoRotBtn');
+    autoRotBtn.addEventListener('click', () => {
+      controls.autoRotate = !controls.autoRotate;
+      autoRotBtn.classList.toggle('active', controls.autoRotate);
+    });
+
+    const scrubber = document.getElementById('scrubber');
+    scrubber.addEventListener('input', () => {
+      if (!mixer || activeActions.length === 0) return;
+      isPlaying = false;
+      playBtn.textContent = 'Play';
+      const t = parseFloat(scrubber.value);
+      activeActions.forEach((a) => (a.time = t % a.getClip().duration));
+      mixer.update(0);
+      document.getElementById('timeLabel').textContent = t.toFixed(2) + 's';
+    });
+
+    document.getElementById('speedSlider').addEventListener('input', (e) => {
+      const v = parseFloat(e.target.value);
+      document.getElementById('speedLabel').textContent = v.toFixed(1) + 'x';
+      if (mixer) mixer.timeScale = v;
+    });
+
+    document.getElementById('expSlider').addEventListener('input', (e) => {
+      const v = parseFloat(e.target.value);
+      document.getElementById('expLabel').textContent = v.toFixed(1);
+      renderer.toneMappingExposure = v;
+    });
+
+    document.getElementById('bloomToggle').addEventListener('change', (e) => {
+      bloomPass.enabled = e.target.checked;
+    });
+
+    document.getElementById('gridToggle').addEventListener('change', (e) => {
+      gridHelper.visible = e.target.checked;
+    });
+
+    document.getElementById('bboxToggle').addEventListener('change', (e) => {
+      if (bboxHelper) bboxHelper.visible = e.target.checked;
+    });
+
+    document.getElementById('bgColor').addEventListener('input', (e) => {
+      scene.background = new THREE.Color(e.target.value);
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+      const key = e.key.toLowerCase();
+      if (key === 'r') {
+        camera.position.copy(defaultCamPos);
+        controls.target.copy(defaultTarget);
+        controls.update();
+      } else if (key === 'h') {
+        toggleUiBtn.click();
+      } else if (e.code === 'Space' && !playBtn.disabled) {
+        e.preventDefault();
+        playBtn.click();
+      }
+    });
+
+    // Drag & Drop
     window.addEventListener('dragover', (e) => {
       e.preventDefault();
       document.body.classList.add('dragging');
     });
     window.addEventListener('dragleave', (e) => {
-      if (e.relatedTarget === null) document.body.classList.remove('dragging');
+      if (!e.relatedTarget) document.body.classList.remove('dragging');
     });
     window.addEventListener('drop', (e) => {
       e.preventDefault();
@@ -272,19 +1460,26 @@
       }
     });
 
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      composer.setSize(window.innerWidth, window.innerHeight);
-    });
-
+    // =========================================================
+    // 6. RENDER LOOP
+    // =========================================================
+    const clock = new THREE.Clock();
     function animate() {
       requestAnimationFrame(animate);
       const delta = clock.getDelta();
-      if (mixer && isPlaying) {
+      sharedUniforms.uTime.value += delta;
+
+      if (mixer && isPlaying && activeActions.length > 0) {
         mixer.update(delta);
+        const t = activeActions[0].time;
+        scrubber.value = t;
+        document.getElementById('timeLabel').textContent = t.toFixed(2) + 's';
       }
+
+      if (bboxHelper && bboxHelper.visible) {
+        bboxHelper.update();
+      }
+
       controls.update();
       composer.render();
     }
