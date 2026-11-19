@@ -397,8 +397,19 @@
                 /* ------------------------------------------------
                    Model-Viewer lazy-loading (einmalig, mit Guard)
                    ------------------------------------------------ */
+                function configureModelViewerRenderScale() {
+                    const ModelViewerElement = customElements.get('model-viewer');
+                    if (ModelViewerElement && 'minimumRenderScale' in ModelViewerElement) {
+                        // Let model-viewer reduce its internal pixel density more aggressively on slower GPUs.
+                        ModelViewerElement.minimumRenderScale = 0.4;
+                    }
+                }
+
                 function ensureModelViewer() {
-                    if (customElements.get('model-viewer')) return Promise.resolve();
+                    if (customElements.get('model-viewer')) {
+                        configureModelViewerRenderScale();
+                        return Promise.resolve();
+                    }
                     if (!document.querySelector('script[data-lhu-mv-loader]')) {
                         const s = document.createElement('script');
                         s.type = 'module';
@@ -406,7 +417,9 @@
                         s.setAttribute('data-lhu-mv-loader', '1');
                         document.head.appendChild(s);
                     }
-                    return customElements.whenDefined('model-viewer').catch(() => {});
+                    return customElements.whenDefined('model-viewer')
+                        .then(configureModelViewerRenderScale)
+                        .catch(() => {});
                 }
                 // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
                 ensureModelViewer();

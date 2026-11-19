@@ -250,14 +250,21 @@
                 /* ------------------------------------------------
                    Device / Qualitäts-Probing
                    ------------------------------------------------ */
-                const isMobile   = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+                const isMobile = window.matchMedia('(max-width: 768px)').matches ||
+                    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
                 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                const saveData   = !!(navigator.connection && navigator.connection.saveData);
+                const saveData = !!(navigator.connection && navigator.connection.saveData);
+                const targetFps = isMobile ? 30 : 45;
+                const frameInterval = 1000 / targetFps;
 
-                function getDPR() {
-                    if (saveData) return 1;
-                    const dpr = window.devicePixelRatio || 1;
-                    return isMobile ? Math.min(dpr, 1.25) : Math.min(dpr, 1.5);
+                function getDPR(width = container.clientWidth || innerWidth, height = container.clientHeight || innerHeight) {
+                    const maxEdge = saveData ? 768 : (isMobile ? 1024 : 1440);
+                    const dprCap = saveData ? 0.85 : (isMobile ? 1.10 : 1.25);
+                    return Math.max(0.25, Math.min(
+                        window.devicePixelRatio || 1,
+                        dprCap,
+                        maxEdge / Math.max(1, width, height)
+                    ));
                 }
 
                 /* ------------------------------------------------
@@ -286,11 +293,11 @@
                 const renderer = new THREE.WebGLRenderer({
                     alpha: true,
                     antialias: false,
-                    powerPreference: 'high-performance',
+                    powerPreference: 'low-power',
                     // Wichtig: Verhindert voreiligen Context-Verlust
                     failIfMajorPerformanceCaveat: false
                 });
-                renderer.setPixelRatio(getDPR());
+                renderer.setPixelRatio(getDPR(container.clientWidth || 1, container.clientHeight || 1));
                 renderer.setSize(container.clientWidth || 1, container.clientHeight || 1);
                 renderer.setClearColor(0x000000, 0);
                 container.appendChild(renderer.domElement);
@@ -449,13 +456,16 @@
                    Animation Loop
                    ------------------------------------------------ */
                 let animationId = null;
+                let lastFrameTime = 0;
                 const clock = new THREE.Clock();
 
-                function animate() {
+                function animate(now = performance.now()) {
                     animationId = requestAnimationFrame(animate);
                     if (isDestroyed) return;
                     if (document.hidden) return;
                     if (!container.clientWidth || !container.clientHeight) return;
+                    if (now - lastFrameTime < frameInterval) return;
+                    lastFrameTime = now;
 
                     const delta = clock.getDelta();
 
@@ -472,6 +482,7 @@
                 function startAnimate() {
                     if (animationId === null) {
                         clock.getDelta(); // Reset, damit kein Zeitsprung
+                        lastFrameTime = 0;
                         animationId = requestAnimationFrame(animate);
                     }
                 }
@@ -504,8 +515,8 @@
                         if (isDestroyed) return;
                         const w = container.clientWidth;
                         const h = container.clientHeight;
+                        renderer.setPixelRatio(getDPR(w, h));
                         renderer.setSize(w, h);
-                        renderer.setPixelRatio(getDPR());
                         camera.aspect = w / h;
                         fitCamera();
                         controls.update();

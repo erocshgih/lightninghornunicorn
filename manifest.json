@@ -11,13 +11,13 @@
   },
   {
     "path": "03_humanart.html",
-    "bytes": 26765,
-    "sha256": "75fd15a34a37d0ccc29f4c4b3ff1a4a1532e2d6d085db045680c412a267095d4"
+    "bytes": 27500,
+    "sha256": "62898cfc498a5ae0f5b5d23c12b67fd01907f8b6d8604b85a7abad587815309e"
   },
   {
     "path": "04_projects.html",
-    "bytes": 64187,
-    "sha256": "bf3a085a65454866a10d33102c718cc3529b820a8c944fa8f3086a9743ac50f9"
+    "bytes": 64840,
+    "sha256": "c084ce2b60b53d47d0ae82e9cc6c59da73df77869cf620c07dbe1a84721790e6"
   },
   {
     "path": "05_storytime.html",
@@ -46,13 +46,13 @@
   },
   {
     "path": "README_REPAIRED.txt",
-    "bytes": 2653,
-    "sha256": "02975e708763ca0d5035ce4dc31c5a96a4bf546dcda8847ea95bdc0d55a2fe46"
+    "bytes": 3779,
+    "sha256": "3a606f623c81367479aea7bf055ddb370191857860ae24c182816a62000c809d"
   },
   {
     "path": "index.html",
-    "bytes": 206228,
-    "sha256": "104d4f70025f9a7d71f8a44f93fb9b1c2355031d419f5feff3a94936b1e778b2"
+    "bytes": 209772,
+    "sha256": "4ee4bf18304c36de6e11f41494bf77ab8027819bd6a0ae66bc262ddee341dea8"
   },
   {
     "path": "legacy/script.js",

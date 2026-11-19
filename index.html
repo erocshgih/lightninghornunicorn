@@ -203,7 +203,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   transition: background-color 0.35s ease, color 0.35s ease;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: auto;
 }
 
 h1, h2, h3, h4, h5, h6, .font-display {
@@ -777,7 +777,7 @@ body.intro-mode {
   background: var(--gallery-void);
   color: var(--gallery-ink);
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: auto;
 }
 
 #lhu-index-experience[hidden] { display: none !important; }
@@ -2252,7 +2252,11 @@ main#mainContent input[type="submit"] {
 (function initBackground() {
   const mcanvas = document.getElementById("matrix-bg");
   const mctx = mcanvas.getContext("2d", { alpha: false });
-  const DOWNSCALE = 0.6;
+  const compactViewport = window.matchMedia("(max-width: 768px)").matches;
+  const DOWNSCALE = compactViewport ? 0.42 : 0.50;
+  const BACKGROUND_FPS = compactViewport ? 24 : 30;
+  const BACKGROUND_FRAME_INTERVAL = 1000 / BACKGROUND_FPS;
+  let lastBackgroundFrameTime = 0;
   let W, H, cx, cy;
   let currentBgIndex = 0;
   window.isTrafficConePhase = false;
@@ -2320,9 +2324,14 @@ main#mainContent input[type="submit"] {
   let bgAnimationFrame = null;
   let bgActive = true;
 
-  function drawBg() {
+  function drawBg(now = performance.now()) {
     bgAnimationFrame = null;
     if (!bgActive || document.hidden || document.body.classList.contains('site-mode')) return;
+    if (now - lastBackgroundFrameTime < BACKGROUND_FRAME_INTERVAL) {
+      bgAnimationFrame = requestAnimationFrame(drawBg);
+      return;
+    }
+    lastBackgroundFrameTime = now;
 
     mctx.fillStyle = "#070708";
     mctx.fillRect(0, 0, W, H);
@@ -2418,11 +2427,24 @@ import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 window.THREE = Object.assign({}, THREE, { OrbitControls });
 window.LHU_THREE_REVISION = THREE.REVISION;
 
-const getDPR = () => {
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  const dpr = window.devicePixelRatio || 1;
-  return isMobile ? Math.min(dpr, 1.35) : Math.min(dpr, 1.6);
+const isMobileDevice = window.matchMedia("(max-width: 768px)").matches ||
+  /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+// Keep the longest internal canvas edge near 1024 px on phones and 1440 px elsewhere.
+// The browser still displays the canvas at its normal CSS size, so the aspect ratio is untouched.
+const getDPR = (width = innerWidth, height = innerHeight) => {
+  const maxBufferEdge = isMobileDevice ? 1024 : 1440;
+  const dprLimit = isMobileDevice ? 1.10 : 1.25;
+  const longestEdge = Math.max(1, width, height);
+  return Math.max(0.25, Math.min(
+    window.devicePixelRatio || 1,
+    dprLimit,
+    maxBufferEdge / longestEdge
+  ));
 };
+window.LHU_GET_RENDER_DPR = getDPR;
+const INDEX_TARGET_FPS = isMobileDevice ? 30 : 45;
+const INDEX_FRAME_INTERVAL = 1000 / INDEX_TARGET_FPS;
 
 const browserLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
 const isGerman = browserLanguage.startsWith('de');
@@ -2633,7 +2655,7 @@ const loadingEl = document.getElementById("index-loading");
 const hypnoAsciiCanvas = document.getElementById("index-hypno-ascii");
 const hypnoAsciiCtx = hypnoAsciiCanvas ? hypnoAsciiCanvas.getContext("2d", { alpha: true }) : null;
 const hypnoSourceCanvas = document.createElement("canvas");
-hypnoSourceCanvas.width = hypnoSourceCanvas.height = 256;
+hypnoSourceCanvas.width = hypnoSourceCanvas.height = isMobileDevice ? 176 : 208;
 const hypnoSourceCtx = hypnoSourceCanvas.getContext("2d", { willReadFrequently: true });
 const hypnoSvgImage = new Image();
 hypnoSvgImage.src = "hypnoload.svg";
@@ -2654,7 +2676,7 @@ function renderHypnoAscii(now) {
   hypnoSourceCtx.drawImage(hypnoSvgImage, -dw / 2, -dh / 2, dw, dh);
   hypnoSourceCtx.restore();
   const pixels = hypnoSourceCtx.getImageData(0, 0, w, h).data;
-  const cols = 52, rows = 52, cw = hypnoAsciiCanvas.width / cols, ch = hypnoAsciiCanvas.height / rows;
+  const cols = 46, rows = 46, cw = hypnoAsciiCanvas.width / cols, ch = hypnoAsciiCanvas.height / rows;
   const glyphs = " .,:;irsXA253hMHGS#9B&@";
   hypnoAsciiCtx.clearRect(0, 0, hypnoAsciiCanvas.width, hypnoAsciiCanvas.height);
   hypnoAsciiCtx.textAlign = "center";
@@ -2683,8 +2705,12 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, 0.1, 1000);
 camera.position.set(2.55, 0, 2.55);
 
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
-renderer.setPixelRatio(getDPR());
+const renderer = new THREE.WebGLRenderer({
+  alpha: true,
+  antialias: !isMobileDevice,
+  powerPreference: "low-power"
+});
+renderer.setPixelRatio(getDPR(innerWidth, innerHeight));
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById("container3D").appendChild(renderer.domElement);
@@ -2706,8 +2732,12 @@ const hitEnterSlot = document.getElementById("lhu-image-slot");
 const hitEnterScene = new THREE.Scene();
 const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
 
-const hitEnterRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" });
-hitEnterRenderer.setPixelRatio(getDPR());
+const hitEnterRenderer = new THREE.WebGLRenderer({
+  alpha: true,
+  antialias: !isMobileDevice,
+  powerPreference: "low-power"
+});
+hitEnterRenderer.setPixelRatio(getDPR(hitEnterSlot.clientWidth || 1, hitEnterSlot.clientHeight || 1));
 hitEnterRenderer.setClearColor(0x000000, 0);
 hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
 hitEnterSlot.appendChild(hitEnterRenderer.domElement);
@@ -2786,6 +2816,7 @@ const hitEnterResizeObserver = new ResizeObserver(() => {
   const rect = hitEnterSlot.getBoundingClientRect();
   const w = Math.max(1, Math.floor(rect.width));
   const h = Math.max(1, Math.floor(rect.height));
+  hitEnterRenderer.setPixelRatio(getDPR(w, h));
   hitEnterRenderer.setSize(w, h, false);
   hitEnterCamera.aspect = w / h;
   hitEnterCamera.updateProjectionMatrix();
@@ -3202,8 +3233,13 @@ loadHead(initialHead.url);
   }
 
   function resizeIntro() {
-    W = innerWidth; H = innerHeight;
-    canvas.width = W; canvas.height = H;
+    const cssWidth = Math.max(1, innerWidth);
+    const cssHeight = Math.max(1, innerHeight);
+    const introRenderScale = isMobileDevice ? 0.62 : 0.78;
+    W = Math.max(1, Math.round(cssWidth * introRenderScale));
+    H = Math.max(1, Math.round(cssHeight * introRenderScale));
+    canvas.width = W;
+    canvas.height = H;
     if (gl) gl.viewport(0, 0, W, H);
   }
 
@@ -3390,11 +3426,13 @@ loadHead(initialHead.url);
 let isTabVisible = !document.hidden;
 let indexExperienceActive = true;
 let indexAnimationFrame = null;
+let lastIndexFrameTime = 0;
 
 document.addEventListener("visibilitychange", () => {
   isTabVisible = !document.hidden;
   if (isTabVisible) {
     clock.getDelta();
+    lastIndexFrameTime = 0;
     if (indexExperienceActive && indexAnimationFrame === null) {
       indexAnimationFrame = requestAnimationFrame(animate);
     }
@@ -3406,10 +3444,12 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-function animate() {
+function animate(now = performance.now()) {
   indexAnimationFrame = null;
   if (!isTabVisible || !indexExperienceActive || indexExperienceSuspended) return;
   indexAnimationFrame = requestAnimationFrame(animate);
+  if (now - lastIndexFrameTime < INDEX_FRAME_INTERVAL) return;
+  lastIndexFrameTime = now;
 
   const delta = clock.getDelta();
   if (mixer) mixer.update(delta);
@@ -3609,6 +3649,7 @@ window.__lhuSetIndexExperienceSuspended = function(suspended) {
     }
   } else if (indexExperienceActive && isTabVisible && indexAnimationFrame === null) {
     clock.getDelta();
+    lastIndexFrameTime = 0;
     indexAnimationFrame = requestAnimationFrame(animate);
   }
 };
@@ -3649,7 +3690,7 @@ window.addEventListener("resize", () => {
   resizeTimeout = setTimeout(() => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(getDPR());
+    renderer.setPixelRatio(getDPR(innerWidth, innerHeight));
     renderer.setSize(innerWidth, innerHeight);
   }, 150);
 });
@@ -3685,8 +3726,8 @@ window.addEventListener("resize", () => {
   let kAnimEnabled = true;
   let kShaderMode = "texture";
   let kMood = "daylight";
-  let kResScale = 1.0;
-  let kMaxFps = 60;
+  let kResScale = isMobileDevice ? 0.82 : 0.92;
+  let kMaxFps = isMobileDevice ? 30 : 45;
   let kShadowsOn = true;
   let kVertexSnap = false;
   let kPixelMode = "off"; // off | coarse | fine
@@ -3697,6 +3738,13 @@ window.addEventListener("resize", () => {
   let kOriginalStates = new WeakMap();
   let kCustomMaterials = [];
   let kCurrentUrl = "";
+
+  const kResSlider = document.getElementById("kobo-res-slider");
+  const kResValue = document.getElementById("kobo-res-val");
+  const kFpsButton = document.getElementById("kobo-fps-btn");
+  if (kResSlider) kResSlider.value = String(kResScale);
+  if (kResValue) kResValue.textContent = `${kResScale.toFixed(2)}×`;
+  if (kFpsButton) kFpsButton.textContent = `FPS: ${kMaxFps}`;
 
   // Web Audio Synth for Spawn Choreographies & Glitch Pulse
   let audioCtx = null;
@@ -3780,9 +3828,9 @@ window.addEventListener("resize", () => {
 
     kRenderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: !isMobileDevice,
       preserveDrawingBuffer: true,
-      powerPreference: "high-performance"
+      powerPreference: "low-power"
     });
     kRenderer.outputColorSpace = THREE.SRGBColorSpace;
     kRenderer.shadowMap.enabled = true;
@@ -3804,7 +3852,7 @@ window.addEventListener("resize", () => {
     kKeyLight = new THREE.DirectionalLight(0xfff2e2, 1.65);
     kKeyLight.position.set(4, 6, 5);
     kKeyLight.castShadow = true;
-    kKeyLight.shadow.mapSize.set(1024, 1024);
+    kKeyLight.shadow.mapSize.set(isMobileDevice ? 512 : 768, isMobileDevice ? 512 : 768);
     kScene.add(kKeyLight);
 
     kFillLight = new THREE.DirectionalLight(0xffd7c2, 0.95);
@@ -3833,7 +3881,7 @@ window.addEventListener("resize", () => {
   function applyKoboResolution() {
     if (!kRenderer || !kCamera) return;
     const pixelFactor = kPixelMode === "coarse" ? 0.28 : kPixelMode === "fine" ? 0.52 : 1.0;
-    const effectiveDpr = Math.max(0.25, Math.min(window.devicePixelRatio || 1, 2) * kResScale * pixelFactor);
+    const effectiveDpr = Math.max(0.25, getDPR(canvasWrap.clientWidth || innerWidth, canvasWrap.clientHeight || innerHeight) * kResScale * pixelFactor);
     kCamera.aspect = innerWidth / innerHeight;
     kCamera.updateProjectionMatrix();
     kRenderer.setPixelRatio(effectiveDpr);
@@ -4367,7 +4415,7 @@ window.addEventListener("resize", () => {
   const PRESET_CONFIGS = {
     potato:   { res: 0.45, fps: 24, shadows: false, snap: true,  pixel: "coarse" },
     portable: { res: 0.75, fps: 30, shadows: true,  snap: false, pixel: "fine" },
-    studio:   { res: 1.00, fps: 60, shadows: true,  snap: false, pixel: "off" },
+    studio:   { res: isMobileDevice ? 0.82 : 0.92, fps: isMobileDevice ? 30 : 45, shadows: true,  snap: false, pixel: "off" },
     overkill: { res: 1.50, fps: 120, shadows: true, snap: false, pixel: "off" }
   };
 
@@ -4408,7 +4456,7 @@ window.addEventListener("resize", () => {
     applyKoboResolution();
   });
 
-  const FPS_STEPS = [15, 24, 30, 60, 120];
+  const FPS_STEPS = [15, 24, 30, 45, 60, 120];
   document.getElementById("kobo-fps-btn")?.addEventListener("click", (e) => {
     const idx = FPS_STEPS.indexOf(kMaxFps);
     kMaxFps = FPS_STEPS[(idx + 1) % FPS_STEPS.length];
