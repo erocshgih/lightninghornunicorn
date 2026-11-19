@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Three.js GLB & Glitch Tester</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0b111e;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+    }
+    #ui {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 300px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    h1 { font-size: 15px; margin-bottom: 10px; color: #ff2a85; }
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 9px 12px;
+      background: #ff2a85;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      text-align: center;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .btn:hover { background: #e01e72; }
+    .btn-secondary {
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-top: 6px;
+    }
+    .btn-secondary:hover { background: #334155; }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin-top: 8px;
+      color: #94a3b8;
+    }
+    #status {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+    #dropzone {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      font-size: 20px;
+      font-weight: 600;
+      color: #ff2a85;
+      background: rgba(11, 17, 30, 0.75);
+      border: 3px dashed #ff2a85;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 20;
+    }
+    body.dragging #dropzone { opacity: 1; }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="ui">
+    <h1>GLB & Visor-Glitch Tester</h1>
+    <label class="btn">
+      .GLB Datei auswählen
+      <input type="file" id="fileInput" accept=".glb,.gltf" hidden />
+    </label>
+    <div style="font-size: 11px; color: #94a3b8; text-align: center;">
+      oder .glb einfach ins Fenster ziehen
+    </div>
+
+    <div class="row">
+      <label for="bloomToggle">Neon-Glow (Bloom)</label>
+      <input type="checkbox" id="bloomToggle" checked />
+    </div>
+    <div class="row">
+      <label for="speedRange">Speed: <span id="speedVal">1.0x</span></label>
+      <input type="range" id="speedRange" min="0" max="2" step="0.1" value="1" style="width: 130px;" />
+    </div>
+    <button id="playPauseBtn" class="btn btn-secondary" disabled>Pause / Play</button>
+
+    <div id="status">Warte auf .glb Datei...</div>
+  </div>
+
+  <div id="dropzone">.GLB hier loslassen</div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+    // 1. Renderer & Szene
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    document.body.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b111e);
+
+    // Studio-Umgebung für realistische Glas- & Metall-Reflexionen
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100);
+    camera.position.set(0, 0.3, 1.5);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    // 2. Post-Processing (Neon-Bloom)
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.85,  // Stärke
+      0.35,  // Radius
+      0.85   // Threshold (nur helle Emission glüht)
+    );
+    composer.addPass(bloomPass);
+    composer.addPass(new OutputPass());
+
+    // 3. GLB Loader & Animations-Status
+    const loader = new GLTFLoader();
+    let currentModel = null;
+    let mixer = null;
+    let isPlaying = true;
+    const clock = new THREE.Clock();
+
+    const statusEl = document.getElementById('status');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const bloomToggle = document.getElementById('bloomToggle');
+    const speedRange = document.getElementById('speedRange');
+    const speedVal = document.getElementById('speedVal');
+
+    bloomToggle.addEventListener('change', () => {
+      bloomPass.enabled = bloomToggle.checked;
+    });
+
+    speedRange.addEventListener('input', () => {
+      const val = parseFloat(speedRange.value);
+      speedVal.textContent = val.toFixed(1) + 'x';
+      if (mixer) mixer.timeScale = val;
+    });
+
+    playPauseBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+    });
+
+    function loadGLBBuffer(arrayBuffer, fileName) {
+      if (currentModel) {
+        scene.remove(currentModel);
+        currentModel = null;
+      }
+      mixer = null;
+
+      loader.parse(arrayBuffer, '', (gltf) => {
+        currentModel = gltf.scene;
+        scene.add(currentModel);
+
+        // Modell automatisch zentrieren & auf angenehme Größe skalieren
+        const box = new THREE.Box3().setFromObject(currentModel);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z) || 1;
+        const scale = 1.0 / maxDim;
+
+        currentModel.scale.setScalar(scale);
+        currentModel.position.sub(center.multiplyScalar(scale));
+
+        camera.position.set(0, 0.15, 1.4);
+        controls.target.set(0, 0, 0);
+        controls.update();
+
+        // Prüfen auf Shape Keys (Morph Targets) & Animationen
+        let morphCount = 0;
+        currentModel.traverse((child) => {
+          if (child.isMesh && child.morphTargetDictionary) {
+            morphCount += Object.keys(child.morphTargetDictionary).length;
+          }
+        });
+
+        const animCount = gltf.animations.length;
+        if (animCount > 0) {
+          mixer = new THREE.AnimationMixer(currentModel);
+          mixer.timeScale = parseFloat(speedRange.value);
+          gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).play();
+          });
+          isPlaying = true;
+          playPauseBtn.disabled = false;
+        } else {
+          playPauseBtn.disabled = true;
+        }
+
+        statusEl.innerHTML = `
+          <strong>Datei:</strong> ${fileName}<br>
+          <strong>Animationen:</strong> ${animCount > 0 ? '✅ ' + animCount + ' aktiv' : '❌ Keine gefunden'}<br>
+          <strong>Shape Keys:</strong> ${morphCount > 0 ? '✅ ' + morphCount + ' erkannt' : '⚠️ 0 erkannt'}
+        `;
+      }, (err) => {
+        console.error(err);
+        statusEl.textContent = 'Fehler beim Laden der GLB-Datei.';
+      });
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => loadGLBBuffer(e.target.result, file.name);
+      reader.readAsArrayBuffer(file);
+    }
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      handleFile(e.target.files[0]);
+    });
+
+    // Drag & Drop Events
+    window.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      document.body.classList.add('dragging');
+    });
+    window.addEventListener('dragleave', (e) => {
+      if (e.relatedTarget === null) document.body.classList.remove('dragging');
+    });
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      document.body.classList.remove('dragging');
+      if (e.dataTransfer.files.length > 0) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      if (mixer && isPlaying) {
+        mixer.update(delta);
+      }
+      controls.update();
+      composer.render();
+    }
+    animate();
+  </script>
+</body>
+</html>
