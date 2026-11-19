@@ -3,22 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AETHER // Universal 3D GLB Viewer</title>
+  <title>KŌBŌ // 3D GLB Studio Inspector</title>
   <style>
     :root {
-      --bg-base: #090b10;
-      --panel-bg: rgba(15, 19, 28, 0.78);
-      --panel-border: rgba(255, 255, 255, 0.11);
-      --surface: rgba(255, 255, 255, 0.05);
-      --surface-hover: rgba(255, 255, 255, 0.11);
-      --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.35);
-      --pink: #f43f5e;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --radius-sm: 7px;
+      /* Cream, Marble, Frosted Glass & Rosé Palette */
+      --bg-stage: #f2ece6;
+      --cream-base: rgba(251, 248, 244, 0.80);
+      --cream-solid: #faf7f3;
+      --marble-tint: rgba(244, 236, 233, 0.72);
+      --glass-card: rgba(255, 252, 249, 0.56);
+      --glass-hover: rgba(255, 255, 255, 0.85);
+
+      --rose-primary: #c47684;
+      --rose-deep: #9e5462;
+      --rose-soft: rgba(196, 118, 132, 0.14);
+      --rose-glow: rgba(196, 118, 132, 0.28);
+      --rose-gold: #cfa097;
+
+      --ink-primary: #221c1f;
+      --ink-secondary: #5c5056;
+      --ink-muted: #8c7d84;
+
+      --hairline: rgba(164, 122, 130, 0.22);
+      --hairline-strong: rgba(164, 122, 130, 0.42);
+
+      /* Procedural Subtle Marble Veining (Pure Surface Texture, Zero Illustration) */
+      --marble-veins: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.72  0 0 0 0 0.54  0 0 0 0 0.58  0 0 0 0.065 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+
+      --radius-panel: 12px;
+      --radius-card: 7px;
+      --radius-control: 5px;
     }
 
     * {
@@ -32,9 +46,10 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg-base);
-      color: var(--text-main);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-stage);
+      color: var(--ink-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       user-select: none;
     }
 
@@ -53,7 +68,9 @@
       outline: none;
     }
 
-    /* Top Floating Header (Always accessible on Desktop & Mobile) */
+    /* =========================================================
+       TOP ARCHITECTURAL HEADER BAR
+       ========================================================= */
     #topbar {
       position: fixed;
       top: 14px;
@@ -67,146 +84,203 @@
       pointer-events: none;
     }
 
-    .top-group {
+    .top-cluster {
       display: flex;
       align-items: center;
       gap: 8px;
       pointer-events: auto;
     }
 
-    .glass-pill {
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--panel-border);
-      border-radius: 999px;
-      padding: 6px 14px;
+    .brand-bar {
+      background-color: var(--cream-base);
+      background-image: var(--marble-veins), linear-gradient(135deg, rgba(255,255,255,0.65), rgba(245,234,232,0.45));
+      backdrop-filter: blur(22px) saturate(135%);
+      -webkit-backdrop-filter: blur(22px) saturate(135%);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-panel);
+      height: 38px;
+      padding: 0 14px;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 8px 24px rgba(58, 38, 44, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.85);
     }
 
-    .brand {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      background: linear-gradient(135deg, #38bdf8, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .brand-mark {
+      width: 7px;
+      height: 7px;
+      border-radius: 1px;
+      transform: rotate(45deg);
+      background: var(--rose-primary);
+      box-shadow: 0 0 0 3px var(--rose-soft);
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #0284c7, #2563eb);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.4);
-      transition: transform 0.12s, filter 0.15s;
-    }
-
-    .btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); }
-    .btn-primary:active { transform: translateY(0); }
-
-    .icon-btn {
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      color: var(--text-main);
-      border: 1px solid var(--panel-border);
-      border-radius: 999px;
-      height: 34px;
-      padding: 0 12px;
+    .brand-title {
       font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: var(--ink-primary);
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--hairline-strong);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      color: var(--ink-muted);
+    }
+
+    .btn-load {
+      height: 38px;
+      padding: 0 16px;
+      border-radius: var(--radius-panel);
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-deep));
+      color: #fffdfb;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 11.5px;
       font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-      transition: background 0.15s, border-color 0.15s;
+      gap: 7px;
+      box-shadow: 0 8px 20px rgba(158, 84, 98, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: transform 0.14s ease, box-shadow 0.15s ease, filter 0.15s ease;
     }
 
-    .icon-btn:hover { background: rgba(30, 41, 59, 0.9); border-color: rgba(255, 255, 255, 0.25); }
-    .icon-btn.active { border-color: var(--accent); color: var(--accent); }
+    .btn-load:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(158, 84, 98, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
 
-    /* Sound Toast Pop-up */
+    .btn-load:active { transform: translateY(0); }
+
+    .tool-btn {
+      height: 38px;
+      padding: 0 13px;
+      border-radius: var(--radius-panel);
+      background-color: var(--cream-base);
+      background-image: var(--marble-veins);
+      backdrop-filter: blur(22px) saturate(135%);
+      -webkit-backdrop-filter: blur(22px) saturate(135%);
+      border: 1px solid var(--hairline);
+      color: var(--ink-secondary);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(58, 38, 44, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover {
+      background-color: rgba(255, 253, 250, 0.94);
+      border-color: var(--hairline-strong);
+      color: var(--ink-primary);
+    }
+
+    .tool-btn.active {
+      border-color: var(--rose-primary);
+      color: var(--rose-deep);
+      background-color: rgba(253, 245, 246, 0.9);
+    }
+
+    /* =========================================================
+       SOUND FEEDBACK CAPSULE
+       ========================================================= */
     #sound-toast {
       position: fixed;
-      top: 64px;
+      top: 62px;
       left: 50%;
-      transform: translateX(-50%) translateY(-12px) scale(0.92);
+      transform: translateX(-50%) translateY(-10px);
       z-index: 30;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--accent);
-      box-shadow: 0 0 28px var(--accent-glow);
-      color: #fff;
-      padding: 8px 18px;
+      background-color: rgba(252, 248, 246, 0.92);
+      background-image: var(--marble-veins);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--rose-primary);
+      box-shadow: 0 10px 28px rgba(158, 84, 98, 0.18), inset 0 1px 0 #fff;
+      padding: 7px 16px;
       border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      color: var(--ink-primary);
       display: flex;
       align-items: center;
       gap: 8px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     #sound-toast.show {
       opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
+      transform: translateX(-50%) translateY(0);
     }
 
-    #sound-toast .sfx-word {
-      color: #38bdf8;
+    #sound-toast .sfx-tag {
+      color: var(--rose-deep);
+      font-weight: 800;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      font-weight: 900;
     }
 
-    /* Main Control Panel - Adaptive Landscape vs Portrait */
+    /* =========================================================
+       ADAPTIVE INSPECTOR PANEL (LANDSCAPE SIDEBAR / PORTRAIT DOCK)
+       ========================================================= */
     #inspector {
       position: fixed;
       top: 62px;
       left: 14px;
       bottom: 14px;
-      width: 316px;
+      width: 320px;
       z-index: 15;
-      background: var(--panel-bg);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--panel-border);
-      border-radius: var(--radius-lg);
-      padding: 14px;
+      background-color: var(--cream-base);
+      background-image:
+        var(--marble-veins),
+        linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(246, 236, 234, 0.58) 100%);
+      backdrop-filter: blur(26px) saturate(140%);
+      -webkit-backdrop-filter: blur(26px) saturate(140%);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-panel);
+      padding: 12px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s;
+      gap: 10px;
+      box-shadow:
+        0 18px 44px rgba(54, 34, 40, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
     }
 
-    #inspector::-webkit-scrollbar { width: 5px; }
-    #inspector::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
+    #inspector::-webkit-scrollbar { width: 4px; }
+    #inspector::-webkit-scrollbar-track { background: transparent; }
+    #inspector::-webkit-scrollbar-thumb {
+      background: rgba(164, 122, 130, 0.28);
+      border-radius: 99px;
+    }
 
     body.ui-collapsed #inspector {
       opacity: 0;
       pointer-events: none;
-      transform: translateX(-20px);
+      transform: translateX(-18px);
     }
 
-    /* Portrait / Vertical Window Adaptation */
-    @media (max-aspect-ratio: 1/1), (max-width: 740px) {
+    /* Portrait / Vertical Viewport Adaptation */
+    @media (max-aspect-ratio: 1/1), (max-width: 760px) {
       #inspector {
         top: auto;
         left: 10px;
@@ -214,129 +288,226 @@
         bottom: 10px;
         width: auto;
         max-height: 44vh;
-        border-radius: var(--radius-lg);
-        padding: 12px;
-        gap: 12px;
+        padding: 10px;
+        gap: 9px;
       }
 
       body.ui-collapsed #inspector {
-        transform: translateY(24px);
+        transform: translateY(20px);
       }
 
-      .brand-sub { display: none; }
+      .brand-divider, .brand-sub, .hide-mobile {
+        display: none;
+      }
     }
 
+    /* =========================================================
+       ARCHITECTURAL SECTION CARDS
+       ========================================================= */
     .card {
-      background: var(--surface);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--radius-md);
-      padding: 11px;
+      background: var(--glass-card);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      padding: 10px 11px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 7px;
+      margin-bottom: 9px;
+      border-bottom: 1px solid var(--hairline);
     }
 
     .card-title {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
+      letter-spacing: 1.4px;
       text-transform: uppercase;
-      letter-spacing: 0.9px;
-      color: var(--text-muted);
-      margin-bottom: 9px;
+      color: var(--ink-secondary);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-    }
-
-    /* Shader / Render Mode Grid */
-    .mode-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
       gap: 6px;
     }
 
-    @media (max-aspect-ratio: 1/1), (max-width: 740px) {
+    .card-title::before {
+      content: "";
+      width: 2px;
+      height: 10px;
+      background: var(--rose-primary);
+      border-radius: 1px;
+    }
+
+    .card-meta {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--rose-deep);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* =========================================================
+       RENDER MODE MATRIX
+       ========================================================= */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+    }
+
+    @media (max-aspect-ratio: 1/1), (max-width: 760px) {
       .mode-grid {
         grid-template-columns: repeat(3, 1fr);
       }
     }
 
     .mode-btn {
-      background: rgba(15, 23, 42, 0.65);
-      color: var(--text-muted);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: var(--radius-sm);
-      padding: 7px 8px;
-      font-size: 11.5px;
+      background: rgba(255, 253, 250, 0.62);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
+      padding: 6px 8px;
+      font-size: 11px;
       font-weight: 600;
+      color: var(--ink-secondary);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.14s ease;
+      gap: 7px;
       text-align: left;
+      transition: all 0.14s ease;
     }
 
     .mode-btn:hover {
-      background: var(--surface-hover);
-      color: var(--text-main);
+      background: var(--glass-hover);
+      border-color: var(--hairline-strong);
+      color: var(--ink-primary);
     }
 
     .mode-btn.active {
-      background: rgba(56, 189, 248, 0.16);
-      border-color: var(--accent);
-      color: #fff;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+      background: linear-gradient(135deg, rgba(255, 246, 247, 0.96), rgba(245, 226, 230, 0.88));
+      border-color: var(--rose-primary);
+      color: var(--ink-primary);
+      box-shadow: 0 2px 8px rgba(196, 118, 132, 0.16), inset 0 1px 0 #fff;
     }
 
-    .dot {
+    .swatch {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
+      border-radius: 2px;
       flex-shrink: 0;
+      border: 1px solid rgba(34, 28, 31, 0.15);
     }
 
-    /* Controls & Sliders */
+    /* =========================================================
+       FORM CONTROLS, SLIDERS & BUTTONS
+       ========================================================= */
     .row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      font-size: 12px;
-      color: #cbd5e1;
+      gap: 10px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
       margin-bottom: 8px;
     }
     .row:last-child { margin-bottom: 0; }
 
+    .val-readout {
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
     select {
       width: 100%;
-      background: rgba(9, 11, 16, 0.8);
-      color: var(--text-main);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: var(--radius-sm);
-      padding: 7px 9px;
-      font-size: 12px;
+      height: 30px;
+      padding: 0 8px;
       margin-bottom: 8px;
+      background: rgba(255, 253, 250, 0.85);
+      color: var(--ink-primary);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
+      font-size: 11.5px;
+      font-weight: 500;
       outline: none;
+      cursor: pointer;
     }
 
+    select:focus { border-color: var(--rose-primary); }
+
+    /* Tailored Thin Range Slider */
     input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
       flex: 1;
       max-width: 150px;
-      accent-color: var(--accent);
+      height: 2px;
+      background: rgba(164, 122, 130, 0.3);
+      border-radius: 2px;
+      outline: none;
       cursor: pointer;
     }
 
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--cream-solid);
+      border: 2px solid var(--rose-primary);
+      box-shadow: 0 1px 4px rgba(54, 34, 40, 0.22);
+      transition: transform 0.1s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      background: var(--rose-primary);
+    }
+
+    input[type="range"]:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Tailored Checkbox */
     input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
       width: 15px;
       height: 15px;
-      accent-color: var(--accent);
+      border-radius: 3px;
+      border: 1px solid var(--hairline-strong);
+      background: rgba(255, 253, 250, 0.85);
       cursor: pointer;
+      display: grid;
+      place-content: center;
+      transition: all 0.12s ease;
+    }
+
+    input[type="checkbox"]:checked {
+      background: var(--rose-primary);
+      border-color: var(--rose-deep);
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: "";
+      width: 7px;
+      height: 4px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg) translate(0.5px, -0.5px);
     }
 
     input[type="color"] {
-      width: 28px;
-      height: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 26px;
+      height: 19px;
+      border: 1px solid var(--hairline-strong);
       border-radius: 4px;
-      background: none;
+      padding: 1px;
+      background: #fff;
       cursor: pointer;
     }
 
@@ -347,88 +518,126 @@
 
     .btn-sub {
       flex: 1;
-      background: rgba(255, 255, 255, 0.07);
-      color: var(--text-main);
-      border: 1px solid rgba(255, 255, 255, 0.11);
-      border-radius: var(--radius-sm);
-      padding: 6px 8px;
-      font-size: 11.5px;
+      height: 28px;
+      background: rgba(255, 253, 250, 0.75);
+      color: var(--ink-primary);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
+      font-size: 11px;
       font-weight: 600;
+      letter-spacing: 0.4px;
       cursor: pointer;
-      transition: background 0.14s;
+      transition: all 0.14s ease;
     }
 
-    .btn-sub:hover:not(:disabled) { background: rgba(255, 255, 255, 0.14); }
-    .btn-sub:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-sub.active { border-color: var(--accent); color: var(--accent); }
+    .btn-sub:hover:not(:disabled) {
+      background: #fff;
+      border-color: var(--hairline-strong);
+    }
 
-    /* Soundboard Chips */
+    .btn-sub:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-sub.active {
+      background: var(--rose-soft);
+      border-color: var(--rose-primary);
+      color: var(--rose-deep);
+    }
+
+    /* Sound Chips */
     .sfx-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 5px;
-      margin-top: 6px;
     }
 
     .sfx-chip {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #cbd5e1;
-      border-radius: 6px;
-      padding: 5px 4px;
-      font-size: 11px;
+      height: 25px;
+      background: rgba(255, 253, 250, 0.7);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
+      color: var(--ink-secondary);
+      font-size: 10px;
       font-weight: 700;
+      letter-spacing: 0.9px;
       cursor: pointer;
-      text-align: center;
-      transition: transform 0.1s, border-color 0.15s, color 0.15s;
+      transition: all 0.12s ease;
     }
 
     .sfx-chip:hover {
-      border-color: var(--accent);
-      color: #fff;
+      background: #fff;
+      border-color: var(--rose-primary);
+      color: var(--rose-deep);
       transform: translateY(-1px);
     }
 
-    /* Stats Grid */
+    /* Telemetry Grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      font-size: 11.5px;
+      gap: 5px;
     }
 
     .stat-box {
-      background: rgba(9, 11, 16, 0.55);
+      background: rgba(255, 253, 250, 0.65);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
       padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .stat-label { font-size: 10px; color: var(--text-muted); display: block; }
-    .stat-val { font-weight: 700; color: var(--text-main); }
+    .stat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      display: block;
+      margin-bottom: 1px;
+    }
 
-    /* Fullscreen Drag & Drop Overlay */
+    .stat-val {
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-primary);
+    }
+
+    /* =========================================================
+       DRAG & DROP ARCHITECTURAL OVERLAY
+       ========================================================= */
     #dropzone {
       position: fixed;
-      inset: 12px;
+      inset: 14px;
       z-index: 50;
-      border-radius: 20px;
-      background: rgba(9, 11, 16, 0.85);
-      backdrop-filter: blur(12px);
-      border: 2px dashed var(--accent);
+      border-radius: var(--radius-panel);
+      background-color: rgba(250, 246, 243, 0.88);
+      background-image: var(--marble-veins);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px dashed var(--rose-primary);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.16s ease;
     }
 
     body.dragging #dropzone { opacity: 1; }
-    #dropzone h2 { font-size: 22px; color: #fff; }
-    #dropzone p { font-size: 13px; color: var(--text-muted); }
+
+    #dropzone h2 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-primary);
+    }
+
+    #dropzone p {
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
   </style>
 
   <script type="importmap">
@@ -443,86 +652,93 @@
 <body>
   <div id="canvas-container"></div>
 
-  <!-- Top Floating Bar -->
+  <!-- Top Header Bar -->
   <header id="topbar">
-    <div class="top-group">
-      <div class="glass-pill">
-        <span class="brand">GLB LAB</span>
-        <span class="brand-sub" style="font-size: 11.5px; color: var(--text-muted);">3D Inspector</span>
+    <div class="top-cluster">
+      <div class="brand-bar">
+        <span class="brand-mark"></span>
+        <span class="brand-title">Kōbō 3D</span>
+        <span class="brand-divider"></span>
+        <span class="brand-sub">GLB Studio Inspector</span>
       </div>
-      <label class="btn-primary" title="Load .glb or .gltf file">
-        <span>+ Load GLB</span>
+      <label class="btn-load" title="Import .glb or .gltf model">
+        <span>+ Import GLB</span>
         <input type="file" id="fileInput" accept=".glb,.gltf" hidden />
       </label>
     </div>
 
-    <div class="top-group">
-      <button id="soundToggleBtn" class="icon-btn active" title="Toggle Load Sound Effects">🔊 SFX On</button>
-      <button id="resetCamBtn" class="icon-btn" title="Reset Camera [R]">⌖ Reset</button>
-      <button id="toggleUiBtn" class="icon-btn active" title="Toggle Panel [H]">☰ Panel</button>
+    <div class="top-cluster">
+      <button id="soundToggleBtn" class="tool-btn active" title="Toggle Load Audio">
+        <span>Audio</span><span class="hide-mobile">On</span>
+      </button>
+      <button id="resetCamBtn" class="tool-btn" title="Reset Camera [R]">
+        <span>Reset</span>
+      </button>
+      <button id="toggleUiBtn" class="tool-btn active" title="Toggle Inspector [H]">
+        <span>Panel</span>
+      </button>
     </div>
   </header>
 
-  <!-- Sound Feedback Pill -->
+  <!-- Sound Feedback Capsule -->
   <div id="sound-toast">
-    <span>🔊</span>
-    <span class="sfx-word" id="toastWord">POP!</span>
-    <span id="toastFile" style="color: var(--text-muted); font-weight: 500;">model.glb</span>
+    <span class="sfx-tag" id="toastWord">POP</span>
+    <span id="toastFile" style="color: var(--ink-secondary);">model.glb</span>
   </div>
 
-  <!-- Adaptive Inspector Sidebar / Bottom Drawer -->
+  <!-- Adaptive Inspector Sidebar / Bottom Dock -->
   <aside id="inspector">
-    <!-- Render / Shader Modes -->
+    <!-- Render / Surface Modes -->
     <div class="card">
-      <div class="card-title">
-        <span>Render Mode</span>
-        <span id="activeModeBadge" style="color: var(--accent);">Texture</span>
+      <div class="card-header">
+        <span class="card-title">Surface Mode</span>
+        <span class="card-meta" id="activeModeBadge">Texture</span>
       </div>
       <div class="mode-grid" id="modeGrid">
-        <button class="mode-btn active" data-mode="texture"><span class="dot" style="background:#38bdf8;"></span>Texture</button>
-        <button class="mode-btn" data-mode="solid"><span class="dot" style="background:#cbd5e1;"></span>Solid</button>
-        <button class="mode-btn" data-mode="wireframe"><span class="dot" style="background:#22d3ee;"></span>Wireframe</button>
-        <button class="mode-btn" data-mode="holographic"><span class="dot" style="background:#00f0ff; box-shadow:0 0 6px #00f0ff;"></span>Holographic</button>
-        <button class="mode-btn" data-mode="granite"><span class="dot" style="background:#78716c;"></span>Granite</button>
-        <button class="mode-btn" data-mode="gold"><span class="dot" style="background:#fbbf24;"></span>Gold</button>
-        <button class="mode-btn" data-mode="glitch"><span class="dot" style="background:#f43f5e; box-shadow:0 0 6px #f43f5e;"></span>Glitch</button>
-        <button class="mode-btn" data-mode="chrome"><span class="dot" style="background:#e2e8f0;"></span>Chrome</button>
-        <button class="mode-btn" data-mode="xray"><span class="dot" style="background:#818cf8;"></span>X-Ray</button>
-        <button class="mode-btn" data-mode="normals"><span class="dot" style="background:linear-gradient(135deg,#f43f5e,#22c55e,#3b82f6);"></span>Normals</button>
+        <button class="mode-btn active" data-mode="texture"><span class="swatch" style="background:#c47684;"></span>Texture</button>
+        <button class="mode-btn" data-mode="solid"><span class="swatch" style="background:#ece6df;"></span>Solid</button>
+        <button class="mode-btn" data-mode="wireframe"><span class="swatch" style="background:#4a3f45;"></span>Wireframe</button>
+        <button class="mode-btn" data-mode="holographic"><span class="swatch" style="background:#67e8f9;"></span>Holographic</button>
+        <button class="mode-btn" data-mode="granite"><span class="swatch" style="background:#8c8580;"></span>Granite</button>
+        <button class="mode-btn" data-mode="gold"><span class="swatch" style="background:#e5b96b;"></span>Gold</button>
+        <button class="mode-btn" data-mode="glitch"><span class="swatch" style="background:#e11d48;"></span>Glitch</button>
+        <button class="mode-btn" data-mode="chrome"><span class="swatch" style="background:#ffffff;"></span>Chrome</button>
+        <button class="mode-btn" data-mode="xray"><span class="swatch" style="background:#94a3b8;"></span>X-Ray</button>
+        <button class="mode-btn" data-mode="normals"><span class="swatch" style="background:linear-gradient(135deg,#f43f5e,#34d399,#60a5fa);"></span>Normals</button>
       </div>
     </div>
 
     <!-- Animation Controls -->
     <div class="card">
-      <div class="card-title">
-        <span>Animations</span>
-        <span id="timeLabel">0.00s</span>
+      <div class="card-header">
+        <span class="card-title">Motion & Timeline</span>
+        <span class="card-meta" id="timeLabel">0.00s</span>
       </div>
       <select id="animSelect" disabled>
-        <option>No animations in scene</option>
+        <option>No animation clips</option>
       </select>
       <div class="row">
-        <span>Timeline</span>
+        <span>Scrub</span>
         <input type="range" id="scrubber" min="0" max="1" step="0.001" value="0" disabled />
       </div>
       <div class="row">
-        <span>Speed (<span id="speedLabel">1.0x</span>)</span>
+        <span>Speed <span class="val-readout" id="speedLabel">1.0x</span></span>
         <input type="range" id="speedSlider" min="0" max="2.5" step="0.1" value="1" />
       </div>
       <div class="btn-row">
         <button id="playBtn" class="btn-sub" disabled>Pause</button>
-        <button id="autoRotBtn" class="btn-sub">Auto-Rotate</button>
+        <button id="autoRotBtn" class="btn-sub">Turntable</button>
       </div>
     </div>
 
-    <!-- Load Sound FX Selector -->
+    <!-- Acoustic Feedback -->
     <div class="card">
-      <div class="card-title">
-        <span>Load Sound Effect</span>
-        <span style="font-size:10px; color:var(--accent);">Click to test</span>
+      <div class="card-header">
+        <span class="card-title">Import Acoustics</span>
+        <span class="card-meta">Synth</span>
       </div>
       <select id="sfxModeSelect">
-        <option value="random" selected>🎲 Random (Pop / Push / Pew / Noodly / Boing / Dong)</option>
+        <option value="random" selected>Random (Pop / Push / Pew / Noodly / Boing / Dong)</option>
         <option value="pop">Pop</option>
         <option value="push">Push</option>
         <option value="pew">Pew</option>
@@ -540,36 +756,39 @@
       </div>
     </div>
 
-    <!-- Scene & Lighting -->
+    <!-- Stage & Lighting -->
     <div class="card">
-      <div class="card-title"><span>Stage & Lighting</span></div>
+      <div class="card-header">
+        <span class="card-title">Stage & Optics</span>
+        <span class="card-meta">Studio</span>
+      </div>
       <div class="row">
-        <span>Exposure (<span id="expLabel">1.0</span>)</span>
+        <span>Exposure <span class="val-readout" id="expLabel">1.0</span></span>
         <input type="range" id="expSlider" min="0.2" max="2.5" step="0.1" value="1.0" />
       </div>
       <div class="row">
-        <label for="bloomToggle">Neon Bloom</label>
+        <label for="bloomToggle">Emissive Bloom</label>
         <input type="checkbox" id="bloomToggle" checked />
       </div>
       <div class="row">
-        <label for="gridToggle">Floor Grid</label>
+        <label for="gridToggle">Architectural Grid</label>
         <input type="checkbox" id="gridToggle" checked />
       </div>
       <div class="row">
-        <label for="bboxToggle">Bounding Box</label>
+        <label for="bboxToggle">Bounding Frame</label>
         <input type="checkbox" id="bboxToggle" />
       </div>
       <div class="row">
-        <label for="bgColor">Backdrop Color</label>
-        <input type="color" id="bgColor" value="#090b10" />
+        <label for="bgColor">Stage Tone</label>
+        <input type="color" id="bgColor" value="#f2ece6" />
       </div>
     </div>
 
-    <!-- Model Telemetry -->
+    <!-- Telemetry -->
     <div class="card">
-      <div class="card-title">
-        <span>Telemetry</span>
-        <span id="fileNameBadge" style="color:var(--text-main); max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Demo Mesh</span>
+      <div class="card-header">
+        <span class="card-title">Telemetry</span>
+        <span class="card-meta" id="fileNameBadge" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Studio Knot</span>
       </div>
       <div class="stats-grid">
         <div class="stat-box"><span class="stat-label">Meshes</span><span class="stat-val" id="statMeshes">1</span></div>
@@ -582,8 +801,8 @@
 
   <!-- Drag & Drop Overlay -->
   <div id="dropzone">
-    <h2>Drop .GLB or .GLTF Here</h2>
-    <p>Supports PBR textures, Draco, Meshopt, Bones & Shape Keys</p>
+    <h2>Drop GLB / glTF Asset</h2>
+    <p>PBR Textures, Draco, Meshopt, Armatures & Shape Keys</p>
   </div>
 
   <script type="module">
@@ -599,7 +818,7 @@
     import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
     // =========================================================
-    // 1. PROCEDURAL WEB AUDIO SYNTHESIZER (POP/PUSH/PEW/NOODLY/BOING/DONG)
+    // 1. PROCEDURAL WEB AUDIO SYNTHESIZER
     // =========================================================
     let audioCtx = null;
     let sfxEnabled = true;
@@ -629,16 +848,15 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(190, now);
-        osc.frequency.exponentialRampToValueAtTime(680, now + 0.075);
+        osc.frequency.setValueAtTime(195, now);
+        osc.frequency.exponentialRampToValueAtTime(690, now + 0.075);
         gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(0.45, now + 0.01);
+        gain.gain.linearRampToValueAtTime(0.42, now + 0.01);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
         osc.connect(gain).connect(audioCtx.destination);
         osc.start(now);
         osc.stop(now + 0.095);
       } else if (chosen === 'push') {
-        // Airy whoosh + soft low thud
         const bufferSize = Math.floor(audioCtx.sampleRate * 0.22);
         const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = noiseBuffer.getChannelData(0);
@@ -648,13 +866,13 @@
         noise.buffer = noiseBuffer;
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(300, now);
-        filter.frequency.exponentialRampToValueAtTime(1400, now + 0.16);
+        filter.frequency.setValueAtTime(320, now);
+        filter.frequency.exponentialRampToValueAtTime(1450, now + 0.16);
         filter.Q.value = 1.8;
 
         const nGain = audioCtx.createGain();
         nGain.gain.setValueAtTime(0.01, now);
-        nGain.gain.linearRampToValueAtTime(0.35, now + 0.05);
+        nGain.gain.linearRampToValueAtTime(0.32, now + 0.05);
         nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
         noise.connect(filter).connect(nGain).connect(audioCtx.destination);
         noise.start(now);
@@ -664,7 +882,7 @@
         sub.type = 'triangle';
         sub.frequency.setValueAtTime(135, now);
         sub.frequency.exponentialRampToValueAtTime(48, now + 0.18);
-        sGain.gain.setValueAtTime(0.35, now);
+        sGain.gain.setValueAtTime(0.34, now);
         sGain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
         sub.connect(sGain).connect(audioCtx.destination);
         sub.start(now);
@@ -681,7 +899,7 @@
         filter.frequency.setValueAtTime(3200, now);
         filter.frequency.exponentialRampToValueAtTime(400, now + 0.24);
 
-        gain.gain.setValueAtTime(0.32, now);
+        gain.gain.setValueAtTime(0.3, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
         osc.connect(filter).connect(gain).connect(audioCtx.destination);
         osc.start(now);
@@ -703,7 +921,7 @@
 
         lfo.connect(lfoGain).connect(osc.frequency);
         gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.35, now + 0.04);
+        gain.gain.linearRampToValueAtTime(0.34, now + 0.04);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
 
         osc.connect(gain).connect(audioCtx.destination);
@@ -728,7 +946,7 @@
         lfoGain.gain.exponentialRampToValueAtTime(2, now + 0.55);
 
         lfo.connect(lfoGain).connect(osc.frequency);
-        gain.gain.setValueAtTime(0.42, now);
+        gain.gain.setValueAtTime(0.4, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.58);
 
         osc.connect(gain).connect(audioCtx.destination);
@@ -743,7 +961,7 @@
           const gain = audioCtx.createGain();
           osc.type = idx === 0 ? 'sine' : 'triangle';
           osc.frequency.setValueAtTime(f, now);
-          const amp = 0.28 / (idx + 1);
+          const amp = 0.26 / (idx + 1);
           const dur = 1.35 - idx * 0.22;
           gain.gain.setValueAtTime(0.001, now);
           gain.gain.linearRampToValueAtTime(amp, now + 0.015);
@@ -758,15 +976,15 @@
     let toastTimer = null;
     function showSoundToast(word, fileName) {
       const toast = document.getElementById('sound-toast');
-      document.getElementById('toastWord').textContent = word.toUpperCase() + '!';
-      document.getElementById('toastFile').textContent = fileName ? `— ${fileName}` : '';
+      document.getElementById('toastWord').textContent = word.toUpperCase();
+      document.getElementById('toastFile').textContent = fileName ? `· ${fileName}` : '';
       toast.classList.add('show');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.remove('show'), 2100);
     }
 
     // =========================================================
-    // 2. THREE.JS SCENE, RENDERER & ADAPTIVE VIEWPORT
+    // 2. THREE.JS STAGE & ADAPTIVE VIEWPORT
     // =========================================================
     const container = document.getElementById('canvas-container');
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -777,7 +995,7 @@
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#090b10');
+    scene.background = new THREE.Color('#f2ece6');
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -789,22 +1007,23 @@
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
 
-    const gridHelper = new THREE.GridHelper(10, 24, 0x334155, 0x161e2e);
+    // Fine architectural grid tuned to Cream & Rosé stage
+    const gridHelper = new THREE.GridHelper(10, 24, 0xc9b4b8, 0xe3dad4);
     scene.add(gridHelper);
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
+    // Threshold > 1.0 ensures bright cream backdrop never blooms, only HDR emissives
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(container.clientWidth, container.clientHeight),
-      0.65,
+      0.55,
       0.35,
-      0.88
+      1.02
     );
     bloomPass.enabled = true;
     composer.addPass(bloomPass);
     composer.addPass(new OutputPass());
 
-    // ResizeObserver handles both landscape/portrait rotation & window splits seamlessly
     const resizeObserver = new ResizeObserver(() => {
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
@@ -816,7 +1035,7 @@
     resizeObserver.observe(container);
 
     // =========================================================
-    // 3. CUSTOM SHADER & MATERIAL MODES
+    // 3. CUSTOM SHADER & SURFACE MODES
     // =========================================================
     let currentMode = 'texture';
     let currentModel = null;
@@ -838,9 +1057,9 @@
     function createModeMaterial(mode, origMat) {
       if (mode === 'solid') {
         const m = new THREE.MeshStandardMaterial({
-          color: 0xd8dee9,
-          roughness: 0.62,
-          metalness: 0.06
+          color: 0xf6f1eb,
+          roughness: 0.58,
+          metalness: 0.04
         });
         disposableModeMaterials.push(m);
         return m;
@@ -848,7 +1067,7 @@
 
       if (mode === 'wireframe') {
         const m = new THREE.MeshBasicMaterial({
-          color: 0x38bdf8,
+          color: 0x9e5462,
           wireframe: true
         });
         disposableModeMaterials.push(m);
@@ -857,9 +1076,9 @@
 
       if (mode === 'gold') {
         const m = new THREE.MeshStandardMaterial({
-          color: 0xffcf54,
+          color: 0xf4c67a,
           metalness: 1.0,
-          roughness: 0.17,
+          roughness: 0.16,
           envMapIntensity: 1.35
         });
         disposableModeMaterials.push(m);
@@ -868,10 +1087,10 @@
 
       if (mode === 'chrome') {
         const m = new THREE.MeshStandardMaterial({
-          color: 0xf8fafc,
+          color: 0xffffff,
           metalness: 1.0,
           roughness: 0.03,
-          envMapIntensity: 1.5
+          envMapIntensity: 1.45
         });
         disposableModeMaterials.push(m);
         return m;
@@ -888,7 +1107,7 @@
           uniforms: { uTime: sharedUniforms.uTime },
           transparent: true,
           depthWrite: false,
-          blending: THREE.AdditiveBlending,
+          blending: THREE.NormalBlending,
           side: THREE.DoubleSide,
           vertexShader: `
             varying vec3 vNormalW;
@@ -917,13 +1136,13 @@
             varying vec3 vViewDir;
             varying vec3 vWorldPos;
             void main() {
-              float fresnel = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.2);
+              float fresnel = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.0);
               float scan = 0.65 + 0.35 * sin(vWorldPos.y * 95.0 - uTime * 6.0);
               float sweep = smoothstep(0.85, 1.0, sin(vWorldPos.y * 4.0 - uTime * 2.2));
               float flicker = 0.92 + 0.08 * sin(uTime * 37.0);
-              vec3 baseCol = mix(vec3(0.0, 0.72, 1.0), vec3(0.55, 0.95, 1.0), fresnel);
-              float alpha = clamp((fresnel * 0.85 + 0.14 + sweep * 0.35) * scan * flicker, 0.05, 0.95);
-              gl_FragColor = vec4(baseCol * (1.25 + sweep * 0.9), alpha);
+              vec3 baseCol = mix(vec3(0.05, 0.58, 0.85), vec3(0.45, 0.92, 1.0), fresnel);
+              float alpha = clamp((fresnel * 0.85 + 0.18 + sweep * 0.35) * scan * flicker, 0.12, 0.94);
+              gl_FragColor = vec4(baseCol * (1.35 + sweep * 1.1), alpha);
             }
           `
         });
@@ -935,7 +1154,7 @@
         const m = new THREE.ShaderMaterial({
           transparent: true,
           depthWrite: false,
-          blending: THREE.AdditiveBlending,
+          blending: THREE.NormalBlending,
           side: THREE.DoubleSide,
           vertexShader: `
             varying vec3 vNormalW;
@@ -960,9 +1179,9 @@
             varying vec3 vNormalW;
             varying vec3 vViewDir;
             void main() {
-              float edge = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.6);
-              vec3 col = mix(vec3(0.15, 0.25, 0.55), vec3(0.75, 0.88, 1.0), edge);
-              gl_FragColor = vec4(col * 1.15, 0.06 + edge * 0.78);
+              float edge = pow(1.0 - abs(dot(normalize(vNormalW), normalize(vViewDir))), 2.3);
+              vec3 col = mix(vec3(0.76, 0.46, 0.52), vec3(0.24, 0.16, 0.20), edge);
+              gl_FragColor = vec4(col, 0.10 + edge * 0.78);
             }
           `
         });
@@ -972,7 +1191,7 @@
 
       if (mode === 'granite') {
         const m = new THREE.MeshStandardMaterial({
-          color: 0x9ca3af,
+          color: 0xa8a29e,
           roughness: 0.78,
           metalness: 0.05
         });
@@ -1007,9 +1226,9 @@
             float n2 = noise3(sp * 3.1 + 17.0);
             float mica = step(0.76, n2);
             float quartz = step(0.72, n1);
-            vec3 stoneCol = mix(vec3(0.46, 0.47, 0.49), vec3(0.68, 0.67, 0.65), n1);
-            stoneCol = mix(stoneCol, vec3(0.11, 0.12, 0.14), mica * 0.85);
-            stoneCol = mix(stoneCol, vec3(0.88, 0.89, 0.91), quartz * 0.55);
+            vec3 stoneCol = mix(vec3(0.48, 0.46, 0.47), vec3(0.72, 0.69, 0.68), n1);
+            stoneCol = mix(stoneCol, vec3(0.14, 0.12, 0.13), mica * 0.85);
+            stoneCol = mix(stoneCol, vec3(0.92, 0.90, 0.89), quartz * 0.55);
             diffuseColor.rgb = stoneCol;
             `
           ).replace(
@@ -1027,7 +1246,7 @@
       if (mode === 'glitch') {
         const base = (origMat && origMat.isMeshStandardMaterial)
           ? origMat.clone()
-          : new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.7 });
+          : new THREE.MeshStandardMaterial({ color: 0x2a2226, roughness: 0.3, metalness: 0.7 });
 
         base.onBeforeCompile = (shader) => {
           shader.uniforms.uTime = sharedUniforms.uTime;
@@ -1063,10 +1282,10 @@
             float band = floor(vGlitchPos.y * 32.0);
             float bandNoise = fHash(vec2(band, tStep));
             float scan = 0.75 + 0.25 * sin(vGlitchPos.y * 180.0);
-            vec3 neon = mix(vec3(1.0, 0.08, 0.52), vec3(0.05, 0.9, 1.0), step(0.5, bandNoise));
+            vec3 neon = mix(vec3(1.0, 0.08, 0.45), vec3(0.05, 0.85, 1.0), step(0.5, bandNoise));
             float mask = step(0.62, bandNoise) * burst;
             diffuseColor.rgb *= scan;
-            totalEmissiveRadiance += neon * mask * 2.4;
+            totalEmissiveRadiance += neon * mask * 3.2;
             `
           );
         };
@@ -1105,7 +1324,7 @@
     }
 
     // =========================================================
-    // 4. GLTF / GLB LOADING & DEMO MESH
+    // 4. GLTF / GLB LOADING & STUDIO PLACEHOLDER
     // =========================================================
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -1208,7 +1427,7 @@
 
       if (clips.length === 0) {
         const opt = document.createElement('option');
-        opt.textContent = 'No animations in scene';
+        opt.textContent = 'No animation clips';
         animSelect.appendChild(opt);
         animSelect.disabled = true;
         scrubber.disabled = true;
@@ -1283,7 +1502,7 @@
         scene.add(currentModel);
         fitCameraToModel(currentModel);
 
-        bboxHelper = new THREE.BoxHelper(currentModel, 0x38bdf8);
+        bboxHelper = new THREE.BoxHelper(currentModel, 0xc47684);
         bboxHelper.visible = document.getElementById('bboxToggle').checked;
         scene.add(bboxHelper);
 
@@ -1291,24 +1510,22 @@
         setupAnimations(gltf.animations);
         updateTelemetry(currentModel, fileName);
 
-        // Trigger the celebratory load sound effect!
         const chosenSfx = document.getElementById('sfxModeSelect').value;
         playSound(chosenSfx, fileName);
       }, (err) => {
         console.error(err);
-        alert('Failed to load GLB/glTF file. Check console for details.');
+        alert('Failed to load GLB/glTF asset. Check browser console for details.');
       });
     }
 
-    // Spawn sleek default placeholder mesh on startup so modes & SFX work immediately
     function spawnDemoModel() {
       cleanupScene();
       const group = new THREE.Group();
-      const geo = new THREE.TorusKnotGeometry(0.45, 0.16, 180, 32);
+      const geo = new THREE.TorusKnotGeometry(0.45, 0.15, 200, 36);
       const mat = new THREE.MeshStandardMaterial({
-        color: 0x38bdf8,
-        metalness: 0.45,
-        roughness: 0.25
+        color: 0xd996a2,
+        metalness: 0.72,
+        roughness: 0.18
       });
       const mesh = new THREE.Mesh(geo, mat);
       mesh.userData.origMaterial = mat;
@@ -1318,12 +1535,12 @@
       scene.add(currentModel);
       fitCameraToModel(currentModel);
 
-      bboxHelper = new THREE.BoxHelper(currentModel, 0x38bdf8);
+      bboxHelper = new THREE.BoxHelper(currentModel, 0xc47684);
       bboxHelper.visible = false;
       scene.add(bboxHelper);
 
       setupAnimations([]);
-      updateTelemetry(currentModel, 'Demo Knot');
+      updateTelemetry(currentModel, 'Studio Knot');
     }
 
     spawnDemoModel();
@@ -1356,7 +1573,9 @@
     const soundToggleBtn = document.getElementById('soundToggleBtn');
     soundToggleBtn.addEventListener('click', () => {
       sfxEnabled = !sfxEnabled;
-      soundToggleBtn.textContent = sfxEnabled ? '🔊 SFX On' : '🔇 Muted';
+      soundToggleBtn.innerHTML = sfxEnabled
+        ? '<span>Audio</span><span class="hide-mobile">On</span>'
+        : '<span>Audio</span><span class="hide-mobile">Off</span>';
       soundToggleBtn.classList.toggle('active', sfxEnabled);
       if (sfxEnabled) ensureAudio();
     });
@@ -1428,7 +1647,6 @@
       scene.background = new THREE.Color(e.target.value);
     });
 
-    // Keyboard Shortcuts
     window.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
       const key = e.key.toLowerCase();
@@ -1444,7 +1662,6 @@
       }
     });
 
-    // Drag & Drop
     window.addEventListener('dragover', (e) => {
       e.preventDefault();
       document.body.classList.add('dragging');
