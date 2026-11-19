@@ -1475,6 +1475,44 @@ body.intro-mode {
   }
 }
 </style>
+<style id="index-button-shapes-final">
+/* Capsule buttons for text actions; softly rounded squares for icon controls. */
+.btn,
+.glass:not(.effect-btn),
+#intro-skip-buttons .intro-skip-btn {
+  border-radius: 999px !important;
+}
+#intro-skip-buttons .intro-skip-btn {
+  min-height: 48px;
+  min-width: 170px;
+  padding: 12px 28px;
+}
+#effect-buttons .effect-btn,
+.index-utility-btn,
+.bg-nav-btn {
+  border-radius: 12px !important;
+}
+#effect-buttons .effect-btn {
+  font-size: 20px;
+}
+.intro-entry {
+  width: min(100%, 420px);
+}
+#intro-skip-buttons {
+  width: 100%;
+}
+@media (max-width: 600px) {
+  #intro-skip-buttons { gap: 10px; }
+  #intro-skip-buttons .intro-skip-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 10px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  #effect-buttons .effect-btn { font-size: 18px; }
+}
+</style>
 </head>
 
 <body class="intro-mode">
@@ -1552,8 +1590,8 @@ body.intro-mode {
     <div class="ui-top">
       <div id="effect-buttons" aria-label="Interactive effects">
         <button class="btn glass effect-btn" id="heart-btn" title="Heart effect" type="button" aria-label="Heart effect">♥</button>
-        <button class="btn glass effect-btn" id="rainbow-btn" title="Rainbow effect" type="button" aria-label="Rainbow effect">◉</button>
-        <button aria-label="Show a quote" class="btn glass effect-btn" id="wisdom-btn" title="Show a quote" type="button">✳<span class="quote-counter" id="quote-counter">0</span></button>
+        <button class="btn glass effect-btn" id="rainbow-btn" title="Rainbow effect" type="button" aria-label="Rainbow effect">🌈</button>
+        <button aria-label="Show a quote" class="btn glass effect-btn" id="wisdom-btn" title="Show a quote" type="button">🗿<span class="quote-counter" id="quote-counter">0</span></button>
       </div>
       <div id="ui-wrapper">
         <button class="btn glass" id="music-toggle" type="button">MUSIC</button>
