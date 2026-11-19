@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>KŌBŌ // 3D GLB Studio Inspector</title>
   <style>
     :root {
       /* Warm Cream-Orange, Marble, Frosted Glass & Rosé Palette */
       --bg-stage: #f6d7bd;
-      --cream-base: rgba(253, 245, 237, 0.84);
+      --cream-base: rgba(253, 245, 237, 0.85);
       --cream-solid: #fdf5ed;
-      --glass-card: rgba(255, 251, 246, 0.66);
-      --glass-hover: rgba(255, 253, 250, 0.92);
+      --glass-card: rgba(255, 251, 246, 0.68);
+      --glass-hover: rgba(255, 253, 250, 0.94);
 
       --rose-primary: #c47684;
       --rose-deep: #964958;
@@ -32,6 +32,14 @@
       --radius-panel: 12px;
       --radius-card: 7px;
       --radius-control: 5px;
+
+      /* Dynamic Layout Metrics (Updated via ResizeObserver) */
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --topbar-h: 52px;
+      --inspector-h: 0px;
     }
 
     * {
@@ -43,8 +51,10 @@
 
     html, body {
       width: 100%;
-      height: 100%;
+      height: 100vh;
+      height: 100dvh;
       overflow: hidden;
+      overscroll-behavior: none;
       background: var(--bg-stage);
       color: var(--ink-primary);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
@@ -58,6 +68,7 @@
       width: 100%;
       height: 100%;
       z-index: 1;
+      touch-action: none;
     }
 
     canvas {
@@ -68,103 +79,13 @@
     }
 
     /* =========================================================
-       OPTICAL MEDIUM-FORMAT VIEWFINDER OVERLAY
-       ========================================================= */
-    #viewfinder {
-      position: fixed;
-      inset: 60px 14px 14px 346px;
-      z-index: 5;
-      pointer-events: none;
-      transition: inset 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
-    }
-
-    body.ui-collapsed #viewfinder {
-      inset: 60px 14px 14px 14px;
-    }
-
-    .vf-corner {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      border-color: rgba(150, 73, 88, 0.36);
-      border-style: solid;
-    }
-    .vf-tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
-    .vf-tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
-    .vf-bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
-    .vf-br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
-
-    #vf-telemetry {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      font-variant-numeric: tabular-nums;
-      color: rgba(110, 62, 70, 0.75);
-      background: rgba(253, 245, 237, 0.45);
-      backdrop-filter: blur(8px);
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid rgba(154, 108, 102, 0.18);
-    }
-
-    /* =========================================================
-       STUDIO CAMERA ANGLE PILLS (BOTTOM RIGHT)
-       ========================================================= */
-    #cam-angles {
-      position: fixed;
-      right: 22px;
-      bottom: 22px;
-      z-index: 16;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background-color: var(--cream-base);
-      background-image: var(--marble-veins);
-      backdrop-filter: blur(20px) saturate(135%);
-      -webkit-backdrop-filter: blur(20px) saturate(135%);
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-panel);
-      padding: 4px;
-      box-shadow: 0 8px 24px rgba(64, 38, 32, 0.08), inset 0 1px 0 rgba(255, 253, 250, 0.85);
-      transition: bottom 0.25s ease;
-    }
-
-    .cam-pill {
-      height: 26px;
-      padding: 0 10px;
-      border: 1px solid transparent;
-      border-radius: 7px;
-      background: transparent;
-      color: var(--ink-secondary);
-      font-size: 10.5px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: all 0.14s ease;
-    }
-
-    .cam-pill:hover {
-      background: rgba(255, 252, 248, 0.8);
-      color: var(--ink-primary);
-    }
-
-    .cam-pill.active {
-      background: linear-gradient(135deg, rgba(255, 247, 245, 0.96), rgba(246, 225, 224, 0.88));
-      border-color: var(--rose-primary);
-      color: var(--rose-deep);
-    }
-
-    /* =========================================================
-       TOP ARCHITECTURAL HEADER BAR
+       TOP ARCHITECTURAL HEADER BAR (DESKTOP & MOBILE ADAPTIVE)
        ========================================================= */
     #topbar {
       position: fixed;
-      top: 14px;
-      left: 14px;
-      right: 14px;
+      top: calc(12px + var(--safe-top));
+      left: calc(12px + var(--safe-left));
+      right: calc(12px + var(--safe-right));
       z-index: 20;
       display: flex;
       align-items: center;
@@ -182,16 +103,17 @@
 
     .brand-bar {
       background-color: var(--cream-base);
-      background-image: var(--marble-veins), linear-gradient(135deg, rgba(255,253,249,0.76), rgba(248,231,218,0.52));
+      background-image: var(--marble-veins), linear-gradient(135deg, rgba(255,253,249,0.78), rgba(248,231,218,0.54));
       backdrop-filter: blur(22px) saturate(135%);
       -webkit-backdrop-filter: blur(22px) saturate(135%);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-panel);
       height: 38px;
-      padding: 0 14px;
+      padding: 0 13px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
+      flex-shrink: 0;
       box-shadow: 0 8px 24px rgba(72, 44, 36, 0.07), inset 0 1px 0 rgba(255, 253, 250, 0.9);
     }
 
@@ -202,14 +124,16 @@
       transform: rotate(45deg);
       background: var(--rose-primary);
       box-shadow: 0 0 0 3px var(--rose-soft);
+      flex-shrink: 0;
     }
 
     .brand-title {
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 2.2px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--ink-primary);
+      white-space: nowrap;
     }
 
     .brand-divider {
@@ -223,22 +147,25 @@
       font-weight: 600;
       letter-spacing: 0.4px;
       color: var(--ink-muted);
+      white-space: nowrap;
     }
 
     .btn-load {
       height: 38px;
-      padding: 0 15px;
+      padding: 0 14px;
       border-radius: var(--radius-panel);
       background: linear-gradient(135deg, var(--rose-primary), var(--rose-deep));
       color: #fffcfa;
       border: 1px solid rgba(255, 251, 246, 0.4);
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.9px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
+      white-space: nowrap;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       box-shadow: 0 8px 20px rgba(150, 73, 88, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.35);
       transition: transform 0.14s ease, box-shadow 0.15s ease, filter 0.15s ease;
@@ -254,7 +181,7 @@
 
     .tool-btn {
       height: 38px;
-      padding: 0 12px;
+      padding: 0 11px;
       border-radius: var(--radius-panel);
       background-color: var(--cream-base);
       background-image: var(--marble-veins);
@@ -264,10 +191,12 @@
       color: var(--ink-secondary);
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 5px;
       box-shadow: 0 8px 24px rgba(72, 44, 36, 0.06), inset 0 1px 0 rgba(255, 253, 250, 0.88);
       transition: all 0.15s ease;
@@ -286,11 +215,106 @@
     }
 
     /* =========================================================
+       OPTICAL MEDIUM-FORMAT VIEWFINDER OVERLAY
+       ========================================================= */
+    #viewfinder {
+      position: fixed;
+      top: calc(var(--topbar-h) + 18px);
+      right: calc(14px + var(--safe-right));
+      bottom: calc(14px + var(--safe-bottom));
+      left: calc(344px + var(--safe-left));
+      z-index: 5;
+      pointer-events: none;
+      transition: inset 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+    }
+
+    body.ui-collapsed #viewfinder {
+      left: calc(14px + var(--safe-left));
+    }
+
+    .vf-corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: rgba(150, 73, 88, 0.36);
+      border-style: solid;
+    }
+    .vf-tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
+    .vf-tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
+    .vf-bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+    .vf-br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+    #vf-telemetry {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.1px;
+      font-variant-numeric: tabular-nums;
+      color: rgba(110, 62, 70, 0.78);
+      background: rgba(253, 245, 237, 0.48);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(154, 108, 102, 0.20);
+    }
+
+    /* =========================================================
+       STUDIO CAMERA ANGLE PILLS
+       ========================================================= */
+    #cam-angles {
+      position: fixed;
+      right: calc(20px + var(--safe-right));
+      bottom: calc(20px + var(--safe-bottom));
+      z-index: 16;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background-color: var(--cream-base);
+      background-image: var(--marble-veins);
+      backdrop-filter: blur(20px) saturate(135%);
+      -webkit-backdrop-filter: blur(20px) saturate(135%);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-panel);
+      padding: 4px;
+      box-shadow: 0 8px 24px rgba(64, 38, 32, 0.08), inset 0 1px 0 rgba(255, 253, 250, 0.85);
+      transition: bottom 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cam-pill {
+      height: 26px;
+      padding: 0 9px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--ink-secondary);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .cam-pill:hover {
+      background: rgba(255, 252, 248, 0.8);
+      color: var(--ink-primary);
+    }
+
+    .cam-pill.active {
+      background: linear-gradient(135deg, rgba(255, 247, 245, 0.96), rgba(246, 225, 224, 0.88));
+      border-color: var(--rose-primary);
+      color: var(--rose-deep);
+    }
+
+    /* =========================================================
        SOUND & SNAPSHOT TOAST CAPSULE
        ========================================================= */
     #sound-toast {
       position: fixed;
-      top: 62px;
+      top: calc(var(--topbar-h) + 18px);
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       z-index: 30;
@@ -300,15 +324,19 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--rose-primary);
       box-shadow: 0 10px 28px rgba(150, 73, 88, 0.2), inset 0 1px 0 #fffcfa;
-      padding: 7px 16px;
+      padding: 6px 15px;
       border-radius: 999px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       color: var(--ink-primary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      max-width: calc(100vw - 32px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
@@ -322,8 +350,9 @@
     #sound-toast .sfx-tag {
       color: var(--rose-deep);
       font-weight: 800;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.1px;
       text-transform: uppercase;
+      flex-shrink: 0;
     }
 
     /* =========================================================
@@ -331,21 +360,23 @@
        ========================================================= */
     #inspector {
       position: fixed;
-      top: 62px;
-      left: 14px;
-      bottom: 14px;
-      width: 320px;
+      top: calc(var(--topbar-h) + 18px);
+      left: calc(12px + var(--safe-left));
+      bottom: calc(12px + var(--safe-bottom));
+      width: 318px;
       z-index: 15;
       background-color: var(--cream-base);
       background-image:
         var(--marble-veins),
-        linear-gradient(165deg, rgba(255, 253, 249, 0.82) 0%, rgba(249, 232, 219, 0.68) 100%);
+        linear-gradient(165deg, rgba(255, 253, 249, 0.84) 0%, rgba(249, 232, 219, 0.70) 100%);
       backdrop-filter: blur(28px) saturate(145%);
       -webkit-backdrop-filter: blur(28px) saturate(145%);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-panel);
       padding: 11px;
       overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
       display: flex;
       flex-direction: column;
       gap: 9px;
@@ -368,15 +399,51 @@
       transform: translateX(-18px);
     }
 
-    /* Portrait / Vertical Viewport Adaptation */
+    /* =========================================================
+       RESPONSIVE BREAKPOINTS: PORTRAIT, COMPACT MOBILE & LANDSCAPE
+       ========================================================= */
+    /* 1. Narrow Screens (Phones in Portrait / Compact Windows) */
+    @media (max-width: 720px) {
+      .brand-divider, .brand-sub, .hide-mobile {
+        display: none;
+      }
+
+      #topbar {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .top-cluster:first-child {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .top-cluster:last-child {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .top-cluster:last-child .tool-btn {
+        flex: 1 1 0;
+        height: 32px;
+        padding: 0 6px;
+        font-size: 10.5px;
+      }
+
+      .brand-bar, .btn-load {
+        height: 34px;
+      }
+    }
+
+    /* 2. Portrait Aspect Ratio or Mobile Width -> Bottom Sheet Dock */
     @media (max-aspect-ratio: 1/1), (max-width: 780px) {
       #inspector {
         top: auto;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
+        left: calc(10px + var(--safe-left));
+        right: calc(10px + var(--safe-right));
+        bottom: calc(10px + var(--safe-bottom));
         width: auto;
-        max-height: 43vh;
+        max-height: min(41dvh, calc(100dvh - var(--topbar-h) - 135px));
         padding: 10px;
         gap: 8px;
       }
@@ -386,24 +453,56 @@
       }
 
       #viewfinder {
-        inset: 58px 10px calc(43vh + 18px) 10px;
+        left: calc(12px + var(--safe-left));
+        right: calc(12px + var(--safe-right));
+        bottom: calc(var(--inspector-h) + 18px + var(--safe-bottom));
       }
 
       body.ui-collapsed #viewfinder {
-        inset: 58px 10px 10px 10px;
+        bottom: calc(14px + var(--safe-bottom));
       }
 
       #cam-angles {
-        right: 16px;
-        bottom: calc(43vh + 24px);
+        right: calc(16px + var(--safe-right));
+        bottom: calc(var(--inspector-h) + 24px + var(--safe-bottom));
       }
 
       body.ui-collapsed #cam-angles {
-        bottom: 16px;
+        bottom: calc(18px + var(--safe-bottom));
       }
+    }
 
+    /* 3. Mobile Landscape (Short Viewport Height, e.g. Phone rotated sideways) */
+    @media (orientation: landscape) and (max-height: 520px) {
       .brand-divider, .brand-sub, .hide-mobile {
         display: none;
+      }
+
+      .brand-bar, .btn-load, .tool-btn {
+        height: 32px;
+        padding: 0 9px;
+        font-size: 10.5px;
+      }
+
+      #inspector {
+        width: 268px;
+        padding: 8px;
+        gap: 7px;
+      }
+
+      #viewfinder {
+        left: calc(290px + var(--safe-left));
+      }
+
+      #cam-angles {
+        right: calc(16px + var(--safe-right));
+        bottom: calc(16px + var(--safe-bottom));
+      }
+
+      .cam-pill {
+        height: 24px;
+        padding: 0 7px;
+        font-size: 10px;
       }
     }
 
@@ -467,7 +566,7 @@
     }
 
     .seg-btn {
-      height: 24px;
+      height: 25px;
       border: 1px solid transparent;
       border-radius: 4px;
       background: transparent;
@@ -478,9 +577,7 @@
       transition: all 0.13s ease;
     }
 
-    .seg-btn:hover {
-      color: var(--ink-primary);
-    }
+    .seg-btn:hover { color: var(--ink-primary); }
 
     .seg-btn.active {
       background: #fffdfb;
@@ -501,6 +598,12 @@
     @media (max-aspect-ratio: 1/1), (max-width: 780px) {
       .mode-grid {
         grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .mode-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -564,7 +667,7 @@
 
     select {
       width: 100%;
-      height: 29px;
+      height: 30px;
       padding: 0 8px;
       margin-bottom: 8px;
       background: rgba(255, 252, 248, 0.92);
@@ -584,7 +687,7 @@
       -webkit-appearance: none;
       appearance: none;
       flex: 1;
-      max-width: 150px;
+      max-width: 155px;
       height: 2px;
       background: rgba(154, 108, 102, 0.36);
       border-radius: 2px;
@@ -604,6 +707,17 @@
       transition: transform 0.1s ease;
     }
 
+    /* Larger ergonomic thumb on touch screens */
+    @media (pointer: coarse) {
+      input[type="range"]::-webkit-slider-thumb {
+        width: 16px;
+        height: 16px;
+      }
+      .mode-btn, .seg-btn, .btn-sub, .sfx-chip {
+        min-height: 30px;
+      }
+    }
+
     input[type="range"]::-webkit-slider-thumb:hover {
       transform: scale(1.15);
       background: var(--rose-primary);
@@ -618,8 +732,8 @@
     input[type="checkbox"] {
       -webkit-appearance: none;
       appearance: none;
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
       border-radius: 3px;
       border: 1px solid var(--hairline-strong);
       background: rgba(255, 252, 248, 0.92);
@@ -644,8 +758,8 @@
     }
 
     input[type="color"] {
-      width: 26px;
-      height: 19px;
+      width: 28px;
+      height: 20px;
       border: 1px solid var(--hairline-strong);
       border-radius: 4px;
       padding: 1px;
@@ -688,8 +802,8 @@
     .btn-pulse {
       width: 100%;
       margin-top: 6px;
-      height: 27px;
-      background: linear-gradient(135deg, rgba(255, 245, 246, 0.9), rgba(247, 224, 228, 0.85));
+      height: 28px;
+      background: linear-gradient(135deg, rgba(255, 245, 246, 0.92), rgba(247, 224, 228, 0.86));
       border: 1px solid var(--rose-primary);
       color: var(--rose-deep);
       border-radius: var(--radius-control);
@@ -714,7 +828,7 @@
     }
 
     .sfx-chip {
-      height: 25px;
+      height: 26px;
       background: rgba(255, 252, 248, 0.80);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-control);
@@ -769,7 +883,7 @@
        ========================================================= */
     #dropzone {
       position: fixed;
-      inset: 14px;
+      inset: 12px;
       z-index: 50;
       border-radius: var(--radius-panel);
       background-color: rgba(248, 223, 202, 0.92);
@@ -781,6 +895,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      text-align: center;
+      padding: 20px;
       gap: 8px;
       opacity: 0;
       pointer-events: none;
@@ -821,7 +937,7 @@
     <div class="vf-corner vf-tr"></div>
     <div class="vf-corner vf-bl"></div>
     <div class="vf-corner vf-br"></div>
-    <div id="vf-telemetry">AZ 031° · EL 017°</div>
+    <div id="vf-telemetry">AZ 031° · EL +17°</div>
   </div>
 
   <!-- Studio Camera Perspective Pills -->
@@ -852,7 +968,7 @@
         <span>Snap</span>
       </button>
       <button id="snapAlphaBtn" class="tool-btn" title="Save Transparent Cutout PNG">
-        <span>Alpha PNG</span>
+        <span>Alpha</span><span class="hide-mobile">PNG</span>
       </button>
       <button id="soundToggleBtn" class="tool-btn active" title="Toggle Studio Audio">
         <span>Audio</span><span class="hide-mobile">On</span>
@@ -869,7 +985,7 @@
   <!-- Sound & Snapshot Feedback Capsule -->
   <div id="sound-toast">
     <span class="sfx-tag" id="toastWord">POP</span>
-    <span id="toastFile" style="color: var(--ink-secondary);">model.glb</span>
+    <span id="toastFile" style="color: var(--ink-secondary); overflow: hidden; text-overflow: ellipsis;">model.glb</span>
   </div>
 
   <!-- Adaptive Inspector Sidebar / Bottom Dock -->
@@ -924,7 +1040,7 @@
       </div>
       <div class="row">
         <label for="bloomToggle">Emissive Bloom</label>
-        <input type="checkbox" id="bloomToggle" checked />
+        <input type="checkbox" id="bloomToggle" />
       </div>
       <div class="row">
         <label for="bboxToggle">Bounding Frame</label>
@@ -1018,6 +1134,24 @@
     import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
     // =========================================================
+    // 0. DYNAMIC LAYOUT METRICS FOR MOBILE & DESKTOP VIEWPORTS
+    // =========================================================
+    const topbarEl = document.getElementById('topbar');
+    const inspectorEl = document.getElementById('inspector');
+
+    function syncLayoutMetrics() {
+      const topH = topbarEl ? topbarEl.offsetHeight : 38;
+      const inspH = inspectorEl ? inspectorEl.offsetHeight : 0;
+      document.documentElement.style.setProperty('--topbar-h', `${topH}px`);
+      document.documentElement.style.setProperty('--inspector-h', `${inspH}px`);
+    }
+
+    const layoutObserver = new ResizeObserver(syncLayoutMetrics);
+    layoutObserver.observe(topbarEl);
+    layoutObserver.observe(inspectorEl);
+    syncLayoutMetrics();
+
+    // =========================================================
     // 1. PROCEDURAL WEB AUDIO SYNTHESIZER + MICRO-HAPTIC CLICK
     // =========================================================
     let audioCtx = null;
@@ -1033,7 +1167,6 @@
       }
     }
 
-    // Subtle mechanical detent click for UI dials & buttons
     function playTick() {
       if (!sfxEnabled) return;
       ensureAudio();
@@ -1223,7 +1356,6 @@
 
     const scene = new THREE.Scene();
 
-    // Procedural Studio Cyclorama (Radial Gradient Texture)
     let bgTexture = null;
     function setCycloramaBackground(hexColor, isDark = false) {
       const base = new THREE.Color(hexColor);
@@ -1249,11 +1381,9 @@
 
     setCycloramaBackground('#f6d7bd', false);
 
-    // Studio Environment Reflections
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-    // Directional Studio Key Light + Soft Fill Light
     const hemiLight = new THREE.HemisphereLight(0xfff8f0, 0xd8b4a0, 0.55);
     scene.add(hemiLight);
 
@@ -1270,9 +1400,7 @@
     keyLight.shadow.normalBias = 0.02;
     scene.add(keyLight);
 
-    let lightAzimuthDeg = 45;
     function updateStudioLightAngle(deg) {
-      lightAzimuthDeg = deg;
       const rad = THREE.MathUtils.degToRad(deg);
       const radius = 4.2;
       keyLight.position.set(Math.sin(rad) * radius, 4.6, Math.cos(rad) * radius);
@@ -1295,11 +1423,9 @@
     const stageGroup = new THREE.Group();
     scene.add(stageGroup);
 
-    // 3a. Architectural Grid
     let gridHelper = new THREE.GridHelper(10, 24, 0xd1a796, 0xe8c6ab);
     stageGroup.add(gridHelper);
 
-    // 3b. Beveled Marble & Rose-Gold Plinth
     function createMarblePlinthTexture() {
       const c = document.createElement('canvas');
       c.width = 512;
@@ -1308,7 +1434,6 @@
       ctx.fillStyle = '#faf3eb';
       ctx.fillRect(0, 0, 512, 512);
 
-      // Subtle organic veins
       for (let v = 0; v < 22; v++) {
         ctx.beginPath();
         let x = Math.random() * 512;
@@ -1340,7 +1465,6 @@
     plinthMesh.position.y = -0.0275;
     plinthMesh.receiveShadow = true;
 
-    // Fine brushed rose-gold inlay ring around top edge
     const trimGeo = new THREE.TorusGeometry(1.002, 0.0045, 16, 96);
     trimGeo.rotateX(Math.PI / 2);
     const trimMat = new THREE.MeshStandardMaterial({
@@ -1355,7 +1479,6 @@
     plinthGroup.visible = false;
     stageGroup.add(plinthGroup);
 
-    // 3c. Soft Real-Time Shadow Receiver + Ambient Contact AO Disc
     const shadowPlane = new THREE.Mesh(
       new THREE.PlaneGeometry(14, 14).rotateX(-Math.PI / 2),
       new THREE.ShadowMaterial({ opacity: 0.19, color: 0x3a2024 })
@@ -1391,9 +1514,7 @@
     contactShadowMesh.position.y = 0.0003;
     stageGroup.add(contactShadowMesh);
 
-    let currentPedestal = 'grid';
     function setPedestalMode(mode) {
-      currentPedestal = mode;
       document.querySelectorAll('#pedestalGroup .seg-btn').forEach((b) => {
         b.classList.toggle('active', b.dataset.pedestal === mode);
       });
@@ -1401,7 +1522,6 @@
       plinthGroup.visible = mode === 'plinth';
     }
 
-    // 3d. Lighting Mood Presets
     let currentMood = 'daylight';
     function setLightingMood(mood) {
       currentMood = mood;
@@ -1456,7 +1576,7 @@
       stageGroup.add(gridHelper);
     }
 
-    // Multisampled HalfFloat EffectComposer
+    // Multisampled HalfFloat EffectComposer (Bloom OFF by default)
     const rt = new THREE.WebGLRenderTarget(
       Math.max(container.clientWidth, 1),
       Math.max(container.clientHeight, 1),
@@ -1471,7 +1591,7 @@
       0.35,
       1.05
     );
-    bloomPass.enabled = true;
+    bloomPass.enabled = false;
     composer.addPass(bloomPass);
     composer.addPass(new OutputPass());
 
@@ -1482,6 +1602,7 @@
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
       composer.setSize(w, h);
+      syncLayoutMetrics();
     });
     resizeObserver.observe(container);
 
@@ -1806,7 +1927,7 @@
     }
 
     // =========================================================
-    // 5. PHYSICAL SPAWN CHOREOGRAPHY & CAMERA TRANSITIONS
+    // 5. PHYSICAL SPAWN CHOREOGRAPHY & ASPECT-AWARE CAMERA
     // =========================================================
     const spawnState = { active: false, type: 'pop', t: 0, duration: 0.65 };
 
@@ -1864,7 +1985,6 @@
       }
     }
 
-    // Smooth Camera Angle Presets
     const camAnim = {
       active: false,
       t: 0,
@@ -1875,12 +1995,19 @@
       endTarget: new THREE.Vector3()
     };
 
+    function getOptimalCameraDistance() {
+      const vFov = THREE.MathUtils.degToRad(camera.fov);
+      const hFov = 2 * Math.atan(Math.tan(vFov / 2) * Math.max(camera.aspect, 0.35));
+      const limitingFov = Math.min(vFov, hFov);
+      return (modelRadius * 0.72) / Math.tan(limitingFov / 2);
+    }
+
     function goToCameraView(viewName) {
       document.querySelectorAll('.cam-pill').forEach((b) => {
         b.classList.toggle('active', b.dataset.view === viewName);
       });
 
-      const dist = modelRadius * 1.68;
+      const dist = getOptimalCameraDistance();
       const c = modelCenter;
       const endPos = new THREE.Vector3();
 
@@ -1934,13 +2061,11 @@
       camera.far = Math.max(maxDim * 500, 100);
       camera.updateProjectionMatrix();
 
-      // Scale pedestal, grid & contact shadow to match model footprint
       const footprint = Math.max(framedSize.x, framedSize.z, maxDim * 0.5);
       plinthGroup.scale.setScalar(footprint * 0.78);
       gridHelper.scale.setScalar(Math.max(maxDim * 0.36, 0.1));
       contactShadowMesh.scale.set(footprint * 1.45, footprint * 1.45, 1);
 
-      // Adjust key light shadow frustum to fit model tightly
       const shadowSpan = maxDim * 1.5;
       keyLight.shadow.camera.left = -shadowSpan;
       keyLight.shadow.camera.right = shadowSpan;
@@ -2257,6 +2382,7 @@
       playTick();
       const collapsed = document.body.classList.toggle('ui-collapsed');
       toggleUiBtn.classList.toggle('active', !collapsed);
+      requestAnimationFrame(syncLayoutMetrics);
     });
 
     document.getElementById('resetCamBtn').addEventListener('click', () => {
@@ -2326,7 +2452,6 @@
       setCycloramaBackground(e.target.value, currentMood === 'midnight');
     });
 
-    // Cancel camera tween if user grabs OrbitControls manually
     controls.addEventListener('start', () => {
       camAnim.active = false;
     });
@@ -2380,7 +2505,6 @@
 
       updateSpawnChoreography(delta);
 
-      // Smooth Camera Preset Interpolation
       if (camAnim.active) {
         camAnim.t += delta;
         const p = Math.min(camAnim.t / camAnim.duration, 1.0);
@@ -2403,7 +2527,6 @@
 
       controls.update();
 
-      // Update Medium-Format Viewfinder Azimuth / Elevation Readout
       offsetVec.copy(camera.position).sub(controls.target);
       spherical.setFromVector3(offsetVec);
       const az = Math.round(((THREE.MathUtils.radToDeg(spherical.theta) % 360) + 360) % 360);
