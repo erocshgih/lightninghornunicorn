@@ -453,6 +453,15 @@
         font-size: 10px;
       }
 
+      .demo-model-select {
+        width: clamp(92px, 29vw, 122px);
+        max-width: 122px;
+        flex: 0 1 auto;
+        height: 36px;
+        padding: 0 5px;
+        font-size: 9px;
+      }
+
       .top-cluster:last-child {
         width: 100%;
         flex: 1 1 100%;
@@ -591,6 +600,13 @@
       .row { min-height: 34px; gap: 10px; }
       .row-label { white-space: normal; }
       .seg-group.compact { max-width: 58%; }
+    }
+
+    @media (max-width: 360px) {
+      .brand-bar { padding: 0 7px; gap: 5px; }
+      .brand-title { font-size: 9px; letter-spacing: 1px; }
+      .btn-load { padding: 0 7px; font-size: 9px; }
+      .demo-model-select { width: 92px; font-size: 8.5px; }
     }
 
     /* Compact but persistent side inspector on tablets. */
@@ -844,6 +860,51 @@
     }
 
     select:focus { border-color: var(--rose-primary); }
+
+    .demo-model-select {
+      width: 168px;
+      max-width: 168px;
+      height: 38px;
+      flex: 0 1 168px;
+      margin: 0;
+      padding: 0 9px;
+      background-color: var(--cream-base);
+      background-image: var(--marble-veins), linear-gradient(135deg, rgba(255,253,249,0.82), rgba(248,231,218,0.62));
+      backdrop-filter: blur(18px) saturate(130%);
+      -webkit-backdrop-filter: blur(18px) saturate(130%);
+      border-color: var(--hairline-strong);
+      border-radius: var(--radius-panel);
+      box-shadow: 0 4px 16px rgba(82, 49, 49, 0.07);
+      font-size: 10.5px;
+      letter-spacing: 0.25px;
+      text-overflow: ellipsis;
+    }
+
+    .demo-model-select:disabled { opacity: 0.68; cursor: progress; }
+
+    /* Keep the picker compact on phones; placed after base rules to win the cascade. */
+    @media (max-width: 720px) {
+      .demo-model-select {
+        width: clamp(92px, 29vw, 122px);
+        max-width: 122px;
+        flex: 0 1 auto;
+        height: 36px;
+        padding: 0 5px;
+        font-size: 9px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .demo-model-select { width: 92px; font-size: 8.5px; }
+    }
+
+    @media (min-width: 721px) and (max-width: 780px) {
+      .demo-model-select {
+        width: clamp(108px, calc(100vw - 613px), 168px);
+        max-width: 168px;
+        flex-basis: auto;
+      }
+    }
 
     /* Tailored Thin Range Slider */
     input[type="range"] {
@@ -1124,6 +1185,17 @@
         <span>+ Import GLB</span>
         <input type="file" id="fileInput" accept=".glb,.gltf" hidden />
       </label>
+      <select id="demoModelSelect" class="demo-model-select" aria-label="Load a demo head">
+        <option value="" selected>DEMO HEADS · 8</option>
+        <option value="askflamongostache.glb">Askflamongo Stache</option>
+        <option value="duckybulywaterhorn.glb">Ducky Bulby Waterhorn</option>
+        <option value="grasscowschmeckicore.glb">Grasscow Schmeckicore</option>
+        <option value="hotdoghorn.glb">Hotdog Horn</option>
+        <option value="obesewarrior.glb">Obese Warrior</option>
+        <option value="pumpzhehorn.glb">Pumpzhe Horn</option>
+        <option value="unibrowserloadicorn.glb">Unibrowser Loadicorn</option>
+        <option value="uniturnoeyeballhorn.glb">Uniturno Eyeballhorn</option>
+      </select>
     </div>
 
     <div class="top-cluster">
@@ -2846,6 +2918,9 @@
       animSelect.innerHTML = '';
 
       if (clips.length === 0) {
+        mixer = null;
+        activeActions = [];
+        isPlaying = false;
         const opt = document.createElement('option');
         opt.textContent = 'No animation clips';
         animSelect.appendChild(opt);
@@ -2854,6 +2929,7 @@
         scrubber.value = 0;
         timeLabel.textContent = '0.00s';
         playBtn.disabled = true;
+        playBtn.textContent = 'Play';
         return;
       }
 
@@ -2909,34 +2985,42 @@
     }
 
     function loadGLBBuffer(buffer, fileName) {
-      cleanupScene();
+      // Parse first. The currently displayed model remains intact if the new asset is invalid.
+      return new Promise((resolve, reject) => {
+        loader.parse(buffer, '', (gltf) => {
+          try {
+            cleanupScene();
+            currentModel = gltf.scene;
+            currentModel.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.userData.origMaterial = child.material;
+              }
+            });
 
-      loader.parse(buffer, '', (gltf) => {
-        currentModel = gltf.scene;
-        currentModel.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            child.userData.origMaterial = child.material;
+            modelPivot.add(currentModel);
+            fitStageToModel(currentModel);
+
+            bboxHelper = new THREE.BoxHelper(currentModel, 0xc47684);
+            bboxHelper.visible = document.getElementById('bboxToggle').checked;
+            scene.add(bboxHelper);
+
+            applyRenderMode(currentMode);
+            setupAnimations(gltf.animations);
+            updateTelemetry(currentModel, fileName);
+
+            const chosenSfx = document.getElementById('sfxModeSelect').value;
+            playSound(chosenSfx, fileName, true);
+            resolve(gltf);
+          } catch (error) {
+            console.error('GLB scene setup failed:', error);
+            reject(error);
           }
+        }, (err) => {
+          console.error('GLB parse failed:', err);
+          reject(err instanceof Error ? err : new Error('Could not parse this GLB/glTF asset.'));
         });
-
-        modelPivot.add(currentModel);
-        fitStageToModel(currentModel);
-
-        bboxHelper = new THREE.BoxHelper(currentModel, 0xc47684);
-        bboxHelper.visible = document.getElementById('bboxToggle').checked;
-        scene.add(bboxHelper);
-
-        applyRenderMode(currentMode);
-        setupAnimations(gltf.animations);
-        updateTelemetry(currentModel, fileName);
-
-        const chosenSfx = document.getElementById('sfxModeSelect').value;
-        playSound(chosenSfx, fileName, true);
-      }, (err) => {
-        console.error(err);
-        alert('Failed to load GLB/glTF asset. Check browser console for details.');
       });
     }
 
@@ -3019,13 +3103,66 @@
     // =========================================================
     // 9. UI & INPUT WIRING
     // =========================================================
+    let demoLoadSequence = 0;
+
     function handleFile(file) {
       if (!file) return;
       ensureAudio();
+      const demoSelect = document.getElementById('demoModelSelect');
+      if (demoSelect) demoSelect.value = '';
+
       const reader = new FileReader();
-      reader.onload = (e) => loadGLBBuffer(e.target.result, file.name);
+      reader.onload = async (e) => {
+        try {
+          await loadGLBBuffer(e.target.result, file.name);
+        } catch (error) {
+          console.error(error);
+          alert('Failed to load GLB/glTF asset. The previous model was kept. Check the browser console for details.');
+        }
+      };
+      reader.onerror = () => alert('Could not read this file. Please try again.');
       reader.readAsArrayBuffer(file);
     }
+
+    async function loadDemoModel(fileName) {
+      if (!fileName) return;
+      const select = document.getElementById('demoModelSelect');
+      const loadId = ++demoLoadSequence;
+      const selectedLabel = select.options[select.selectedIndex]?.textContent || fileName;
+      select.disabled = true;
+      select.setAttribute('aria-busy', 'true');
+
+      try {
+        const demoUrl = new URL(`./heads/${encodeURIComponent(fileName)}`, window.location.href);
+        const response = await fetch(demoUrl.href, { cache: 'no-cache' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} while requesting ./heads/${fileName}`);
+        }
+        const buffer = await response.arrayBuffer();
+        if (loadId !== demoLoadSequence) return;
+        await loadGLBBuffer(buffer, fileName);
+        if (loadId !== demoLoadSequence) return;
+        showSoundToast('DEMO LOADED', selectedLabel);
+      } catch (error) {
+        console.error('Demo GLB load failed:', error);
+        if (loadId === demoLoadSequence) {
+          select.value = '';
+          showSoundToast('DEMO ERROR', `${fileName} · Check ./heads/ path`);
+        }
+      } finally {
+        if (loadId === demoLoadSequence) {
+          select.disabled = false;
+          select.removeAttribute('aria-busy');
+        }
+      }
+    }
+
+    document.getElementById('demoModelSelect').addEventListener('change', (e) => {
+      const fileName = e.target.value;
+      if (!fileName) return;
+      ensureAudio();
+      loadDemoModel(fileName);
+    });
 
     document.getElementById('fileInput').addEventListener('change', (e) => {
       handleFile(e.target.files[0]);
