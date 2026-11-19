@@ -536,21 +536,10 @@ a { text-decoration: none; }
       <div class="kobo-row">
         <span class="kobo-row-label">MODEL</span>
         <select class="kobo-select" id="kobo-model-select" aria-label="Select 3D model"></select>
-        <button class="kobo-chip" id="kobo-scan-folder" type="button">↻ SCAN FOLDER</button>
-        <span class="kobo-folder-status" id="kobo-folder-status" role="status">CONNECTING TO GLB FOLDER…</span>
-        <button class="kobo-chip" id="kobo-upload-btn" type="button" aria-expanded="false" aria-controls="kobo-github-menu">IMPORT GLB ▾</button>
+        <button class="kobo-chip" id="kobo-local-upload-btn" type="button">＋ FROM DEVICE</button>
         <input type="file" id="kobo-file-input" accept=".glb,.gltf" hidden />
         <button class="kobo-chip" id="kobo-anim-toggle" type="button">ANIM: ON</button>
-      </div>
-      <div class="kobo-github-menu" id="kobo-github-menu" hidden>
-        <div class="kobo-github-menu-head">
-          <a class="kobo-github-folder-link" href="https://github.com/erocshgih/lightninghornunicorn/tree/main/glb" target="_blank" rel="noopener noreferrer">GITHUB REPOSITORY / GLB ↗</a>
-          <button class="kobo-chip" id="kobo-local-upload-btn" type="button">＋ FROM DEVICE</button>
-        </div>
-        <div class="kobo-github-model-list" id="kobo-github-model-list" aria-live="polite">
-          <span class="kobo-github-empty">Reading the GLB folder…</span>
-        </div>
-        <div class="kobo-import-credit">Kōbō 3D by Vedran Lukic &amp; Aether Veylan</div>
+        <span class="kobo-folder-status" id="kobo-folder-status" role="status">DEMO MODELS</span>
       </div>
       <div class="kobo-row">
         <span class="kobo-row-label">SHADER</span>
@@ -691,14 +680,33 @@ function disposeObject(root) {
   const overlay = document.getElementById("kobo-3d-overlay");
   const canvasWrap = document.getElementById("kobo-canvas-wrap");
   const modelSelect = document.getElementById("kobo-model-select");
-  if (!overlay || !canvasWrap || !modelSelect) return;
+  if (!overlay || !canvasWrap || !modelSelect) {
+    console.error("[Kōbō] Required DOM elements missing – aborting.");
+    return;
+  }
   const folderStatus = document.getElementById("kobo-folder-status");
-  const scanFolderBtn = document.getElementById("kobo-scan-folder");
-  const uploadBtn = document.getElementById("kobo-upload-btn");
   const fileInput = document.getElementById("kobo-file-input");
-  const githubMenu = document.getElementById("kobo-github-menu");
-  const githubModelList = document.getElementById("kobo-github-model-list");
   const localUploadBtn = document.getElementById("kobo-local-upload-btn");
+
+  // ── Hardcoded demo models from /glb on the repo ──────────────────────────
+  const GLB_BASE = "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/";
+  const DEMO_MODELS = [
+    { name: "askflamongostache",   file: "askflamongostache.glb" },
+    { name: "duckybulbywaterhorn", file: "duckybulbywaterhorn.glb" },
+    { name: "grasscowschmeckicore",file: "grasscowschmeckicore.glb" },
+    { name: "hotdoghorn",         file: "hotdoghorn.glb" },
+    { name: "obesewarrior",       file: "obesewarrior.glb" },
+    { name: "pumpzhehorn",        file: "pumpzhehorn.glb" },
+    { name: "unibrowserloadicorn",file: "unibrowserloadicorn.glb" },
+    { name: "uniturnoeyeballhorn",file: "uniturnoeyeballhorn.glb" },
+    { name: "berta",              file: "berta.glb" },
+    { name: "duddha",             file: "duddha.glb" },
+    { name: "rubberduck",         file: "rubberduck.glb" },
+    { name: "hitenter",           file: "hitenter.glb" },
+    { name: "duckarmorbackpack",  file: "duckarmorbackpack.glb" },
+    { name: "commissionerwurstinger", file: "commissionerwurstinger.glb" },
+    { name: "turnmeonring",       file: "turnmeonring.glb" }
+  ];
 
   let koboInitialized = false;
   let koboActive = false;
@@ -706,6 +714,7 @@ function disposeObject(root) {
   let kScene, kCamera, kRenderer, kControls, kClock;
   let kKeyLight, kFillLight, kRimLight, kHemiLight, kGrid;
   let kModel = null, kMixer = null;
+  let kActions = [];
   let kAnimEnabled = true;
   let kShaderMode = "texture";
   let kMood = "daylight";
@@ -724,7 +733,7 @@ function disposeObject(root) {
   let kCurrentIsLocal = false;
   let kCurrentLabel = "";
 
-  // Web Audio remains available for interactive studio effects only.
+  // Web Audio for spawn / glitch sounds
   let audioCtx = null;
 
   // Web Audio Synth for Spawn Choreographies & Glitch Pulse
@@ -1120,6 +1129,7 @@ function disposeObject(root) {
       kMixer.stopAllAction();
       kMixer = null;
     }
+    kActions = [];
     disposeKoboCustomMaterials();
 
     loader.load(url, (gltf) => {
@@ -1136,10 +1146,12 @@ function disposeObject(root) {
       kScene.add(kModel);
       if (gltf.animations && gltf.animations.length) {
         kMixer = new THREE.AnimationMixer(kModel);
+        kActions = [];
         gltf.animations.forEach(clip => {
           const action = kMixer.clipAction(clip);
           action.play();
           action.paused = !kAnimEnabled;
+          kActions.push(action);
         });
       }
       updateKoboTelemetry();
@@ -1227,7 +1239,7 @@ function disposeObject(root) {
         if (tNorm >= 1) {
           kModel.scale.setScalar(baseScale);
           kModel.position.copy(basePos);
-          kModel.rotation.z = baseRot.z;
+          kModel.rotation.copy(baseRot);   // full restore (fixes PEW + others)
           kSpawnState = null;
         }
       }
@@ -1293,14 +1305,8 @@ function disposeObject(root) {
     });
   });
 
-  // Model selector, GitHub import menu and local GLB upload.
-  modelSelect?.addEventListener("change", (e) => loadKoboModel(e.target.value));
-  uploadBtn?.addEventListener("click", () => {
-    if (!githubMenu) return;
-    githubMenu.hidden = !githubMenu.hidden;
-    uploadBtn.setAttribute("aria-expanded", String(!githubMenu.hidden));
-    if (!githubMenu.hidden && !discoveredModels.length) scanGitHubFolder(false);
-  });
+  // Model selector + local upload
+  modelSelect.addEventListener("change", (e) => loadKoboModel(e.target.value));
   localUploadBtn?.addEventListener("click", () => fileInput?.click());
   fileInput?.addEventListener("change", (e) => {
     const file = e.target.files?.[0];
@@ -1309,14 +1315,26 @@ function disposeObject(root) {
     loadKoboModel(blobUrl, file.name.replace(/\.(glb|gltf)$/i, ""));
   });
 
+  // Populate the demo model dropdown once
+  function populateDemoModels() {
+    modelSelect.replaceChildren();
+    DEMO_MODELS.forEach((m, i) => {
+      const opt = document.createElement("option");
+      opt.value = GLB_BASE + m.file;
+      opt.textContent = m.name;
+      if (i === 0) opt.selected = true;
+      modelSelect.appendChild(opt);
+    });
+    if (folderStatus) folderStatus.textContent = `${DEMO_MODELS.length} DEMO MODELS`;
+  }
+  populateDemoModels();
+
   // Animation toggle
   document.getElementById("kobo-anim-toggle")?.addEventListener("click", (e) => {
     kAnimEnabled = !kAnimEnabled;
     e.currentTarget.textContent = `ANIM: ${kAnimEnabled ? "ON" : "OFF"}`;
     e.currentTarget.classList.toggle("is-active", kAnimEnabled);
-    if (kMixer) {
-      kMixer._actions?.forEach(a => { a.paused = !kAnimEnabled; });
-    }
+    kActions.forEach(a => { a.paused = !kAnimEnabled; });
   });
 
   // Shader modes (including X-Ray)
@@ -1491,111 +1509,22 @@ function disposeObject(root) {
   window.disposeKoboStudio = () => {
     closeKoboStudio(false);
     if (kModel) { kScene?.remove(kModel); disposeObject(kModel); kModel = null; }
+    if (kMixer) { kMixer.stopAllAction(); kMixer = null; }
+    kActions = [];
     disposeKoboCustomMaterials();
     try { kRenderer?.dispose(); kRenderer?.forceContextLoss(); } catch (e) {}
   };
-  // Discover every GLB directly from the repository folder on each page visit.
-  const GITHUB_FOLDER_API = "https://api.github.com/repos/erocshgih/lightninghornunicorn/contents/glb?ref=main";
-  let discoveredModels = [];
-  let scanInProgress = false;
 
-  async function scanGitHubFolder(autoLoad = false) {
-    if (scanInProgress) return;
-    scanInProgress = true;
-    if (scanFolderBtn) scanFolderBtn.disabled = true;
-    if (folderStatus) folderStatus.textContent = "SCANNING GITHUB FOLDER…";
-    try {
-      const response = await fetch(GITHUB_FOLDER_API, {
-        headers: { "Accept": "application/vnd.github+json" },
-        cache: "no-store"
-      });
-      if (!response.ok) throw new Error(`GitHub API: ${response.status} ${response.statusText}`);
-      const entries = await response.json();
-      const files = entries
-        .filter(item => item && item.type === "file" && /\.glb$/i.test(item.name) && item.download_url)
-        .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
-      const previousValue = modelSelect.value;
-      discoveredModels = files.map(item => ({
-        name: item.name.replace(/\.glb$/i, ""),
-        fileName: item.name,
-        url: item.download_url
-      }));
-      modelSelect.replaceChildren();
-      discoveredModels.forEach(model => {
-        const option = document.createElement("option");
-        option.value = model.url;
-        option.textContent = model.name;
-        modelSelect.appendChild(option);
-      });
-      if (kCurrentIsLocal && kCurrentUrl && kModel) {
-        const localOption = document.createElement("option");
-        localOption.value = kCurrentUrl;
-        localOption.textContent = `${kCurrentLabel || "LOCAL MODEL"} · LOCAL`;
-        localOption.dataset.custom = "1";
-        modelSelect.insertBefore(localOption, modelSelect.firstChild);
-      }
-      if (githubModelList) {
-        githubModelList.replaceChildren();
-        if (discoveredModels.length) {
-          discoveredModels.forEach(model => {
-            const modelButton = document.createElement("button");
-            modelButton.type = "button";
-            modelButton.className = "kobo-chip";
-            modelButton.textContent = model.name;
-            modelButton.title = `Load ${model.fileName} from GitHub`;
-            modelButton.classList.toggle("is-selected", model.url === kCurrentUrl);
-            modelButton.addEventListener("click", () => {
-              loadKoboModel(model.url, model.name);
-              githubModelList.querySelectorAll(".kobo-chip").forEach(button => button.classList.remove("is-selected"));
-              modelButton.classList.add("is-selected");
-            });
-            githubModelList.appendChild(modelButton);
-          });
-        } else {
-          const empty = document.createElement("span");
-          empty.className = "kobo-github-empty";
-          empty.textContent = "No .glb files found in the repository folder yet.";
-          githubModelList.appendChild(empty);
-        }
-      }
-      if (folderStatus) folderStatus.textContent = `${discoveredModels.length} GLB FILE${discoveredModels.length === 1 ? "" : "S"} FOUND · AUTO-SCAN 2 MIN`;
-      const selected = discoveredModels.find(model => model.url === previousValue) || discoveredModels[0];
-      if (kCurrentIsLocal && kModel) {
-        modelSelect.value = kCurrentUrl;
-      } else if (selected) {
-        modelSelect.value = selected.url;
-        if (autoLoad || !kModel || !discoveredModels.some(model => model.url === kCurrentUrl)) {
-          loadKoboModel(selected.url, selected.name);
-        }
-      } else if (folderStatus) {
-        folderStatus.textContent = "NO .GLB FILES FOUND IN /glb";
-      }
-    } catch (error) {
-      console.error("Kobo folder scan failed:", error);
-      if (folderStatus) folderStatus.textContent = "FOLDER SCAN FAILED · CHECK CONNECTION / GITHUB API";
-      if (githubModelList && !discoveredModels.length) {
-        githubModelList.replaceChildren();
-        const message = document.createElement("span");
-        message.className = "kobo-github-empty";
-        message.textContent = "Could not read GitHub. Check the connection or open the repository folder.";
-        githubModelList.appendChild(message);
-      }
-    } finally {
-      scanInProgress = false;
-      if (scanFolderBtn) scanFolderBtn.disabled = false;
-    }
+  // ── Start ──────────────────────────────────────────────────────────────
+  openKoboStudio();
+
+  // Auto-load first demo model
+  if (DEMO_MODELS.length) {
+    const first = DEMO_MODELS[0];
+    loadKoboModel(GLB_BASE + first.file, first.name);
   }
 
-  scanFolderBtn?.addEventListener("click", () => scanGitHubFolder(false));
-
-  // Standalone page: start the studio immediately, then refresh the GitHub
-  // folder periodically so newly committed GLB files appear without a reload.
-  openKoboStudio();
-  scanGitHubFolder(true);
-  const GITHUB_SCAN_INTERVAL = 120000; // 2 minutes, mindful of the unauthenticated API rate limit
-  const folderScanTimer = window.setInterval(() => scanGitHubFolder(false), GITHUB_SCAN_INTERVAL);
   window.addEventListener("pagehide", () => {
-    window.clearInterval(folderScanTimer);
     closeKoboStudio(false);
   }, { once: true });
 

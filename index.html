@@ -2617,14 +2617,14 @@ document.addEventListener('keydown', (event) => {
 /* [JS-DATEN] 3D-HEADS */
 const LAST_HEAD_STORAGE_KEY = 'lhu-last-head';
 const MODELS = [
-  { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/unibrowserloadicorn.glb" },
-  { label: "uniturnoeyeballhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/uniturnoeyeballhorn.glb" },
-  { label: "duckybulbywaterhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/duckybulbywaterhorn.glb" },
-  { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/obesewarrior.glb" },
-  { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/askflamongostache.glb" },
-  { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hotdoghorn.glb" },
-  { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/pumpzhehorn.glb" },
-  { label: "grasscowschmeckicore", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/grasscowschmeckicore.glb" }
+  { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/unibrowserloadicorn.glb" },
+  { label: "uniturnoeyeballhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/uniturnoeyeballhorn.glb" },
+  { label: "duckybulbywaterhorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/duckybulbywaterhorn.glb" },
+  { label: "obesewarrior", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/obesewarrior.glb" },
+  { label: "askflamongostache", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/askflamongostache.glb" },
+  { label: "hotdoghorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/hotdoghorn.glb" },
+  { label: "pumpzhehorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/pumpzhehorn.glb" },
+  { label: "grasscowschmeckicore", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/grasscowschmeckicore.glb" }
 ];
 
 const loadingEl = document.getElementById("index-loading");
@@ -5226,6 +5226,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (animationFrame === null) animationFrame = requestAnimationFrame(loop);
     triggerCategoryChange(entryCategory, { updateHistory: false });
   };
+
+  // Navigation fallback: MAIN PAGE must work even if the optional Three.js
+  // module fails to download or initialize. The SPA entry point is owned by
+  // this shared script, so bind the buttons here rather than relying on the
+  // 3D module to attach their click handlers.
+  const enterMainPage = () => window.__lhuEnterMainSite({ category: 'ABOUT' });
+  document.getElementById('navigate-to-main')?.addEventListener('click', enterMainPage);
+  document.getElementById('btn-skip-main')?.addEventListener('click', () => {
+    window.__lhuStopIntro?.(true);
+    enterMainPage();
+  });
 
   const directCategory = categoryFromLocation();
   if (directCategory) window.__lhuEnterMainSite({ category: directCategory });
