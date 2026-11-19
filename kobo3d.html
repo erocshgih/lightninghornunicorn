@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>KŌBŌ // 3D GLB Studio Inspector</title>
   <style>
     :root {
@@ -69,6 +69,11 @@
       height: 100%;
       z-index: 1;
       touch-action: none;
+    }
+
+    :where(button, input, select, label[for]):focus-visible {
+      outline: 2px solid var(--rose-deep);
+      outline-offset: 2px;
     }
 
     canvas {
@@ -406,8 +411,13 @@
       transform: translateX(-18px);
     }
 
+    .inspector-handle { display: none; }
+
     /* =========================================================
-       RESPONSIVE BREAKPOINTS
+       RESPONSIVE LAYOUT
+       Desktop: fixed inspector sidebar
+       Tablet: compact inspector sidebar
+       Phone: draggable bottom-sheet inspector
        ========================================================= */
     @media (max-width: 720px) {
       .brand-divider, .brand-sub, .hide-mobile {
@@ -415,6 +425,9 @@
       }
 
       #topbar {
+        top: calc(8px + var(--safe-top));
+        left: calc(8px + var(--safe-left));
+        right: calc(8px + var(--safe-right));
         flex-wrap: wrap;
         gap: 6px;
       }
@@ -422,65 +435,184 @@
       .top-cluster:first-child {
         flex: 1 1 auto;
         min-width: 0;
+        gap: 5px;
+      }
+
+      .brand-bar {
+        min-width: 0;
+        height: 36px;
+        padding: 0 10px;
+        gap: 7px;
+      }
+
+      .brand-title { font-size: 10.5px; letter-spacing: 1.4px; }
+
+      .btn-load {
+        height: 36px;
+        padding: 0 10px;
+        font-size: 10px;
       }
 
       .top-cluster:last-child {
         width: 100%;
+        flex: 1 1 100%;
         justify-content: space-between;
+        gap: 4px;
       }
 
       .top-cluster:last-child .tool-btn {
         flex: 1 1 0;
-        height: 32px;
-        padding: 0 6px;
-        font-size: 10.5px;
+        min-width: 0;
+        height: 36px;
+        padding: 0 4px;
+        font-size: 10px;
+        letter-spacing: 0;
       }
 
-      .brand-bar, .btn-load {
-        height: 34px;
-      }
-    }
-
-    @media (max-aspect-ratio: 1/1), (max-width: 780px) {
       #inspector {
         top: auto;
+        left: calc(8px + var(--safe-left));
+        right: calc(8px + var(--safe-right));
+        bottom: calc(8px + var(--safe-bottom));
+        width: auto;
+        max-height: min(44dvh, calc(100dvh - var(--topbar-h) - 110px - var(--safe-top)));
+        padding: 8px;
+        gap: 8px;
+        border-radius: 16px;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                    opacity 0.18s ease, max-height 0.28s ease;
+      }
+
+      /* A desktop collapse state must not accidentally hide the phone sheet. */
+      body.ui-collapsed #inspector {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      body[data-panel-state="expanded"] #inspector {
+        max-height: min(86dvh, calc(100dvh - var(--topbar-h) - 42px - var(--safe-top) - var(--safe-bottom)));
+      }
+
+      body[data-panel-state="closed"] #inspector {
+        transform: translateY(calc(100% + 18px));
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .inspector-handle {
+        position: sticky;
+        top: -8px;
+        z-index: 4;
+        display: flex;
+        flex: 0 0 34px;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        min-height: 34px;
+        margin: -8px 0 0;
+        padding: 5px 0 4px;
+        border: 0;
+        border-radius: 12px 12px 6px 6px;
+        background: linear-gradient(180deg, rgba(253,245,237,0.98), rgba(253,245,237,0.78));
+        color: var(--ink-muted);
+        cursor: grab;
+        touch-action: none;
+      }
+
+      .handle-grip {
+        display: block;
+        width: 38px;
+        height: 4px;
+        border-radius: 99px;
+        background: rgba(150, 73, 88, 0.42);
+      }
+
+      .handle-label {
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 1.3px;
+        line-height: 1;
+      }
+
+      #viewfinder {
+        top: calc(var(--topbar-h) + 14px);
         left: calc(10px + var(--safe-left));
         right: calc(10px + var(--safe-right));
+        bottom: calc(var(--inspector-h) + 56px + var(--safe-bottom));
+      }
+
+      body[data-panel-state="closed"] #viewfinder {
+        bottom: calc(58px + var(--safe-bottom));
+      }
+
+      #cam-angles {
+        left: calc(10px + var(--safe-left));
+        right: calc(10px + var(--safe-right));
+        bottom: calc(var(--inspector-h) + 10px + var(--safe-bottom));
+        justify-content: center;
+        gap: 3px;
+        padding: 4px;
+        max-width: calc(100vw - 20px - var(--safe-left) - var(--safe-right));
+      }
+
+      .cam-pill {
+        min-width: 0;
+        height: 32px;
+        flex: 1 1 auto;
+        padding: 0 8px;
+        font-size: 10px;
+      }
+
+      body[data-panel-state="closed"] #cam-angles {
         bottom: calc(10px + var(--safe-bottom));
-        width: auto;
-        max-height: min(42dvh, calc(100dvh - var(--topbar-h) - 135px));
+      }
+
+      #vf-telemetry {
+        font-size: 9px;
+        letter-spacing: 0.6px;
+      }
+
+      .card { padding: 10px; }
+      .card-header { padding-bottom: 7px; margin-bottom: 9px; }
+      .mode-btn { min-height: 36px; padding: 8px; }
+      .seg-btn { min-height: 36px; font-size: 10.5px; }
+      .btn-sub, .btn-pulse, .sfx-chip { min-height: 38px; height: auto; }
+      select { min-height: 40px; height: auto; font-size: 13px; }
+      input[type="checkbox"] { width: 20px; height: 20px; }
+      input[type="color"] { width: 38px; height: 30px; }
+      input[type="range"] { max-width: none; min-width: 70px; height: 24px; }
+      input[type="range"]::-webkit-slider-thumb { width: 20px; height: 20px; }
+      .row { min-height: 34px; gap: 10px; }
+      .row-label { white-space: normal; }
+      .seg-group.compact { max-width: 58%; }
+    }
+
+    /* Compact but persistent side inspector on tablets. */
+    @media (min-width: 721px) and (max-width: 1100px) and (min-height: 600px) {
+      #inspector {
+        width: clamp(258px, 28vw, 286px);
+        left: calc(10px + var(--safe-left));
         padding: 10px;
         gap: 8px;
       }
 
-      body.ui-collapsed #inspector {
-        transform: translateY(20px);
-      }
-
       #viewfinder {
-        left: calc(12px + var(--safe-left));
-        right: calc(12px + var(--safe-right));
-        bottom: calc(var(--inspector-h) + 18px + var(--safe-bottom));
+        left: calc(clamp(280px, 30vw, 308px) + var(--safe-left));
       }
 
-      body.ui-collapsed #viewfinder {
-        bottom: calc(14px + var(--safe-bottom));
-      }
-
-      #cam-angles {
-        right: calc(16px + var(--safe-right));
-        bottom: calc(var(--inspector-h) + 24px + var(--safe-bottom));
-      }
-
-      body.ui-collapsed #cam-angles {
-        bottom: calc(18px + var(--safe-bottom));
-      }
+      .brand-sub { display: none; }
+      .tool-btn { padding: 0 9px; }
     }
 
-    @media (orientation: landscape) and (max-height: 520px) {
-      .brand-divider, .brand-sub, .hide-mobile {
-        display: none;
-      }
+    /* Short landscape devices retain a narrow side inspector. */
+    @media (orientation: landscape) and (max-height: 520px) and (min-width: 721px) {
+      .brand-divider, .brand-sub, .hide-mobile { display: none; }
 
       .brand-bar, .btn-load, .tool-btn {
         height: 32px;
@@ -494,26 +626,22 @@
         gap: 7px;
       }
 
-      #viewfinder {
-        left: calc(296px + var(--safe-left));
-      }
+      #viewfinder { left: calc(296px + var(--safe-left)); }
 
       #cam-angles {
         right: calc(16px + var(--safe-right));
         bottom: calc(16px + var(--safe-bottom));
+        left: auto;
       }
 
-      .cam-pill {
-        height: 24px;
-        padding: 0 7px;
-        font-size: 10px;
-      }
+      .cam-pill { height: 28px; padding: 0 7px; font-size: 10px; }
     }
 
     /* =========================================================
        ARCHITECTURAL SECTION CARDS
        ========================================================= */
     .card {
+      flex: 0 0 auto;
       background: var(--glass-card);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-card);
@@ -963,7 +1091,7 @@
     }
   </script>
 </head>
-<body>
+<body data-panel-state="peek">
   <div id="canvas-container"></div>
 
   <!-- Medium-Format Optical Viewfinder Frame -->
@@ -1025,6 +1153,11 @@
 
   <!-- Adaptive Inspector Sidebar / Bottom Dock -->
   <aside id="inspector">
+    <button id="inspectorHandle" class="inspector-handle" type="button"
+            aria-label="Expand inspector controls" aria-expanded="false" aria-controls="inspector">
+      <span class="handle-grip" aria-hidden="true"></span>
+      <span class="handle-label" id="inspectorHandleLabel">CONTROLS · SWIPE UP</span>
+    </button>
     <!-- Render / Surface Modes -->
     <div class="card">
       <div class="card-header">
@@ -1273,18 +1406,94 @@
     // =========================================================
     const topbarEl = document.getElementById('topbar');
     const inspectorEl = document.getElementById('inspector');
+    const inspectorHandle = document.getElementById('inspectorHandle');
+    const inspectorHandleLabel = document.getElementById('inspectorHandleLabel');
+    const toggleUiBtn = document.getElementById('toggleUiBtn');
+    const mobilePanelQuery = window.matchMedia('(max-width: 720px)');
 
     function syncLayoutMetrics() {
-      const topH = topbarEl ? topbarEl.offsetHeight : 38;
-      const inspH = inspectorEl ? inspectorEl.offsetHeight : 0;
-      document.documentElement.style.setProperty('--topbar-h', `${topH}px`);
-      document.documentElement.style.setProperty('--inspector-h', `${inspH}px`);
+      const topH = topbarEl ? topbarEl.getBoundingClientRect().height : 38;
+      const panelIsHidden = mobilePanelQuery.matches && document.body.dataset.panelState === 'closed';
+      const inspH = inspectorEl && !panelIsHidden ? inspectorEl.getBoundingClientRect().height : 0;
+      document.documentElement.style.setProperty('--topbar-h', `${Math.round(topH)}px`);
+      document.documentElement.style.setProperty('--inspector-h', `${Math.round(inspH)}px`);
+    }
+
+    function setMobilePanelState(state) {
+      const nextState = ['closed', 'peek', 'expanded'].includes(state) ? state : 'peek';
+      document.body.dataset.panelState = nextState;
+      const isOpen = nextState !== 'closed';
+
+      if (inspectorHandle) {
+        inspectorHandle.setAttribute('aria-expanded', String(isOpen));
+        inspectorHandle.setAttribute('aria-label', nextState === 'closed'
+          ? 'Open inspector controls'
+          : nextState === 'expanded' ? 'Collapse inspector controls' : 'Expand inspector controls');
+      }
+      if (inspectorHandleLabel) {
+        inspectorHandleLabel.textContent = nextState === 'closed'
+          ? 'OPEN CONTROLS'
+          : nextState === 'expanded' ? 'CONTROLS · SWIPE DOWN TO PEEK' : 'CONTROLS · SWIPE UP';
+      }
+      if (toggleUiBtn) {
+        toggleUiBtn.classList.toggle('active', isOpen);
+        toggleUiBtn.setAttribute('aria-pressed', String(isOpen));
+      }
+
+      requestAnimationFrame(syncLayoutMetrics);
     }
 
     const layoutObserver = new ResizeObserver(syncLayoutMetrics);
-    layoutObserver.observe(topbarEl);
-    layoutObserver.observe(inspectorEl);
+    if (topbarEl) layoutObserver.observe(topbarEl);
+    if (inspectorEl) layoutObserver.observe(inspectorEl);
     syncLayoutMetrics();
+    setMobilePanelState(document.body.dataset.panelState || 'peek');
+
+    if (mobilePanelQuery.addEventListener) {
+      mobilePanelQuery.addEventListener('change', () => {
+        if (mobilePanelQuery.matches) document.body.classList.remove('ui-collapsed');
+        requestAnimationFrame(syncLayoutMetrics);
+      });
+    } else if (mobilePanelQuery.addListener) {
+      mobilePanelQuery.addListener(() => requestAnimationFrame(syncLayoutMetrics));
+    }
+
+    if (inspectorHandle) {
+      let handleStartY = null;
+      let suppressHandleTap = false;
+
+      inspectorHandle.addEventListener('pointerdown', (event) => {
+        handleStartY = event.clientY;
+        suppressHandleTap = false;
+        if (inspectorHandle.setPointerCapture) inspectorHandle.setPointerCapture(event.pointerId);
+      });
+
+      inspectorHandle.addEventListener('pointerup', (event) => {
+        if (handleStartY === null) return;
+        const deltaY = event.clientY - handleStartY;
+        handleStartY = null;
+        if (Math.abs(deltaY) < 28) return;
+
+        suppressHandleTap = true;
+        const current = document.body.dataset.panelState || 'peek';
+        if (deltaY < 0) {
+          setMobilePanelState('expanded');
+        } else {
+          setMobilePanelState(current === 'expanded' ? 'peek' : 'closed');
+        }
+      });
+
+      inspectorHandle.addEventListener('pointercancel', () => { handleStartY = null; });
+      inspectorHandle.addEventListener('click', (event) => {
+        if (suppressHandleTap) {
+          suppressHandleTap = false;
+          event.preventDefault();
+          return;
+        }
+        const current = document.body.dataset.panelState || 'peek';
+        setMobilePanelState(current === 'expanded' ? 'peek' : 'expanded');
+      });
+    }
 
     // =========================================================
     // 1. PROCEDURAL WEB AUDIO SYNTHESIZER + MICRO-HAPTIC CLICK
@@ -2958,12 +3167,17 @@
       }
     });
 
-    const toggleUiBtn = document.getElementById('toggleUiBtn');
     toggleUiBtn.addEventListener('click', () => {
       playTick();
-      const collapsed = document.body.classList.toggle('ui-collapsed');
-      toggleUiBtn.classList.toggle('active', !collapsed);
-      requestAnimationFrame(syncLayoutMetrics);
+      if (mobilePanelQuery.matches) {
+        const isClosed = document.body.dataset.panelState === 'closed';
+        setMobilePanelState(isClosed ? 'peek' : 'closed');
+      } else {
+        const collapsed = document.body.classList.toggle('ui-collapsed');
+        toggleUiBtn.classList.toggle('active', !collapsed);
+        toggleUiBtn.setAttribute('aria-pressed', String(!collapsed));
+        requestAnimationFrame(syncLayoutMetrics);
+      }
     });
 
     document.getElementById('resetCamBtn').addEventListener('click', () => {

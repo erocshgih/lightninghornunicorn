@@ -30,6 +30,9 @@ SCHNELL ZU FINDEN (STRG + F):
 <meta content="Lightning Horn Unicorn — Independent creative universe of Vienna-based artist Vedran Lukic." name="description"/>
 <meta content="Vedran Lukic" name="author"/>
 <meta content="#070708" name="theme-color"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet"/>
 <script type="importmap">
 {
   "imports": {
@@ -314,7 +317,96 @@ select:focus-visible,
 .audio-btn.muted img {
   filter: grayscale(100%) opacity(0.38);
 }
-.nav-toolbar-spacer { flex: 1 1 auto; min-width: 8px; }
+/* ---------- DUCKY CRT STATUS DISPLAY ---------- */
+.duck-crt {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 34px;
+  overflow: hidden;
+  padding: 0 5px;
+  border: 1px solid rgba(70, 255, 120, 0.24);
+  border-radius: 6px;
+  color: #8dffab;
+  background: #041008;
+  box-shadow: inset 0 0 10px rgba(0, 255, 80, 0.10), 0 0 8px rgba(0, 255, 80, 0.06);
+}
+.duck-crt::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(160, 255, 180, 0.11) 0,
+    rgba(160, 255, 180, 0.11) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.62;
+}
+.duck-crt::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), transparent 38%, rgba(0,0,0,0.10));
+  animation: duckCrtFlicker 3.4s steps(1, end) infinite;
+}
+.duck-crt-track {
+  display: flex;
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: max-content;
+  position: relative;
+  z-index: 1;
+  animation: duckCrtMoveLeft 14s linear infinite;
+  will-change: transform;
+}
+.duck-crt-track span {
+  display: block;
+  flex: 0 0 auto;
+  padding-right: 3.2em;
+  white-space: nowrap;
+  color: #8dffab;
+  font-family: 'VT323', var(--font-mono), monospace;
+  font-size: clamp(15px, 2.1vw, 19px);
+  font-weight: 400;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  text-shadow: 0 0 2px rgba(90,255,130,0.95), 0 0 7px rgba(0,255,80,0.62);
+}
+.sphere-nav-toolbar.categories-open .duck-crt-track {
+  animation-name: duckCrtMoveRight;
+}
+@keyframes duckCrtMoveLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes duckCrtMoveRight {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+@keyframes duckCrtFlicker {
+  0%, 94%, 96%, 100% { opacity: 1; }
+  95% { opacity: 0.84; }
+}
+
+@media (max-width: 380px) {
+  .duck-crt { height: 32px; padding-inline: 3px; }
+  .duck-crt-track span { font-size: 15px; letter-spacing: 0.08em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .duck-crt-track { animation: none !important; transform: none !important; }
+  .duck-crt-track span { font-size: 13px; letter-spacing: 0; padding-right: 0; }
+  .duck-crt-track span:nth-child(2) { display: none; }
+  .duck-crt::after { animation: none; }
+}
 
 .sphere-menu {
   width: 100%;
@@ -2218,7 +2310,12 @@ main#mainContent input[type="submit"] {
     <div class="strip-wrapper sphere-nav-toolbar" id="stripWrapper">
       <div class="nav-toolbar-row">
         <button aria-label="Farbmodus wechseln" class="theme-btn" id="themeToggle" title="Farbmodus" type="button">☀</button>
-        <div class="nav-toolbar-spacer" aria-hidden="true"></div>
+        <div class="duck-crt" id="duckCrt" aria-hidden="true">
+          <div class="duck-crt-track">
+            <span>PUSH THE DUCK TO REVEAL</span>
+            <span>PUSH THE DUCK TO REVEAL</span>
+          </div>
+        </div>
         <button aria-label="Audio Sound An/Aus" class="audio-btn" id="audioToggle" title="Audio Sound An/Aus" type="button">
           <img alt="" src="duck.png"/>
         </button>
@@ -4637,10 +4734,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const collapseBtn = document.getElementById('collapseToggle');
   const stripWrapper = document.getElementById('stripWrapper');
   const categoryPanel = document.getElementById('categorySpherePanel');
+  const categoryTicker = document.getElementById('duckCrt');
+  const categoryTickerCopies = categoryTicker?.querySelectorAll('.duck-crt-track span');
   let categoriesOpen = false;
+
+  function updateCategoryTicker() {
+    const message = categoriesOpen ? 'PUSH THE DUCKY TO HIDE' : 'PUSH THE DUCK TO REVEAL';
+    categoryTickerCopies?.forEach((copy) => { copy.textContent = message; });
+  }
 
   function setCategoryMenuOpen(open) {
     categoriesOpen = Boolean(open);
+    updateCategoryTicker();
     stripWrapper?.classList.toggle('categories-open', categoriesOpen);
     categoryPanel?.classList.toggle('is-closed', !categoriesOpen);
     categoryPanel?.setAttribute('aria-hidden', String(!categoriesOpen));
@@ -4648,6 +4753,7 @@ document.addEventListener('DOMContentLoaded', () => {
     collapseBtn.setAttribute('aria-label', categoriesOpen ? sharedText.categoryClose : sharedText.categoryOpen);
     collapseBtn.title = sharedText.categoryPanel;
   }
+  setCategoryMenuOpen(false);
 
   const quackFiles = ['quack/quack01.mp3', 'quack/quack02.mp3', 'quack/quack03.mp3'];
   let quackQueue = [];
