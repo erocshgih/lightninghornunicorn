@@ -46,13 +46,13 @@
   },
   {
     "path": "README_REPAIRED.txt",
-    "bytes": 2328,
-    "sha256": "e2426acf267a59026f0d9e993d41dd058502175e87dd55af0298a11344d33e1d"
+    "bytes": 2653,
+    "sha256": "02975e708763ca0d5035ce4dc31c5a96a4bf546dcda8847ea95bdc0d55a2fe46"
   },
   {
     "path": "index.html",
-    "bytes": 205754,
-    "sha256": "8c79ea0932e0b74d08575e6813594ee272200d16a4db803e90a94e8f0f82a296"
+    "bytes": 206228,
+    "sha256": "104d4f70025f9a7d71f8a44f93fb9b1c2355031d419f5feff3a94936b1e778b2"
   },
   {
     "path": "legacy/script.js",

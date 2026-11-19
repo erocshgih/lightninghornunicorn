@@ -5013,18 +5013,30 @@ document.addEventListener('DOMContentLoaded', () => {
   async function triggerCategoryChange(cat, options = {}) {
     if (!categoryPages[cat]) return;
     if (options.updateHistory !== false) writeCategoryRoute(cat, false);
-    if (cat === currentCategory) return;
+
+    // Do not treat a requested category as loaded until its HTML has actually
+    // arrived. This lets the same category be retried after a failed/aborted load.
+    if (cat === currentCategory && mainContent?.dataset.loadedCategory === cat) return;
+
+    const door = document.getElementById('door-overlay');
+    if (!door || !mainContent) {
+      console.error('[LHU] Cannot load category: site shell or content mount is missing.');
+      return;
+    }
 
     const loadToken = ++categoryLoadToken;
     if (categoryTransitionTimer !== null) { clearTimeout(categoryTransitionTimer); categoryTransitionTimer = null; }
     if (categoryFetchController) { categoryFetchController.abort(); categoryFetchController = null; }
 
     currentCategory = cat;
+    delete mainContent.dataset.loadedCategory;
     window.__lhuCloseImageLightbox?.();
-    runCleanups();
-
-    const door = document.getElementById('door-overlay');
-    if (!door) return;
+    try {
+      runCleanups();
+    } catch (error) {
+      // A stale page cleanup must never prevent navigation to the next page.
+      console.warn('[LHU] A page cleanup failed; continuing navigation.', error);
+    }
 
     door.setAttribute('data-category', cat);
     door.classList.remove('open');
@@ -5056,6 +5068,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fetchedMain) throw new Error('No <main> found');
 
         mainContent.innerHTML = fetchedMain.innerHTML;
+        mainContent.dataset.loadedCategory = cat;
 
         const lang = window.LHU_LANGUAGE || 'en';
         mainContent.querySelectorAll('[data-lang-en]').forEach(el => {
@@ -5129,7 +5142,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (loadToken === categoryLoadToken) announceCategory(cat);
       } catch (err) {
-        if (err?.name !== 'AbortError' && loadToken === categoryLoadToken) showError(cat, targetPage);
+        if (err?.name !== 'AbortError' && loadToken === categoryLoadToken) {
+          delete mainContent.dataset.loadedCategory;
+          showError(cat, targetPage);
+        }
       } finally {
         if (loadToken === categoryLoadToken) {
           categoryFetchController = null;
@@ -5217,33 +5233,43 @@ document.addEventListener('DOMContentLoaded', () => {
   /* 9. Single-Page App Entry */
   let appEntered = false;
   window.__lhuEnterMainSite = function(options = {}) {
-    // A repeated call must still navigate. Only the expensive intro teardown
-    // is one-shot; the old early return made MAIN PAGE appear completely dead
-    // after the first entry into the site.
     const firstEntry = !appEntered;
     const entryCategory = options.category || 'ABOUT';
 
+    // Mark entry, but treat all visual/audio teardown as best-effort. On the
+    // first attempt a Three.js disposal or media API can throw; that must not
+    // abort the actual navigation and force the visitor to click twice.
     if (firstEntry) {
       appEntered = true;
-      window.__lhuStopIntro?.(true);
-      window.__lhuDisposeKoboStudio?.();
-      window.__lhuPauseIndexExperience?.();
-      window.__lhuPauseMatrixBackground?.();
+      const safeCleanup = (label, callback) => {
+        try {
+          if (typeof callback === 'function') callback();
+        } catch (error) {
+          console.warn(`[LHU] ${label} cleanup failed; continuing to MAIN PAGE.`, error);
+        }
+      };
+
+      safeCleanup('Intro', () => window.__lhuStopIntro?.(true));
+      safeCleanup('KŌBŌ 3D', () => window.__lhuDisposeKoboStudio?.());
+      safeCleanup('Index 3D', () => window.__lhuPauseIndexExperience?.());
+      safeCleanup('Background', () => window.__lhuPauseMatrixBackground?.());
+      safeCleanup('Intro DOM', () => document.getElementById('lhu-intro')?.remove());
+      safeCleanup('Background audio', () => document.getElementById('background-music')?.pause());
 
       const indexExperience = document.getElementById('lhu-index-experience');
       if (indexExperience) indexExperience.hidden = true;
-      document.getElementById('lhu-intro')?.remove();
-      document.getElementById('background-music')?.pause();
     }
 
-    // Keep the site shell active even when the button is used a second time.
+    // These state changes always run, including on repeated activation.
     document.body.classList.remove('intro-mode');
     document.body.classList.add('site-mode');
     const shell = document.getElementById('site-shell');
     if (shell) shell.hidden = false;
 
     writeCategoryRoute(entryCategory, firstEntry);
-    applyGlobalMute();
+    try { applyGlobalMute(); } catch (error) {
+      console.warn('[LHU] Audio state could not be synchronized; continuing.', error);
+    }
     if (animationFrame === null) animationFrame = requestAnimationFrame(loop);
     triggerCategoryChange(entryCategory, { updateHistory: false });
   };
