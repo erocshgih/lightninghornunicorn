@@ -902,6 +902,28 @@ body.intro-mode {
     0 0 32px currentColor;
 }
 .lhu-pill:disabled { cursor: default; }
+.lhu-pill::before {
+  content: "";
+  position: absolute;
+  inset: -32%;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      transparent 0deg 17deg,
+      rgba(255, 255, 255, 0.17) 18deg 21deg,
+      transparent 22deg 38deg
+    ),
+    radial-gradient(ellipse at 32% 27%, rgba(255, 255, 255, 0.38), transparent 54%);
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  animation: signalTextureOrbit 9s linear infinite;
+}
+@keyframes signalTextureOrbit {
+  from { transform: rotate(0deg) scale(1.12); }
+  to   { transform: rotate(360deg) scale(1.12); }
+}
 
 .lhu-pill-red {
   color: #ff3b30;
@@ -936,7 +958,7 @@ body.intro-mode {
 .intro-skip-btn {
   min-height: 40px;
   padding: 9px 18px;
-  border-radius: 6px;
+  border-radius: 16px;
   border: 1px solid var(--gallery-border-strong);
   background: rgba(255, 255, 255, 0.05);
   color: var(--gallery-ink);
@@ -1070,7 +1092,7 @@ body.intro-mode {
   z-index: 15;
   width: 38px;
   height: 38px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid var(--gallery-border);
   background: var(--gallery-surface);
   -webkit-backdrop-filter: blur(16px);
@@ -1115,6 +1137,7 @@ body.intro-mode {
 }
 
 .glass {
+  border-radius: 12px;
   background: var(--gallery-surface);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
@@ -1221,7 +1244,7 @@ body.intro-mode {
   min-height: 42px;
   padding: 0 32px 0 14px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.06);
   color: var(--gallery-ink);
   font: 500 12.5px/1.2 var(--font-mono);
@@ -1252,7 +1275,7 @@ body.intro-mode {
   place-items: center;
   width: 42px;
   height: 42px;
-  border-radius: 6px;
+  border-radius: 12px;
   border: 1px solid var(--gallery-border);
   background: rgba(255, 255, 255, 0.05);
   color: var(--gallery-muted);
@@ -1287,37 +1310,22 @@ body.intro-mode {
   line-height: 1.38;
   letter-spacing: -0.02em;
   text-align: center;
-  background-image:
-    linear-gradient(
-      115deg,
-      #ff6b8b 0%,
-      #ffd95a 18%,
-      #59ffa8 36%,
-      #42dcff 54%,
-      #c67dff 72%,
-      #ff7eb3 88%,
-      #ff6b8b 100%
-    ),
-    linear-gradient(rgba(9, 9, 13, 0.9), rgba(9, 9, 13, 0.9));
-  background-size: 260% 260%, 100% 100%;
-  -webkit-background-clip: text, padding-box;
-  background-clip: text, padding-box;
-  -webkit-text-fill-color: transparent;
+  color: #f5f4f0;
+  -webkit-text-fill-color: #f5f4f0;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  text-shadow:
+    -2px 0 rgba(255, 59, 48, 0.62),
+     2px 0 rgba(50, 173, 230, 0.68),
+     0 0 14px rgba(245, 244, 240, 0.2);
   filter:
-    drop-shadow(0 0 16px rgba(110, 210, 255, 0.35))
+    drop-shadow(0 0 14px rgba(110, 210, 255, 0.2))
     drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95));
-  animation: holoQuoteShimmer 3.8s linear infinite;
   pointer-events: none;
   z-index: 30;
   display: none;
 }
 .wisdom-active { display: block !important; }
-
-@keyframes holoQuoteShimmer {
-  0%   { background-position: 0% 50%, 0 0; }
-  50%  { background-position: 100% 50%, 0 0; }
-  100% { background-position: 0% 50%, 0 0; }
-}
 
 /* Modals */
 #disclaimer-modal, #quote-modal {
@@ -1454,8 +1462,8 @@ body.intro-mode {
       </div>
       <div id="lhu-intro-hint">CHOOSE SIGNAL</div>
       <div id="intro-skip-buttons">
-        <button class="intro-skip-btn" id="btn-skip-heads" type="button">3D HEADS</button>
-        <button class="intro-skip-btn" id="btn-skip-main" type="button">MAIN PAGE</button>
+        <button class="intro-skip-btn" id="btn-skip-heads" type="button">🗿 3D HEADS</button>
+        <button class="intro-skip-btn" id="btn-skip-main" type="button">🏠 MAIN PAGE</button>
       </div>
     </div>
   </div>
@@ -1764,7 +1772,7 @@ const translations = {
     chooseIntro: "Choose signal", imagePlaceholder: "Intro 3D preview",
     previousBackground: "Previous background", nextBackground: "Next background",
     showQuote: "Show a quote", suggestQuote: "Suggest a quote", legalDisclaimer: "Legal disclaimer",
-    skipHeads: "3D HEADS", skipMain: "MAIN PAGE",
+    skipHeads: "🗿 3D HEADS", skipMain: "🏠 MAIN PAGE",
     introRed: "Red signal", introYellow: "Yellow signal", introBlue: "Blue signal",
     heartEffect: "Heart effect", rainbowEffect: "Rainbow effect",
     headControl: "Select 3D head",
@@ -1783,7 +1791,7 @@ const translations = {
     chooseIntro: "Signal wählen", imagePlaceholder: "3D-Vorschau",
     previousBackground: "Vorheriger Hintergrund", nextBackground: "Nächster Hintergrund",
     showQuote: "Zitat anzeigen", suggestQuote: "Zitat vorschlagen", legalDisclaimer: "Rechtlicher Hinweis",
-    skipHeads: "3D HEADS", skipMain: "MAIN PAGE",
+    skipHeads: "🗿 3D HEADS", skipMain: "🏠 MAIN PAGE",
     introRed: "Rotes Signal", introYellow: "Gelbes Signal", introBlue: "Blaues Signal",
     heartEffect: "Herz-Effekt", rainbowEffect: "Regenbogen-Effekt",
     headControl: "3D-Kopf auswählen",
@@ -2540,7 +2548,9 @@ loadHead(initialHead.url);
     word.innerHTML = "";
     currentSpans = [];
     const row = document.createElement("div");
+    row.className = "intro-word-row";
     row.style.display = "inline-flex";
+    row.style.flexDirection = window.matchMedia("(max-width: 600px)").matches ? "column" : "row";
     row.style.alignItems = "center";
     row.style.justifyContent = "center";
     row.style.whiteSpace = "nowrap";
@@ -2596,28 +2606,24 @@ loadHead(initialHead.url);
           const pLocal = Math.max(0, Math.min(1, (pText - i * 0.03) * 2.2));
           if (pLocal < 1) {
             const glitchX = Math.sin(now * 0.05 + i) * 22 * (1 - pLocal);
-            const glitchY = Math.cos(now * 0.07 + i) * 10 * (1 - pLocal);
-            letter.style.transform = `translate3d(${glitchX}px, ${glitchY}px, 0) scaleY(${1.4 - pLocal * 0.4})`;
+            letter.style.transform = `translate3d(${glitchX}px, 0, 0) scaleY(${1.4 - pLocal * 0.4})`;
             letter.style.opacity = pLocal;
           } else {
-            const isGlitching = Math.random() < 0.05;
-            letter.style.transform = `translate3d(${isGlitching ? (Math.random() - 0.5) * 14 : 0}px, 0, 0)`;
+            letter.style.transform = "translate3d(0, 0, 0)";
             letter.style.opacity = 1;
           }
         } else if (introVariant === "yellow") {
           const pLocal = Math.max(0, Math.min(1, (pText - i * 0.035) * 3));
-          const wave = pLocal >= 1 ? Math.sin(now * 0.002 + i * 0.5) * 7 : 0;
-          letter.style.transform = `translate3d(0, ${65 * (1 - pLocal) + wave}px, ${-160 * (1 - pLocal)}px) rotateX(${40 * (1 - pLocal)}deg)`;
+          letter.style.transform = `translate3d(0, 0, ${-160 * (1 - pLocal)}px) rotateX(${40 * (1 - pLocal)}deg)`;
           letter.style.filter = `blur(${14 * (1 - pLocal)}px)`;
           letter.style.opacity = pLocal;
         } else if (introVariant === "blue") {
           const pLocal = Math.max(0, Math.min(1, (pText - i * 0.025) * 2.2));
           if (pLocal < 1) {
-            const elasticY = -320 * (1 - easeOutElastic(pLocal));
-            letter.style.transform = `translate3d(0, ${elasticY}px, 0) scale(${1 - Math.sin(pLocal * Math.PI) * 0.25}, ${1 + Math.sin(pLocal * Math.PI) * 0.4})`;
+            letter.style.transform = `translate3d(0, 0, 0) scale(${1 - Math.sin(pLocal * Math.PI) * 0.25})`;
             letter.style.opacity = Math.min(1, pLocal * 3);
           } else {
-            letter.style.transform = `translate3d(${Math.sin(now * 0.003 + i * 0.8) * 5}px, 0, 0)`;
+            letter.style.transform = "translate3d(0, 0, 0)";
             letter.style.opacity = 1;
           }
         }
