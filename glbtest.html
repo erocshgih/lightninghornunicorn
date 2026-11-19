@@ -402,7 +402,6 @@
     /* =========================================================
        RESPONSIVE BREAKPOINTS: PORTRAIT, COMPACT MOBILE & LANDSCAPE
        ========================================================= */
-    /* 1. Narrow Screens (Phones in Portrait / Compact Windows) */
     @media (max-width: 720px) {
       .brand-divider, .brand-sub, .hide-mobile {
         display: none;
@@ -435,7 +434,6 @@
       }
     }
 
-    /* 2. Portrait Aspect Ratio or Mobile Width -> Bottom Sheet Dock */
     @media (max-aspect-ratio: 1/1), (max-width: 780px) {
       #inspector {
         top: auto;
@@ -472,7 +470,6 @@
       }
     }
 
-    /* 3. Mobile Landscape (Short Viewport Height, e.g. Phone rotated sideways) */
     @media (orientation: landscape) and (max-height: 520px) {
       .brand-divider, .brand-sub, .hide-mobile {
         display: none;
@@ -707,7 +704,6 @@
       transition: transform 0.1s ease;
     }
 
-    /* Larger ergonomic thumb on touch screens */
     @media (pointer: coarse) {
       input[type="range"]::-webkit-slider-thumb {
         width: 16px;
@@ -1005,7 +1001,7 @@
         <button class="mode-btn" data-mode="gold"><span class="swatch" style="background:#e5b96b;"></span>Gold</button>
         <button class="mode-btn" data-mode="glitch"><span class="swatch" style="background:#e11d48;"></span>Glitch</button>
         <button class="mode-btn" data-mode="chrome"><span class="swatch" style="background:#ffffff;"></span>Chrome</button>
-        <button class="mode-btn" data-mode="xray"><span class="swatch" style="background:#94a3b8;"></span>X-Ray</button>
+        <button class="mode-btn" data-mode="xray"><span class="swatch" style="background:#38bdf8;"></span>X-Ray</button>
         <button class="mode-btn" data-mode="normals"><span class="swatch" style="background:linear-gradient(135deg,#f43f5e,#34d399,#60a5fa);"></span>Normals</button>
       </div>
       <button id="glitchPulseBtn" class="btn-pulse" title="Trigger Glitch Surge [G]">⚡ Glitch Pulse [G]</button>
@@ -1088,7 +1084,7 @@
         <option value="pew">Pew (Laser Spin)</option>
         <option value="noodly">Noodly (Rubbery Wobble)</option>
         <option value="boing">Boing (Spring Drop)</option>
-        <option value="dong">Dong (Heavy Bell Settle)</option>
+        <option value="dong">Dong (Bronze Bell Settle)</option>
       </select>
       <div class="sfx-grid">
         <button class="sfx-chip" data-sfx="pop">POP</button>
@@ -1308,20 +1304,41 @@
         osc.stop(now + 0.6);
         lfo.stop(now + 0.6);
       } else if (chosen === 'dong') {
-        const freqs = [196, 293.66, 466.16, 587.33];
-        freqs.forEach((f, idx) => {
+        // Deep resonant Japanese bronze temple bell (Bonsho)
+        const mallet = audioCtx.createOscillator();
+        const mGain = audioCtx.createGain();
+        mallet.type = 'sine';
+        mallet.frequency.setValueAtTime(142, now);
+        mallet.frequency.exponentialRampToValueAtTime(46, now + 0.085);
+        mGain.gain.setValueAtTime(0.36, now);
+        mGain.gain.exponentialRampToValueAtTime(0.001, now + 0.095);
+        mallet.connect(mGain).connect(audioCtx.destination);
+        mallet.start(now);
+        mallet.stop(now + 0.1);
+
+        const partials = [
+          { fStart: 103.5, fEnd: 98.0,  amp: 0.34, dur: 1.75, type: 'sine',     delay: 0.0 },
+          { fStart: 99.4,  fEnd: 99.4,  amp: 0.22, dur: 1.65, type: 'sine',     delay: 0.01 },
+          { fStart: 196.0, fEnd: 196.0, amp: 0.11, dur: 1.15, type: 'triangle', delay: 0.008 },
+          { fStart: 246.94,fEnd: 246.94,amp: 0.065,dur: 0.85, type: 'sine',     delay: 0.015 },
+          { fStart: 392.0, fEnd: 392.0, amp: 0.032,dur: 0.52, type: 'sine',     delay: 0.02 }
+        ];
+
+        partials.forEach((p) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-          osc.type = idx === 0 ? 'sine' : 'triangle';
-          osc.frequency.setValueAtTime(f, now);
-          const amp = 0.26 / (idx + 1);
-          const dur = 1.35 - idx * 0.22;
-          gain.gain.setValueAtTime(0.001, now);
-          gain.gain.linearRampToValueAtTime(amp, now + 0.015);
-          gain.gain.exponentialRampToValueAtTime(0.0008, now + dur);
+          const t0 = now + p.delay;
+          osc.type = p.type;
+          osc.frequency.setValueAtTime(p.fStart, t0);
+          if (p.fStart !== p.fEnd) {
+            osc.frequency.exponentialRampToValueAtTime(p.fEnd, t0 + 0.09);
+          }
+          gain.gain.setValueAtTime(0.0008, t0);
+          gain.gain.linearRampToValueAtTime(p.amp, t0 + 0.018);
+          gain.gain.exponentialRampToValueAtTime(0.0006, t0 + p.dur);
           osc.connect(gain).connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + dur + 0.02);
+          osc.start(t0);
+          osc.stop(t0 + p.dur + 0.02);
         });
       }
     }
@@ -1607,7 +1624,7 @@
     resizeObserver.observe(container);
 
     // =========================================================
-    // 4. CUSTOM SHADER & SURFACE MODES (NaN-SAFE + GLITCH PULSE)
+    // 4. CUSTOM SHADER & SURFACE MODES (TEXTURED X-RAY + NaN-SAFE)
     // =========================================================
     let currentMode = 'texture';
     const modelPivot = new THREE.Group();
@@ -1735,46 +1752,52 @@
       }
 
       if (mode === 'xray') {
-        const m = new THREE.ShaderMaterial({
+        // Textured Radiographic X-Ray: preserves original albedo maps, base colors & vertex colors
+        const m = new THREE.MeshStandardMaterial({
+          map: origMat?.map || null,
+          color: origMat?.color ? origMat.color.clone() : new THREE.Color(0xffffff),
+          alphaMap: origMat?.alphaMap || null,
+          vertexColors: Boolean(origMat?.vertexColors),
+          roughness: 0.38,
+          metalness: 0.05,
           transparent: true,
           depthWrite: false,
-          blending: THREE.NormalBlending,
-          side: THREE.DoubleSide,
-          vertexShader: `
-            varying vec3 vNormalW;
-            varying vec3 vViewDir;
-            #include <morphtarget_pars_vertex>
-            #include <skinning_pars_vertex>
-            void main() {
-              #include <beginnormal_vertex>
-              #include <morphnormal_vertex>
-              #include <skinbase_vertex>
-              #include <skinnormal_vertex>
-              #include <begin_vertex>
-              #include <morphtarget_vertex>
-              #include <skinning_vertex>
-              vec4 wp = modelMatrix * vec4(transformed, 1.0);
-              vec3 wn = mat3(modelMatrix) * objectNormal;
-              vNormalW = length(wn) > 0.0001 ? normalize(wn) : vec3(0.0, 1.0, 0.0);
-              vec3 vd = cameraPosition - wp.xyz;
-              vViewDir = length(vd) > 0.0001 ? normalize(vd) : vec3(0.0, 0.0, 1.0);
-              gl_Position = projectionMatrix * viewMatrix * wp;
-            }
-          `,
-          fragmentShader: `
-            varying vec3 vNormalW;
-            varying vec3 vViewDir;
-            void main() {
-              vec3 n = length(vNormalW) > 0.0001 ? normalize(vNormalW) : vec3(0.0, 1.0, 0.0);
-              vec3 v = length(vViewDir) > 0.0001 ? normalize(vViewDir) : vec3(0.0, 0.0, 1.0);
-              float ndotv = clamp(abs(dot(n, v)), 0.0, 1.0);
-              float edge = pow(max(1.0 - ndotv, 0.0001), 2.2);
-              vec3 col = mix(vec3(0.76, 0.46, 0.52), vec3(0.24, 0.16, 0.20), edge);
-              float alpha = clamp(0.10 + edge * 0.78, 0.05, 0.92);
-              gl_FragColor = vec4(col, alpha);
-            }
-          `
+          side: THREE.DoubleSide
         });
+
+        m.onBeforeCompile = (shader) => {
+          shader.vertexShader = `
+            varying vec3 vXrayNormalW;
+            varying vec3 vXrayViewDir;
+          ` + shader.vertexShader.replace(
+            '#include <project_vertex>',
+            `#include <project_vertex>
+            vec4 xrayWp = modelMatrix * vec4(transformed, 1.0);
+            vec3 xrayWn = mat3(modelMatrix) * objectNormal;
+            vXrayNormalW = length(xrayWn) > 0.0001 ? normalize(xrayWn) : vec3(0.0, 1.0, 0.0);
+            vec3 xrayVd = cameraPosition - xrayWp.xyz;
+            vXrayViewDir = length(xrayVd) > 0.0001 ? normalize(xrayVd) : vec3(0.0, 0.0, 1.0);
+            `
+          );
+
+          shader.fragmentShader = `
+            varying vec3 vXrayNormalW;
+            varying vec3 vXrayViewDir;
+          ` + shader.fragmentShader.replace(
+            '#include <opaque_fragment>',
+            `#include <opaque_fragment>
+            vec3 xn = length(vXrayNormalW) > 0.0001 ? normalize(vXrayNormalW) : vec3(0.0, 1.0, 0.0);
+            vec3 xv = length(vXrayViewDir) > 0.0001 ? normalize(vXrayViewDir) : vec3(0.0, 0.0, 1.0);
+            float xNdotV = clamp(abs(dot(xn, xv)), 0.0, 1.0);
+            float xRim = pow(max(1.0 - xNdotV, 0.0001), 2.1);
+            vec3 texCol = max(gl_FragColor.rgb, vec3(0.0));
+            vec3 xrayEdgeCol = mix(texCol * 1.15 + vec3(0.05, 0.14, 0.19), vec3(0.24, 0.66, 0.82), 0.55);
+            gl_FragColor.rgb = mix(texCol * 1.06, xrayEdgeCol, xRim * 0.78);
+            gl_FragColor.a = clamp((0.24 + xRim * 0.68) * diffuseColor.a, 0.06, 0.94);
+            `
+          );
+        };
+        m.customProgramCacheKey = () => 'kobo-textured-xray-v1';
         disposableModeMaterials.push(m);
         return m;
       }
