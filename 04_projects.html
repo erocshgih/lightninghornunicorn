@@ -376,7 +376,109 @@
                 .prod-header .prod-arrow { transition-duration: 0.01ms; }
                 .model-loading .spinner { animation-duration: 2s; }
             }
-        </style>
+        
+
+
+
+/* LHU FIX: stable project accordion sizing. Same/higher specificity than
+   the global index overrides, so the content cannot be compressed again. */
+main#mainContent #projects-accordion .prod-item > .prod-body {
+    display:block !important;
+    height:auto !important;
+    max-height:0 !important;
+    overflow:hidden !important;
+    transition:max-height .42s cubic-bezier(.3,.9,.4,1) !important;
+}
+main#mainContent #projects-accordion .prod-item.open > .prod-body {
+    max-height:1600px !important;
+}
+main#mainContent #projects-accordion .prod-body-inner {
+    box-sizing:border-box !important;
+    min-height:0 !important;
+    height:auto !important;
+    overflow:visible !important;
+}
+main#mainContent #projects-accordion .prod-media-panel {
+    box-sizing:border-box !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+}
+main#mainContent #projects-accordion .prod-media-panel .carousel-wrapper {
+    box-sizing:border-box !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+}
+main#mainContent #projects-accordion .prod-media-panel .carousel-stage {
+    box-sizing:border-box !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+}
+main#mainContent #projects-accordion .prod-media-panel .carousel-slide,
+main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
+    position:absolute !important; inset:0 !important; width:100% !important;
+    height:100% !important; min-height:0 !important;
+}
+@media (min-width:1000px) {
+    main#mainContent #projects-accordion .prod-body-inner {
+        display:grid !important;
+        grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr) !important;
+        grid-template-rows:auto !important;
+        align-items:stretch !important;
+        gap:clamp(20px,2.6vw,38px) !important;
+        padding:22px clamp(18px,2.4vw,32px) 28px !important;
+        min-height:390px !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel {
+        min-height:430px !important;
+        display:flex !important; flex-direction:column !important;
+        justify-content:flex-start !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel .carousel-wrapper {
+        width:100% !important; max-width:none !important; margin:0 auto !important;
+        flex:1 1 auto !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel .carousel-stage {
+        width:100% !important; height:clamp(260px,34vh,350px) !important;
+        min-height:260px !important; aspect-ratio:4/3 !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel .carousel-dots {
+        flex:0 0 auto !important; display:flex !important; justify-content:center !important;
+        flex-wrap:wrap !important; gap:12px !important; width:100% !important;
+        margin:13px auto 2px !important;
+    }
+    main#mainContent #projects-accordion .prod-desc {
+        align-self:stretch !important; width:auto !important; max-width:none !important;
+        min-height:360px !important; height:clamp(360px,42vh,430px) !important; max-height:430px !important;
+        overflow-y:auto !important; overflow-x:hidden !important; box-sizing:border-box !important;
+        overscroll-behavior:contain !important;
+    }
+}
+@media (max-width:999px) {
+    main#mainContent #projects-accordion .prod-body-inner {
+        display:flex !important; flex-direction:column !important; align-items:stretch !important;
+        min-height:0 !important; height:auto !important; overflow:visible !important;
+        gap:14px !important; padding:14px 14px 22px !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel {
+        width:100% !important; min-height:0 !important; display:flex !important;
+        flex-direction:column !important; gap:8px !important; overflow:hidden !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel .carousel-wrapper {
+        width:100% !important; max-width:none !important; margin:0 auto !important;
+    }
+    main#mainContent #projects-accordion .prod-media-panel .carousel-stage {
+        height:auto !important; min-height:230px !important; aspect-ratio:4/3 !important;
+    }
+    main#mainContent #projects-accordion .prod-desc {
+        width:100% !important; min-height:0 !important; height:auto !important; max-height:none !important;
+        overflow:visible !important; border:0 !important;
+        border-top:1px solid rgba(255,255,255,.15) !important;
+        border-radius:0 !important; background:transparent !important;
+        padding:18px 4px 4px !important; margin:0 !important;
+    }
+}
+
+</style>
 
         <section id="PROJECTS">
             <h2 class="category-opening-title" data-lang-en="PROJECTS" data-lang-de="PROJECTS">PROJECTS</h2>
@@ -760,6 +862,9 @@
                         const inner = document.createElement('div');
                         inner.className = 'prod-body-inner';
 
+                        const mediaPanel = document.createElement('div');
+                        mediaPanel.className = 'prod-media-panel';
+
                         const wrapper = document.createElement('div');
                         wrapper.className = 'carousel-wrapper';
 
@@ -784,7 +889,7 @@
                             stage.appendChild(slide);
                         });
                         wrapper.appendChild(stage);
-                        inner.appendChild(wrapper);
+                        mediaPanel.appendChild(wrapper);
 
                         // Bild-Unterpunkte plus optionaler letzter 3D-Unterpunkt.
                         const dots = document.createElement('div');
@@ -811,7 +916,8 @@
                             modelDot.addEventListener('click', e => { e.stopPropagation(); openModelLightbox(modelItem.model, prod.name); });
                             dots.appendChild(modelDot);
                         }
-                        inner.appendChild(dots);
+                        mediaPanel.appendChild(dots);
+                        inner.appendChild(mediaPanel);
 
                         if (prod.desc) {
                             const desc = document.createElement('div');
