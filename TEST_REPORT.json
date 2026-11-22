@@ -1,0 +1,63 @@
+{
+  "package_layout": "flat",
+  "zip_has_nested_directories": false,
+  "fallback_checks": {
+    "fallback_is_full_app_shell": true,
+    "fallback_starts_site_mode": true,
+    "fallback_has_root_base": true,
+    "fallback_keeps_original_path_router": true,
+    "fallback_has_all_route_slugs": true,
+    "no_route_directories_in_package": true
+  },
+  "fragments": [
+    {
+      "file": "01_about.html",
+      "category": "ABOUT",
+      "title": "About",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "02_vhsmultiverse.html",
+      "category": "VHS MULTIVERSE",
+      "title": "VHS Multiverse",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "03_humanart.html",
+      "category": "HUMANART",
+      "title": "Humanart",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "04_projects.html",
+      "category": "PROJECTS",
+      "title": "Projects",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "05_storytime.html",
+      "category": "STORYTIME",
+      "title": "Storytime",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "06_music.html",
+      "category": "MUSIC",
+      "title": "Music",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "07_contact.html",
+      "category": "CONTACT",
+      "title": "Hire Me",
+      "original_content_unchanged": true
+    },
+    {
+      "file": "08_donate.html",
+      "category": "DONATE",
+      "title": "Donate",
+      "original_content_unchanged": true
+    }
+  ],
+  "fallback_bytes": 373045
+}
