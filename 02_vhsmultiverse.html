@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>VHS Multiverse - LHU Content</title>
-<script id="lhu-direct-fragment-guard">
+<script>
 (() => {
-  // This file is a fragment loaded into index.html. If someone opens the
-  // fragment itself, switch to its clean route; GitHub Pages then serves the
-  // full app shell from 404.html while keeping the route in the address bar.
+  // Content fragments belong inside the full LHU app shell.
+  // Redirect only if this file is opened as a standalone document.
   const appRoute = "/02_vhsmultiverse";
-  const path = (window.location.pathname || "/").replace(/\/+$/, "") || "/";
-  if (path.toLowerCase() === (appRoute + ".html").toLowerCase()) {
-    window.location.replace(appRoute + window.location.search + window.location.hash);
-  }
+  const currentPath = (window.location.pathname || "/").replace(/\/+$/, "") || "/";
+  const normalizedPath = currentPath.replace(/\.html$/i, "").toLowerCase();
+  if (normalizedPath !== appRoute) return;
+
+  // Keep query parameters and the hash while restoring the route in index.html.
+  const requestedRoute = appRoute + window.location.search + window.location.hash;
+  const destination = new URL("/", window.location.origin);
+  destination.searchParams.set("__lhu_route", requestedRoute);
+  window.location.replace(destination.href);
 })();
 </script>
 </head>
@@ -213,7 +217,7 @@
 
             <div id="vhs-preview-wrap" tabindex="0" role="group" aria-label="VHS-Galerie. Pfeiltasten links/rechts zum Navigieren.">
                 <button class="vhs-nav-btn" id="vhs-prev" type="button" aria-label="Vorheriges Cover">&#9664;</button>
-                <img id="vhs-preview-img" alt="" title="Cover Ansicht" loading="lazy" decoding="async">
+                <img id="vhs-preview-img" src="" alt="" title="Cover Ansicht" loading="lazy" decoding="async">
                 <div id="vhs-preview-error" aria-hidden="true">
                     <span class="err-icon">⚠</span>
                     <span>Cover konnte nicht geladen werden</span>
