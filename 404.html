@@ -4,31 +4,51 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Loading Lightning Horn Unicorn…</title>
+  <title>Lightning Horn Unicorn</title>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      box-sizing: border-box;
+      background: #070708;
+      color: #f4f1e9;
+      font: 16px/1.5 system-ui, sans-serif;
+      text-align: center;
+    }
+    main { max-width: 34rem; }
+    h1 { margin: 0 0 .75rem; font-size: clamp(1.5rem, 5vw, 2.5rem); }
+    p { color: #bdb8ae; }
+    a { color: #ffcc42; }
+  </style>
 </head>
 <body>
-  <p>Returning to Lightning Horn Unicorn…</p>
+  <main>
+    <h1>Route not found</h1>
+    <p>This address is not part of the Lightning Horn Unicorn universe.</p>
+    <p><a href="/">Return to the main page</a></p>
+  </main>
   <script>
     (() => {
-      const requestedPath = window.location.pathname || '/';
-      const normalizedPath = requestedPath.toLowerCase().replace(/\/+$/, '') || '/';
+      // GitHub Pages serves this file for unknown paths. Send known LHU routes
+      // back through index.html, which restores the route and loads the page.
       const knownRoutes = new Set([
-        // Canonical routes matching the real content filenames.
         '/01_about', '/02_vhsmultiverse', '/03_humanart', '/04_projects',
         '/05_storytime', '/06_music', '/07_contact', '/08_donate',
-        // Legacy aliases remain supported for existing bookmarks.
         '/about', '/vhsmultiverse', '/humanart', '/projects',
         '/storytime', '/music', '/contact', '/donate'
       ]);
 
-      if (!knownRoutes.has(normalizedPath)) {
-        window.location.replace('/');
-        return;
-      }
+      const requestedPath = window.location.pathname.toLowerCase().replace(/\/+$/, '') || '/';
+      if (!knownRoutes.has(requestedPath)) return;
 
-      const requestedUrl = requestedPath + window.location.search + window.location.hash;
-      const fallbackUrl = '/?__lhu_route=' + encodeURIComponent(requestedUrl);
-      window.location.replace(fallbackUrl);
+      // Keep query strings and fragments intact (for example, chapter anchors).
+      const originalAddress = window.location.pathname + window.location.search + window.location.hash;
+      const destination = '/?__lhu_route=' + encodeURIComponent(originalAddress);
+      window.location.replace(destination);
     })();
   </script>
 </body>
