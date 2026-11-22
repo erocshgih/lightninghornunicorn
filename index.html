@@ -22,6 +22,41 @@ SCHNELL ZU FINDEN (STRG + F):
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script id="lhu-direct-route-bootstrap">
+(() => {
+  const routes = {
+    '/01_about': 'ABOUT', '/02_vhsmultiverse': 'VHS MULTIVERSE',
+    '/03_humanart': 'HUMANART', '/04_projects': 'PROJECTS',
+    '/05_storytime': 'STORYTIME', '/06_music': 'MUSIC',
+    '/07_contact': 'CONTACT', '/08_donate': 'DONATE',
+    '/about': 'ABOUT', '/vhsmultiverse': 'VHS MULTIVERSE',
+    '/humanart': 'HUMANART', '/projects': 'PROJECTS',
+    '/storytime': 'STORYTIME', '/music': 'MUSIC',
+    '/contact': 'CONTACT', '/donate': 'DONATE'
+  };
+  const normalize = value => (value || '/')
+    .toLowerCase().replace(/\.html$/, '').replace(/\/+$/, '') || '/';
+  let requestedPath = window.location.pathname;
+  const fallbackRoute = new URLSearchParams(window.location.search).get('__lhu_route');
+  if (fallbackRoute) {
+    try {
+      const requested = new URL(fallbackRoute, window.location.origin);
+      if (requested.origin === window.location.origin) requestedPath = requested.pathname;
+    } catch (_) {}
+  }
+  let category = routes[normalize(requestedPath)];
+  if (!category && window.location.hash) {
+    const hashPath = window.location.hash.startsWith('#/')
+      ? window.location.hash.slice(1)
+      : '/' + window.location.hash.slice(1).replace(/^\//, '');
+    category = routes[normalize(hashPath)];
+  }
+  if (category) {
+    window.__LHU_DIRECT_CATEGORY__ = category;
+    document.documentElement.classList.add('lhu-direct-category');
+  }
+})();
+</script>
 <base href="/"/>
 <title>Lightning Horn Unicorn</title>
 <link href="lhu_favicon.svg" rel="icon" type="image/svg+xml"/>
@@ -864,6 +899,11 @@ body.site-mode { overflow-y: auto; }
 body.site-mode #lhu-intro,
 body.site-mode #lhu-index-experience { display: none !important; }
 body.site-mode #site-shell { display: block; min-height: 100vh; }
+
+/* Direct category URLs bypass the cinematic landing sequence before first paint. */
+html.lhu-direct-category #lhu-intro,
+html.lhu-direct-category #lhu-index-experience { display: none !important; }
+html.lhu-direct-category #site-shell[hidden] { display: block !important; }
 </style>
 
 <!-- ====================================================================== -->
@@ -3962,6 +4002,12 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 </head>
 
 <body class="intro-mode">
+<script id="lhu-direct-route-body-init">
+if (window.__LHU_DIRECT_CATEGORY__) {
+  document.body.classList.remove('intro-mode');
+  document.body.classList.add('site-mode');
+}
+</script>
 <!-- [HTML] AUDIO-ELEMENTE -->
 <audio id="quackAudio" preload="auto" src="quack/quack01.mp3"></audio>
 <audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
@@ -4311,6 +4357,10 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 <!-- ====================================================================== -->
 <script id="lhu-background-js">
 (function initBackground() {
+  if (window.__LHU_DIRECT_CATEGORY__) {
+    window.__lhuPauseMatrixBackground = () => {};
+    return;
+  }
   const mcanvas = document.getElementById("matrix-bg");
   const mctx = mcanvas.getContext("2d", { alpha: false });
   const compactViewport = window.matchMedia("(max-width: 768px)").matches;
@@ -4484,21 +4534,35 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 <!-- [JS] INDEX-ERLEBNIS / THREE.JS                                        -->
 <!-- ====================================================================== -->
 <script id="lhu-index-experience-js" type="module">
-// Use the same Three.js 0.160.0 source declared in the import map.
-// HUMANART shares this global engine, so all 3D areas stay version-aligned.
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+const directCategory = window.__LHU_DIRECT_CATEGORY__ || '';
+const browserLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+const isGerman = browserLanguage.startsWith('de');
+const currentLang = isGerman ? 'de' : 'en';
+document.documentElement.lang = currentLang;
+window.LHU_LANGUAGE = currentLang;
 
-window.THREE = Object.assign({}, THREE, { OrbitControls });
-window.LHU_THREE_REVISION = THREE.REVISION;
-
-const isMobileDevice = window.matchMedia("(max-width: 768px)").matches ||
-  /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+if (directCategory === 'HUMANART') {
+  // HUMANART needs the shared Three.js core and OrbitControls, but not the intro renderer.
+  const THREE = await import('three');
+  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+  window.THREE = Object.assign({}, THREE, { OrbitControls });
+  window.LHU_THREE_REVISION = THREE.REVISION;
+} else if (!directCategory) {
+  // The cinematic homepage is unchanged; load its full renderer only on the homepage.
+  const [THREE, { OrbitControls }, { GLTFLoader }, { DRACOLoader },
+    { EffectComposer }, { RenderPass }, { UnrealBloomPass }] = await Promise.all([
+      import('three'),
+      import('three/addons/controls/OrbitControls.js'),
+      import('three/addons/loaders/GLTFLoader.js'),
+      import('three/addons/loaders/DRACOLoader.js'),
+      import('three/addons/postprocessing/EffectComposer.js'),
+      import('three/addons/postprocessing/RenderPass.js'),
+      import('three/addons/postprocessing/UnrealBloomPass.js')
+    ]);
+  window.THREE = Object.assign({}, THREE, { OrbitControls });
+  window.LHU_THREE_REVISION = THREE.REVISION;
+  const isMobileDevice = window.matchMedia("(max-width: 768px)").matches ||
+    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 // Keep the longest internal canvas edge near 1024 px on phones and 1440 px elsewhere.
 // The browser still displays the canvas at its normal CSS size, so the aspect ratio is untouched.
@@ -4515,12 +4579,6 @@ const getDPR = (width = innerWidth, height = innerHeight) => {
 window.LHU_GET_RENDER_DPR = getDPR;
 const INDEX_TARGET_FPS = isMobileDevice ? 30 : 45;
 const INDEX_FRAME_INTERVAL = 1000 / INDEX_TARGET_FPS;
-
-const browserLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-const isGerman = browserLanguage.startsWith('de');
-const currentLang = isGerman ? 'de' : 'en';
-document.documentElement.lang = currentLang;
-window.LHU_LANGUAGE = currentLang;
 
 const translations = {
   en: {
@@ -7222,6 +7280,8 @@ float lhuStoneNoise(vec3 p) {
   };
 })();
 
+
+}
 </script>
 
 <!-- ====================================================================== -->
