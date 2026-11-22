@@ -3,6 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Music - LHU Content</title>
+<script>
+(() => {
+  // Content fragments belong inside the full LHU app shell.
+  // Redirect only if this file is opened as a standalone document.
+  const appRoute = "/06_music";
+  const currentPath = (window.location.pathname || "/").replace(/\/+$/, "") || "/";
+  const normalizedPath = currentPath.replace(/\.html$/i, "").toLowerCase();
+  if (normalizedPath !== appRoute) return;
+
+  // Keep query parameters and the hash while restoring the route in index.html.
+  const requestedRoute = appRoute + window.location.search + window.location.hash;
+  const destination = new URL("/", window.location.origin);
+  destination.searchParams.set("__lhu_route", requestedRoute);
+  window.location.replace(destination.href);
+})();
+</script>
 </head>
 <body>
     <main>

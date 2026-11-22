@@ -3,6 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>VHS Multiverse - LHU Content</title>
+<script>
+(() => {
+  // Content fragments belong inside the full LHU app shell.
+  // Redirect only if this file is opened as a standalone document.
+  const appRoute = "/02_vhsmultiverse";
+  const currentPath = (window.location.pathname || "/").replace(/\/+$/, "") || "/";
+  const normalizedPath = currentPath.replace(/\.html$/i, "").toLowerCase();
+  if (normalizedPath !== appRoute) return;
+
+  // Keep query parameters and the hash while restoring the route in index.html.
+  const requestedRoute = appRoute + window.location.search + window.location.hash;
+  const destination = new URL("/", window.location.origin);
+  destination.searchParams.set("__lhu_route", requestedRoute);
+  window.location.replace(destination.href);
+})();
+</script>
 </head>
 <body>
     <main>
@@ -164,8 +180,8 @@
                 max-width: 520px;
             }
             #vhs-dots .vhs-dot {
-                width: 20px;
-                height: 20px;
+                width: 12px;
+                height: 12px;
                 border-radius: 50%;
                 background: var(--dot);
                 cursor: pointer;
@@ -182,8 +198,8 @@
                 outline-offset: 3px;
             }
             #vhs-dots .vhs-dot.active {
-                background: #ff861d;
-                transform: scale(1.15);
+                background: var(--dot-active);
+                transform: scale(1.3);
             }
 
             @media (max-width: 480px) {
