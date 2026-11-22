@@ -7379,14 +7379,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* 5. Category Loading & Routing */
   const categoryPages = {
-    'ABOUT':          '01_about.html',
-    'VHS MULTIVERSE': '02_vhsmultiverse.html',
-    'HUMANART':       '03_humanart.html',
-    'PROJECTS':       '04_projects.html',
-    'STORYTIME':      '05_storytime.html',
-    'MUSIC':          '06_music.html',
-    'CONTACT':        '07_contact.html',
-    'DONATE':         '08_donate.html'
+    'ABOUT':          '01_about.txt',
+    'VHS MULTIVERSE': '02_vhsmultiverse.txt',
+    'HUMANART':       '03_humanart.txt',
+    'PROJECTS':       '04_projects.txt',
+    'STORYTIME':      '05_storytime.txt',
+    'MUSIC':          '06_music.txt',
+    'CONTACT':        '07_contact.txt',
+    'DONATE':         '08_donate.txt'
   };
   // Canonical browser routes mirror the real HTML filenames (without .html).
   // The shorter legacy routes remain accepted as aliases for old bookmarks.
@@ -7414,7 +7414,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths)]
       .map(([category, route]) => [route, category])
   );
-  const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
+  const normalizePath = (path) => (path || '/').toLowerCase().replace(/\.html$/, '').replace(/\/+$/, '') || '/';
 
   function restoreGithubPagesRoute() {
     const encodedRoute = new URLSearchParams(window.location.search).get('__lhu_route');

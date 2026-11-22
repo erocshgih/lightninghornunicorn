@@ -20,48 +20,10 @@ SCHNELL ZU FINDEN (STRG + F):
 -->
 <html lang="de">
 <head>
+<base href="/">
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <base href="/"/>
-<script id="lhu-direct-route-meta">
-(() => {
-  const routes = {
-    '/01_about': 'About',
-    '/02_vhsmultiverse': 'VHS Multiverse',
-    '/03_humanart': 'Humanart',
-    '/04_projects': 'Projects',
-    '/05_storytime': 'Storytime',
-    '/06_music': 'Music',
-    '/07_contact': 'Hire Me',
-    '/08_donate': 'Donate',
-    '/about': 'About',
-    '/vhsmultiverse': 'VHS Multiverse',
-    '/humanart': 'Humanart',
-    '/projects': 'Projects',
-    '/storytime': 'Storytime',
-    '/music': 'Music',
-    '/contact': 'Hire Me',
-    '/donate': 'Donate'
-  };
-  const path = (location.pathname || '/').replace(/\/+$/, '').toLowerCase() || '/';
-  const title = routes[path];
-  if (title) {
-    document.title = `Lightning Horn Unicorn | ${title}`;
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.rel = 'canonical';
-      document.head.appendChild(canonical);
-    }
-    canonical.href = `https://www.lightninghornunicorn.com${path}`;
-  } else {
-    // The fallback is only meant for known SPA routes. Unknown paths return
-    // visitors to the normal homepage instead of leaving a blank site shell.
-    location.replace('/');
-  }
-})();
-</script>
-
 <title>Lightning Horn Unicorn</title>
 <link href="lhu_favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="lhu_favicon.png" rel="icon" type="image/png"/>
@@ -4000,7 +3962,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 </style>
 </head>
 
-<body class="site-mode">
+<body class="intro-mode">
 <!-- [HTML] AUDIO-ELEMENTE -->
 <audio id="quackAudio" preload="auto" src="quack/quack01.mp3"></audio>
 <audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
@@ -7418,14 +7380,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* 5. Category Loading & Routing */
   const categoryPages = {
-    'ABOUT':          '01_about.html',
-    'VHS MULTIVERSE': '02_vhsmultiverse.html',
-    'HUMANART':       '03_humanart.html',
-    'PROJECTS':       '04_projects.html',
-    'STORYTIME':      '05_storytime.html',
-    'MUSIC':          '06_music.html',
-    'CONTACT':        '07_contact.html',
-    'DONATE':         '08_donate.html'
+    'ABOUT':          '01_about.txt',
+    'VHS MULTIVERSE': '02_vhsmultiverse.txt',
+    'HUMANART':       '03_humanart.txt',
+    'PROJECTS':       '04_projects.txt',
+    'STORYTIME':      '05_storytime.txt',
+    'MUSIC':          '06_music.txt',
+    'CONTACT':        '07_contact.txt',
+    'DONATE':         '08_donate.txt'
   };
   // Canonical browser routes mirror the real HTML filenames (without .html).
   // The shorter legacy routes remain accepted as aliases for old bookmarks.
@@ -7453,7 +7415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths)]
       .map(([category, route]) => [route, category])
   );
-  const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
+  const normalizePath = (path) => (path || '/').toLowerCase().replace(/\.html$/, '').replace(/\/+$/, '') || '/';
 
   function restoreGithubPagesRoute() {
     const encodedRoute = new URLSearchParams(window.location.search).get('__lhu_route');
