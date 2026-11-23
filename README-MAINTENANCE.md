@@ -6,22 +6,20 @@
   Site-Shell liegen bewusst monolithisch in dieser Datei.
 - **`404.html`** ist ein automatisch erzeugter, vollständiger Spiegel von
   `index.html`. GitHub Pages liefert ihn für unbekannte Pfade aus; dadurch
-  funktionieren Deep-Links wie `/01_about`, `/about` und sogar alte
+  funktionieren Deep-Links wie `/about`, `/vhsmultiverse` und sogar alte
   `/01_about.html`-Bookmarks ohne Redirect-Stub.
 
 ## Inhalte
 
-- Die Dateien **`01_about.txt` … `08_donate.txt`** sind die kanonischen
-  Content-Master. Sie sind vollständige HTML-Dokumente, liegen aber als
-  `.txt` vor, damit sie diff- und editorfreundlich bleiben.
+- Die Dateien in **`txt/`** (`about.txt`, `vhsmultiverse.txt`, `humanart.txt`,
+  `projects.txt`, `storytime.txt`, `music.txt`, `contact.txt`, `donate.txt`)
+  sind die kanonischen Content-Master. Sie sind vollständige HTML-Dokumente,
+  liegen aber als `.txt` vor, damit sie diff- und editorfreundlich bleiben.
 - Der Loader in `index.html` parst sie mit `DOMParser`, extrahiert ausschließlich
   den Inhalt von `<main>` (`normalizeFragmentDocument`) und injiziert ihn in
   `#mainContent`. Standalone-Skripte im Head der Master werden dabei verworfen.
-- Die früher zusätzlich vorhandenen `0*.html`-Kopien enthielten nur denselben
-  Inhalt plus ein Redirect-Skript. Sie liegen jetzt unter
-  `website backup/deploy-fragments/` und werden nicht mehr ausgeliefert.
-- Ebenso archived: die nie eingebundenen Legacy-Dateien `script.js`, `shared.js`,
-  `styles.css`, `shared.css` unter `website backup/legacy-root/`.
+- Alte nummerierte Dateien und duplicate HTML-Kopien sind nicht mehr Teil der
+  Site; sie liegen im Archiv `_unused_archive/` neben diesem Ordner.
 
 ## Wartungsbefehle
 
@@ -40,8 +38,9 @@ tatsächlich existieren. Es sollte immer *„All checks passed"* ausgeben.
 
 | Muster | Beispiel | Ziel |
 |---|---|---|
-| Kanonisch | `/01_about` … `/08_donate` | Kategorie |
-| Legacy-Alias | `/about`, `/music`, … | Kategorie |
+| Kanonisch | `/about`, `/vhsmultiverse`, `/humanart`, `/projects`, `/storytime`, `/music`, `/contact`, `/donate` | Kategorie |
+| Legacy-Alias (nummeriert) | `/01_about` … `/08_donate` | Kategorie |
+| Legacy-Alias (alte UI) | `/hire-me` | CONTACT |
 | Alte Datei-URL | `/01_about.html` | Kategorie |
 | Unbekannt | `/irgendwas` | 404-Shell mit Welcome-Card |
 

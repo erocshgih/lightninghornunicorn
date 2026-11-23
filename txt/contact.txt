@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Hire Me - LHU Content</title>
+    <title>Contact - LHU Content</title>
 </head>
 <body>
     <main>
@@ -82,7 +82,7 @@
         </style>
 
         <section id="CONTACT">
-            <h2 class="category-opening-title" data-lang-en="HIRE ME" data-lang-de="ENGAGIER MICH">HIRE ME</h2>
+            <h2 class="category-opening-title" data-lang-en="CONTACT" data-lang-de="KONTAKT">CONTACT</h2>
 
             <p data-lang-en="Have a project that needs an independent creative mind and hands-on execution? Hire me for website design and development, 3D design and modelling, music production, sculptural work, visual concepts, creative direction or ambitious artistic collaborations. From the first rough idea to the finished object, I can help shape the whole thing."
                data-lang-de="Du hast ein Projekt, das einen eigenständigen kreativen Kopf und praktische Umsetzung braucht? Engagiere mich für Website-Design und Entwicklung, 3D-Design und Modellierung, Musikproduktion, bildhauerische Arbeiten, visuelle Konzepte, Creative Direction oder ambitionierte Kunstprojekte. Von der ersten rohen Idee bis zum fertigen Objekt kann ich den gesamten Prozess mitgestalten.">

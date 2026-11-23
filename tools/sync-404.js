@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * GitHub Pages serves 404.html for unknown paths. To make SPA deep links such
- * as /01_about or /about work without a redirect stub, 404.html must be a
+ * as /about, /01_about or /01_about.html work without a redirect stub,
+ * 404.html must be a
  * complete mirror of index.html: the app reads location.pathname itself and
  * loads the matching content fragment.
  *

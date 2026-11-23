@@ -7456,33 +7456,21 @@ float lhuStoneNoise(vec3 p) {
 
   /* 5. Category Loading & Routing */
   // The .txt masters are the canonical content source. They are complete HTML
-  // documents stored as plain text so they stay readable and diff-friendly;
-  // the host shell strips the document scaffolding before injection (see
-  // normalizeFragmentDocument below). The old .html copies only added a
-  // standalone redirect script that was discarded by the normalizer anyway.
+  // documents stored as plain text in /txt so they stay readable and
+  // diff-friendly; the host shell strips the document scaffolding before
+  // injection (see normalizeFragmentDocument below).
   const categoryPages = {
-    'ABOUT':          '01_about.txt',
-    'VHS MULTIVERSE': '02_vhsmultiverse.txt',
-    'HUMANART':       '03_humanart.txt',
-    'PROJECTS':       '04_projects.txt',
-    'STORYTIME':      '05_storytime.txt',
-    'MUSIC':          '06_music.txt',
-    'CONTACT':        '07_contact.txt',
-    'DONATE':         '08_donate.txt'
+    'ABOUT':          'txt/about.txt',
+    'VHS MULTIVERSE': 'txt/vhsmultiverse.txt',
+    'HUMANART':       'txt/humanart.txt',
+    'PROJECTS':       'txt/projects.txt',
+    'STORYTIME':      'txt/storytime.txt',
+    'MUSIC':          'txt/music.txt',
+    'CONTACT':        'txt/contact.txt',
+    'DONATE':         'txt/donate.txt'
   };
-  // Canonical browser routes mirror the real HTML filenames (without .html).
-  // The shorter legacy routes remain accepted as aliases for old bookmarks.
+  // Clean canonical routes: no numbers, no file extensions.
   const categoryPaths = {
-    'ABOUT': '/01_about',
-    'VHS MULTIVERSE': '/02_vhsmultiverse',
-    'HUMANART': '/03_humanart',
-    'PROJECTS': '/04_projects',
-    'STORYTIME': '/05_storytime',
-    'MUSIC': '/06_music',
-    'CONTACT': '/07_contact',
-    'DONATE': '/08_donate'
-  };
-  const legacyCategoryPaths = {
     'ABOUT': '/about',
     'VHS MULTIVERSE': '/vhsmultiverse',
     'HUMANART': '/humanart',
@@ -7492,8 +7480,19 @@ float lhuStoneNoise(vec3 p) {
     'CONTACT': '/contact',
     'DONATE': '/donate'
   };
-  // Old bookmarks pointed at the standalone .html fragments. Those files are
-  // archived now, but the routes must keep working through the full app shell.
+  // Old numbered routes and old .html bookmark URLs stay valid as aliases.
+  const legacyCategoryPaths = {
+    'ABOUT': '/01_about',
+    'VHS MULTIVERSE': '/02_vhsmultiverse',
+    'HUMANART': '/03_humanart',
+    'PROJECTS': '/04_projects',
+    'STORYTIME': '/05_storytime',
+    'MUSIC': '/06_music',
+    'CONTACT': '/07_contact',
+    'DONATE': '/08_donate'
+  };
+  // The old UI label "HIRE ME" produced this bookmark; keep it as an alias.
+  const legacyUiAliases = { 'CONTACT': '/hire-me' };
   const legacyFileRoutes = {
     'ABOUT': '/01_about.html',
     'VHS MULTIVERSE': '/02_vhsmultiverse.html',
@@ -7505,7 +7504,7 @@ float lhuStoneNoise(vec3 p) {
     'DONATE': '/08_donate.html'
   };
   const routeCategories = Object.fromEntries(
-    [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths), ...Object.entries(legacyFileRoutes)]
+    [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths), ...Object.entries(legacyUiAliases), ...Object.entries(legacyFileRoutes)]
       .map(([category, route]) => [route, category])
   );
   const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
@@ -8153,9 +8152,9 @@ float lhuStoneNoise(vec3 p) {
       item.type = 'button';
       item.className = `marquee-category sphere-material-${index + 1}`;
       item.dataset.cat = cat;
-      item.setAttribute('aria-label', `${cat === 'CONTACT' ? 'HIRE ME' : cat}: ${uiLanguage === 'de' ? 'Kategorie öffnen' : 'Open category'}`);
+      item.setAttribute('aria-label', `${cat}: ${uiLanguage === 'de' ? 'Kategorie öffnen' : 'Open category'}`);
       const dot = document.createElement('span'); dot.className = 'marquee-planet';
-      const label = document.createElement('span'); label.className = 'marquee-label'; label.textContent = cat === 'CONTACT' ? 'HIRE ME' : cat;
+      const label = document.createElement('span'); label.className = 'marquee-label'; label.textContent = cat;
       item.append(dot, label);
       return item;
     };

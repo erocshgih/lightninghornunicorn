@@ -1,48 +1,8 @@
 [
   {
-    "path": "01_about.txt",
-    "bytes": 50391,
-    "sha256": "7dd7bf31d9a57a367ac0ed5aaf8917fb8c8af149c59e8161f151b9cbb0108ce6"
-  },
-  {
-    "path": "02_vhsmultiverse.txt",
-    "bytes": 22792,
-    "sha256": "255bae2decc613aeb2a7405c7619daace03f957233479c013ba5c72c6ef04046"
-  },
-  {
-    "path": "03_humanart.txt",
-    "bytes": 31831,
-    "sha256": "f72624a40ed9207a949a52c0735ad01b76560782f5a9797345b1d139088298d2"
-  },
-  {
-    "path": "04_projects.txt",
-    "bytes": 73596,
-    "sha256": "5676141cf08ffcf9aed339fc80223e98a3592445c06c8468e83158b664f5fd7d"
-  },
-  {
-    "path": "05_storytime.txt",
-    "bytes": 21286,
-    "sha256": "efebfc7b4cf169fdb5d4ba5c382a7632e70bd99b7f7cd257b06839da10db7480"
-  },
-  {
-    "path": "06_music.txt",
-    "bytes": 28502,
-    "sha256": "0029dfcf8bbadbb724856255cb4af9de99aeafd8296393cd438016124b36a7e4"
-  },
-  {
-    "path": "07_contact.txt",
-    "bytes": 5633,
-    "sha256": "d34862d30f64cd8c9f19b437f4c771413baf9323123b675e1fa571044b3510ac"
-  },
-  {
-    "path": "08_donate.txt",
-    "bytes": 5377,
-    "sha256": "964795a0c922a7ff448cefa1f86eefda843c073a3af6cea4a067a9f634a14932"
-  },
-  {
     "path": "404.html",
-    "bytes": 380120,
-    "sha256": "43c74062d171cd4c361e0045e6d2631f19554fbcfee948659ed63e66f0bfe12c"
+    "bytes": 379951,
+    "sha256": "8305bbc06c715f55273a486a48f16f2cb797cd4766417e432c9ed453b53512ea"
   },
   {
     "path": "about/about_7.webp",
@@ -566,8 +526,8 @@
   },
   {
     "path": "index.html",
-    "bytes": 380033,
-    "sha256": "da228630de507551d0f72f5f2e939b8586140c32de11acf0727241ba4164904f"
+    "bytes": 379864,
+    "sha256": "975662b21c5f18bba187b260ce1b52b23d877812a60569590625986a22ea49da"
   },
   {
     "path": "lhu_favicon.png",
@@ -816,8 +776,48 @@
   },
   {
     "path": "README-MAINTENANCE.md",
-    "bytes": 2612,
-    "sha256": "b529e609d6f0b84f360c7cbba7179f099a2bfc9c3ef3bec8e60ac0b473698fe1"
+    "bytes": 2647,
+    "sha256": "203656db656892167b2b3175018c13e991752bd70dd66857d8176db0e747e688"
+  },
+  {
+    "path": "txt/about.txt",
+    "bytes": 50391,
+    "sha256": "7dd7bf31d9a57a367ac0ed5aaf8917fb8c8af149c59e8161f151b9cbb0108ce6"
+  },
+  {
+    "path": "txt/contact.txt",
+    "bytes": 5627,
+    "sha256": "46c109be0fd989fabe87adeb2699470fcd6e4a9b300fd37898ac1f7cd7954e07"
+  },
+  {
+    "path": "txt/donate.txt",
+    "bytes": 5377,
+    "sha256": "964795a0c922a7ff448cefa1f86eefda843c073a3af6cea4a067a9f634a14932"
+  },
+  {
+    "path": "txt/humanart.txt",
+    "bytes": 31831,
+    "sha256": "f72624a40ed9207a949a52c0735ad01b76560782f5a9797345b1d139088298d2"
+  },
+  {
+    "path": "txt/music.txt",
+    "bytes": 28502,
+    "sha256": "0029dfcf8bbadbb724856255cb4af9de99aeafd8296393cd438016124b36a7e4"
+  },
+  {
+    "path": "txt/projects.txt",
+    "bytes": 73596,
+    "sha256": "5676141cf08ffcf9aed339fc80223e98a3592445c06c8468e83158b664f5fd7d"
+  },
+  {
+    "path": "txt/storytime.txt",
+    "bytes": 21286,
+    "sha256": "efebfc7b4cf169fdb5d4ba5c382a7632e70bd99b7f7cd257b06839da10db7480"
+  },
+  {
+    "path": "txt/vhsmultiverse.txt",
+    "bytes": 22792,
+    "sha256": "255bae2decc613aeb2a7405c7619daace03f957233479c013ba5c72c6ef04046"
   },
   {
     "path": "unicornmail.webp",

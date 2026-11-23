@@ -28,8 +28,8 @@ let match;
 let scriptCount = 0;
 const tmpFiles = [];
 const scriptSources = ['index.html', 'downloads.html',
-  '01_about.txt', '02_vhsmultiverse.txt', '03_humanart.txt', '04_projects.txt',
-  '05_storytime.txt', '06_music.txt', '07_contact.txt', '08_donate.txt'];
+  'txt/about.txt', 'txt/vhsmultiverse.txt', 'txt/humanart.txt', 'txt/projects.txt',
+  'txt/storytime.txt', 'txt/music.txt', 'txt/contact.txt', 'txt/donate.txt'];
 for (const source of scriptSources) {
   if (!fs.existsSync(path.join(root, source))) continue;
   const sourceHtml = read(source);
@@ -86,8 +86,8 @@ if (dupes.size) fail(`duplicate IDs in index.html: ${[...dupes].join(', ')}`);
 else ok(`${ids.length} IDs in index.html, no duplicates`);
 
 /* ---------- 4. fragment masters ---------- */
-const fragments = ['01_about', '02_vhsmultiverse', '03_humanart', '04_projects',
-  '05_storytime', '06_music', '07_contact', '08_donate'].map((n) => `${n}.txt`);
+const fragments = ['about', 'vhsmultiverse', 'humanart', 'projects',
+  'storytime', 'music', 'contact', 'donate'].map((n) => `txt/${n}.txt`);
 for (const file of fragments) {
   if (!fs.existsSync(path.join(root, file))) { fail(`missing content master: ${file}`); continue; }
   const text = read(file);
