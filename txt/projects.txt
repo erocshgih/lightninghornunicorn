@@ -762,24 +762,33 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     // Shadows are the second biggest cost on weaker GPUs.
                     viewer.setAttribute('shadow-intensity', value < 0.8 ? '0' : '1');
                 }
-                // model-viewer reads devicePixelRatio once when its shared
-                // renderer is created. We hand it a reduced value for that
-                // moment and restore the real one immediately afterwards.
-                function appendResolutionAwareViewer(panel, viewer) {
+                // model-viewer's renderer re-reads window.devicePixelRatio on
+                // every frame. A temporary override is therefore useless: the
+                // renderer resets to 1 immediately. The override must stay
+                // active for as long as the 3D view is in use.
+                let projectDprOverrideActive = false;
+                let projectDprOriginalDescriptor = null;
+                function installProjectDprOverride() {
+                    if (projectDprOverrideActive) return;
+                    projectDprOriginalDescriptor = Object.getOwnPropertyDescriptor(window, 'devicePixelRatio');
                     const realDpr = window.devicePixelRatio || 1;
-                    const descriptor = Object.getOwnPropertyDescriptor(window, 'devicePixelRatio');
-                    try {
-                        Object.defineProperty(window, 'devicePixelRatio', {
-                            configurable: true,
-                            get: () => Math.max(0.5, realDpr * Math.min(1, Math.max(0.25, projectRenderScale)))
-                        });
-                        // Appending upgrades the element and creates the shared
-                        // renderer, which reads the temporarily reduced DPR.
-                        panel.appendChild(viewer);
-                    } finally {
-                        if (descriptor) Object.defineProperty(window, 'devicePixelRatio', descriptor);
-                        else delete window.devicePixelRatio;
+                    Object.defineProperty(window, 'devicePixelRatio', {
+                        configurable: true,
+                        get: () => Math.max(0.5, realDpr * Math.min(1, Math.max(0.25, projectRenderScale)))
+                    });
+                    projectDprOverrideActive = true;
+                }
+                function removeProjectDprOverride() {
+                    if (!projectDprOverrideActive) return;
+                    // Restore the EXACT original descriptor (in Chrome it can be
+                    // an own data property, not a prototype accessor).
+                    if (projectDprOriginalDescriptor) {
+                        Object.defineProperty(window, 'devicePixelRatio', projectDprOriginalDescriptor);
+                    } else {
+                        delete window.devicePixelRatio;
                     }
+                    projectDprOriginalDescriptor = null;
+                    projectDprOverrideActive = false;
                 }
                 function ensureModelLightbox() {
                     if (modelLightbox) return modelLightbox;
@@ -812,6 +821,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     const close = () => {
                         modelLightbox.hidden = true;
                         if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
+                        removeProjectDprOverride();
                     };
                     modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
                     modelLightbox.addEventListener('click', e => { if (e.target === modelLightbox) close(); });
@@ -857,6 +867,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     return modelLightbox;
                 }
                 function openModelLightbox(modelSrc, label) {
+                    installProjectDprOverride();
                     ensureModelViewer();
                     const box = ensureModelLightbox();
                     const panel = box.querySelector('.lhu-3d-lightbox__panel');
@@ -916,9 +927,9 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     currentModelSrc = modelSrc;
                     currentModelLabel = label;
                     modelLightboxViewer = viewer;
-                    // Keep the element at 100% of the panel; only its internal
-                    // render resolution is capped by the temporary DPR below.
-                    appendResolutionAwareViewer(panel, viewer);
+                    // Full panel size; the persistent DPR override caps only
+                    // the internal framebuffer resolution.
+                    panel.appendChild(viewer);
                     applyProjectResolution();
                     box.hidden = false;
                     box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
@@ -954,6 +965,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     }
                     modelLoadTimers.forEach(t => clearTimeout(t));
                     modelLoadTimers.clear();
+                    removeProjectDprOverride();
                     if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
                     activeModelViewers.forEach(mv => {
                         try {
