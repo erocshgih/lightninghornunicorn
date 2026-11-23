@@ -734,6 +734,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                 let modelLightbox = null;
                 let modelLightboxViewer = null;
                 let modelLightboxEscapeHandler = null;
+                let currentModelSrc = '';
+                let currentModelLabel = '';
                 const modelLoadTimers = new Set();
                 // Default 0.7 keeps the framebuffer small enough for devices such
                 // as the OnePlus 6T. The visitor can raise it on stronger hardware.
@@ -754,17 +756,30 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     if (readout) readout.textContent = value.toFixed(2) + '×';
                     const viewer = modelLightboxViewer;
                     if (!viewer) return;
-                    // model-viewer derives its render target from the CSS box.
-                    // Centring a smaller box caps GPU memory and fill rate.
-                    const pct = Math.round(value * 100);
-                    viewer.style.position = 'absolute';
-                    viewer.style.left = '50%';
-                    viewer.style.top = '50%';
-                    viewer.style.width = pct + '%';
-                    viewer.style.height = pct + '%';
-                    viewer.style.transform = 'translate(-50%, -50%)';
+                    // The element keeps its FULL panel size. Only the internal
+                    // device pixel ratio (set when the viewer is created) is
+                    // reduced, so nothing shrinks visually.
                     // Shadows are the second biggest cost on weaker GPUs.
                     viewer.setAttribute('shadow-intensity', value < 0.8 ? '0' : '1');
+                }
+                // model-viewer reads devicePixelRatio once when its shared
+                // renderer is created. We hand it a reduced value for that
+                // moment and restore the real one immediately afterwards.
+                function appendResolutionAwareViewer(panel, viewer) {
+                    const realDpr = window.devicePixelRatio || 1;
+                    const descriptor = Object.getOwnPropertyDescriptor(window, 'devicePixelRatio');
+                    try {
+                        Object.defineProperty(window, 'devicePixelRatio', {
+                            configurable: true,
+                            get: () => Math.max(0.5, realDpr * Math.min(1, Math.max(0.25, projectRenderScale)))
+                        });
+                        // Appending upgrades the element and creates the shared
+                        // renderer, which reads the temporarily reduced DPR.
+                        panel.appendChild(viewer);
+                    } finally {
+                        if (descriptor) Object.defineProperty(window, 'devicePixelRatio', descriptor);
+                        else delete window.devicePixelRatio;
+                    }
                 }
                 function ensureModelLightbox() {
                     if (modelLightbox) return modelLightbox;
@@ -809,10 +824,17 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     };
                     document.addEventListener('keydown', modelLightboxEscapeHandler);
                     const resSlider = modelLightbox.querySelector('.lhu-3d-res-slider');
-                    resSlider?.addEventListener('input', (event) => {
+                    resSlider?.addEventListener('change', (event) => {
                         projectRenderScale = Math.min(1, Math.max(0.25, Number(event.target.value)));
                         try { localStorage.setItem(PROJECT_RES_KEY, String(projectRenderScale)); } catch (_) {}
                         applyProjectResolution();
+                        // The shared renderer reads DPR only at construction.
+                        // Rebuild it with the new value and reload the same model.
+                        const MV = customElements.get('model-viewer');
+                        try { MV?.resetSingleton?.(); } catch (_) { /* ignore */ }
+                        if (currentModelSrc && !modelLightbox?.hidden) {
+                            openModelLightbox(currentModelSrc, currentModelLabel);
+                        }
                     });
                     applyProjectResolution();
                     modelLightbox.querySelectorAll('[data-zoom]').forEach(btn => btn.addEventListener('click', () => {
@@ -891,10 +913,12 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         }
                     });
 
+                    currentModelSrc = modelSrc;
+                    currentModelLabel = label;
                     modelLightboxViewer = viewer;
-                    panel.appendChild(viewer);
-                    // Capping the CSS box is the reliable way to limit the GPU
-                    // framebuffer; minimumRenderScale is only a lower bound.
+                    // Keep the element at 100% of the panel; only its internal
+                    // render resolution is capped by the temporary DPR below.
+                    appendResolutionAwareViewer(panel, viewer);
                     applyProjectResolution();
                     box.hidden = false;
                     box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
