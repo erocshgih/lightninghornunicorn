@@ -155,11 +155,6 @@
     "sha256": "fc0b7e5526910f37c0bc843718a60cbf1a4f9677de106dc50882110f5f7f6b41"
   },
   {
-    "path": "assets/hdri/lhu_tropical_chrome.png",
-    "bytes": 108485,
-    "sha256": "e32b7c6e79b811348e10e541bd6761a367cdafafffeaba3898fe8b98a0c3d1ee"
-  },
-  {
     "path": "chapters/000001.txt",
     "bytes": 16147,
     "sha256": "64ef5f643655917872038478dc2bbb15735eed81fdc8da1f27dbfbc4190f48e1"
@@ -420,11 +415,6 @@
     "sha256": "f9324ce6e53db9265ceb5e52cd9aad5ca723ed9daf028737a1e022fc1908452d"
   },
   {
-    "path": "glb early files/unibrowserloadicorn_version1.glb",
-    "bytes": 1253900,
-    "sha256": "35de00b8089566428190ee0ded099bfb8d1497096d718d519560c9f63600a75f"
-  },
-  {
     "path": "glb/berta.glb",
     "bytes": 2196280,
     "sha256": "3a6a925eea27262a0030ae536ec0480ceb29b8368f480a556a4a571d11b3507e"
@@ -458,11 +448,6 @@
     "path": "glb/turnmeonring.glb",
     "bytes": 445260,
     "sha256": "feac69055e72f051e77aedc150d58272742db12b97f6e39a071b26e359d6fbb2"
-  },
-  {
-    "path": "GOAT.mp3",
-    "bytes": 2772096,
-    "sha256": "eff644d140a8e9e5a5b321ce000d3a946dd6f296807307ac08b208022920e0f0"
   },
   {
     "path": "heads/askflamongostache.glb",
@@ -608,16 +593,6 @@
     "path": "lhuyellow.mp3",
     "bytes": 122880,
     "sha256": "fc28c4d4779a0356ea09c70299b2b4e02c14830bf989492366b9ddbac6038670"
-  },
-  {
-    "path": "lightninghornunicorn.svg",
-    "bytes": 116417,
-    "sha256": "f7da347b837d31ada3e0e829c20349914dc3a54adbf4af6fa12fcddd2bdfdf5a"
-  },
-  {
-    "path": "mrrrphadoravandonatia.webp",
-    "bytes": 110116,
-    "sha256": "f643fbf03e0071ae2fa5b13df91935da4d64871e4e4c47b09df3c7d94622650a"
   },
   {
     "path": "music_Laserette.webp",
@@ -840,24 +815,9 @@
     "sha256": "927f67628de12590305881411146f4a05b2ddb9a7fcafb80a8e97d3de5686540"
   },
   {
-    "path": "rainbow.mp3",
-    "bytes": 118608,
-    "sha256": "8f41cb1f0bb19d290bdd6505a2d6063a5133d357d2d13ad26797c4e2455a9404"
-  },
-  {
     "path": "README-MAINTENANCE.md",
     "bytes": 2612,
     "sha256": "b529e609d6f0b84f360c7cbba7179f099a2bfc9c3ef3bec8e60ac0b473698fe1"
-  },
-  {
-    "path": "rizz-sound-effect.mp3",
-    "bytes": 77462,
-    "sha256": "dbbde7a7920b680ab42a6b8cab49dbd59e24841878bb622fb889669f9fae286f"
-  },
-  {
-    "path": "smooth.svg",
-    "bytes": 265791,
-    "sha256": "4f69ee872df83ae4820851002b82641451bea621be234246ad78904d9df3f3fb"
   },
   {
     "path": "unicornmail.webp",
@@ -1168,155 +1128,5 @@
     "path": "vhsmultiverse/vhsmultiverse_wobblepaws_front.webp",
     "bytes": 226182,
     "sha256": "6b4d345bf508dbc0da359ce49bedaf06f57f4e6e571c4686a1a3b0921bf3052e"
-  },
-  {
-    "path": "website backup/01_about.html",
-    "bytes": 49756,
-    "sha256": "3c24b4694dc9937a117f94df040d9bdaee2b7028d8036d4499fa4d67ac146d55"
-  },
-  {
-    "path": "website backup/02_vhsmultiverse.html",
-    "bytes": 22444,
-    "sha256": "2fb99819142102762019a26104a0127fa0e719cfaeeb60179e4879d23282bcf8"
-  },
-  {
-    "path": "website backup/03_humanart.html",
-    "bytes": 27500,
-    "sha256": "62898cfc498a5ae0f5b5d23c12b67fd01907f8b6d8604b85a7abad587815309e"
-  },
-  {
-    "path": "website backup/04_projects.html",
-    "bytes": 64840,
-    "sha256": "c084ce2b60b53d47d0ae82e9cc6c59da73df77869cf620c07dbe1a84721790e6"
-  },
-  {
-    "path": "website backup/05_storytime.html",
-    "bytes": 19376,
-    "sha256": "0b4b443da61a8e88c48c050ce97e2bca4d5a62fdb057fd793146b535fac8ba37"
-  },
-  {
-    "path": "website backup/06_music.html",
-    "bytes": 28303,
-    "sha256": "5c17f882808b4f64a25c1fb3cd927c1a555074cb5b9a424ddef8641e581b0fe6"
-  },
-  {
-    "path": "website backup/07_contact.html",
-    "bytes": 4915,
-    "sha256": "4404d1d901c701d89b0b56be761b82a52a6f911c9c2554d52f2f0175403450de"
-  },
-  {
-    "path": "website backup/08_donate.html",
-    "bytes": 4556,
-    "sha256": "531d4a7a95aad544362c6c92a2d301669dc0ef95b7b10b01a906dee366f87c3d"
-  },
-  {
-    "path": "website backup/404.html",
-    "bytes": 1257,
-    "sha256": "43bf2c9e901056b669c0938ad1755a71767ff141f9aecc4e4d2668eec57adf0c"
-  },
-  {
-    "path": "website backup/deploy-fragments/01_about.html",
-    "bytes": 51122,
-    "sha256": "c72a5d04141cd483442a3bd9fcccfb37f4d8733530694920c0db17339bdd8171"
-  },
-  {
-    "path": "website backup/deploy-fragments/02_vhsmultiverse.html",
-    "bytes": 23183,
-    "sha256": "94da73d661cee91b80d3914ee7de85df73e4aef2b38f66865940598252108be0"
-  },
-  {
-    "path": "website backup/deploy-fragments/03_humanart.html",
-    "bytes": 28234,
-    "sha256": "31a4c12f3c15a1596c7055f9042cfba3f85b6ef8998ce5b48db2304c9c0ead46"
-  },
-  {
-    "path": "website backup/deploy-fragments/04_projects.html",
-    "bytes": 70398,
-    "sha256": "3767d755fe91c56ac22549ad42cc576af5997ce7125a06b9f155c4fbff9682ad"
-  },
-  {
-    "path": "website backup/deploy-fragments/05_storytime.html",
-    "bytes": 20111,
-    "sha256": "b3978dcec0adfa742155a6ee3672bead095de81590518e1dbf536a784d25275a"
-  },
-  {
-    "path": "website backup/deploy-fragments/06_music.html",
-    "bytes": 29034,
-    "sha256": "ed5cbd232f85d2a0bd7e41fb8b0f378b754248a346d487f5ec21d38bacae2225"
-  },
-  {
-    "path": "website backup/deploy-fragments/07_contact.html",
-    "bytes": 6603,
-    "sha256": "7d5a76b1b036fa41f189e964ac53b02d3832191eb390733b9fa6da44a39e1034"
-  },
-  {
-    "path": "website backup/deploy-fragments/08_donate.html",
-    "bytes": 5288,
-    "sha256": "53d86dbe75c04e61a8222a9db9587d43a5b4bcba90ea5b95916b3f7dc46e13e4"
-  },
-  {
-    "path": "website backup/downloads.html",
-    "bytes": 90027,
-    "sha256": "7754b367c1829606af5cd1c09aa080d9f50f0d5ae4729a3e55904bb7cd98fa72"
-  },
-  {
-    "path": "website backup/index.html",
-    "bytes": 212934,
-    "sha256": "2b20de7dacc6f391579c719d7cd9e9d44047c4b5b6f82885386a4e70d9e0f1c0"
-  },
-  {
-    "path": "website backup/kobo3d.html",
-    "bytes": 128170,
-    "sha256": "fa43abdee182533664d87c7277c157163713820fd274f2b241dc9f66c6ffd084"
-  },
-  {
-    "path": "website backup/legacy-root/script.js",
-    "bytes": 15036,
-    "sha256": "ece9c602ed0c28b9e11960b3ba828501cbbee68b922d9cdfde8b9f9ec96a26ed"
-  },
-  {
-    "path": "website backup/legacy-root/shared.css",
-    "bytes": 73914,
-    "sha256": "c3bf6708657382e5a7e9ba03232149251630b95beb10684d6d1443aa6399c3f7"
-  },
-  {
-    "path": "website backup/legacy-root/shared.js",
-    "bytes": 68907,
-    "sha256": "166677e8a660a1306cd356fe02af9f5f3783fd1bf4332595e812e9179a3e4c72"
-  },
-  {
-    "path": "website backup/legacy-root/styles.css",
-    "bytes": 23826,
-    "sha256": "cfb68b9541c5ccd91b9d04d6202e109e09de3ef68586696b3686c56149905f2c"
-  },
-  {
-    "path": "website backup/manifest.json",
-    "bytes": 2118,
-    "sha256": "66bb9927ee908a40b826ed9e06a072c7644ca19b889fb5dccadc60ee2d50f43d"
-  },
-  {
-    "path": "website backup/script.js",
-    "bytes": 15036,
-    "sha256": "ece9c602ed0c28b9e11960b3ba828501cbbee68b922d9cdfde8b9f9ec96a26ed"
-  },
-  {
-    "path": "website backup/shared.css",
-    "bytes": 73914,
-    "sha256": "c3bf6708657382e5a7e9ba03232149251630b95beb10684d6d1443aa6399c3f7"
-  },
-  {
-    "path": "website backup/shared.js",
-    "bytes": 68907,
-    "sha256": "166677e8a660a1306cd356fe02af9f5f3783fd1bf4332595e812e9179a3e4c72"
-  },
-  {
-    "path": "website backup/styles.css",
-    "bytes": 23826,
-    "sha256": "cfb68b9541c5ccd91b9d04d6202e109e09de3ef68586696b3686c56149905f2c"
-  },
-  {
-    "path": "wolfwhistttle.mp3",
-    "bytes": 34233,
-    "sha256": "cc6f82d32c5afa9fc406e151dbdf5bfc8b3b44ab491e284c0580e1364b4b6171"
   }
 ]
