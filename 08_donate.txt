@@ -80,17 +80,28 @@
                 Du bist so weit in diese Website vorgedrungen und möchtest die Kunst von morgen fördern.<br><br>Kunst zu erschaffen erfordert Zeit und eine lächerlich große Menge an Kaffee. Wenn dir gefällt, was hier entsteht, kannst du direkt mithelfen mit einer Spende.<br><br>Das hier ist Mrrrphadora van Donatia. Drücke einfach das Sticker, um mich zu supporten. Danke.
             </p>
 
-            <form class="donate-form" action="https://www.paypal.com/donate/?hosted_button_id=M9DSYY435ZPRN&source=qr" method="post" target="_blank" rel="noopener noreferrer">
-                <button type="submit" class="sticker-link" aria-label="Mit PayPal an Mrrrphadora van Donatia spenden">
-                    <img src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/donate.png"
+            <!-- & must be escaped; rel belongs on <a>, not on <form>. -->
+            <form class="donate-form" action="https://www.paypal.com/donate/?hosted_button_id=M9DSYY435ZPRN&amp;source=qr" method="post" target="_blank">
+                <button type="submit" class="sticker-link" aria-labelledby="donate-button-label">
+                    <!-- Use the local asset. The former raw.githubusercontent
+                         URL added a runtime dependency on a third-party repo. -->
+                    <img src="donate.png"
                          class="transparent-sticker"
                          title="Donate to Mrrrphadora van Donatia"
                          alt="Donate to Mrrrphadora van Donatia"
-                         loading="lazy" decoding="async">
+                         decoding="async">
                 </button>
+                <!-- Separate text node: the host's language swap replaces the
+                     innerHTML of [data-lang-en] elements, which would delete
+                     the <img> if it lived on the button itself. -->
+                <span class="sr-only" id="donate-button-label"
+                      data-lang-en="Donate to Mrrrphadora van Donatia via PayPal"
+                      data-lang-de="Mit PayPal an Mrrrphadora van Donatia spenden">Mit PayPal an Mrrrphadora van Donatia spenden</span>
             </form>
 
-            <p class="warning-text">
+            <p class="warning-text"
+               data-lang-en="⚡ WARNING: UNAUTHORIZED GENEROSITY DETECTED // SYSTEM OVERRIDE ⚡"
+               data-lang-de="⚡ WARNUNG: UNBEFUGTE GROßZÜGIGKEIT ERKANNT // SYSTEM-ÜBERSTEUERUNG ⚡">
                 ⚡ WARNING: UNAUTHORIZED GENEROSITY DETECTED // SYSTEM OVERRIDE ⚡
             </p>
         </section>

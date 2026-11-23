@@ -10,17 +10,19 @@
             /* ============================================
                VHS MULTIVERSE — spezifische Styles
                ============================================ */
-            :root {
+            /* Scoped to this category: a :root override here used to leak into
+               the shell (theme button, marquee, lightbox) for the whole visit. */
+            html:not([data-theme]) [id="VHS MULTIVERSE"] {
                 --dot:         #d5d0ca;
                 --dot-active:  #b33;
                 --accent-red:  #e02424;
                 --accent-blue: #1a73e8;
                 --card-bg:     transparent;
             }
-            html[data-theme="dark"]       { --dot: #4a4540; --dot-active: #ff8c22; }
-            html[data-theme="mono-gray"]  { --dot: #555;    --dot-active: #ddd; }
-            html[data-theme="mono-green"] { --dot: #1b5e20; --dot-active: #69f0ae; }
-            html[data-theme="crt"]        { --dot: #2a4a2a; --dot-active: #99ff99; }
+            html[data-theme="dark"]       [id="VHS MULTIVERSE"] { --dot: #4a4540; --dot-active: #ff8c22; }
+            html[data-theme="mono-gray"]  [id="VHS MULTIVERSE"] { --dot: #555;    --dot-active: #ddd; }
+            html[data-theme="mono-green"] [id="VHS MULTIVERSE"] { --dot: #1b5e20; --dot-active: #69f0ae; }
+            html[data-theme="crt"]        [id="VHS MULTIVERSE"] { --dot: #2a4a2a; --dot-active: #99ff99; }
 
             html[data-theme="dark"] #vhs-preview-wrap {
                 background: #1a1a1a;
@@ -202,7 +204,7 @@
             <div id="vhs-preview-wrap" tabindex="0" role="group" aria-label="VHS-Galerie. Pfeiltasten links/rechts zum Navigieren.">
                 <button class="vhs-nav-btn" id="vhs-prev" type="button" aria-label="Vorheriges Cover">&#9664;</button>
                 <img id="vhs-preview-img" src="" alt="" title="Cover Ansicht" loading="lazy" decoding="async">
-                <div id="vhs-preview-error" aria-hidden="true">
+                <div id="vhs-preview-error" role="alert" hidden>
                     <span class="err-icon">⚠</span>
                     <span>Cover konnte nicht geladen werden</span>
                 </div>
@@ -297,7 +299,7 @@
                     const url = baseUrl + `vhsmultiverse_${item.id}_${safeView}.webp`;
 
                     // Reset Fehler
-                    if (errorBox) errorBox.classList.remove('show');
+                    if (errorBox) { errorBox.classList.remove('show'); errorBox.hidden = true; }
                     preview.classList.remove('visible');
                     preview.setAttribute('aria-disabled', 'true');
                     preview.alt = `${item.title} – ${safeView}`;
@@ -309,7 +311,7 @@
                     preview.onerror = () => {
                         preview.classList.remove('visible');
                         preview.setAttribute('aria-disabled', 'true');
-                        if (errorBox) errorBox.classList.add('show');
+                        if (errorBox) { errorBox.hidden = false; errorBox.classList.add('show'); }
                     };
                     preview.src = url;
                 }

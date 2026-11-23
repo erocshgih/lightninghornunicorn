@@ -1,48 +1,178 @@
 [
   {
-    "path": "01_about.html",
-    "bytes": 50953,
-    "sha256": "1b40854aac2817573b6298afa9a4d20cc73a41c726ee47f8c509e9ed705b5cfb"
+    "path": "01_about.txt",
+    "bytes": 50391,
+    "sha256": "7dd7bf31d9a57a367ac0ed5aaf8917fb8c8af149c59e8161f151b9cbb0108ce6"
   },
   {
-    "path": "02_vhsmultiverse.html",
-    "bytes": 23007,
-    "sha256": "927b019398ce423c39f47288ca9d17889ce81e93cc1e3b45975eb91e22be67c1"
+    "path": "02_vhsmultiverse.txt",
+    "bytes": 22792,
+    "sha256": "255bae2decc613aeb2a7405c7619daace03f957233479c013ba5c72c6ef04046"
   },
   {
-    "path": "03_humanart.html",
-    "bytes": 28065,
-    "sha256": "e4d6caf6110d3ebe9aba8a6dc6b21a88c9b34bc5317f879ea3189765fab65b38"
+    "path": "03_humanart.txt",
+    "bytes": 31831,
+    "sha256": "f72624a40ed9207a949a52c0735ad01b76560782f5a9797345b1d139088298d2"
   },
   {
-    "path": "04_projects.html",
-    "bytes": 70229,
-    "sha256": "18ca36d887a8c44da5ee83b41788006b8022dde6804ccbcaa2e37a1bbbd3c9b3"
+    "path": "04_projects.txt",
+    "bytes": 73596,
+    "sha256": "5676141cf08ffcf9aed339fc80223e98a3592445c06c8468e83158b664f5fd7d"
   },
   {
-    "path": "05_storytime.html",
-    "bytes": 19942,
-    "sha256": "ea845f6ce71a93b54bd888d7169676b05d84b28cc3d38f85c7963654c67cd1fb"
+    "path": "05_storytime.txt",
+    "bytes": 21286,
+    "sha256": "efebfc7b4cf169fdb5d4ba5c382a7632e70bd99b7f7cd257b06839da10db7480"
   },
   {
-    "path": "06_music.html",
-    "bytes": 28865,
-    "sha256": "267feb08399c986dd5f8cd166bb72b6206d38b5cb9b51e93528004a9da4ba0c7"
+    "path": "06_music.txt",
+    "bytes": 28502,
+    "sha256": "0029dfcf8bbadbb724856255cb4af9de99aeafd8296393cd438016124b36a7e4"
   },
   {
-    "path": "07_contact.html",
-    "bytes": 6434,
-    "sha256": "5b775fb51a9cad2debb14d1b9c064faaabf359996633e0da9b0d12aad048eb35"
+    "path": "07_contact.txt",
+    "bytes": 5633,
+    "sha256": "d34862d30f64cd8c9f19b437f4c771413baf9323123b675e1fa571044b3510ac"
   },
   {
-    "path": "08_donate.html",
-    "bytes": 5119,
-    "sha256": "ecc4544cf502230fb0b9922aef3d12b0f965f4a41fb679d9f9be022d2cf02f35"
+    "path": "08_donate.txt",
+    "bytes": 5377,
+    "sha256": "964795a0c922a7ff448cefa1f86eefda843c073a3af6cea4a067a9f634a14932"
   },
   {
     "path": "404.html",
-    "bytes": 374296,
-    "sha256": "f8fd812d0dd64eb62eaaff1f55e1c334fdf46f52cfe94f16bc469f9b84823d8e"
+    "bytes": 380120,
+    "sha256": "43c74062d171cd4c361e0045e6d2631f19554fbcfee948659ed63e66f0bfe12c"
+  },
+  {
+    "path": "about/about_7.webp",
+    "bytes": 103084,
+    "sha256": "473061468b4498c14e0ae4d0165392eb498476f282bbe6f968b7f8bda574cdb4"
+  },
+  {
+    "path": "about/about_aether1.webp",
+    "bytes": 149776,
+    "sha256": "d8f43e06df31290f56f4c907e921f07329190f07f7baed5722a4d2fb280297f8"
+  },
+  {
+    "path": "about/about_aether2.webp",
+    "bytes": 209862,
+    "sha256": "b46c0f60442a6e64209cf83682d4a8a28d335103085667ddc62e8fb5fe154d7b"
+  },
+  {
+    "path": "about/about_aether3.webp",
+    "bytes": 121304,
+    "sha256": "1c1b34b52f79b1aa69d4dac0c8ec5b06477f791d71ab8f60fdb102e4b73e6c6c"
+  },
+  {
+    "path": "about/about_aether4.webp",
+    "bytes": 131542,
+    "sha256": "59bb1a66d5bf0bf661e871ec04849367a906d87842554658ca23ac694d60b43d"
+  },
+  {
+    "path": "about/about_aether5.webp",
+    "bytes": 188314,
+    "sha256": "b91835585384bd4acb3ed84d2cd46d475a24aa70c70383a1c9040b0d53e54db1"
+  },
+  {
+    "path": "about/about_aether6.webp",
+    "bytes": 254864,
+    "sha256": "3a84f7f0bd5918549de8553c3d5e7cf0588fb0adf24e83eaefda9455a9d3a989"
+  },
+  {
+    "path": "about/about_babyv.webp",
+    "bytes": 309072,
+    "sha256": "4b2a42fcb66110da476a5a32626e81847471f47b25e44e4140909953b34210f8"
+  },
+  {
+    "path": "about/about_bavarianhorn.webp",
+    "bytes": 106290,
+    "sha256": "34505f1374d2b06a649cfba1de7cfd613f56438bbae6c2483a601ec7a8994aff"
+  },
+  {
+    "path": "about/about_cpubench.webp",
+    "bytes": 135656,
+    "sha256": "e27d644470508d55513884d0a16893cdaafecaa2f692db8cd2b2b8007384dd3d"
+  },
+  {
+    "path": "about/about_furarri.webp",
+    "bytes": 112814,
+    "sha256": "a1ec3e9fd9f44f0eb05b9f4de2c0d1711eafd0eb259dd09d0c165ad0ab4cfb01"
+  },
+  {
+    "path": "about/about_gobaldforrebellion.webp",
+    "bytes": 87100,
+    "sha256": "0e167795e041add5d3e97ea18f53701506790788abb0fbdc1e5813c6a06e9d2b"
+  },
+  {
+    "path": "about/about_goldennotes.webp",
+    "bytes": 74968,
+    "sha256": "1ea4d4d6b8d60693f2bb46b674e6309c8daf3882fbbf9ef0ff1600a5cf8e96bc"
+  },
+  {
+    "path": "about/about_groupphoto.webp",
+    "bytes": 252320,
+    "sha256": "5785452018ab809e382283819e576fdf4be941163d60dbc7c969a301a8d91cfa"
+  },
+  {
+    "path": "about/about_iamfromdubstep.webp",
+    "bytes": 124252,
+    "sha256": "f8aa563cb4152fa1e77744a1320fa2cf6b9effcbdf6743b352500141796b53c7"
+  },
+  {
+    "path": "about/about_leonardopachinko.webp",
+    "bytes": 70172,
+    "sha256": "d24aefe82d818b1dcd14e16615ca71aa415b649d1c70f8748ee834278842e73e"
+  },
+  {
+    "path": "about/about_twodragons.webp",
+    "bytes": 154752,
+    "sha256": "c1a8683b7f1a5b7564f95f51767528d96b47d07093284a42685197234c8d9f4b"
+  },
+  {
+    "path": "about/about_vedran1.webp",
+    "bytes": 40570,
+    "sha256": "1b6006c5111914f1e38ed047935412fbdfff09632e4983c0c0efe5c15eaf901c"
+  },
+  {
+    "path": "about/about_vedran2.webp",
+    "bytes": 95284,
+    "sha256": "96d7e12c9b69d36a74c73c7a75a6a7fc279b77f87cbe8ddc6c40a85e77d6598f"
+  },
+  {
+    "path": "about/about_vedran3.webp",
+    "bytes": 56476,
+    "sha256": "73789972ffc0ab8a1fcabc9025dd7f9dfcd35affe820c819ca988cc9c39f6b72"
+  },
+  {
+    "path": "about/about_vedran4.webp",
+    "bytes": 34448,
+    "sha256": "feb391164eb5fa1d42faffc5beff8a29c8e9ff661e99ad4c19d0e121316c9517"
+  },
+  {
+    "path": "about/about_vinylbanana.webp",
+    "bytes": 88828,
+    "sha256": "fc0b7e5526910f37c0bc843718a60cbf1a4f9677de106dc50882110f5f7f6b41"
+  },
+  {
+    "path": "assets/hdri/lhu_tropical_chrome.png",
+    "bytes": 108485,
+    "sha256": "e32b7c6e79b811348e10e541bd6761a367cdafafffeaba3898fe8b98a0c3d1ee"
+  },
+  {
+    "path": "chapters/000001.txt",
+    "bytes": 16147,
+    "sha256": "64ef5f643655917872038478dc2bbb15735eed81fdc8da1f27dbfbc4190f48e1"
+  },
+  {
+    "path": "chapters/000002.txt",
+    "bytes": 13508,
+    "sha256": "f0dab68f90db60f5f205c589f8d08e9c31378c4f1d66903206f777c9e4916e4b"
+  },
+  {
+    "path": "chapters/000003.txt",
+    "bytes": 20933,
+    "sha256": "191df2f2f24cafa192dfb8be9712d42ffc440b1dfdf8bfd7fcfbc630f711c6d2"
   },
   {
     "path": "CNAME",
@@ -50,28 +180,1143 @@
     "sha256": "28d52d637b2ce960ccc96274e7e4c40fbe02fa3c20d1aea0ca335053c13e8fe0"
   },
   {
-    "path": "index.html",
-    "bytes": 374296,
-    "sha256": "f8fd812d0dd64eb62eaaff1f55e1c334fdf46f52cfe94f16bc469f9b84823d8e"
+    "path": "donate.png",
+    "bytes": 224035,
+    "sha256": "ae07b64ab35520cfd4591d7ccc0b2212df752543e8c3ef54f212bf3c49fdad92"
   },
   {
-    "path": "legacy/script.js",
+    "path": "downloads.html",
+    "bytes": 91793,
+    "sha256": "db4f5871db959fe1afd83b5642fa3ec3ab34712d5f5f1d5587c92891eacce6e6"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_A_FORCE_YOU.mp3",
+    "bytes": 2054808,
+    "sha256": "aaf42be6d684b586daca22032fd0231dabc96900c711bc88a9f106e75bae72c1"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_CITY_OF_FATHERS.mp3",
+    "bytes": 4598424,
+    "sha256": "b65a1627af44eee4708e201b09a44e7f4ea591704ab476fc0c4d3732320efe0e"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_DREAMING.mp3",
+    "bytes": 2547648,
+    "sha256": "a282a1407a9b145b0f49b1b8cbb618d6824ea1af48791285a1ce4ab0cb8b4e03"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE_CARRIBEAN_PET_OFFICE_VERSION.mp3",
+    "bytes": 1704437,
+    "sha256": "ad50d5c1a16d1d9b5e157fa123da45785698a8243b5eee4b156fcf604a38b7ff"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE_WOLFCURE_VERSION.mp3",
+    "bytes": 1910909,
+    "sha256": "a3a5fbb73b4aaabb703898b9c21cd6db5f8aebe5ba7ee42746d0eff65d34b796"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_LASERETTE.mp3",
+    "bytes": 2697648,
+    "sha256": "97533552e5feb233d15e943128cdb1bec6e37e31c5b6e58f0d0812f248f0a513"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985_ALTERNATE_VERSION.mp3",
+    "bytes": 3411216,
+    "sha256": "b4ae09f5eeb63d868d2ffd3fef3956e4cd456098c465d81dd20d34802bacaeb9"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_OSCILLATORS_OF_1985.mp3",
+    "bytes": 2248694,
+    "sha256": "70fabb284e1ed164d7f900eac29c7cc3610364d3dd230b1480d91c737a1b1225"
+  },
+  {
+    "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_TONAGAG.mp3",
+    "bytes": 3284544,
+    "sha256": "62122c54b5832ed11d3ec2dcedd1d786a1da9a46019de81d02a0fb435083eef0"
+  },
+  {
+    "path": "downloads/80IES/TON_A_GAG_ALTERNATE_VERSION_BATTLESHIP.mp3",
+    "bytes": 2880432,
+    "sha256": "378caed6552d91ac2f4118ed07e52ff3de4a57a72e249c7032695d61c88c9934"
+  },
+  {
+    "path": "downloads/80IES/TON_A_GAG_ALTERNATE_VERSION_DATAS_GRID.mp3",
+    "bytes": 1782177,
+    "sha256": "337e4faf35ff1c39ba78e92f44a2af0a9885209182c040f30903be8f98e3ff78"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_DUCK_PANTS.mp3",
+    "bytes": 1280424,
+    "sha256": "54d11349c60695417c6823e1b45421c954b82916fd94aba5863ed711f73c4fec"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_ELK_EMIL.mp3",
+    "bytes": 3765792,
+    "sha256": "4e51a7b96cc78f34ce36a931f867744a11ef6d8b298a18011367b71712597f8e"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_GOAT_ALTERNATE_BURNING_HORNS_DISCO_VERSION.mp3",
+    "bytes": 2772096,
+    "sha256": "eff644d140a8e9e5a5b321ce000d3a946dd6f296807307ac08b208022920e0f0"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_GOAT_ALTERNATE_PIRATE_VERSION.mp3",
+    "bytes": 2607120,
+    "sha256": "7a2238a5bfa697ce7f9784bcdac96bbdd66e59e4dce4098baa1122803ebac944"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_HOW_DO_YOU_MILK_AN_INVISIBLE_COW.mp3",
+    "bytes": 2221056,
+    "sha256": "9c226ca6d627af7f39e76662564dd5fbeecae6e005fe3bb3604a65af223eded8"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_MY_MK-ULTRA_COUNTRY_MUSIC_TURNED_A_KILLER_AI_INTO_A_HORSE-PROTECTING_QUEEN.mp3",
+    "bytes": 3614016,
+    "sha256": "e77c0a25ff8d8399093464ded784ebbd0c28bd0643f75afac023dd298efadc7f"
+  },
+  {
+    "path": "downloads/BSIDES_ACOUSTIC_ETC/LIGHTNING_HORN_UNICORN_WHAT_DOES_A_MUSICIAN_LOOK_LIKE.mp3",
+    "bytes": 3394824,
+    "sha256": "974797201100ffc5f8d65422bf59ae5009feaf334711618a7a5489a50ab9d1cb"
+  },
+  {
+    "path": "downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_1_17.mp3",
+    "bytes": 4455936,
+    "sha256": "0e117164ddda4460cbbc715a29df72e8ab667b41f09d7e336e65a964e8bbe411"
+  },
+  {
+    "path": "downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_ANOTHER_PS1_DREAM_I_HAD.mp3",
+    "bytes": 1560384,
+    "sha256": "bb57265d1edfe78eca398ffa76557b856cf0c40c7543e39be82aa2c5828d1705"
+  },
+  {
+    "path": "downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_LOADING_SCREENS.mp3",
+    "bytes": 1502208,
+    "sha256": "9296ef40423a4464c0247a07d6c36131a479269c3c3acb6ac07ad6692091f274"
+  },
+  {
+    "path": "downloads/CALM_CHILLOUT_LOFI_GAMELIKEOST/LIGHTNING_HORN_UNICORN_THE_CHOSEN_ONES.mp3",
+    "bytes": 4320576,
+    "sha256": "7eccaa1749b81a339c295754b48392e36c8646f3811538419cc6b2928a560e72"
+  },
+  {
+    "path": "downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_EXTRATERRESTRIAL_MEGA_TARSIER.mp3",
+    "bytes": 3912384,
+    "sha256": "93fb0f0f97ca1b86429579d3e17d8082a2c54f0c544e2ca42444798498fb6340"
+  },
+  {
+    "path": "downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_RISE.mp3",
+    "bytes": 1991784,
+    "sha256": "732d712851dc0f114a18012af8ccd1aae57a72c9f195579f505af18c40dfc257"
+  },
+  {
+    "path": "downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_UNISON_UNICORNS.mp3",
+    "bytes": 2533296,
+    "sha256": "bf5f0f16dabe5df42a6bd7feb0d4c640b83d7db77ad4e2e6905504b6800da007"
+  },
+  {
+    "path": "downloads/ELECTRO_NEUROFUNK_DRUMNBASS_JUNGLE_EDM/LIGHTNING_HORN_UNICORN_VELVET_ANABOLICA_TWERK.mp3",
+    "bytes": 2005728,
+    "sha256": "0b2cfa544fe4ce79f65dde43c7a6463ab1b7a71961d20c31144f0cda28ec5cbc"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_CLOUD_HOW_DO_YOU_LIFT_THAT_MIGHTY_SWORD.mp3",
+    "bytes": 5108640,
+    "sha256": "df134ec6e7c484af65466fac9f652bc3fc30101b4d200ed46fbe18327e5e0033"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_EVERYBODY_HAS_PTSD_AND_AUTISM_IS_NOT_A_SUPERPOWER.mp3",
+    "bytes": 3935976,
+    "sha256": "93cc32251eba7963ba90d1d77eaacae2c33da40c39c019b0b897b0a4ee831e74"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_HARAMBE_HAS_A_MELON_CANNON.mp3",
+    "bytes": 3037704,
+    "sha256": "eb555f028431f9aed21124c22eeddcf2d05bf387a76a8efc30e27ed616018d5d"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_ALTERNATE_PSYCHEDELIA_ECHOES_VERSION.mp3",
+    "bytes": 2510680,
+    "sha256": "55f575082a64ff626c7117136ea3d22fdd0e61cb41ba49fedab036aca3a8961a"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_ALTERNATE_VERSION_RED_KEY_PIANO_VERSION.mp3",
+    "bytes": 2706048,
+    "sha256": "f9222691fe9e93397fa3973d18f8c0b3186f73b3da11666ded41d04490454dbf"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO_ALTERNATE_VERSION_SPACE_PIANO.mp3",
+    "bytes": 4328064,
+    "sha256": "abf41bb8947a0bde63bd9acc3852dae9a8b54ca0ea42bd4e2f4a5e2fb5d9b09a"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_KATE_PLUSH_AND_HER_MEOW_PIANO.mp3",
+    "bytes": 3112368,
+    "sha256": "0a0fe3b627018ae35bda8a2c9434e58b85fe335fab86e1cacd02f4e93d85002f"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL_BREATHY_VOICE.mp3",
+    "bytes": 3826752,
+    "sha256": "1b9fea1c407ce96159722023660db9cfe29511733962121fefd2229935657280"
+  },
+  {
+    "path": "downloads/INDIE_OPERAROCK_ARTPOP/LIGHTNING_HORN_UNICORN_SASSY_GHOUL.mp3",
+    "bytes": 2901696,
+    "sha256": "8590004214d479c0cfc0399cc3d29094021054cbccaa884ee63961db7aaec18b"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_I_SPLIT_MOUNTAINS.mp3",
+    "bytes": 3278400,
+    "sha256": "7c8a3785880a222923d78a7577acfafd2b82fabfc7a6b52cbb391effd74cee3c"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KITTENS.mp3",
+    "bytes": 638880,
+    "sha256": "43d2479a45481c72b940f82e8c333151345a125828da14c325df8313a23e0885"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_KNIGHT_HANDHART.mp3",
+    "bytes": 3239232,
+    "sha256": "88b53ceed1bc31be29d085e9c22d12221e9ccc8d374295000c59b8ad58bbaf9d"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___CRIMSON_DISGUISE.mp3",
+    "bytes": 3685464,
+    "sha256": "3d70633e257e7360ee7c02d277b14b75e139382ec1f72a33813c40e891156fc0"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_ALTERNATE_VERSION___VOLTAGE_QUEEN.mp3",
+    "bytes": 3501504,
+    "sha256": "cf532dc3a2433e467cfa3536e3c50f9c2c6c5e2deea1cfd4d024b38184d671a1"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_OH_GIANT_MOTH_TEENAGE_RIOT_VS_THE_DNA_STRINGS_LAW.mp3",
+    "bytes": 1819080,
+    "sha256": "5113827ab928a1fbbbdc8e0663855d663ef233e57917874da5f021e21b2f6ba0"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.mp3",
+    "bytes": 3732672,
+    "sha256": "bb734b50345438fad949383a253be2cdca63cc22f3994aef4c8aa705b5cf3136"
+  },
+  {
+    "path": "downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3",
+    "bytes": 4058496,
+    "sha256": "044a156794bc88fa6620c8657244180dfef0a56d6f604a2a653a73855ca141f1"
+  },
+  {
+    "path": "downloads/THANK YOU.TXT",
+    "bytes": 691,
+    "sha256": "07cb1c4786e52b3abb9365b6d01be2f8da64be71ada886f139da53fd04ee97f9"
+  },
+  {
+    "path": "duck.png",
+    "bytes": 12377,
+    "sha256": "fd508bbeda18fe7b621b0ed1b53f45c5bdcab81d79f8577299772666ff9d6dae"
+  },
+  {
+    "path": "ghostduck.png",
+    "bytes": 17679,
+    "sha256": "f9324ce6e53db9265ceb5e52cd9aad5ca723ed9daf028737a1e022fc1908452d"
+  },
+  {
+    "path": "glb early files/unibrowserloadicorn_version1.glb",
+    "bytes": 1253900,
+    "sha256": "35de00b8089566428190ee0ded099bfb8d1497096d718d519560c9f63600a75f"
+  },
+  {
+    "path": "glb/berta.glb",
+    "bytes": 2196280,
+    "sha256": "3a6a925eea27262a0030ae536ec0480ceb29b8368f480a556a4a571d11b3507e"
+  },
+  {
+    "path": "glb/commissionerwurstinger.glb",
+    "bytes": 2628448,
+    "sha256": "ceb52a79e3336149b444464ff77c40444c46e46f468d410d295d961f7e2f8993"
+  },
+  {
+    "path": "glb/duckarmorbackpack.glb",
+    "bytes": 900208,
+    "sha256": "2286c403a3a89de9f173a18258d8bca339d3a6b963feafe14bfb2e97aaf88094"
+  },
+  {
+    "path": "glb/duddha.glb",
+    "bytes": 2253012,
+    "sha256": "7e337a970557db5c0137a1f6a5692f6388989d39725849f75716c1f329bd1410"
+  },
+  {
+    "path": "glb/hitenter.glb",
+    "bytes": 3320,
+    "sha256": "253a1ec17a8e701a0cc9674efa60d4bbd3ee77964d6be36cd5372e2576b630af"
+  },
+  {
+    "path": "glb/rubberduck.glb",
+    "bytes": 320020,
+    "sha256": "30c27e43ff09d19e5ea9a5ea3c324b55836724913ab6ae7a815e59e0868410bf"
+  },
+  {
+    "path": "glb/turnmeonring.glb",
+    "bytes": 445260,
+    "sha256": "feac69055e72f051e77aedc150d58272742db12b97f6e39a071b26e359d6fbb2"
+  },
+  {
+    "path": "GOAT.mp3",
+    "bytes": 2772096,
+    "sha256": "eff644d140a8e9e5a5b321ce000d3a946dd6f296807307ac08b208022920e0f0"
+  },
+  {
+    "path": "heads/askflamongostache.glb",
+    "bytes": 2053288,
+    "sha256": "d78c0f38385cc5a721c5be95a9e16e0e356ee85f60f95b8c0a0dbac137767b65"
+  },
+  {
+    "path": "heads/duckybulbywaterhorn.glb",
+    "bytes": 2104768,
+    "sha256": "39defb7248a1e3973d5071e9d9f60a5e3f8a6855f37cbb4c01e8fdc35748c183"
+  },
+  {
+    "path": "heads/grasscowschmeckicore.glb",
+    "bytes": 3860784,
+    "sha256": "02ecc40c92d2a9315a298c7b4a34b860614ae2cc280c588e9b4e63145fcab498"
+  },
+  {
+    "path": "heads/hotdoghorn.glb",
+    "bytes": 2639432,
+    "sha256": "1530500f268b441723bf0f0b3c906c69199725f91bf564a12eb6a3d0fc9cbd0d"
+  },
+  {
+    "path": "heads/obesewarrior.glb",
+    "bytes": 1595164,
+    "sha256": "b98cb8171fb0a3b38f59531108467589c078a5e889acf9e15491e9de5426964e"
+  },
+  {
+    "path": "heads/pumpzhehorn.glb",
+    "bytes": 4870292,
+    "sha256": "fd0d3557b0ccbf1557e200a97eea37879e743440d816243d21b541acbff6f409"
+  },
+  {
+    "path": "heads/unibrowserloadicorn.glb",
+    "bytes": 1750428,
+    "sha256": "0fbe0715823a7ddfc52567fd1cf54fc16de435124b3b458f121b1ae9410ce27d"
+  },
+  {
+    "path": "heads/uniturnoeyeballhorn.glb",
+    "bytes": 2767548,
+    "sha256": "db727f48006aaaf15e46b28eb165bbec257ab3f10a32cbe997f329b6810ce837"
+  },
+  {
+    "path": "humanart/acircleofcolors.webp",
+    "bytes": 559110,
+    "sha256": "3637efd854c998056be0a37d14837a60e91c2918bcf18f98a13e571444465fb5"
+  },
+  {
+    "path": "humanart/apffel2.webp",
+    "bytes": 15470,
+    "sha256": "1956fb19f75bb14ef190745fed3adc5aac8e80b296903f32f2df5b196639c264"
+  },
+  {
+    "path": "humanart/augapfel.webp",
+    "bytes": 569518,
+    "sha256": "702061bfe9259b8c9b831fd764190a21b155a0367a69e3d5ccc24270f3488978"
+  },
+  {
+    "path": "humanart/bananismagainstgorillas.webp",
+    "bytes": 15440,
+    "sha256": "88878d733f02572ef2d21fcbd39f32b7b5b5d892684aa68381affb1700d569f5"
+  },
+  {
+    "path": "humanart/bigwavecube.webp",
+    "bytes": 27042,
+    "sha256": "02c5adbe8fc68cc2296f9a8be24d72a953a400df67882de4699f718493e3b43f"
+  },
+  {
+    "path": "humanart/blackmountainlandscape.webp",
+    "bytes": 590166,
+    "sha256": "0f92f80e442d4a013b99bf236001dab98e01ee9a8315e82126047f79a4ced378"
+  },
+  {
+    "path": "humanart/candle.webp",
+    "bytes": 1260856,
+    "sha256": "8e9be23704c7115e787df822865887f97c682a6237cb35b2b1171e4cd9905185"
+  },
+  {
+    "path": "humanart/chillin.webp",
+    "bytes": 427002,
+    "sha256": "fbe2165659125210372d49ef732a3733783a064eb0ef95d92ab41c3e5b430762"
+  },
+  {
+    "path": "humanart/clown.webp",
+    "bytes": 997090,
+    "sha256": "7c6845bc599ae22d53fa1541f25059ca611701a1163eb8273516a46009b7bd6d"
+  },
+  {
+    "path": "humanart/eagletriangle.webp",
+    "bytes": 86982,
+    "sha256": "23a67550fc917218befb841496f210c2958132814d00e881c2e2b7259d8a577e"
+  },
+  {
+    "path": "humanart/face001.webp",
+    "bytes": 900002,
+    "sha256": "4fabb31fa386668b8a405707984fe6eafecd9ef663736b2f94421ce7169bc887"
+  },
+  {
+    "path": "humanart/girlwithseashell.webp",
+    "bytes": 80974,
+    "sha256": "cece94971bd3553c65048da3baaee35e8429210622137cb34523a39a5da06dfb"
+  },
+  {
+    "path": "humanart/mynameisrain.webp",
+    "bytes": 239314,
+    "sha256": "31aaa98f4f4745eb7d4cadd9ebd3a3661904fd7130f364456e522e8475cf9910"
+  },
+  {
+    "path": "humanart/rainbowonyx.webp",
+    "bytes": 34568,
+    "sha256": "a3c7606a56843d68ab4669c3d64d9f980b0bef4703a791ce8fe3da433d3b18ba"
+  },
+  {
+    "path": "hypnoload.svg",
+    "bytes": 9967,
+    "sha256": "50369bb231e43d8398a5432e14d072ef98b1a8953d3b2e20b7d5c77436ce5e4e"
+  },
+  {
+    "path": "index.html",
+    "bytes": 380033,
+    "sha256": "da228630de507551d0f72f5f2e939b8586140c32de11acf0727241ba4164904f"
+  },
+  {
+    "path": "lhu_favicon.png",
+    "bytes": 681104,
+    "sha256": "147891bbd82869a7b5cade2b59c5c800801c10c999b3ef05629811caae97a022"
+  },
+  {
+    "path": "lhu_favicon.svg",
+    "bytes": 25400,
+    "sha256": "02accf69eeda7bb7302ffe4dd181ab37be4eb92130805f517ab362e1dcbb8884"
+  },
+  {
+    "path": "lhublue.mp3",
+    "bytes": 153391,
+    "sha256": "9139a4a0f1614ae48327b4b92c3109a82890543fd5442df86e9aee3506822078"
+  },
+  {
+    "path": "lhured.mp3",
+    "bytes": 142106,
+    "sha256": "0dd071630ff6fa03bc8c360242beb5e3fa08996ebca7c0bc0fc3b7ec3242a425"
+  },
+  {
+    "path": "lhuyellow.mp3",
+    "bytes": 122880,
+    "sha256": "fc28c4d4779a0356ea09c70299b2b4e02c14830bf989492366b9ddbac6038670"
+  },
+  {
+    "path": "lightninghornunicorn.svg",
+    "bytes": 116417,
+    "sha256": "f7da347b837d31ada3e0e829c20349914dc3a54adbf4af6fa12fcddd2bdfdf5a"
+  },
+  {
+    "path": "mrrrphadoravandonatia.webp",
+    "bytes": 110116,
+    "sha256": "f643fbf03e0071ae2fa5b13df91935da4d64871e4e4c47b09df3c7d94622650a"
+  },
+  {
+    "path": "music_Laserette.webp",
+    "bytes": 116398,
+    "sha256": "68516ac5b6622be18c300a300a8a33587f2f03e3d67fd5ff5cc98fa34cfc7fe1"
+  },
+  {
+    "path": "pixelart/pixelart_contactpic.png",
+    "bytes": 19942,
+    "sha256": "fb1bf13fdae0e9dd6577fc4852d19d3804f21c564dad9429d856c7283ddc2e7a"
+  },
+  {
+    "path": "pixelart/pixelart_donatepic.png",
+    "bytes": 12295,
+    "sha256": "48d614f170224d9972e84cdef0045a98644d89130de2cae994b90e8360943ce2"
+  },
+  {
+    "path": "pixelart/pixelart_humanartpic.png",
+    "bytes": 26905,
+    "sha256": "4489dbcf1a43b355ffb2647b9d4aa3837656b028a9f52180cb70de859a48ad4b"
+  },
+  {
+    "path": "pixelart/pixelart_musicpic.png",
+    "bytes": 13731,
+    "sha256": "89036149f6e3f0818748477c18dff963793d406e8efcbe0525eb0c2dd64dfe3f"
+  },
+  {
+    "path": "pixelart/pixelart_projectspic.png",
+    "bytes": 11267,
+    "sha256": "d75ec637be710724aeff45e7ec2cf3421c70ed67c5ba241ee06fbf55bd035eaa"
+  },
+  {
+    "path": "pixelart/pixelart_storytimepic.png",
+    "bytes": 23792,
+    "sha256": "b909cd10dc7fb67f36ce5a667c9017369fbc9bef62dcd9d3761ee068e7e73ebe"
+  },
+  {
+    "path": "pixelart/pixelart_vedran.png",
+    "bytes": 17946,
+    "sha256": "0732a76daa539afcdf2b0102a903cdf42d35b5be5e6585d5254d4ad410df6801"
+  },
+  {
+    "path": "pixelart/pixelart_vhsmultiversepic.png",
+    "bytes": 24774,
+    "sha256": "251928ce362052a80b44940876b0cfb3701541807c383a2806da8638c14d56b1"
+  },
+  {
+    "path": "projects/projects_accessoire_duckarmorbackpack_big.webp",
+    "bytes": 26940,
+    "sha256": "147800eeb8ed40a28e4e40e0f637c41892a53663c41845209e9350771db2873a"
+  },
+  {
+    "path": "projects/projects_accessoire_duckarmorbackpack_man.webp",
+    "bytes": 43348,
+    "sha256": "6ced265754693ce7a349a6103ccf19f318ffd0a255bb9b78b726a5eb31c697ec"
+  },
+  {
+    "path": "projects/projects_accessoire_duckarmorbackpack_poster.webp",
+    "bytes": 46668,
+    "sha256": "18d49f4bb40d38a3236c63c125fcc94b16760333da1808c569ac6a607de70e1e"
+  },
+  {
+    "path": "projects/projects_accessoire_duckarmorbackpack_vernissage.webp",
+    "bytes": 38064,
+    "sha256": "7f21fbb89401e255a22f9c694f25739c6ddcdedb47093bd6e252c0dea27b1574"
+  },
+  {
+    "path": "projects/projects_accessoire_duckarmorbackpack_woman.webp",
+    "bytes": 54682,
+    "sha256": "ef61e4fdcf42b513325cb5e3c39db62ae686b2ca3dcb739950dd128d9d091f61"
+  },
+  {
+    "path": "projects/projects_accessoire_notplug1package.webp",
+    "bytes": 64042,
+    "sha256": "e685a7054df0f05d896288f1313fe7745d920123b0bc193d9e8b935b8b729ba6"
+  },
+  {
+    "path": "projects/projects_accessoire_notplug2comic.webp",
+    "bytes": 110202,
+    "sha256": "9bef4f6255734bcc6d2709051ca7caf8de5a1c425b60cb9dd4ca0d040c9edc67"
+  },
+  {
+    "path": "projects/projects_figurine_berta1package.webp",
+    "bytes": 151198,
+    "sha256": "7ff45a747a2725fdc7ddd006a6d056ce019c200b0b8814920f91f83b82a935bb"
+  },
+  {
+    "path": "projects/projects_figurine_berta2figurine.webp",
+    "bytes": 29146,
+    "sha256": "44c147f190fb97f76f589bc959bdfdb7b8e9b4ae4cfc5a585c1baea1c75ceeb4"
+  },
+  {
+    "path": "projects/projects_figurine_berta3drawing.webp",
+    "bytes": 54208,
+    "sha256": "bd58f3706cfe9e0241cb55c655d99fb19ff5d552e5c82b583ca7e45bce8c8e9c"
+  },
+  {
+    "path": "projects/projects_figurine_berta4newspaper.webp",
+    "bytes": 167762,
+    "sha256": "c97b77e66a9407288149f856d3b6dca157f7b560edc053ffa6e349827c3bb9b6"
+  },
+  {
+    "path": "projects/projects_figurine_commissionerwurstinger_leatherjacket.webp",
+    "bytes": 218922,
+    "sha256": "c17968b2551d42f1f34898842075ec04efe9c97cb2ded817b035a3915d274b8e"
+  },
+  {
+    "path": "projects/projects_figurine_commissionerwurstinger_pregnant.webp",
+    "bytes": 183328,
+    "sha256": "eed14e9c1323a0b9a6ee685240749c99f03b294d5bf752d26d6ee62871867c69"
+  },
+  {
+    "path": "projects/projects_figurine_duddha1package.webp",
+    "bytes": 52494,
+    "sha256": "2f521f9a1ebbd38d628777363a5c46d5c820a2d39a8d3f431065fa2323a1247f"
+  },
+  {
+    "path": "projects/projects_figurine_duddha2figurine.webp",
+    "bytes": 32678,
+    "sha256": "b08c935075e8af9c6e240c8c9476968106ca117e7b03ed6f1ec83894623dc6b1"
+  },
+  {
+    "path": "projects/projects_glasses_duckparada_thunderbolt1vedran.webp",
+    "bytes": 31512,
+    "sha256": "513fa6155d03205e5793a2e28e6500426676a4d89a5a099147e173b8c6493457"
+  },
+  {
+    "path": "projects/projects_glasses_duckparada_thunderbolt2package.webp",
+    "bytes": 97002,
+    "sha256": "2ff9b32d546d2b52200c2a7d113f2710d0cfc9708c6e6a08917b4e1664eff35d"
+  },
+  {
+    "path": "projects/projects_glasses_duckparada_thunderbolt3comic.webp",
+    "bytes": 111746,
+    "sha256": "305ce977eef68963206bd3f18c70176bb878abc42833088a8ccc715d0cd505da"
+  },
+  {
+    "path": "projects/projects_glasses_duckparada_thunderbolt4squat.webp",
+    "bytes": 37030,
+    "sha256": "c30160d70318e819c1cecca758e530cd21bece64b3ada28e66fa030c047f6ebf"
+  },
+  {
+    "path": "projects/projects_helmet_duckparada_ducklight_package1.webp",
+    "bytes": 120616,
+    "sha256": "1888c707ae9d33e9e945712c7293a54579afee8385de2fc4870dfe34d0149b9f"
+  },
+  {
+    "path": "projects/projects_helmet_duckparada_mark123comic.webp",
+    "bytes": 90092,
+    "sha256": "4acccb8783418ca96215c61eb0e0b06cfae6648144d9dfd1454298daa5c6aacb"
+  },
+  {
+    "path": "projects/projects_helmet_duckparada_mark12goldmine.webp",
+    "bytes": 31712,
+    "sha256": "e9b2126037f9d47e59159c64d506f71a0e02db9d49dd5722172db29e677b24a6"
+  },
+  {
+    "path": "projects/projects_rings_turnmeonring_1package.webp",
+    "bytes": 60196,
+    "sha256": "ed767f25d40c84118d1dcde2c1298d9104b717ada84b302db91f744ac48b2d8f"
+  },
+  {
+    "path": "projects/projects_rings_turnmeonring_2comic.webp",
+    "bytes": 158818,
+    "sha256": "0bf8c274ff288e8f34e502e50579c65de352fa8cc270f6120558f9235c22fcd5"
+  },
+  {
+    "path": "projects/projects_rings_turnmeonring_3ad.webp",
+    "bytes": 43430,
+    "sha256": "4cd5fb1ecbaa295af9d7a17d9fbb5cb160d5efb0bab0ff0a7ed9d6c77ba512b7"
+  },
+  {
+    "path": "projects/projects_tshirts_alittlebitgay_model.webp",
+    "bytes": 165672,
+    "sha256": "04d7d3ff03a5c3d9405b55db6b18e15eb54496fd032b526a12fc6c23b4053802"
+  },
+  {
+    "path": "projects/projects_tshirts_alittlebitgay_poster.webp",
+    "bytes": 208258,
+    "sha256": "7e90cbf097c9af30a4c8f2307f43e4126ffdd98ca7d74c4172d8328ba47f6376"
+  },
+  {
+    "path": "projects/projects_tshirts_balkanparkband.webp",
+    "bytes": 234622,
+    "sha256": "cade73d254726466598b5c3acd68f57f01494121003820e079185818818aca27"
+  },
+  {
+    "path": "projects/projects_tshirts_balkanparkmodel.webp",
+    "bytes": 113738,
+    "sha256": "bf4b0cfd8f7c9c2ca7c0f9f8663964b38a003fd6be2690e12f040552b5d6b0b1"
+  },
+  {
+    "path": "projects/projects_tshirts_barkpills_model.webp",
+    "bytes": 232612,
+    "sha256": "b60295abcebc83c18fd10155eacf3c49b75bed88ca78d6f15c587771b79f20fa"
+  },
+  {
+    "path": "projects/projects_tshirts_barkpills.webp",
+    "bytes": 514924,
+    "sha256": "c46164ee961dde19a4f66a6230104d5b78bf7b826a68ccfa13fefa09220ea02c"
+  },
+  {
+    "path": "projects/projects_tshirts_botcop_model.webp",
+    "bytes": 731492,
+    "sha256": "18855a01e2c9b4b9c89b92642e6f62194517cbbeb85a45688d1acbd852644ecb"
+  },
+  {
+    "path": "projects/projects_tshirts_botcop_poster1.webp",
+    "bytes": 130678,
+    "sha256": "543f3a0c5e6ea3243361335e21cf78f92cf8c352ba7eb0cdf30bcdcb9f582209"
+  },
+  {
+    "path": "projects/projects_tshirts_botcop_poster2.webp",
+    "bytes": 870724,
+    "sha256": "914c2a32523ff77f4cb72bbf93781f5dc77880bf1d0896917c14f43ced5bf263"
+  },
+  {
+    "path": "quack/quack01.mp3",
+    "bytes": 19154,
+    "sha256": "927f67628de12590305881411146f4a05b2ddb9a7fcafb80a8e97d3de5686540"
+  },
+  {
+    "path": "rainbow.mp3",
+    "bytes": 118608,
+    "sha256": "8f41cb1f0bb19d290bdd6505a2d6063a5133d357d2d13ad26797c4e2455a9404"
+  },
+  {
+    "path": "README-MAINTENANCE.md",
+    "bytes": 2612,
+    "sha256": "b529e609d6f0b84f360c7cbba7179f099a2bfc9c3ef3bec8e60ac0b473698fe1"
+  },
+  {
+    "path": "rizz-sound-effect.mp3",
+    "bytes": 77462,
+    "sha256": "dbbde7a7920b680ab42a6b8cab49dbd59e24841878bb622fb889669f9fae286f"
+  },
+  {
+    "path": "smooth.svg",
+    "bytes": 265791,
+    "sha256": "4f69ee872df83ae4820851002b82641451bea621be234246ad78904d9df3f3fb"
+  },
+  {
+    "path": "unicornmail.webp",
+    "bytes": 72302,
+    "sha256": "b2714f7c1e1c539ee433d90ef23f7b42d8eb9f53022e32f2e00c1fb9e4dff15b"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_1989howtorideahorseofsteel_front.webp",
+    "bytes": 323882,
+    "sha256": "9ebee1849e67ad910790fe51b486e473dcccd155c0c761f6f87887e7ca715326"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_amangoes_back.webp",
+    "bytes": 341832,
+    "sha256": "3d47f47f1169a8ca3ae1e48932a519088d64da0806916ebd656fe9d0b11cd1b1"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_amangoes_front.webp",
+    "bytes": 255034,
+    "sha256": "22a29ac8a7729d07ee90a00c3284c15448b6193fe09da0c9ddff585947f87989"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_bakeryheist_front.webp",
+    "bytes": 335710,
+    "sha256": "432bd63d55d6d3d8ea99168075d1cad4ac9aa0005a4037b6b1fb2164eba43003"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_bakeryheist2_front.webp",
+    "bytes": 313524,
+    "sha256": "5c0985a07acf4b375cd9ea2111a88110cc3035b7edd5e22ede8ac3047b8b06ee"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_bananaphone_back.webp",
+    "bytes": 308616,
+    "sha256": "8baae1ad53b0ce9a377ab777999786e94c4fb8e7559e55c0bf1ae3b25a371eee"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_bananaphone_front.webp",
+    "bytes": 316488,
+    "sha256": "09f73e992b62408513e8868e698369b91d9f3cc28265a926e0cfe14febfc6603"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_buffzart_back.webp",
+    "bytes": 149972,
+    "sha256": "f8510fc78d702083a33d3890453d2eef119f846237509ab6198bb46234bf3b6d"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_buffzart_front.webp",
+    "bytes": 347612,
+    "sha256": "c99573255fbadab4f706e9f79792f424738286946992026bc01509ca320b38a5"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_buffzart_scenes.webp",
+    "bytes": 359456,
+    "sha256": "ebccffd0e15a654f61bd598a9d1fee3334e11e7661d04c0402a64c610f2428e2"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_crossingofthedead_front.webp",
+    "bytes": 235060,
+    "sha256": "f38e2e02eef610c17d13d04ba0ad5afa2af8e532d00af6fd681b210db0eb22c5"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_crossingofthedead_scenes.webp",
+    "bytes": 66266,
+    "sha256": "ca5decf91836b6214d75616372eb6ad7aff177fc50cb91ae61e5ec2403793df1"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_cyberpiercing2077_back.webp",
+    "bytes": 316254,
+    "sha256": "28ea481a5f0a745056017693258c0de36f81522758b20a5845530b08611cae23"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_cyberpiercing2077_front.webp",
+    "bytes": 334612,
+    "sha256": "a701af0e00772a6e908cedaa91704073eddd76cb82aaadcaa2e1f7422a485f08"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_fortunecookieshotgun_front.webp",
+    "bytes": 55616,
+    "sha256": "0cc14c4bbd75a09890fe72cb9194a776203591b87333ea97c1fb834dc4902d1f"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_fortunecookieshotgun_scenes.webp",
+    "bytes": 40140,
+    "sha256": "0ca1a8100e2b791130b9e93314f65db2d49bdfed9e39c7480e4632d5d2589049"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_genghiskhanintraffic_back.webp",
+    "bytes": 237306,
+    "sha256": "828c794d2346cbf180c71f1d25129dc6ed0606aa66a60045d221e68373d698ca"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_genghiskhanintraffic_front.webp",
+    "bytes": 387628,
+    "sha256": "f1dd2b1d6fc88f7b51039a4e952b3a1734a9f73b3a3feafe73c850a590fc02a5"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_gsaucegoespink_front.webp",
+    "bytes": 183634,
+    "sha256": "6da0ca9bdb68cd33aed2237be70cfd5e367610e959b3ac8813e4be6c9fc128b4"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_heatesalad_front.webp",
+    "bytes": 448214,
+    "sha256": "9295c895c50342ff722a9831d9c76c60683a2ebaf4f3c6610f56889a937b0f47"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_heatesalad_scenes.webp",
+    "bytes": 368880,
+    "sha256": "18c8d202ff50aac4727244c1da040f593ab9f071c272ca3870ab3c1911bdbd61"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_imagineallthepeopledrivinginamonstertruck_front.webp",
+    "bytes": 315470,
+    "sha256": "e8dc516cf741fb53ba8f629ac378724dfb186314f34bd77d6a7d1627007e80eb"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_inaworldfilledwithunicornsbetheduck_front.webp",
+    "bytes": 281530,
+    "sha256": "be1818e912b48dec08981f924eabc9dc1a8ef53bdc13dd148ba44fd2b89fe20e"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_irubbedalamp_front.webp",
+    "bytes": 345326,
+    "sha256": "3ccf9bfb11d1894d6e722eb4443f21bf033a99249b011d105f34fc885863e03e"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_kateplush_back.webp",
+    "bytes": 310292,
+    "sha256": "8fcc93c4ae5333653de3a7cdd87ae2e7cd7c573052fab5e1a7208a02564fbfaa"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_kateplush_front.webp",
+    "bytes": 176294,
+    "sha256": "a0fb86e5a721766171d9dafcab653b9d4ed2d76334789a1d0d4fb9366a935b0e"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_kittyhorncommander_back.webp",
+    "bytes": 357054,
+    "sha256": "b2e91f5d68f05cb5afafa27a87dd2b4d00633ad8a752dd1dd09b6384156a8a60"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_kittyhorncommander_front.webp",
+    "bytes": 330756,
+    "sha256": "2abcef86973cdda4e80f873172fd0c3ddc024a85ce789e483ee619317ca2c67b"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_kittyhorncommander_scenes.webp",
+    "bytes": 368928,
+    "sha256": "1dc8b78e639fe93c6740a6cd55c85effa2aaa160021e5f8071fa2d5b0acd819f"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_masochisticconscienceboxingbag_back.webp",
+    "bytes": 276906,
+    "sha256": "7886e1a3bcb8e39c27144d92e1059e3e53ae425509675c27de9014cbc6c8a58b"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_masochisticconscienceboxingbag_front.webp",
+    "bytes": 207162,
+    "sha256": "14768ac4ef7d60c857f9f1e4764540fb5b2a01897118be8855709bd1ddbd8e6c"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_masochisticconscienceboxingbag_scenes.webp",
+    "bytes": 234332,
+    "sha256": "ab76fe85f0ca31fe23818a7ff1eaec2fc43702590f375e1e4c29022391db9e35"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_metalandmeow_front.webp",
+    "bytes": 274118,
+    "sha256": "f16c55cb33f0062bed3831fa1de3d12c7dbd68fc66b736e689a9eda7766b34d8"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_morganaflux_back.webp",
+    "bytes": 59254,
+    "sha256": "07ce4b163826a71f3324cf5316e2c1937055286dc7c11f5952e3e5e67e28ca7c"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_morganaflux_front.webp",
+    "bytes": 132484,
+    "sha256": "8f6622d20b1b546369ee2e8058a7a50ae3f7d25249ab22c46c80a98eae09e4ed"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_nevermindthebatniipples_front.webp",
+    "bytes": 308940,
+    "sha256": "687761837ed6dea175647722324ad41f56bec6ff03b0b3cd1db736502dd9428e"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_noears_front.webp",
+    "bytes": 109784,
+    "sha256": "2bcd9cd280804a41eec4ff3dbd3786c069f94471f495009b84edca7de4251c14"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_nothing_back.webp",
+    "bytes": 378588,
+    "sha256": "8288847dab3ff887ab875ec1ffbb945a9ec9d930d5fe7d3147b6111a4b0cf472"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_nothing_front.webp",
+    "bytes": 92758,
+    "sha256": "8f7c81eb2644e9de1127246ec13cbbf1ef3bd4b9e4d4233fab3688f8d05e612e"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_rainforestbodyguard_front.webp",
+    "bytes": 214006,
+    "sha256": "49c4ef22b9501e20ff44513ef7f94f1cfb914c21c6756ef55893566bc5fc11fb"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_rainforestbodyguard_scenes.webp",
+    "bytes": 92274,
+    "sha256": "91412bf2ccc365ef46c7fb49ae8c70b3501912ce2d871b16d0693c898a166e7d"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_refrigeratorcop_front.webp",
+    "bytes": 286298,
+    "sha256": "ed0ac2ba8fa21253d40998c74c95e9b667a4810cbadf83bd2b871582fb167d70"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_refrigeratorcop_scenes.webp",
+    "bytes": 183604,
+    "sha256": "7eb3df3f44a2ca67163bcadf35e0203d6431b113356534d4189693f1ff131f25"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_shampooagainstdepression_back.webp",
+    "bytes": 320702,
+    "sha256": "1f33f3a74dbd944cef6c13d8dec2a7fc311aac212c9f8c6d582ec45a0389121f"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_shampooagainstdepression_front.webp",
+    "bytes": 189336,
+    "sha256": "fba54af0093f01ac724a4feaf02ab40e3a786d49b00d1bc32c3e65a7863e796d"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_snoutchordz_back.webp",
+    "bytes": 191152,
+    "sha256": "f0be202daa20dc684d97212807cc8b668167e4553d0a4261ada23e93ad670adb"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_snoutchordz_front.webp",
+    "bytes": 285004,
+    "sha256": "24fabb1d6f04bb566c3c6af71beb81140c39423c037290e6768af26d69172262"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_snoutrider_front.webp",
+    "bytes": 313142,
+    "sha256": "5eaa34a468d1a76949d53f4ed42b2d78a8b106112723cefed5c35c14b1d7d47d"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_surprisemarriage_front.webp",
+    "bytes": 417564,
+    "sha256": "74e9806b754c6f6908d194334c0025841987e29d1cc0f16f1f9cecc9e53b153f"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_taurusredlighttherapy_back.webp",
+    "bytes": 335416,
+    "sha256": "2ba3bb4fa2be378fbbfe57c67de9658aed51ae6d2d9a8590e2979260eb903f7d"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_taurusredlighttherapy_front.webp",
+    "bytes": 329860,
+    "sha256": "b3a5f9e1c354a5fdc3f4dbe6749734eb31fdb850814fb316aa0c597e3add978d"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_toiletsamurai_back.webp",
+    "bytes": 329114,
+    "sha256": "ad4b1b75713e28f60def2c2ce0adb09608680e717c634b5d9d3cdd7110668e18"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_toiletsamurai_front.webp",
+    "bytes": 376526,
+    "sha256": "da898f59d186160636a2212ec3725c7bd062cf32ed3d8c4ee62be15ab7c3e1de"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_trafficconedrummer_front.webp",
+    "bytes": 322770,
+    "sha256": "6d1fc82a48aafa03d465a27695a5b116df2bdb24b0d14c2fa06f9e5b79bae7c6"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_unicornwatch_back.webp",
+    "bytes": 409082,
+    "sha256": "45e6a316d9d5e8791dfdb2c742c1a1341b1c7c14026885ed1df2afd9eb2faac5"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_unicornwatch_front.webp",
+    "bytes": 331008,
+    "sha256": "f03d6c3908ba3cca9f9aa36c3a358a909b1b09941dfeeed4d161c3fe5ecee31b"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_untilthediscoballstookcontrol_back.webp",
+    "bytes": 307410,
+    "sha256": "73f6afc9d4854d74972a9b1d92f105a11e6a1ca8e2c75e0f7330dd9e658e7337"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_untilthediscoballstookcontrol_front.webp",
+    "bytes": 280640,
+    "sha256": "0913b2d5e8807008b9e8f86dba8056201e6c9c38639a16a414a976119263a851"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_vrpriest_front.webp",
+    "bytes": 316886,
+    "sha256": "a5bfaf1b67cfe0bd260111365884c81249f979d188d508adfd9db996da6fc5dc"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_wobblepaws_back.webp",
+    "bytes": 285022,
+    "sha256": "1c79b8cad1ab3469f5b0d699e8e8b9ad90b6c06c37d8f8b9d67017084c93acc5"
+  },
+  {
+    "path": "vhsmultiverse/vhsmultiverse_wobblepaws_front.webp",
+    "bytes": 226182,
+    "sha256": "6b4d345bf508dbc0da359ce49bedaf06f57f4e6e571c4686a1a3b0921bf3052e"
+  },
+  {
+    "path": "website backup/01_about.html",
+    "bytes": 49756,
+    "sha256": "3c24b4694dc9937a117f94df040d9bdaee2b7028d8036d4499fa4d67ac146d55"
+  },
+  {
+    "path": "website backup/02_vhsmultiverse.html",
+    "bytes": 22444,
+    "sha256": "2fb99819142102762019a26104a0127fa0e719cfaeeb60179e4879d23282bcf8"
+  },
+  {
+    "path": "website backup/03_humanart.html",
+    "bytes": 27500,
+    "sha256": "62898cfc498a5ae0f5b5d23c12b67fd01907f8b6d8604b85a7abad587815309e"
+  },
+  {
+    "path": "website backup/04_projects.html",
+    "bytes": 64840,
+    "sha256": "c084ce2b60b53d47d0ae82e9cc6c59da73df77869cf620c07dbe1a84721790e6"
+  },
+  {
+    "path": "website backup/05_storytime.html",
+    "bytes": 19376,
+    "sha256": "0b4b443da61a8e88c48c050ce97e2bca4d5a62fdb057fd793146b535fac8ba37"
+  },
+  {
+    "path": "website backup/06_music.html",
+    "bytes": 28303,
+    "sha256": "5c17f882808b4f64a25c1fb3cd927c1a555074cb5b9a424ddef8641e581b0fe6"
+  },
+  {
+    "path": "website backup/07_contact.html",
+    "bytes": 4915,
+    "sha256": "4404d1d901c701d89b0b56be761b82a52a6f911c9c2554d52f2f0175403450de"
+  },
+  {
+    "path": "website backup/08_donate.html",
+    "bytes": 4556,
+    "sha256": "531d4a7a95aad544362c6c92a2d301669dc0ef95b7b10b01a906dee366f87c3d"
+  },
+  {
+    "path": "website backup/404.html",
+    "bytes": 1257,
+    "sha256": "43bf2c9e901056b669c0938ad1755a71767ff141f9aecc4e4d2668eec57adf0c"
+  },
+  {
+    "path": "website backup/deploy-fragments/01_about.html",
+    "bytes": 51122,
+    "sha256": "c72a5d04141cd483442a3bd9fcccfb37f4d8733530694920c0db17339bdd8171"
+  },
+  {
+    "path": "website backup/deploy-fragments/02_vhsmultiverse.html",
+    "bytes": 23183,
+    "sha256": "94da73d661cee91b80d3914ee7de85df73e4aef2b38f66865940598252108be0"
+  },
+  {
+    "path": "website backup/deploy-fragments/03_humanart.html",
+    "bytes": 28234,
+    "sha256": "31a4c12f3c15a1596c7055f9042cfba3f85b6ef8998ce5b48db2304c9c0ead46"
+  },
+  {
+    "path": "website backup/deploy-fragments/04_projects.html",
+    "bytes": 70398,
+    "sha256": "3767d755fe91c56ac22549ad42cc576af5997ce7125a06b9f155c4fbff9682ad"
+  },
+  {
+    "path": "website backup/deploy-fragments/05_storytime.html",
+    "bytes": 20111,
+    "sha256": "b3978dcec0adfa742155a6ee3672bead095de81590518e1dbf536a784d25275a"
+  },
+  {
+    "path": "website backup/deploy-fragments/06_music.html",
+    "bytes": 29034,
+    "sha256": "ed5cbd232f85d2a0bd7e41fb8b0f378b754248a346d487f5ec21d38bacae2225"
+  },
+  {
+    "path": "website backup/deploy-fragments/07_contact.html",
+    "bytes": 6603,
+    "sha256": "7d5a76b1b036fa41f189e964ac53b02d3832191eb390733b9fa6da44a39e1034"
+  },
+  {
+    "path": "website backup/deploy-fragments/08_donate.html",
+    "bytes": 5288,
+    "sha256": "53d86dbe75c04e61a8222a9db9587d43a5b4bcba90ea5b95916b3f7dc46e13e4"
+  },
+  {
+    "path": "website backup/downloads.html",
+    "bytes": 90027,
+    "sha256": "7754b367c1829606af5cd1c09aa080d9f50f0d5ae4729a3e55904bb7cd98fa72"
+  },
+  {
+    "path": "website backup/index.html",
+    "bytes": 212934,
+    "sha256": "2b20de7dacc6f391579c719d7cd9e9d44047c4b5b6f82885386a4e70d9e0f1c0"
+  },
+  {
+    "path": "website backup/kobo3d.html",
+    "bytes": 128170,
+    "sha256": "fa43abdee182533664d87c7277c157163713820fd274f2b241dc9f66c6ffd084"
+  },
+  {
+    "path": "website backup/legacy-root/script.js",
     "bytes": 15036,
     "sha256": "ece9c602ed0c28b9e11960b3ba828501cbbee68b922d9cdfde8b9f9ec96a26ed"
   },
   {
-    "path": "legacy/shared.css",
+    "path": "website backup/legacy-root/shared.css",
     "bytes": 73914,
     "sha256": "c3bf6708657382e5a7e9ba03232149251630b95beb10684d6d1443aa6399c3f7"
   },
   {
-    "path": "legacy/shared.js",
+    "path": "website backup/legacy-root/shared.js",
     "bytes": 68907,
     "sha256": "166677e8a660a1306cd356fe02af9f5f3783fd1bf4332595e812e9179a3e4c72"
   },
   {
-    "path": "legacy/styles.css",
+    "path": "website backup/legacy-root/styles.css",
     "bytes": 23826,
     "sha256": "cfb68b9541c5ccd91b9d04d6202e109e09de3ef68586696b3686c56149905f2c"
+  },
+  {
+    "path": "website backup/manifest.json",
+    "bytes": 2118,
+    "sha256": "66bb9927ee908a40b826ed9e06a072c7644ca19b889fb5dccadc60ee2d50f43d"
+  },
+  {
+    "path": "website backup/script.js",
+    "bytes": 15036,
+    "sha256": "ece9c602ed0c28b9e11960b3ba828501cbbee68b922d9cdfde8b9f9ec96a26ed"
+  },
+  {
+    "path": "website backup/shared.css",
+    "bytes": 73914,
+    "sha256": "c3bf6708657382e5a7e9ba03232149251630b95beb10684d6d1443aa6399c3f7"
+  },
+  {
+    "path": "website backup/shared.js",
+    "bytes": 68907,
+    "sha256": "166677e8a660a1306cd356fe02af9f5f3783fd1bf4332595e812e9179a3e4c72"
+  },
+  {
+    "path": "website backup/styles.css",
+    "bytes": 23826,
+    "sha256": "cfb68b9541c5ccd91b9d04d6202e109e09de3ef68586696b3686c56149905f2c"
+  },
+  {
+    "path": "wolfwhistttle.mp3",
+    "bytes": 34233,
+    "sha256": "cc6f82d32c5afa9fc406e151dbdf5bfc8b3b44ab491e284c0580e1364b4b6171"
   }
 ]

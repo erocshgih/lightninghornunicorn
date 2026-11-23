@@ -11,7 +11,11 @@
                PROJECTS — spezifische Styles
                (Globale Tokens kommen aus shared.css)
                ============================================ */
-            :root {
+            /* Scoped fallbacks: a :root override here used to replace the
+               shell's design tokens for every category and theme. */
+            /* Only when NO theme is set (standalone direct open). An ID alone
+               would beat html[data-theme="dark"] and force a light card. */
+            html:not([data-theme]) #PROJECTS {
                 /* Fallbacks für Direkt-Aufruf ohne shared.css */
                 --accent-red:  #e02424;
                 --accent-blue: #1a73e8;
@@ -27,10 +31,10 @@
                 --fs-xs:       0.65rem;
                 --fs-sm:       0.8rem;
             }
-            html[data-theme="dark"]        { --dot: #4a4540; --dot-active: #ff8c22; }
-            html[data-theme="mono-gray"]   { --dot: #555555; --dot-active: #dddddd; }
-            html[data-theme="mono-green"]  { --dot: #1b5e20; --dot-active: #69f0ae; }
-            html[data-theme="crt"]         { --dot: #2a4a2a; --dot-active: #99ff99; }
+            html[data-theme="dark"]        #PROJECTS { --dot: #4a4540; --dot-active: #ff8c22; }
+            html[data-theme="mono-gray"]   #PROJECTS { --dot: #555555; --dot-active: #dddddd; }
+            html[data-theme="mono-green"]  #PROJECTS { --dot: #1b5e20; --dot-active: #69f0ae; }
+            html[data-theme="crt"]         #PROJECTS { --dot: #2a4a2a; --dot-active: #99ff99; }
 
             /* SECTION WRAPPER */
             section#PROJECTS {
@@ -512,16 +516,24 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         configureModelViewerRenderScale();
                         return Promise.resolve();
                     }
-                    if (!document.querySelector('script[data-lhu-mv-loader]')) {
-                        const s = document.createElement('script');
-                        s.type = 'module';
-                        s.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js';
-                        s.setAttribute('data-lhu-mv-loader', '1');
-                        document.head.appendChild(s);
+                    let loader = document.querySelector('script[data-lhu-mv-loader]');
+                    if (!loader) {
+                        loader = document.createElement('script');
+                        loader.type = 'module';
+                        loader.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js';
+                        loader.setAttribute('data-lhu-mv-loader', '1');
+                        // A blocked CDN must be observable instead of leaving
+                        // every model viewer stuck on the LOADING animation.
+                        loader.addEventListener('error', () => {
+                            loader.setAttribute('data-lhu-mv-state', 'error');
+                        }, { once: true });
+                        document.head.appendChild(loader);
                     }
                     return customElements.whenDefined('model-viewer')
                         .then(configureModelViewerRenderScale)
-                        .catch(() => {});
+                        .catch(() => {
+                            loader.setAttribute('data-lhu-mv-state', 'error');
+                        });
                 }
                 // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
                 ensureModelViewer();
@@ -708,6 +720,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
 
                 let modelLightbox = null;
                 let modelLightboxViewer = null;
+                let modelLightboxEscapeHandler = null;
+                const modelLoadTimers = new Set();
                 function ensureModelLightbox() {
                     if (modelLightbox) return modelLightbox;
                     modelLightbox = document.createElement('div');
@@ -739,13 +753,29 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
                     modelLightbox.addEventListener('click', e => { if (e.target === modelLightbox) close(); });
                     modelLightbox.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+                    // aria-modal="true" requires Escape to work even after the
+                    // user tabs out of the dialog. The element-level listener
+                    // above alone is not sufficient.
+                    modelLightboxEscapeHandler = (e) => {
+                        if (e.key === 'Escape' && modelLightbox && !modelLightbox.hidden) close();
+                    };
+                    document.addEventListener('keydown', modelLightboxEscapeHandler);
                     modelLightbox.querySelectorAll('[data-zoom]').forEach(btn => btn.addEventListener('click', () => {
-                        if (!modelLightboxViewer) return;
+                        const viewer = modelLightboxViewer;
+                        // model-viewer may be undefined when the CDN is blocked,
+                        // or the element may exist but not be upgraded yet.
+                        if (!viewer || typeof viewer.getCameraOrbit !== 'function') return;
                         const action = btn.dataset.zoom;
-                        if (action === 'reset') { modelLightboxViewer.cameraOrbit = 'auto auto auto'; modelLightboxViewer.fieldOfView = 'auto'; return; }
-                        const orbit = modelLightboxViewer.getCameraOrbit();
+                        if (action === 'reset') {
+                            viewer.cameraOrbit = 'auto auto auto';
+                            viewer.fieldOfView = 'auto';
+                            return;
+                        }
+                        let orbit;
+                        try { orbit = viewer.getCameraOrbit(); } catch (_) { return; }
+                        if (!orbit || !Number.isFinite(orbit.radius)) return;
                         const next = orbit.radius * (action === 'in' ? 0.8 : 1.25);
-                        modelLightboxViewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${next}m`;
+                        viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${next}m`;
                     }));
                     return modelLightbox;
                 }
@@ -765,26 +795,42 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     viewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
                     viewer.setAttribute('camera-controls', '');
                     viewer.setAttribute('touch-action', 'pan-y');
-                    viewer.setAttribute('auto-rotate', '');
-                    viewer.setAttribute('auto-rotate-delay', '0');
-                    viewer.setAttribute('rotation-per-second', '24deg');
+                    // An empty attribute is still PRESENT in HTML and therefore
+                    // still rotates. Remove it entirely for reduced motion.
+                    if (!reduceMotion) {
+                        viewer.setAttribute('auto-rotate', '');
+                        viewer.setAttribute('auto-rotate-delay', '0');
+                        viewer.setAttribute('rotation-per-second', '24deg');
+                    }
                     viewer.setAttribute('shadow-intensity', '1');
                     viewer.setAttribute('exposure', '1');
 
-                    viewer.addEventListener('load', () => {
-                        if (modelLightboxViewer !== viewer) return;
-                        loader.classList.add('is-loaded');
-                    }, { once: true });
-                    viewer.addEventListener('error', () => {
+                    const showModelError = () => {
                         if (modelLightboxViewer !== viewer) return;
                         loader.classList.add('has-error');
-                        lineTracks.forEach(span => { span.textContent = 'MODEL COULD NOT BE LOADED · MODEL COULD NOT BE LOADED · '; });
-                    }, { once: true });
+                        lineTracks.forEach(span => {
+                            span.textContent = 'MODEL COULD NOT BE LOADED · MODEL COULD NOT BE LOADED · ';
+                        });
+                    };
+                    const finishLoad = (ok) => {
+                        modelLoadTimers.forEach(t => clearTimeout(t));
+                        modelLoadTimers.clear();
+                        if (modelLightboxViewer !== viewer) return;
+                        if (ok) loader.classList.add('is-loaded');
+                        else showModelError();
+                    };
+                    viewer.addEventListener('load', () => finishLoad(true), { once: true });
+                    viewer.addEventListener('error', () => finishLoad(false), { once: true });
 
                     modelLightboxViewer = viewer;
                     panel.appendChild(viewer);
                     box.hidden = false;
                     box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
+                    // If the CDN is blocked, model-viewer fires neither load nor
+                    // error. A hard timeout turns the endless LOADING wall into
+                    // an honest error state.
+                    const loadTimeout = window.setTimeout(() => finishLoad(false), 12000);
+                    modelLoadTimers.add(loadTimeout);
                     // Set the source only after the loader is visible and listeners exist.
                     requestAnimationFrame(() => {
                         if (modelLightboxViewer === viewer) viewer.setAttribute('src', modelSrc);
@@ -798,9 +844,20 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                    Cleanup (registriert beim Menü)
                    ------------------------------------------------ */
                 function projectsCleanup() {
+                    // The lightbox lives on document.body, outside #mainContent.
+                    // Hiding it was not enough: every category visit created a
+                    // new node with its own listeners -> permanent accumulation.
+                    if (modelLightboxEscapeHandler) {
+                        document.removeEventListener('keydown', modelLightboxEscapeHandler);
+                        modelLightboxEscapeHandler = null;
+                    }
                     if (modelLightbox) {
                         modelLightbox.hidden = true;
+                        modelLightbox.remove();
+                        modelLightbox = null;
                     }
+                    modelLoadTimers.forEach(t => clearTimeout(t));
+                    modelLoadTimers.clear();
                     if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
                     activeModelViewers.forEach(mv => {
                         try {
@@ -1044,10 +1101,12 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     const hideLoader = () => {
                         if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
                     };
-                    mv.addEventListener('load', hideLoader, { once: true });
-                    mv.addEventListener('error', hideLoader, { once: true });
-                    // Sicherheitsnetz, falls weder load noch error feuert
-                    setTimeout(hideLoader, 15000);
+                    // Sicherheitsnetz, falls weder load noch error feuert.
+                    // Der Timer wird beim Verlassen der Kategorie abgebrochen.
+                    const loaderFallback = window.setTimeout(hideLoader, 15000);
+                    modelLoadTimers.add(loaderFallback);
+                    mv.addEventListener('load', () => { clearTimeout(loaderFallback); hideLoader(); }, { once: true });
+                    mv.addEventListener('error', () => { clearTimeout(loaderFallback); hideLoader(); }, { once: true });
                 }
 
                 function unmountModel(slide) {
@@ -1077,7 +1136,9 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                                 mountModel(sl, modelSrc);
                                 const mv = sl.querySelector('model-viewer');
                                 if (mv) {
-                                    mv.setAttribute('auto-rotate', reduceMotion ? '' : 'auto-rotate');
+                                    // An empty attribute still enables rotation.
+                                    if (reduceMotion) mv.removeAttribute('auto-rotate');
+                                    else mv.setAttribute('auto-rotate', '');
                                     try { if (mv.play) mv.play(); } catch (e) { /* ignore */ }
                                 }
                             } else {

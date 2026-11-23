@@ -674,6 +674,12 @@
       .np-btn,
       .action-btn { transition: none !important; }
     }
+    /* Several controls above set outline:none. Keep a reliable keyboard
+       focus indicator regardless of those declarations. */
+    :where(a, button, [tabindex]):focus-visible {
+      outline: 2px solid var(--text-main, #111) !important;
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
@@ -997,10 +1003,37 @@ function unlockSecret() {
     }
   ];
 
+  function showStaticDuck(canvas) {
+    if (!canvas || !canvas.parentNode) return;
+    canvas.style.display = 'none';
+    if (canvas.parentNode.querySelector('.duck-fallback')) return;
+    var fallback = document.createElement('img');
+    fallback.src = 'duck.png';
+    fallback.alt = '';
+    fallback.className = 'duck-fallback';
+    fallback.style.width = '100px';
+    fallback.style.height = '100px';
+    fallback.style.objectFit = 'contain';
+    canvas.parentNode.appendChild(fallback);
+  }
+
   function initIntroDuck() {
     var canvas = document.getElementById('intro-duck-canvas');
     if (!canvas) return;
-    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    // Three.js comes from a CDN. If it is blocked or WebGL is unavailable,
+    // degrade to the local static artwork instead of killing the whole script.
+    if (typeof THREE === 'undefined' || !THREE.WebGLRenderer || !THREE.GLTFLoader) {
+      showStaticDuck(canvas);
+      return;
+    }
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    } catch (error) {
+      console.warn('[duckloads] WebGL unavailable:', error);
+      showStaticDuck(canvas);
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     renderer.setSize(100, 100);
     var scene = new THREE.Scene();
@@ -1052,7 +1085,14 @@ function unlockSecret() {
     }
     animateIntro();
   }
-  initIntroDuck();
+  try {
+    initIntroDuck();
+  } catch (error) {
+    // Never let an optional 3D decoration take down the playlist, player and
+    // download controls.
+    console.warn('[duckloads] Intro duck initialization failed:', error);
+    showStaticDuck(document.getElementById('intro-duck-canvas'));
+  }
 
   var mainEl = document.getElementById('main-content');
   var currentGenre = 'all';
@@ -1062,6 +1102,12 @@ function unlockSecret() {
   // Start in shuffle mode so visitors immediately get a random listening path.
   var shuffleEnabled = true;
   var shuffleBag = [];
+  function safeDownloadName(title) {
+    return String(title || 'lightning-horn-unicorn')
+      .replace(/[\\/:*?"<>|]+/g, '_')
+      .replace(/\s+/g, ' ')
+      .trim() + '.mp3';
+  }
 
   function getAllSongs() {
     var all = [];
@@ -1473,7 +1519,7 @@ Vedran Lukic & Aether Veylan`;
         var songIdx = parseInt(btn.closest('.song-item-wrapper').dataset.idx);
         var song = songList[songIdx];
         var a = document.createElement('a');
-        a.href = song.file; a.download = song.title;
+        a.href = song.file; a.download = safeDownloadName(song.title);
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
       });
     });
@@ -1798,7 +1844,7 @@ Vedran Lukic & Aether Veylan`;
   document.getElementById('np-dl').addEventListener('click', function() {
     if (currentSongIdx === -1) return;
     var a = document.createElement('a');
-    a.href = songList[currentSongIdx].file; a.download = songList[currentSongIdx].title;
+    a.href = songList[currentSongIdx].file; a.download = safeDownloadName(songList[currentSongIdx].title);
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   });
 

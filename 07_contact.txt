@@ -102,21 +102,15 @@
                 </div>
             </a>
 
-            <p class="system-status">
+            <p class="system-status"
+               data-lang-en="&#9889; TRK-2000 SYSTEM ONLINE &#9889;"
+               data-lang-de="&#9889; TRK-2000 SYSTEM ONLINE &#9889;">
                 &#9889; TRK-2000 SYSTEM ONLINE &#9889;
             </p>
         </section>
 
-        <script>
-            (function initContact() {
-                const lang = (window.LHU_LANGUAGE || navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
-                const contentRoot = document.getElementById('mainContent') || document;
-                contentRoot.querySelectorAll('[data-lang-en]').forEach(el => {
-                    const text = el.getAttribute(`data-lang-${lang}`);
-                    if (text) el.innerHTML = text;
-                });
-            })();
-        </script>
+        <!-- Translation is done once by the host shell (index.html) before
+             scripts are re-executed. A second pass here was redundant. -->
     </main>
 </body>
 </html>

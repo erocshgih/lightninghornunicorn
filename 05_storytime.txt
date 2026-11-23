@@ -167,8 +167,12 @@
                 <button id="lang-de" class="lang-btn" type="button" aria-pressed="false">DEUTSCH</button>
             </div>
 
+            <!-- Short status only: a live region on the whole chapter used to
+                 make screen readers read ~70 lines on every navigation. -->
+            <p class="sr-only" id="storytime-status" role="status" aria-live="polite"></p>
+
             <div class="text-reader-container">
-                <div id="text-content" aria-live="polite">
+                <div id="text-content">
                     <span class="loading-text">SCANNING ARCHIVE DIRECTORY...</span>
                 </div>
             </div>
@@ -250,13 +254,16 @@
 
                 async function scanChapters() {
                     if (disposed) return;
+                    const MAX_CHAPTERS = 999;
                     const cacheKey = 'lhu-storytime-chaptercount';
                     let cachedCount = null;
                     try { cachedCount = sessionStorage.getItem(cacheKey); } catch (_) { /* storage can be blocked */ }
 
                     if (cachedCount !== null) {
                         const parsedCount = Number.parseInt(cachedCount, 10);
-                        if (Number.isInteger(parsedCount) && parsedCount >= 0) {
+                        // A bogus/cache-poisoned value must never generate
+                        // millions of navigation buttons.
+                        if (Number.isInteger(parsedCount) && parsedCount >= 0 && parsedCount <= MAX_CHAPTERS) {
                             totalChapters = parsedCount;
                             if (totalChapters > 0) {
                                 buildNavigation();
@@ -269,7 +276,9 @@
                     }
 
                     let count = 1;
-                    while (!disposed) {
+                    // A host that answers 200 with the wrong content type must
+                    // not produce an unbounded request loop.
+                    while (!disposed && count <= MAX_CHAPTERS) {
                         const numStr = String(count).padStart(6, '0');
                         const controller = new AbortController();
                         scanController = controller;
@@ -387,10 +396,18 @@
                         if (disposed || loadToken !== chapterLoadToken) return;
                         parseChapterText(rawText);
                         loadedChapter = num;
+                        // Mark the fetch as finished BEFORE rendering, otherwise
+                        // renderText() would treat its own successful result as
+                        // an in-flight request and skip the chapter text.
+                        if (fetchController === controller) fetchController = null;
                         renderText();
 
-                        const container = document.querySelector('.text-reader-container');
-                        if (container) container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Scope to this fragment; a global query could grab a
+                        // stale node from another instance.
+                        const container = contentDiv.closest('.text-reader-container')
+                            || document.querySelector('#mainContent .text-reader-container');
+                        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                        if (container) container.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
                     } catch (error) {
                         if (error.name === 'AbortError' || disposed || loadToken !== chapterLoadToken) return;
                         contentDiv.innerHTML = '<p>CONNECTION ERROR: CHAPTER COULD NOT BE LOADED.</p>';
@@ -412,9 +429,18 @@
 
                 function renderText() {
                     if (disposed) return;
+                    // Do not overwrite an in-flight "LOADING FILE..." message
+                    // when the language buttons are pressed mid-fetch.
+                    if (fetchController !== null) return;
                     const mainText = currentLang === 'en' ? chapterData.en : chapterData.de;
                     const continuedText = currentLang === 'en' ? '\n\n\n... TO BE CONTINUED ...' : '\n\n\n... FORTSETZUNG FOLGT ...';
                     contentDiv.textContent = mainText + continuedText;
+                    // The document is lang="de"; English chapters must be
+                    // announced with the correct language by screen readers.
+                    contentDiv.lang = currentLang;
+                    const status = document.getElementById('storytime-status');
+                    if (status) status.textContent = loadedChapter
+                        ? `Chapter ${loadedChapter}` : '';
                 }
 
                 startupTimer = window.setTimeout(() => {

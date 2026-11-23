@@ -58,7 +58,11 @@
             .music-video-link:focus-visible {
                 transform: translateY(-4px) scale(1.02);
                 box-shadow: var(--shadow-lg);
-                outline: none;
+            }
+            /* Never suppress the global focus ring on :focus-visible. */
+            .music-video-link:focus-visible {
+                outline: 2px solid var(--accent, #e04836);
+                outline-offset: 3px;
             }
             .music-video-link::after {
                 content: '▶';

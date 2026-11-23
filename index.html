@@ -84,7 +84,7 @@ a { color: inherit; text-decoration: none; }
 
   --text:            #141413;
   --text-muted:      #5c5852;
-  --text-soft:       #8c867d;
+  --text-soft:       #6b655e;
 
   --border-soft:     rgba(20, 20, 19, 0.12);
   --border-medium:   rgba(20, 20, 19, 0.22);
@@ -143,7 +143,7 @@ a { color: inherit; text-decoration: none; }
 html[data-theme="dark"] {
   --bg:            #09090b; --bg-solid: #111114; --bg-elevated: #16161a;
   --card-bg:       #141418; --header-bg: rgba(14, 14, 17, 0.84); --door-bg: #09090b;
-  --text:          #f3f2ee; --text-muted: #9e9b93; --text-soft: #66635c;
+  --text:          #f3f2ee; --text-muted: #9e9b93; --text-soft: #8c8981;
   --border-soft:   rgba(255, 255, 255, 0.11); --border-medium: rgba(255, 255, 255, 0.2); --border-strong: rgba(255, 255, 255, 0.32);
   --accent:        #ff6b4a; --accent-yellow: #ffd03b;
   --strip-text:    #d4b48a;
@@ -156,7 +156,7 @@ html[data-theme="dark"] {
 html[data-theme="mono-gray"] {
   --bg: #111111; --bg-solid: #1a1a1a; --bg-elevated: #1a1a1a;
   --card-bg: #1e1e1e; --header-bg: rgba(20, 20, 20, 0.86); --door-bg: #111111;
-  --text: #ededed; --text-muted: #9a9a9a; --text-soft: #686868;
+  --text: #ededed; --text-muted: #9a9a9a; --text-soft: #8a8a8a;
   --border-soft: rgba(255,255,255,0.12); --border-medium: rgba(255,255,255,0.22); --border-strong: rgba(255,255,255,0.4);
   --accent: #ffffff; --strip-text: #bbb;
   --strip-fade: rgba(26,26,26,1); --strip-fade-end: rgba(26,26,26,0);
@@ -166,7 +166,7 @@ html[data-theme="mono-gray"] {
 html[data-theme="mono-green"] {
   --bg: #030d04; --bg-solid: #071708; --bg-elevated: #061507;
   --card-bg: #091d0b; --header-bg: rgba(5, 19, 6, 0.88); --door-bg: #030d04;
-  --text: #86ff8a; --text-muted: #56c95a; --text-soft: #368c39;
+  --text: #86ff8a; --text-muted: #56c95a; --text-soft: #5bbf5f;
   --border-soft: rgba(134, 255, 138, 0.16); --border-medium: rgba(134, 255, 138, 0.28); --border-strong: #9effa1;
   --accent: #9effa1; --accent-red: #ff5555; --accent-blue: #55bbff;
   --strip-text: #5cdb5c;
@@ -177,7 +177,7 @@ html[data-theme="mono-green"] {
 html[data-theme="crt"] {
   --bg: #090b09; --bg-solid: #0e120e; --bg-elevated: #0c100c;
   --card-bg: #121712; --header-bg: rgba(12, 16, 12, 0.88); --door-bg: #090b09;
-  --text: #d0ebd0; --text-muted: #8eb38e; --text-soft: #5b7a5b;
+  --text: #d0ebd0; --text-muted: #8eb38e; --text-soft: #79a079;
   --border-soft: rgba(208, 235, 208, 0.14); --border-medium: rgba(208, 235, 208, 0.25); --border-strong: #d4ffd4;
   --accent: #d4ffd4; --strip-text: #9ccc9c;
   --strip-fade: rgba(12, 16, 12, 1); --strip-fade-end: rgba(12, 16, 12, 0);
@@ -204,7 +204,11 @@ body {
   line-height: 1.6;
   text-align: center;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  /* `clip` avoids turning <body> into a scroll container, which breaks
+     position:sticky on iOS Safari. Browsers without clip keep the fallback. */
+  overflow-x: clip;
   transition: background-color 0.35s ease, color 0.35s ease;
   -webkit-font-smoothing: auto;
 }
@@ -237,11 +241,26 @@ select:focus-visible,
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
+/* Content fragments inject their own <style> late in the cascade and some
+   used to remove the focus ring. This higher-specificity rule guarantees a
+   visible keyboard focus indicator for every injected control. */
+main#mainContent :is(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+/* Note: deliberately NOT :focus. A mouse click must not leave a permanent
+   outline on frames, carousels and submenus. */
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
+.skip-link {
+  position: fixed; top: -100px; left: 12px; z-index: 100000;
+  padding: 10px 16px; background: var(--text); color: var(--bg);
+  border-radius: 10px; font-size: var(--fs-sm); font-weight: 600;
+}
+.skip-link:focus { top: 12px; }
 
 /* ---------- SITE SHELL HEADER & SPHERE NAVIGATION ---------- */
 .header {
@@ -250,7 +269,8 @@ select:focus-visible,
   background: var(--header-bg);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-soft);
+  /* No separating rule: the glass background and blur are enough. */
+  border-bottom: 0;
   position: sticky; top: 0; z-index: 1000;
   width: 100%;
   transition: background 0.35s ease;
@@ -283,10 +303,10 @@ select:focus-visible,
 .sphere-nav-toolbar .theme-btn,
 .sphere-nav-toolbar .audio-btn,
 .sphere-nav-toolbar .collapse-btn {
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
-  min-height: 40px;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
   border: 1px solid var(--border-soft);
   border-radius: 50%;
   background: transparent;
@@ -568,8 +588,9 @@ select:focus-visible,
 /* ---------- CONTENT AREA ---------- */
 main#mainContent {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-  width: 100%; max-width: 100vw;
+  width: 100%; max-width: 100%;
   min-height: calc(100vh - 80px);
+  min-height: calc(100dvh - 80px);
   padding: clamp(36px, 6vw, 76px) clamp(16px, 4vw, 48px) var(--space-xl);
   z-index: 1;
   overflow-x: hidden;
@@ -860,10 +881,10 @@ main#mainContent a.sticker-link img.transparent-sticker {
 .lhu-lightbox__hint { color: rgba(255,255,255,0.6); text-align: center; font: 0.72rem/1.4 var(--font-sans); }
 
 #site-shell[hidden] { display: none !important; }
-body.site-mode { overflow-y: auto; }
+body.site-mode { overflow-y: auto; overflow-x: clip; }
 body.site-mode #lhu-intro,
 body.site-mode #lhu-index-experience { display: none !important; }
-body.site-mode #site-shell { display: block; min-height: 100vh; }
+body.site-mode #site-shell { display: block; min-height: 100vh; min-height: 100dvh; }
 </style>
 
 <!-- ====================================================================== -->
@@ -2393,7 +2414,7 @@ main#mainContent input[type="submit"] {
   .ui-bottom-bar { position:relative; z-index:2; background:rgba(16,16,20,.92); border-radius:8px; }
   #container3D {
     position:fixed !important; inset:0 !important; z-index:0;
-    width:100vw !important; height:100dvh !important; min-height:0;
+    width:100% !important; height:100dvh !important; min-height:0;
     pointer-events:auto;
   }
   #kobo-drawer-card { padding:2px 2px 5px; }
@@ -2535,7 +2556,7 @@ main#mainContent input[type="submit"] {
   position: fixed !important;
   inset: 0 !important;
   z-index: 8 !important;
-  width: 100vw !important;
+  width: 100% !important;
   height: 100vh !important;
   height: 100dvh !important;
   min-height: 0 !important;
@@ -3162,6 +3183,34 @@ main#mainContent input[type="submit"] {
   .kobo-settings-column > .kobo-tab-bar { gap:4px !important; }
   .kobo-settings-column > .kobo-tab-bar .kobo-pill-btn { font-size:7px !important; }
 }
+/* Two additional light moods: warm SUNSET and cold NEON. */
+#kobo-3d-overlay[data-mood="sunset"] {
+  background: radial-gradient(circle at 50% 38%, #3a1c2e 0%, #1b0f1a 62%, #0d070c 100%);
+  color: #fff3e8;
+}
+#kobo-3d-overlay[data-mood="neon"] {
+  background: radial-gradient(circle at 50% 38%, #102a3a 0%, #08131f 62%, #050810 100%);
+  color: #eafcff;
+}
+#kobo-3d-overlay:is([data-mood="sunset"], [data-mood="neon"]) .kobo-pill-btn,
+#kobo-3d-overlay:is([data-mood="sunset"], [data-mood="neon"]) .kobo-panel-card,
+#kobo-3d-overlay:is([data-mood="sunset"], [data-mood="neon"]) .kobo-select {
+  background: rgba(18, 16, 24, 0.84);
+  color: #f6efe8;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+#kobo-3d-overlay[data-mood="sunset"] .kobo-pill-btn:hover,
+#kobo-3d-overlay[data-mood="sunset"] .kobo-chip:hover { border-color: #ffb066; }
+#kobo-3d-overlay[data-mood="neon"] .kobo-pill-btn:hover,
+#kobo-3d-overlay[data-mood="neon"] .kobo-chip:hover { border-color: #4df0ff; }
+#kobo-3d-overlay[data-mood="sunset"] .kobo-pill-btn.is-active,
+#kobo-3d-overlay[data-mood="sunset"] .kobo-chip.is-active {
+  background: linear-gradient(135deg, #ff9a52, #c94f9e); color: #fff; border-color: transparent;
+}
+#kobo-3d-overlay[data-mood="neon"] .kobo-pill-btn.is-active,
+#kobo-3d-overlay[data-mood="neon"] .kobo-chip.is-active {
+  background: linear-gradient(135deg, #4df0ff, #ff36c8); color: #050810; border-color: transparent;
+}
 </style>
 
 <style id="lhu-single-main-head-viewport-fix">
@@ -3237,7 +3286,7 @@ main#mainContent input[type="submit"] {
 #lhu-index-experience.kobo-studio-active #container3D {
   position: fixed !important;
   inset: 0 !important;
-  width: 100vw !important;
+  width: 100% !important;
   height: 100dvh !important;
   min-height: 0 !important;
   z-index: 18 !important;
@@ -3282,7 +3331,7 @@ main#mainContent input[type="submit"] {
 @media (max-width: 899px), (orientation: portrait) and (max-width: 1100px) {
   #lhu-index-experience.kobo-studio-active #container3D {
     inset: 0 0 calc(clamp(180px, 38dvh, 340px) + 18px + env(safe-area-inset-bottom)) 0 !important;
-    width: 100vw !important;
+    width: 100% !important;
     height: auto !important;
   }
   .ui-bottom.is-expanded {
@@ -3962,6 +4011,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 </head>
 
 <body class="intro-mode">
+<a class="skip-link" href="#mainContent">Zum Inhalt springen</a>
 <!-- [HTML] AUDIO-ELEMENTE -->
 <audio id="quackAudio" preload="auto" src="quack/quack01.mp3"></audio>
 <audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
@@ -4056,7 +4106,6 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
               <span class="kobo-row-label">MATERIAL</span>
               <div class="kobo-chip-scroll" id="kobo-shader-modes">
                 <button class="kobo-chip is-active" data-mode="texture" type="button">TEXTURE</button>
-                <button class="kobo-chip" data-mode="xray" type="button">X-RAY</button>
                 <button class="kobo-chip" data-mode="solid" type="button">SOLID</button>
                 <button class="kobo-chip" data-mode="wire" type="button">WIRE</button>
                 <button class="kobo-chip" data-mode="holo" type="button">HOLO</button>
@@ -4072,6 +4121,8 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
               <div class="kobo-chip-scroll" id="kobo-mood-modes">
                 <button class="kobo-chip is-active" data-mood-btn="daylight" type="button">DAYLIGHT</button>
                 <button class="kobo-chip" data-mood-btn="midnight" type="button">MIDNIGHT</button>
+                <button class="kobo-chip" data-mood-btn="sunset" type="button">SUNSET</button>
+                <button class="kobo-chip" data-mood-btn="neon" type="button">NEON</button>
               </div>
             </div>
           </div>
@@ -4113,14 +4164,13 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
               <span class="kobo-row-label">RENDER</span>
               <button class="kobo-chip" id="kobo-fps-btn" type="button">FPS: 45</button>
               <button class="kobo-chip is-active" id="kobo-shadow-btn" type="button">SHADOWS: ON</button>
-              <select class="kobo-select" id="kobo-shadow-quality" aria-label="Shadow map resolution"><option value="off">SHADOW OFF</option><option value="256">SHADOW 256</option><option value="1024">SHADOW 1K</option><option value="2048" selected>SHADOW 2K</option></select>
+              <select class="kobo-select" id="kobo-shadow-quality" aria-label="Shadow map resolution"><option value="off">SHADOW OFF</option><option value="256" selected>SHADOW 256</option><option value="1024">SHADOW 1K</option><option value="2048">SHADOW 2K</option></select>
             </div>
             <div class="kobo-row">
               <span class="kobo-row-label">FILTER</span>
               <button class="kobo-chip" id="kobo-antialias-btn" type="button">MSAA: ON</button>
               <button class="kobo-chip" id="kobo-pixel-btn" type="button">PIXEL: OFF</button>
               <button class="kobo-chip" id="kobo-dither-btn" type="button">16-BIT DITHER: OFF</button>
-              <button class="kobo-chip" id="kobo-vertex-snap-btn" type="button">VERTEX SNAP: OFF</button>
             </div>
             <div class="kobo-row">
               <span class="kobo-row-label">TEX FILTER</span>
@@ -4129,6 +4179,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
             </div>
             <div class="kobo-row">
               <span class="kobo-row-label">RETRO</span>
+              <button class="kobo-chip" id="kobo-vertex-snap-btn" type="button">VERTEX SNAP: OFF</button>
               <label class="kobo-slider-group"><span>VERTEX JITTER <strong id="kobo-jitter-val">0%</strong></span><input type="range" id="kobo-jitter-slider" min="0" max="100" step="1" value="0" /></label>
             </div>
           </div>
@@ -4138,8 +4189,8 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
             <div class="kobo-row">
               <span class="kobo-row-label">BACKDROP</span>
               <div class="kobo-chip-scroll">
-                <button class="kobo-chip is-active" data-backdrop="matrix7" type="button">MATRIX 7</button>
-                <button class="kobo-chip" data-backdrop="words" type="button">LHU WORDS</button>
+                <button class="kobo-chip is-active" data-backdrop="matrix7" type="button">7</button>
+                <button class="kobo-chip" data-backdrop="words" type="button">MUTUALISM</button>
                 <button class="kobo-chip" data-backdrop="balls" type="button">PARTICLES</button>
               </div>
             </div>
@@ -4163,8 +4214,8 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
             </div>
             <div class="kobo-row">
               <span class="kobo-row-label">LIGHTING</span>
-              <label class="kobo-slider-group"><span>ANGLE <strong id="kobo-light-angle-val">045°</strong></span><input type="range" id="kobo-light-angle" min="0" max="359" step="1" value="45" /></label>
-              <label class="kobo-slider-group"><span>EXPOSURE <strong id="kobo-exposure-val">1.0</strong></span><input type="range" id="kobo-exposure" min="0.2" max="2.5" step="0.1" value="1" /></label>
+              <label class="kobo-slider-group"><span>ANGLE <strong id="kobo-light-angle-val">000°</strong></span><input type="range" id="kobo-light-angle" min="0" max="359" step="1" value="0" /></label>
+              <label class="kobo-slider-group"><span>EXPOSURE <strong id="kobo-exposure-val">2.0</strong></span><input type="range" id="kobo-exposure" min="0.2" max="2.5" step="0.1" value="2" /></label>
               <button class="kobo-chip" id="kobo-bloom-btn" type="button">BLOOM: OFF</button>
             </div>
           </div>
@@ -4274,6 +4325,8 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
   </div>
 
   <header class="header" id="headerEl">
+    <!-- One permanent h1 for the document; category titles stay h2. -->
+    <h1 class="sr-only" id="site-title">Lightning Horn Unicorn</h1>
     <div class="strip-wrapper sphere-nav-toolbar" id="stripWrapper">
       <div class="nav-toolbar-row">
         <button aria-label="Farbmodus wechseln" class="theme-btn" id="themeToggle" title="Farbmodus" type="button">☀</button>
@@ -4297,7 +4350,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
     </div>
   </header>
 
-  <main aria-label="Inhalt" id="mainContent">
+  <main aria-label="Inhalt" id="mainContent" tabindex="-1">
     <div class="welcome-card">
       <h2 id="welcome-title">LIGHTNING HORN UNICORN</h2>
       <p id="welcome-text">Wähle eine Kategorie aus dem Menü, um die Inhalte direkt hier zu laden.</p>
@@ -4529,6 +4582,7 @@ const translations = {
     welcomeTitle: "LIGHTNING HORN UNICORN", welcomeText: "Choose a category from the menu to load its content here.",
     srDescription: "Lightning Horn Unicorn (LHU) is the independent creative universe of Vienna-based artist Vedran Lukic, with cocreator and creative partner Aether Veylan.",
     chooseIntro: "Choose signal", imagePlaceholder: "Intro 3D preview",
+    previousBackground: "Previous background", nextBackground: "Next background",
     showQuote: "Show a quote", suggestQuote: "Suggest a quote", legalDisclaimer: "Legal disclaimer",
     skipHeads: "3D HEADS", skipMain: "MAIN PAGE",
     introRed: "Red signal", introYellow: "Yellow signal", introBlue: "Blue signal",
@@ -4563,13 +4617,18 @@ const translations = {
 };
 const t = translations[currentLang];
 
-document.getElementById("music-toggle").textContent = t.playMusic;
-document.getElementById("navigate-to-main").textContent = t.mainPage;
-document.getElementById("lhu-intro-hint").textContent = t.introHint;
-document.getElementById("welcome-title")?.replaceChildren(document.createTextNode(t.welcomeTitle));
-document.getElementById("welcome-text")?.replaceChildren(document.createTextNode(t.welcomeText));
-document.getElementById("lhu-site-description")?.replaceChildren(document.createTextNode(t.srDescription));
-document.querySelector(".loading-text").textContent = t.loading;
+// Every early DOM write is null-safe: when a deep link boots the shell first,
+// the intro nodes can already be gone by the time this deferred module runs.
+const setNodeText = (node, value) => {
+  if (node) node.replaceChildren(document.createTextNode(value));
+};
+setNodeText(document.getElementById("music-toggle"), t.playMusic);
+setNodeText(document.getElementById("navigate-to-main"), t.mainPage);
+setNodeText(document.getElementById("lhu-intro-hint"), t.introHint);
+setNodeText(document.getElementById("welcome-title"), t.welcomeTitle);
+setNodeText(document.getElementById("welcome-text"), t.welcomeText);
+setNodeText(document.getElementById("lhu-site-description"), t.srDescription);
+setNodeText(document.querySelector(".loading-text"), t.loading);
 document.getElementById("lhu-image-slot")?.setAttribute("aria-label", t.imagePlaceholder);
 document.getElementById("lhu-pill-buttons")?.setAttribute("aria-label", t.chooseIntro);
 document.getElementById("btn-skip-heads")?.replaceChildren(document.createTextNode(t.skipHeads));
@@ -5899,10 +5958,10 @@ window.addEventListener("resize", () => {
   let kQuickXrayActive = false;
   let kQuickXrayRestoreMode = "texture";
   let kMood = "daylight";
-  let kResScale = isMobileDevice ? 0.82 : 1.0;
+  let kResScale = 1.0;
   let kMaxFps = 0;
   let kShadowsOn = true;
-  let kShadowResolution = isMobileDevice ? 512 : 1024;
+  let kShadowResolution = 256;
   let kVertexSnap = false;
   let kPixelMode = "off";
   let kTextureFilter = "smooth";
@@ -6002,7 +6061,7 @@ window.addEventListener("resize", () => {
     kControls = controls;
     kClock = clock;
     kRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-    kRenderer.toneMappingExposure = Number(document.getElementById("kobo-exposure")?.value || 1);
+    kRenderer.toneMappingExposure = Number(document.getElementById("kobo-exposure")?.value || 2);
     kRenderer.shadowMap.enabled = kShadowsOn;
     kRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
     if (kKeyLight) {
@@ -6064,7 +6123,8 @@ window.addEventListener("resize", () => {
     createRenderer();
     applyKoboMood("daylight");
     applyKoboPedestal("none");
-    updateKoboLightAngle(Number(document.getElementById("kobo-light-angle")?.value || 45));
+    // A deliberate 0° must not be replaced by a fallback of 45°.
+    updateKoboLightAngle(Number(document.getElementById("kobo-light-angle")?.value ?? 0));
     syncKoboMainModel(object, mixer, activeHeadAnimations, modelSelect.value, modelSelect.selectedOptions?.[0]?.textContent || "LHU head");
   }
 
@@ -6095,6 +6155,12 @@ window.addEventListener("resize", () => {
     } else if (mood === "midnight") {
       kHemiLight.color.setHex(0xc9d6ff); kHemiLight.groundColor.setHex(0x1a1522);
       kKeyLight.color.setHex(0xff9e6d); kRimLight.color.setHex(0xff5277);
+    } else if (mood === "sunset") {
+      kHemiLight.color.setHex(0xffd7b0); kHemiLight.groundColor.setHex(0x2b1020);
+      kKeyLight.color.setHex(0xff9a52); kRimLight.color.setHex(0xc94f9e);
+    } else if (mood === "neon") {
+      kHemiLight.color.setHex(0xa8f0ff); kHemiLight.groundColor.setHex(0x0b0a1a);
+      kKeyLight.color.setHex(0x4df0ff); kRimLight.color.setHex(0xff36c8);
     }
   }
 
@@ -6726,6 +6792,9 @@ float lhuStoneNoise(vec3 p) {
     if (!koboInitialized) return;
     const selected = modelSelect.selectedOptions?.[0];
     syncKoboMainModel(root, mainMixer, animations, url, selected?.textContent || "LHU head");
+    // Selecting a head in the main pill used to update the model without ever
+    // firing the spawn animation. The fullscreen importer already did this.
+    triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted);
   };
 
   function loadKoboModel(url, labelOverride = null) {
@@ -6825,6 +6894,8 @@ float lhuStoneNoise(vec3 p) {
   function triggerKoboSpawn(type, silent = false) {
     if (!kModel) return;
     kSpawnState = { type, start: performance.now(), dur: 680 };
+    // Small public telemetry hook: lets styling/tests observe the active FX.
+    document.documentElement.setAttribute('data-lhu-spawn', type);
     if (!silent) playKoboSynth(type);
   }
 
@@ -6974,7 +7045,7 @@ float lhuStoneNoise(vec3 p) {
   const PRESET_CONFIGS = {
     potato: { res: 0.15, fps: 15, shadows: false, shadowRes: 256, snap: false, jitter: 0.35, pixel: "coarse", texture: "nearest", aa: false, dither: true, bloom: false },
     handheld: { res: 0.50, fps: 30, shadows: true, shadowRes: 256, snap: false, jitter: 0, pixel: "fine", texture: "nearest", aa: false, dither: false, bloom: false },
-    studio: { res: 1.0, fps: 0, shadows: true, shadowRes: 2048, snap: false, jitter: 0, pixel: "off", texture: "smooth", aa: true, dither: false, bloom: false },
+    studio: { res: 1.0, fps: 0, shadows: true, shadowRes: 256, snap: false, jitter: 0, pixel: "off", texture: "smooth", aa: true, dither: false, bloom: false },
     overkill: { res: 1.0, fps: 0, shadows: true, shadowRes: 2048, snap: false, jitter: 0, pixel: "off", texture: "smooth", aa: true, dither: false, bloom: true }
   };
   settingsRoot.querySelectorAll("[data-preset]").forEach(btn => btn.addEventListener("click", () => {
@@ -7228,7 +7299,11 @@ float lhuStoneNoise(vec3 p) {
 <!-- [JS] SHARED WEBSITE-FUNKTIONEN                                        -->
 <!-- ====================================================================== -->
 <script id="lhu-shared-js">
-document.addEventListener('DOMContentLoaded', () => {
+// This script is the last element in <body>: the DOM is already complete.
+// Running it immediately (instead of on DOMContentLoaded) keeps the site shell
+// usable even when the deferred Three.js module and its CDN imports are slow
+// or unavailable. DOMContentLoaded waits for deferred/module scripts.
+(() => {
   const uiLanguage = document.documentElement.lang === 'de' ? 'de' : 'en';
   const sharedText = uiLanguage === 'de' ? {
     theme: 'Farbmodus wechseln', audioOn: 'Audio stummschalten', audioOff: 'Audio aktivieren',
@@ -7358,9 +7433,10 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryPanel?.classList.add('is-closed');
     categoryPanel?.setAttribute('aria-hidden', 'true');
     collapseBtn?.setAttribute('aria-expanded', String(categoriesOpen));
-    collapseBtn?.setAttribute('aria-label', categoriesOpen ? 'Kategorienleiste schließen' : 'Kategorienleiste öffnen');
-    if (collapseBtn) collapseBtn.title = categoriesOpen ? 'Planetennavigation schließen' : 'Planetennavigation öffnen';
+    collapseBtn?.setAttribute('aria-label', categoriesOpen ? sharedText.categoryClose : sharedText.categoryOpen);
+    if (collapseBtn) collapseBtn.title = categoriesOpen ? sharedText.categoryClose : sharedText.categoryOpen;
     if (categoriesOpen) requestAnimationFrame(() => window.__lhuRestartCategoryMarquee?.());
+    else window.__lhuSetCategoryMarqueePaused?.(true);
   }
   setCategoryMenuOpen(true);
 
@@ -7378,15 +7454,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* 5. Category Loading & Routing */
+  // The .txt masters are the canonical content source. They are complete HTML
+  // documents stored as plain text so they stay readable and diff-friendly;
+  // the host shell strips the document scaffolding before injection (see
+  // normalizeFragmentDocument below). The old .html copies only added a
+  // standalone redirect script that was discarded by the normalizer anyway.
   const categoryPages = {
-    'ABOUT':          '01_about.html',
-    'VHS MULTIVERSE': '02_vhsmultiverse.html',
-    'HUMANART':       '03_humanart.html',
-    'PROJECTS':       '04_projects.html',
-    'STORYTIME':      '05_storytime.html',
-    'MUSIC':          '06_music.html',
-    'CONTACT':        '07_contact.html',
-    'DONATE':         '08_donate.html'
+    'ABOUT':          '01_about.txt',
+    'VHS MULTIVERSE': '02_vhsmultiverse.txt',
+    'HUMANART':       '03_humanart.txt',
+    'PROJECTS':       '04_projects.txt',
+    'STORYTIME':      '05_storytime.txt',
+    'MUSIC':          '06_music.txt',
+    'CONTACT':        '07_contact.txt',
+    'DONATE':         '08_donate.txt'
   };
   // Canonical browser routes mirror the real HTML filenames (without .html).
   // The shorter legacy routes remain accepted as aliases for old bookmarks.
@@ -7410,8 +7491,20 @@ document.addEventListener('DOMContentLoaded', () => {
     'CONTACT': '/contact',
     'DONATE': '/donate'
   };
+  // Old bookmarks pointed at the standalone .html fragments. Those files are
+  // archived now, but the routes must keep working through the full app shell.
+  const legacyFileRoutes = {
+    'ABOUT': '/01_about.html',
+    'VHS MULTIVERSE': '/02_vhsmultiverse.html',
+    'HUMANART': '/03_humanart.html',
+    'PROJECTS': '/04_projects.html',
+    'STORYTIME': '/05_storytime.html',
+    'MUSIC': '/06_music.html',
+    'CONTACT': '/07_contact.html',
+    'DONATE': '/08_donate.html'
+  };
   const routeCategories = Object.fromEntries(
-    [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths)]
+    [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths), ...Object.entries(legacyFileRoutes)]
       .map(([category, route]) => [route, category])
   );
   const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
@@ -7433,7 +7526,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function categoryFromHash(hash = window.location.hash) {
-    const normalized = hash ? (hash.startsWith('#/') ? hash : '#/' + hash.slice(1).replace(/^\//, '')) : '';
+    const normalized = (hash ? (hash.startsWith('#/') ? hash : '#/' + hash.slice(1).replace(/^\//, '')) : '').toLowerCase();
     const hashRoutes = Object.fromEntries(
       Object.entries(routeCategories).map(([route, category]) => [route.replace(/^\//, '#/'), category])
     );
@@ -7450,14 +7543,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const route = categoryPaths[category];
     if (!route) return;
     const currentPath = normalizePath(window.location.pathname);
+    const suffix = window.location.search + window.location.hash;
     if (currentPath === route) {
       if (window.location.pathname !== route) {
-        window.history.replaceState({ lhuCategory: category }, '', route + window.location.search + window.location.hash);
+        window.history.replaceState({ lhuCategory: category }, '', route + suffix);
       }
       return;
     }
     const method = replace ? 'replaceState' : 'pushState';
-    window.history[method]({ lhuCategory: category }, '', route);
+    window.history[method]({ lhuCategory: category }, '', route + suffix);
   }
 
   /* 6. Shared Lightbox Viewer */
@@ -7867,13 +7961,31 @@ document.addEventListener('DOMContentLoaded', () => {
   let categoryTransitionTimer = null;
   let categoryFetchController = null;
 
+  // A content master is a full, standalone HTML document. Only the markup
+  // inside <main> belongs in the site shell; everything else (DOCTYPE, head,
+  // body, standalone scripts) is scaffolding and must never be injected.
+  function normalizeFragmentDocument(htmlText) {
+    const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+    const main = doc.querySelector('main');
+    if (main) return main.innerHTML;
+    const body = doc.body;
+    if (!body) return '';
+    // Defensive fallback for a hand-edited master that lost its <main>.
+    if (body.children.length === 1 && body.children[0].tagName !== 'SCRIPT') {
+      return body.children[0].innerHTML;
+    }
+    return body.innerHTML;
+  }
+
   async function triggerCategoryChange(cat, options = {}) {
     if (!categoryPages[cat]) return;
-    if (options.updateHistory !== false) writeCategoryRoute(cat, false);
 
     // Do not treat a requested category as loaded until its HTML has actually
     // arrived. This lets the same category be retried after a failed/aborted load.
+    // Check this BEFORE touching history so a repeated click cannot pile up
+    // duplicate pushState entries.
     if (cat === currentCategory && mainContent?.dataset.loadedCategory === cat) return;
+    if (options.updateHistory !== false) writeCategoryRoute(cat, false);
 
     const door = document.getElementById('door-overlay');
     if (!door || !mainContent) {
@@ -7913,6 +8025,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const controller = new AbortController();
       categoryFetchController = controller;
+      // A hung request must never leave the door animation stuck closed.
+      // Aborting with a DOMException keeps this distinct from a navigation abort.
+      const fetchTimeout = window.setTimeout(() => {
+        controller.abort(new DOMException('Content load timed out', 'TimeoutError'));
+      }, 12000);
 
       try {
         const response = await fetch(targetPage, { signal: controller.signal });
@@ -7920,11 +8037,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const htmlText = await response.text();
         if (loadToken !== categoryLoadToken) return;
 
-        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-        const fetchedMain = doc.querySelector('main') || doc.body;
-        if (!fetchedMain) throw new Error('No <main> found');
+        const fragmentMarkup = normalizeFragmentDocument(htmlText);
+        if (!fragmentMarkup.trim()) throw new Error('Empty content fragment');
 
-        mainContent.innerHTML = fetchedMain.innerHTML;
+        mainContent.innerHTML = fragmentMarkup;
         mainContent.dataset.loadedCategory = cat;
 
         const lang = window.LHU_LANGUAGE || 'en';
@@ -7992,8 +8108,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             vhsImageObserver = new MutationObserver(() => vhsTrigger());
             vhsImageObserver.observe(wrapper, { attributes: true, attributeFilter: ['src'], childList: true, subtree: true });
-            window.__lhuRegisterCleanup(() => { if (vhsImageObserver) vhsImageObserver.disconnect(); clearTimeout(glitchTimeout); });
-            setTimeout(vhsTrigger, 250);
+            const vhsIntroTimer = window.setTimeout(vhsTrigger, 250);
+            window.__lhuRegisterCleanup(() => {
+              if (vhsImageObserver) vhsImageObserver.disconnect();
+              clearTimeout(glitchTimeout);
+              clearTimeout(vhsIntroTimer);
+            });
           }
         }
 
@@ -8007,6 +8127,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showError(cat, targetPage);
         }
       } finally {
+        clearTimeout(fetchTimeout);
         if (loadToken === categoryLoadToken) {
           categoryFetchController = null;
           categoryTransitionTimer = null;
@@ -8042,10 +8163,8 @@ document.addEventListener('DOMContentLoaded', () => {
       firstGroup.className = 'marquee-group';
       CATS.forEach((cat, index) => firstGroup.appendChild(makeMarqueeItem(cat, index)));
       marqueeTrack.replaceChildren(firstGroup);
-      marqueeTrack.addEventListener('click', (event) => {
-        const item = event.target.closest('.marquee-category');
-        if (item && marqueeTrack.contains(item)) triggerCategoryChange(item.dataset.cat);
-      });
+      // Clicks are handled by the single drag-aware listener further below.
+      // A second listener here used to double-trigger every navigation.
     }
 
     // Seamless, pointer-influenced planet marquee. Each repeated group has the exact
@@ -8108,6 +8227,8 @@ document.addEventListener('DOMContentLoaded', () => {
           marqueeTrack.appendChild(group);
         }
         // Exact pixel travel for one complete category cycle.
+        // The endless right-to-left motion is a core part of the navigation:
+        // it stays active so visitors can drag and tap the planets.
         marqueeBaseDuration = Math.max(12000, groupWidth / 52 * 1000);
         marqueeAnimation = marqueeTrack.animate(
           [{ transform: 'translate3d(0px,0,0)' }, { transform: `translate3d(${-groupWidth}px,0,0)` }],
@@ -8119,6 +8240,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
     window.__lhuRestartCategoryMarquee = startCategoryMarquee;
+    window.__lhuSetCategoryMarqueePaused = (paused) => {
+      if (!marqueeAnimation) return;
+      if (paused) marqueeAnimation.pause();
+      else if (!categoryTicker.classList.contains('is-collapsed')) marqueeAnimation.play();
+    };
     if (marqueeTrack && categoryTicker) {
       marqueeTrack.addEventListener('click', (event) => {
         if (marqueeDragged) { event.preventDefault(); event.stopPropagation(); marqueeDragged = false; return; }
@@ -8263,7 +8389,10 @@ document.addEventListener('DOMContentLoaded', () => {
       safeCleanup('Integrated 3D controls', () => window.__lhuDisposeKoboStudio?.());
       safeCleanup('Index 3D', () => window.__lhuPauseIndexExperience?.());
       safeCleanup('Background', () => window.__lhuPauseMatrixBackground?.());
-      safeCleanup('Intro DOM', () => document.getElementById('lhu-intro')?.remove());
+      // Do NOT remove the intro DOM here. A deferred Three.js module may still
+      // be initializing against those nodes (e.g. when a CDN import is slow).
+      // body.site-mode already hides the intro via CSS; removal only saves a
+      // few KB at the cost of breaking that late initialization.
       safeCleanup('Background audio', () => document.getElementById('background-music')?.pause());
 
       const indexExperience = document.getElementById('lhu-index-experience');
@@ -8275,13 +8404,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('site-mode');
     const shell = document.getElementById('site-shell');
     if (shell) shell.hidden = false;
+    // The intro button is hidden on entry; without an explicit focus move the
+    // keyboard user lands on <body> with no indication of the new context.
+    if (mainContent) {
+      requestAnimationFrame(() => {
+        try { mainContent.focus({ preventScroll: true }); }
+        catch (_) { mainContent.focus(); }
+      });
+    }
     // The marquee is measured only after the hidden shell has entered layout.
     // Two frames allow display, flex sizing and web fonts to settle first.
     requestAnimationFrame(() => requestAnimationFrame(() => {
       window.__lhuRestartCategoryMarquee?.();
     }));
 
-    writeCategoryRoute(entryCategory, firstEntry);
+    // Keep "/" in history when the visitor entered from the 3D index, so the
+    // browser Back button can take them home. A deep link keeps replaceState.
+    const enteredFromIndex = normalizePath(window.location.pathname) === '/';
+    writeCategoryRoute(entryCategory, firstEntry && !enteredFromIndex);
     try { applyDuckMute(); } catch (error) {
       console.warn('[LHU] Audio state could not be synchronized; continuing.', error);
     }
@@ -8289,9 +8429,27 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerCategoryChange(entryCategory, { updateHistory: false });
   };
 
-  // One canonical action for every MAIN PAGE control. MAIN PAGE always means
-  // the ABOUT landing page, including when the SPA has already been entered.
-  window.__lhuNavigateToMainPage = () => window.__lhuEnterMainSite({ category: 'ABOUT' });
+  // Returning to the 3D index is a fresh boot: the intro and Three.js module
+  // have no reliable resume API once they were stopped. A hard navigation is
+  // the stable way to get the exact same state as a fresh visit to "/".
+  window.__lhuReturnToIndex = () => {
+    try { runCleanups(); } catch (error) {
+      console.warn('[LHU] Cleanup before returning to index failed.', error);
+    }
+    const atRoot = window.location.pathname.replace(/\/+$/, '') === '';
+    if (atRoot) window.location.reload();
+    else window.location.assign('/');
+  };
+
+  // From the intro, MAIN PAGE enters the site. From inside a category page,
+  // the same control takes the visitor back to the 3D index.
+  window.__lhuNavigateToMainPage = () => {
+    if (document.body.classList.contains('site-mode')) {
+      window.__lhuReturnToIndex?.();
+      return;
+    }
+    window.__lhuEnterMainSite({ category: 'ABOUT' });
+  };
   const enterMainPage = () => window.__lhuNavigateToMainPage();
 
   // Bind these controls only here. Duplicate module-level listeners previously
@@ -8307,13 +8465,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function restoreCategoryFromLocation() {
     const targetCategory = categoryFromLocation();
-    if (!targetCategory) return;
+    if (!targetCategory) {
+      // Browser Back from a category to "/" must really leave the site shell.
+      // Otherwise the URL is "/" while the old category content stays visible.
+      if (appEntered) window.__lhuReturnToIndex?.();
+      return;
+    }
     if (!appEntered) window.__lhuEnterMainSite({ category: targetCategory });
     else triggerCategoryChange(targetCategory, { updateHistory: false });
   }
   window.addEventListener('popstate', restoreCategoryFromLocation);
   window.addEventListener('hashchange', restoreCategoryFromLocation);
-});
+})();
 </script>
 </body>
 </html>
