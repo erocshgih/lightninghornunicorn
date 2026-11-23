@@ -345,6 +345,19 @@
             .lhu-3d-lightbox__close { position: absolute; z-index: 5; top: 14px; right: 14px; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(0,0,0,.72); color: white; font: 28px/1 sans-serif; cursor: pointer; }
             .lhu-3d-lightbox__tools { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
             .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
+            /* Render resolution: shrinks the viewer's CSS box, which is what
+               model-viewer uses to compute its framebuffer (box x devicePixelRatio). */
+            .lhu-3d-lightbox__resolution {
+                position: absolute; z-index: 5; left: 50%; bottom: 66px;
+                transform: translateX(-50%); display: flex; align-items: center; gap: 10px;
+                padding: 6px 12px; border-radius: 20px;
+                background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2);
+                color: #fff; font: 600 11px/1 var(--font-mono, monospace); letter-spacing: .06em;
+                white-space: nowrap;
+            }
+            .lhu-3d-lightbox__resolution strong { color: #ffb066; font-variant-numeric: tabular-nums; min-width: 46px; text-align: right; }
+            .lhu-3d-lightbox__resolution input { width: 140px; min-width: 0; accent-color: #ff861d; cursor: pointer; }
+            .carousel-image-error { display:grid; place-items:center; width:100%; height:100%; min-height:140px; padding:16px; text-align:center; color:#ffbaba; background:rgba(0,0,0,.55); font:600 11px/1.4 var(--font-mono,monospace); letter-spacing:.05em; }
             /* Loading field: 20 moving LOADING rows while the GLB is loading. */
             .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.58); color: #f3f3f3; opacity: 1; visibility: visible; transition: none; pointer-events: none; font-family: 'Courier New', monospace; }
             .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; transition: none !important; }
@@ -722,6 +735,37 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                 let modelLightboxViewer = null;
                 let modelLightboxEscapeHandler = null;
                 const modelLoadTimers = new Set();
+                // Default 0.7 keeps the framebuffer small enough for devices such
+                // as the OnePlus 6T. The visitor can raise it on stronger hardware.
+                const PROJECT_RES_KEY = 'lhu-project-render-scale';
+                let projectRenderScale = 0.7;
+                try {
+                    const savedScale = Number(localStorage.getItem(PROJECT_RES_KEY));
+                    if (Number.isFinite(savedScale) && savedScale >= 0.25 && savedScale <= 1) {
+                        projectRenderScale = savedScale;
+                    }
+                } catch (_) { /* storage may be blocked */ }
+                function applyProjectResolution() {
+                    const value = Math.min(1, Math.max(0.25, projectRenderScale));
+                    projectRenderScale = value;
+                    const slider = modelLightbox?.querySelector('.lhu-3d-res-slider');
+                    const readout = modelLightbox?.querySelector('.lhu-3d-res-val');
+                    if (slider && Number(slider.value) !== value) slider.value = String(value);
+                    if (readout) readout.textContent = value.toFixed(2) + '×';
+                    const viewer = modelLightboxViewer;
+                    if (!viewer) return;
+                    // model-viewer derives its render target from the CSS box.
+                    // Centring a smaller box caps GPU memory and fill rate.
+                    const pct = Math.round(value * 100);
+                    viewer.style.position = 'absolute';
+                    viewer.style.left = '50%';
+                    viewer.style.top = '50%';
+                    viewer.style.width = pct + '%';
+                    viewer.style.height = pct + '%';
+                    viewer.style.transform = 'translate(-50%, -50%)';
+                    // Shadows are the second biggest cost on weaker GPUs.
+                    viewer.setAttribute('shadow-intensity', value < 0.8 ? '0' : '1');
+                }
                 function ensureModelLightbox() {
                     if (modelLightbox) return modelLightbox;
                     modelLightbox = document.createElement('div');
@@ -736,6 +780,10 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         </div>
                         <button type="button" class="lhu-3d-lightbox__close" aria-label="3D-Ansicht schließen">×</button>
                         <div class="lhu-3d-lightbox__tools"><button type="button" data-zoom="out" aria-label="Herauszoomen">−</button><button type="button" data-zoom="in" aria-label="Hineinzoomen">+</button><button type="button" data-zoom="reset" aria-label="Ansicht zurücksetzen">↺</button></div>
+                        <label class="lhu-3d-lightbox__resolution">
+                            <span>RES <strong class="lhu-3d-res-val">0.70×</strong></span>
+                            <input type="range" class="lhu-3d-res-slider" min="0.25" max="1" step="0.05" value="0.7" aria-label="3D-Auflösung" />
+                        </label>
                     </div>`;
                     const loadingLines = modelLightbox.querySelector('.lhu-3d-loading-lines');
                     const lineText = 'LOADING LOADING LOADING LOADING LOADING LOADING LOADING LOADING ';
@@ -760,6 +808,13 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         if (e.key === 'Escape' && modelLightbox && !modelLightbox.hidden) close();
                     };
                     document.addEventListener('keydown', modelLightboxEscapeHandler);
+                    const resSlider = modelLightbox.querySelector('.lhu-3d-res-slider');
+                    resSlider?.addEventListener('input', (event) => {
+                        projectRenderScale = Math.min(1, Math.max(0.25, Number(event.target.value)));
+                        try { localStorage.setItem(PROJECT_RES_KEY, String(projectRenderScale)); } catch (_) {}
+                        applyProjectResolution();
+                    });
+                    applyProjectResolution();
                     modelLightbox.querySelectorAll('[data-zoom]').forEach(btn => btn.addEventListener('click', () => {
                         const viewer = modelLightboxViewer;
                         // model-viewer may be undefined when the CDN is blocked,
@@ -821,9 +876,26 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     };
                     viewer.addEventListener('load', () => finishLoad(true), { once: true });
                     viewer.addEventListener('error', () => finishLoad(false), { once: true });
+                    viewer.addEventListener('webglcontextlost', (event) => {
+                        event.preventDefault();
+                        console.warn('[LHU] 3D WebGL context lost (render scale ' + projectRenderScale.toFixed(2) + ').');
+                        showModelError();
+                    });
+                    // Diagnostic: show the render target model-viewer actually chose.
+                    viewer.addEventListener('render-scale', (event) => {
+                        const d = event.detail || {};
+                        const readout = modelLightbox?.querySelector('.lhu-3d-res-val');
+                        if (readout) {
+                            readout.title = `DPR ${Number(d.renderedDpr || 0).toFixed(2)} · `
+                                + `${Math.round(d.pixelWidth || 0)}×${Math.round(d.pixelHeight || 0)} px`;
+                        }
+                    });
 
                     modelLightboxViewer = viewer;
                     panel.appendChild(viewer);
+                    // Capping the CSS box is the reliable way to limit the GPU
+                    // framebuffer; minimumRenderScale is only a lower bound.
+                    applyProjectResolution();
                     box.hidden = false;
                     box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
                     // If the CDN is blocked, model-viewer fires neither load nor
@@ -939,6 +1011,16 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                             img.alt = `${prod.name} – Ansicht ${i + 1}`;
                             img.loading = 'lazy';
                             img.decoding = 'async';
+                            // A failed image otherwise shows the browser's broken
+                            // icon ("Kästchen-Gesicht") in the upper corner.
+                            img.addEventListener('error', () => {
+                                img.hidden = true;
+                                if (slide.querySelector('.carousel-image-error')) return;
+                                const fallback = document.createElement('div');
+                                fallback.className = 'carousel-image-error';
+                                fallback.textContent = 'BILD NICHT VERFÜGBAR';
+                                slide.appendChild(fallback);
+                            }, { once: true });
                             slide.appendChild(img);
                             if (typeof window.__lhuAttachImageZoom === 'function') {
                                 window.__lhuAttachImageZoom(slide, img, `Bild vergrößern: ${prod.name}, Ansicht ${i + 1}`);
