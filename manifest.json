@@ -1,8 +1,8 @@
 [
   {
     "path": "404.html",
-    "bytes": 379951,
-    "sha256": "8305bbc06c715f55273a486a48f16f2cb797cd4766417e432c9ed453b53512ea"
+    "bytes": 398535,
+    "sha256": "8ee4d4f702881f3eb50b37a3a92ceb8936a597d97484b3321a151917d103d63c"
   },
   {
     "path": "about/about_7.webp",
@@ -141,8 +141,8 @@
   },
   {
     "path": "downloads.html",
-    "bytes": 91793,
-    "sha256": "db4f5871db959fe1afd83b5642fa3ec3ab34712d5f5f1d5587c92891eacce6e6"
+    "bytes": 92904,
+    "sha256": "83dac22561de6d62f965ed67b1aa749f373017502d96ecec98549de00a4f7004"
   },
   {
     "path": "downloads/80IES/LIGHTNING_HORN_UNICORN_A_FORCE_YOU.mp3",
@@ -410,6 +410,11 @@
     "sha256": "feac69055e72f051e77aedc150d58272742db12b97f6e39a071b26e359d6fbb2"
   },
   {
+    "path": "GOAT.mp3",
+    "bytes": 2772096,
+    "sha256": "eff644d140a8e9e5a5b321ce000d3a946dd6f296807307ac08b208022920e0f0"
+  },
+  {
     "path": "heads/askflamongostache.glb",
     "bytes": 2053288,
     "sha256": "d78c0f38385cc5a721c5be95a9e16e0e356ee85f60f95b8c0a0dbac137767b65"
@@ -446,8 +451,8 @@
   },
   {
     "path": "heads/uniturnoeyeballhorn.glb",
-    "bytes": 2767548,
-    "sha256": "db727f48006aaaf15e46b28eb165bbec257ab3f10a32cbe997f329b6810ce837"
+    "bytes": 2778044,
+    "sha256": "31defa7a5eea6483707a9fe8816573a9d105c4900c89ee67777b283265b9b1b6"
   },
   {
     "path": "humanart/acircleofcolors.webp",
@@ -526,8 +531,8 @@
   },
   {
     "path": "index.html",
-    "bytes": 379864,
-    "sha256": "975662b21c5f18bba187b260ce1b52b23d877812a60569590625986a22ea49da"
+    "bytes": 398448,
+    "sha256": "484c890bbde6816cf2c8275a5e2edf21d7fe7460f45858d537c17a32f5e6fb41"
   },
   {
     "path": "lhu_favicon.png",
@@ -553,6 +558,16 @@
     "path": "lhuyellow.mp3",
     "bytes": 122880,
     "sha256": "fc28c4d4779a0356ea09c70299b2b4e02c14830bf989492366b9ddbac6038670"
+  },
+  {
+    "path": "lightninghornunicorn.svg",
+    "bytes": 116417,
+    "sha256": "f7da347b837d31ada3e0e829c20349914dc3a54adbf4af6fa12fcddd2bdfdf5a"
+  },
+  {
+    "path": "mrrrphadoravandonatia.webp",
+    "bytes": 110116,
+    "sha256": "f643fbf03e0071ae2fa5b13df91935da4d64871e4e4c47b09df3c7d94622650a"
   },
   {
     "path": "music_Laserette.webp",
@@ -775,24 +790,49 @@
     "sha256": "927f67628de12590305881411146f4a05b2ddb9a7fcafb80a8e97d3de5686540"
   },
   {
+    "path": "rainbow.mp3",
+    "bytes": 118608,
+    "sha256": "8f41cb1f0bb19d290bdd6505a2d6063a5133d357d2d13ad26797c4e2455a9404"
+  },
+  {
     "path": "README-MAINTENANCE.md",
-    "bytes": 2647,
-    "sha256": "203656db656892167b2b3175018c13e991752bd70dd66857d8176db0e747e688"
+    "bytes": 3078,
+    "sha256": "70fe2289eb8bef96b730b253cab880017a3c4a80f912d178dcbd15081e3624a4"
+  },
+  {
+    "path": "rizz-sound-effect.mp3",
+    "bytes": 77462,
+    "sha256": "dbbde7a7920b680ab42a6b8cab49dbd59e24841878bb622fb889669f9fae286f"
+  },
+  {
+    "path": "robots.txt",
+    "bytes": 167,
+    "sha256": "3cd0ff4492b4ade50bd86c6a2df24e94ca8576eb8bb3bc9217cd6c5ddf0de545"
+  },
+  {
+    "path": "sitemap.xml",
+    "bytes": 798,
+    "sha256": "a7d7ec97de4ae9b906d33d4b5f921497f298635b3f5b6949547fd5591fa58309"
+  },
+  {
+    "path": "smooth.svg",
+    "bytes": 265791,
+    "sha256": "4f69ee872df83ae4820851002b82641451bea621be234246ad78904d9df3f3fb"
   },
   {
     "path": "txt/about.txt",
-    "bytes": 50391,
-    "sha256": "7dd7bf31d9a57a367ac0ed5aaf8917fb8c8af149c59e8161f151b9cbb0108ce6"
+    "bytes": 49973,
+    "sha256": "f4da875e2623fe3aceaca714821d0a20ca5bb76f02e4e8c000d757e3a03966c0"
   },
   {
     "path": "txt/contact.txt",
-    "bytes": 5627,
-    "sha256": "46c109be0fd989fabe87adeb2699470fcd6e4a9b300fd37898ac1f7cd7954e07"
+    "bytes": 6087,
+    "sha256": "1facaf7ae361db0a7a048d757cb29d24d4d48a02738696138ad076db55ddfcea"
   },
   {
     "path": "txt/donate.txt",
-    "bytes": 5377,
-    "sha256": "964795a0c922a7ff448cefa1f86eefda843c073a3af6cea4a067a9f634a14932"
+    "bytes": 5475,
+    "sha256": "639aa78d54ff383ee94c5b28e3f30bf07fc84104f95cf70b7f5fc7c5bd622c34"
   },
   {
     "path": "txt/humanart.txt",
@@ -806,18 +846,18 @@
   },
   {
     "path": "txt/projects.txt",
-    "bytes": 85484,
-    "sha256": "fd95f091d34e6302ea25e40a4ca27fe9dda731fc84a3a8c0f4e9a55d2666abe2"
+    "bytes": 85267,
+    "sha256": "7f0b6862a07f75babace6fdb7a30c46ba9b08127c8b39661d8a90f02027cab30"
   },
   {
     "path": "txt/storytime.txt",
-    "bytes": 21286,
-    "sha256": "efebfc7b4cf169fdb5d4ba5c382a7632e70bd99b7f7cd257b06839da10db7480"
+    "bytes": 21793,
+    "sha256": "3ee6312e5b1d406eb6e08e3197a844439c93d9aad4ecd69d93c0d31c04e889e5"
   },
   {
     "path": "txt/vhsmultiverse.txt",
-    "bytes": 22792,
-    "sha256": "255bae2decc613aeb2a7405c7619daace03f957233479c013ba5c72c6ef04046"
+    "bytes": 22973,
+    "sha256": "5cd5f1fad381bbf650c5adb725017ed354e4f7d09df7592a13014fa96343655d"
   },
   {
     "path": "unicornmail.webp",
@@ -1128,5 +1168,10 @@
     "path": "vhsmultiverse/vhsmultiverse_wobblepaws_front.webp",
     "bytes": 226182,
     "sha256": "6b4d345bf508dbc0da359ce49bedaf06f57f4e6e571c4686a1a3b0921bf3052e"
+  },
+  {
+    "path": "wolfwhistttle.mp3",
+    "bytes": 34233,
+    "sha256": "cc6f82d32c5afa9fc406e151dbdf5bfc8b3b44ab491e284c0580e1364b4b6171"
   }
 ]

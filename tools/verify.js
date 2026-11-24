@@ -7,6 +7,7 @@
  * local asset references, 404 mirror consistency and manifest accuracy.
  */
 'use strict';
+// QA-VOSS: 404-Spiegel-Prüfung (Routen-Stubs bewusst entfernt).
 
 const fs = require('fs');
 const path = require('path');

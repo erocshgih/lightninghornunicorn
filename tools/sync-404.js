@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
- * GitHub Pages serves 404.html for unknown paths. To make SPA deep links such
- * as /about, /01_about or /01_about.html work without a redirect stub,
- * 404.html must be a
- * complete mirror of index.html: the app reads location.pathname itself and
- * loads the matching content fragment.
+ * GitHub Pages serves 404.html for unknown paths. To keep SPA deep links such
+ * as /about, /01_about or /01_about.html working, 404.html must be a complete
+ * mirror of index.html: the app reads location.pathname itself and loads the
+ * matching content fragment.
  *
  * Run after every change to index.html:
  *   node tools/sync-404.js
  */
 'use strict';
-
+// QA-VOSS: erzeugt nur den 404-Spiegel — keine Routen-Stubs (Owner-Entscheidung).
 const fs = require('fs');
 const path = require('path');
 

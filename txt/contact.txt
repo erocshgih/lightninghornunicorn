@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- QA-VOSS: h2 CONTACT (auch de); system-status dunkelgrün + Dark-Overrides. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -54,16 +55,22 @@
             }
 
             /* Blinkender Status-Text */
+            /* QA-VOSS: Kontrast im hellen Theme (war #00FF28). */
             .system-status {
                 font-family: var(--font-display, 'Press Start 2P', monospace);
                 font-size: 0.6rem;
-                color: #00FF28;
+                color: #0a7d1f;
                 text-align: center;
                 letter-spacing: 2px;
                 margin-top: var(--space-md);
                 animation: retroBlink 1.2s infinite steps(2);
                 text-shadow: 0 0 8px rgba(0, 255, 40, 0.5);
             }
+
+            html[data-theme="dark"] .system-status,
+            html[data-theme="mono-gray"] .system-status,
+            html[data-theme="mono-green"] .system-status,
+            html[data-theme="crt"] .system-status { color: #00FF28; }
 
             @keyframes retroBlink {
                 0%, 49% { opacity: 1; }
@@ -82,7 +89,8 @@
         </style>
 
         <section id="CONTACT">
-            <h2 class="category-opening-title" data-lang-en="CONTACT" data-lang-de="KONTAKT">CONTACT</h2>
+            <!-- QA-VOSS: Überschrift in beiden Sprachen CONTACT. -->
+            <h2 class="category-opening-title" data-lang-en="CONTACT" data-lang-de="CONTACT">CONTACT</h2>
 
             <p data-lang-en="Have a project that needs an independent creative mind and hands-on execution? Hire me for website design and development, 3D design and modelling, music production, sculptural work, visual concepts, creative direction or ambitious artistic collaborations. From the first rough idea to the finished object, I can help shape the whole thing."
                data-lang-de="Du hast ein Projekt, das einen eigenständigen kreativen Kopf und praktische Umsetzung braucht? Engagiere mich für Website-Design und Entwicklung, 3D-Design und Modellierung, Musikproduktion, bildhauerische Arbeiten, visuelle Konzepte, Creative Direction oder ambitionierte Kunstprojekte. Von der ersten rohen Idee bis zum fertigen Objekt kann ich den gesamten Prozess mitgestalten.">

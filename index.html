@@ -16,6 +16,21 @@ SCHNELL ZU FINDEN (STRG + F):
   [JS]   INDEX-ERLEBNIS             Three.js, 3D-Heads, Intro, Musik und Zitate
   [JS]   ZITATE / DAILY WISDOM      Deutsche und englische Zitate
   [JS]   SHARED WEBSITE-FUNKTIONEN  Menue, Kategorien, Content-Lader, Bildzoom
+--------------------------------------------------------------------------------
+QA-VOSS: ERINNERUNGSKARTE — grep "QA-VOSS" findet alle Markierungen im Projekt.
+QA-VOSS: P1  Skip-Link über Intro/Lightbox; overflow-x:clip rettet sticky; Reduced-Motion-Overrides raus.
+QA-VOSS: P1  Audio lokal (GOAT/wolf/rizz/rainbow); endGag idempotent + Timer; play() im Gesture-Task.
+QA-VOSS: P1  loadingDepth statt Overlay-Flag; stale Loads rufen stopLoading; disposeMaterial generisch.
+QA-VOSS: P2  sync-404 macht nur den 404-Spiegel (Stubs auf Owner-Wunsch entfernt); canonical + OG-Tags.
+QA-VOSS: P2  robots.txt + sitemap.xml; Downloads noindex + SRI/CSP; Titel var(--text); Modale inert.
+QA-VOSS: P4  Bloom verdeckt DOM-Layer → Matrix-Canvas als CanvasTexture in scene.background.
+QA-VOSS: P6  __lhuUpdateBackdropTexture hält die Textur auch nach Schließen der Einstellungen aktuell.
+QA-VOSS: P7  Solid-Farben als THREE.Color in scene.background; Marquee läuft immer (Owner-Entscheid).
+QA-VOSS: P8  Überschriften ABOUT/DONATE/CONTACT; Projects-Einstieg; Storytime nur bei Klick scrollen.
+QA-VOSS: P9  Spawn-FX: updateKoboSpawn für Studio + Hauptbühne; Trigger auch ohne geöffnete Einstellungen.
+QA-VOSS: P10 Signal-Buttons: eigene ::before/::after-Keyframes je Farbe; Titel-Static-Glow als Fallback.
+QA-VOSS: P11 Optionales stonemarble.glb: 1 Canvas, geteilte Glaze-Materialien, WASM-Draco, Fallback.
+QA-VOSS: P12 Mobile: compileAsync vor Reveal, DPR 1, nur 1 Rect/Frame — gegen Lade-Stottern.
 ================================================================================
 -->
 <html lang="de">
@@ -24,10 +39,22 @@ SCHNELL ZU FINDEN (STRG + F):
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <base href="/"/>
 <title>Lightning Horn Unicorn</title>
+<!-- QA-VOSS: canonical; writeCategoryRoute() setzt ihn pro Kategorie nach. -->
+<link rel="canonical" href="/"/>
 <link href="lhu_favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="lhu_favicon.png" rel="icon" type="image/png"/>
 <link href="lhu_favicon.png" rel="apple-touch-icon"/>
 <meta content="Lightning Horn Unicorn — Independent creative universe of Vienna-based artist Vedran Lukic." name="description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://www.lightninghornunicorn.com/" property="og:url"/>
+<meta content="Lightning Horn Unicorn" property="og:title"/>
+<meta content="Independent creative universe of Vienna-based artist Vedran Lukic." property="og:description"/>
+<meta content="https://www.lightninghornunicorn.com/lhu_favicon.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Lightning Horn Unicorn" name="twitter:title"/>
+<meta content="Independent creative universe of Vienna-based artist Vedran Lukic." name="twitter:description"/>
+<meta content="https://www.lightninghornunicorn.com/lhu_favicon.png" name="twitter:image"/>
+<!-- QA-VOSS: OG/Twitter-Tags für Social-Previews (SEO-002). -->
 <meta content="Vedran Lukic" name="author"/>
 <meta content="#070708" name="theme-color"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -256,7 +283,7 @@ main#mainContent :is(a, button, [tabindex]):focus-visible {
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 .skip-link {
-  position: fixed; top: -100px; left: 12px; z-index: 100000;
+  position: fixed; top: -100px; left: 12px; z-index: 200001; /* QA-VOSS: über Intro (100000) + Lightbox (200000). */
   padding: 10px 16px; background: var(--text); color: var(--bg);
   border-radius: 10px; font-size: var(--fs-sm); font-weight: 600;
 }
@@ -593,7 +620,8 @@ main#mainContent {
   min-height: calc(100dvh - 80px);
   padding: clamp(36px, 6vw, 76px) clamp(16px, 4vw, 48px) var(--space-xl);
   z-index: 1;
-  overflow-x: hidden;
+  overflow-x: hidden; /* fallback for older browsers */
+  overflow-x: clip;   /* QA-VOSS: clip statt hidden — sticky bleibt wirksam. */
   background: transparent;
   position: relative;
 }
@@ -601,6 +629,7 @@ main#mainContent section,
 main#mainContent div {
   width: 100%; max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 main#mainContent p, main#mainContent h2,
 main#mainContent h3, main#mainContent h4 {
@@ -1595,17 +1624,7 @@ body.intro-mode {
   .effect-btn { width: 33px; min-width: 33px; height: 33px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #rainbow-aura.active { animation: rainbowAura 0.55s linear infinite !important; }
-  #heart-emojis.active .fast-rise-emoji,
-  #rainbow-emojis.active .fast-rise-emoji {
-    animation-name: riseFast !important;
-    animation-duration: var(--dur) !important;
-    animation-delay: var(--delay) !important;
-    animation-timing-function: linear !important;
-    animation-iteration-count: infinite !important;
-  }
-}
+/* QA-VOSS: Reduced-Motion-Overrides raus — globaler Reset greift. */
 </style>
 <style id="index-button-shapes-final">
 /* Capsule buttons for text actions; softly rounded squares for icon controls. */
@@ -3782,17 +3801,26 @@ main#mainContent section#DONATE .transparent-sticker { max-width:min(100%,420px)
   #categorySpherePanel .sphere-category-grid { flex-wrap:wrap; justify-content:center; }
 }
 
-/* One shared RGB title treatment for every category, not About alone. */
+/* Shared soft hologram glow for every category heading: blue / yellow / red
+   drift slowly around the letters instead of hard chromatic offsets. */
 main#mainContent h2.category-opening-title {
-  color:#f4f1e9 !important; font-weight:900 !important; letter-spacing:.045em !important;
-  text-shadow:6px 0 2px rgba(255,22,22,.9), -3px 5px 2px rgba(255,205,20,.88), -3px -5px 2px rgba(24,92,255,.9) !important;
-  animation:lhu-shared-title-rgb 12s linear infinite !important;
+  color:var(--text) !important; font-weight:900 !important; letter-spacing:.045em !important;
+  /* Static fallback keeps the RGB glow visible when motion is disabled.
+     No !important here, so the animation can take over when it runs. */
+  text-shadow:-3px -2px 9px rgba(24,92,255,.72), 3px 3px 11px rgba(224,180,34,.62), 0 0 24px rgba(224,49,45,.48);
+  animation:lhu-hologram-title 9s ease-in-out infinite !important;
 }
-@keyframes lhu-shared-title-rgb {
-  0%,100% { text-shadow:6px 0 2px rgba(255,22,22,.9),-3px 5px 2px rgba(255,205,20,.88),-3px -5px 2px rgba(24,92,255,.9); }
-  25% { text-shadow:0 6px 2px rgba(255,22,22,.9),-6px -1px 2px rgba(255,205,20,.88),6px -4px 2px rgba(24,92,255,.9); }
-  50% { text-shadow:-5px 3px 2px rgba(255,22,22,.9),-2px -5px 2px rgba(255,205,20,.88),6px 2px 2px rgba(24,92,255,.9); }
-  75% { text-shadow:-6px -2px 2px rgba(255,22,22,.9),4px -4px 2px rgba(255,205,20,.88),2px 6px 2px rgba(24,92,255,.9); }
+/* QA-VOSS: sanfter Blau/Gelb/Rot-Holo für alle Kategorie-Titel. */
+@keyframes lhu-hologram-title {
+  0%,100% {
+    text-shadow:-5px -3px 12px rgba(24,92,255,.78), 5px 4px 14px rgba(224,180,34,.66), 0 0 28px rgba(224,49,45,.48);
+  }
+  33% {
+    text-shadow:6px -3px 13px rgba(224,49,45,.74), -6px 5px 15px rgba(24,92,255,.62), 0 0 32px rgba(224,180,34,.42);
+  }
+  66% {
+    text-shadow:2px 6px 13px rgba(224,180,34,.76), -4px -6px 15px rgba(224,49,45,.58), 0 0 30px rgba(24,92,255,.46);
+  }
 }
 
 /* Keep page headings below the sticky toolbar. */
@@ -4007,6 +4035,79 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 #categoryMarqueeTrack .marquee-category:hover .marquee-label,
 #categoryMarqueeTrack .marquee-category.active .marquee-label { color:var(--text) !important; }
 @media(max-width:760px) { #categoryMarqueeTrack .marquee-label { font-size:9px !important; } }
+
+/* TOUCH ACCESSIBILITY — final word: the compact 34-35px variants above shrank
+   the actual tap targets. Keep the visual size but guarantee a 44px hit area. */
+.sphere-nav-toolbar .theme-btn,
+.sphere-nav-toolbar .audio-btn,
+.sphere-nav-toolbar .collapse-btn,
+#themeToggle, #audioToggle, #collapseToggle {
+  flex:0 0 44px !important; width:44px !important; height:44px !important;
+  min-width:44px !important; min-height:44px !important;
+}
+</style>
+<!-- QA-VOSS: rot/gelb/blau mit je eigenen ::before/::after-Keyframes. -->
+<style id="lhu-signal-personality">
+/* Each signal colour gets its own INNER animation; the pill shape stays identical. */
+/* RED — fast, hot interference scan with a sharp flare */
+.lhu-pill-red::before {
+  background-size:100% 30px;
+  animation:signalRedScan 1.35s steps(5) infinite;
+}
+.lhu-pill-red::after {
+  background:linear-gradient(115deg, transparent 40%, rgba(255,140,110,.55) 50%, transparent 60%);
+  animation:signalRedFlare 2.6s ease-out infinite;
+}
+@keyframes signalRedScan {
+  0% { background-position:0 -30px; opacity:.28; }
+  50% { opacity:.7; }
+  100% { background-position:0 30px; opacity:.28; }
+}
+@keyframes signalRedFlare {
+  0%,12% { transform:translateX(-58%) rotate(12deg); opacity:0; }
+  45% { opacity:.85; }
+  100% { transform:translateX(58%) rotate(12deg); opacity:0; }
+}
+/* YELLOW — slow radial core pulse with a wide golden shimmer */
+.lhu-pill-yellow::before {
+  background:repeating-radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(255,255,255,.24) 8px 9px, transparent 10px 17px);
+  background-size:100% 100%;
+  animation:signalYellowPulse 3.8s ease-in-out infinite;
+}
+.lhu-pill-yellow::after {
+  background:linear-gradient(115deg, transparent 44%, rgba(255,246,190,.6) 50%, transparent 56%);
+  animation:signalYellowShine 6.4s ease-in-out infinite;
+}
+@keyframes signalYellowPulse {
+  0%,100% { transform:scale(.8); opacity:.22; }
+  50% { transform:scale(1.15); opacity:.7; }
+}
+@keyframes signalYellowShine {
+  0%,100% { transform:translateX(-52%) rotate(-18deg); opacity:.1; }
+  50% { transform:translateX(52%) rotate(-18deg); opacity:.72; }
+}
+/* BLUE — cool horizontal wave with a slow rotating orbit */
+.lhu-pill-blue::before {
+  background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(190,235,255,.26) 7px 8px, transparent 9px 15px);
+  animation:signalBlueWave 3.1s linear infinite;
+}
+.lhu-pill-blue::after {
+  background:linear-gradient(200deg, transparent 42%, rgba(150,220,255,.58) 50%, transparent 58%);
+  animation:signalBlueOrbit 5.4s linear infinite;
+}
+@keyframes signalBlueWave {
+  0% { background-position:-30px 0; opacity:.3; }
+  50% { opacity:.68; }
+  100% { background-position:30px 0; opacity:.3; }
+}
+@keyframes signalBlueOrbit {
+  0% { transform:translateX(-52%) rotate(-28deg); opacity:.12; }
+  50% { opacity:.7; }
+  100% { transform:translateX(52%) rotate(152deg); opacity:.12; }
+}
+/* GLB marble navigation: CSS spheres become invisible layout placeholders
+   once stonemarble.glb has loaded successfully. */
+html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
 </style>
 </head>
 
@@ -4016,11 +4117,11 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 <audio id="quackAudio" preload="auto" src="quack/quack01.mp3"></audio>
 <audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
 <audio crossorigin="anonymous" id="background-music" loop="" preload="auto">
-  <source src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/GOAT.mp3" type="audio/mpeg"/>
+  <source src="GOAT.mp3" type="audio/mpeg"/>
 </audio>
-<audio id="snd-wolf" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/wolfwhistttle.mp3"></audio>
-<audio id="snd-rizz" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rizz-sound-effect.mp3"></audio>
-<audio id="snd-rainbow" preload="auto" src="https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/rainbow.mp3"></audio>
+<audio id="snd-wolf" preload="auto" src="wolfwhistttle.mp3"></audio>
+<audio id="snd-rizz" preload="auto" src="rizz-sound-effect.mp3"></audio>
+<audio id="snd-rainbow" preload="auto" src="rainbow.mp3"></audio>
 
 <!-- [HTML] INTRO-BEREICH -->
 <div id="lhu-intro">
@@ -4697,6 +4798,11 @@ const toggleModal = (id, show) => {
   const el = document.getElementById(id);
   if (!el) return;
   if (show) {
+    // music-focus hides these modals via CSS, and inert backgrounds keep Tab inside.
+    // QA-VOSS: Modale sichtbar + Hintergrund inert (Fokusfalle).
+    setMusicFocus(false);
+    document.getElementById('site-shell')?.setAttribute('inert', '');
+    document.getElementById('ui-layer')?.setAttribute('inert', '');
     lastModalTrigger = document.activeElement;
     el.classList.add("show");
     el.setAttribute('aria-hidden', 'false');
@@ -4704,6 +4810,8 @@ const toggleModal = (id, show) => {
   } else {
     el.classList.remove("show");
     el.setAttribute('aria-hidden', 'true');
+    document.getElementById('site-shell')?.removeAttribute('inert');
+    document.getElementById('ui-layer')?.removeAttribute('inert');
     lastModalTrigger?.focus?.({ preventScroll: true });
     lastModalTrigger = null;
   }
@@ -4794,8 +4902,20 @@ function renderHypnoAscii(now) {
   hypnoAsciiRAF = requestAnimationFrame(renderHypnoAscii);
 }
 function startHypnoAscii() { cancelAnimationFrame(hypnoAsciiRAF); hypnoAsciiStartedAt = performance.now(); hypnoAsciiRAF = requestAnimationFrame(renderHypnoAscii); }
-function startLoading() { loadingEl.classList.add("show"); if (hypnoSvgImage.complete && hypnoSvgImage.naturalWidth) startHypnoAscii(); }
-function stopLoading() { loadingEl.classList.remove("show"); cancelAnimationFrame(hypnoAsciiRAF); hypnoAsciiRAF = 0; }
+// QA-VOSS: Overlay referenzgezählt — überlappende Loads dürfen es nicht zu früh schließen.
+let loadingDepth = 0;
+function startLoading() {
+  loadingDepth += 1;
+  loadingEl.classList.add("show");
+  if (hypnoSvgImage.complete && hypnoSvgImage.naturalWidth) startHypnoAscii();
+}
+function stopLoading() {
+  loadingDepth = Math.max(0, loadingDepth - 1);
+  if (loadingDepth > 0) return; // another head load is still in flight
+  loadingEl.classList.remove("show");
+  cancelAnimationFrame(hypnoAsciiRAF);
+  hypnoAsciiRAF = 0;
+}
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, 0.1, 1000);
@@ -4931,22 +5051,29 @@ const clock = new THREE.Clock();
 function disposeObject(obj) {
   if (!obj) return;
   obj.traverse((child) => {
-    if (child.isMesh) {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        if (Array.isArray(child.material)) child.material.forEach(m => disposeMaterial(m));
-        else disposeMaterial(child.material);
-      }
+    if (child.geometry) child.geometry.dispose();
+    if (child.isSkinnedMesh && child.skeleton) child.skeleton.dispose();
+    if (child.material) {
+      if (Array.isArray(child.material)) child.material.forEach(m => disposeMaterial(m));
+      else disposeMaterial(child.material);
     }
   });
 }
 function disposeMaterial(mat) {
-  if (mat.map) mat.map.dispose();
-  if (mat.lightMap) mat.lightMap.dispose();
-  if (mat.bumpMap) mat.bumpMap.dispose();
-  if (mat.normalMap) mat.normalMap.dispose();
-  if (mat.specularMap) mat.specularMap.dispose();
-  if (mat.envMap) mat.envMap.dispose();
+  if (!mat) return;
+  // QA-VOSS: generisch alle Texture-Slots + uniforms disposen.
+  // Cover every texture slot (roughnessMap, metalnessMap, aoMap, emissiveMap,
+  // transmissionMap, …) instead of a hardcoded list, and dispose each once.
+  const textures = new Set();
+  for (const value of Object.values(mat)) {
+    if (value && value.isTexture) textures.add(value);
+  }
+  if (mat.uniforms) {
+    for (const uniform of Object.values(mat.uniforms)) {
+      if (uniform && uniform.value && uniform.value.isTexture) textures.add(uniform.value);
+    }
+  }
+  textures.forEach(texture => texture.dispose());
   mat.dispose();
 }
 
@@ -4963,6 +5090,7 @@ function loadHead(url, options = {}) {
     (g) => {
       if (requestId !== headLoadSequence) {
         disposeObject(g.scene);
+        stopLoading(); // balance the startLoading() of this stale request
         return;
       }
       object = g.scene;
@@ -5020,7 +5148,7 @@ function loadHead(url, options = {}) {
       if (typeof options.onProgress === "function") options.onProgress(event);
     },
     (error) => {
-      if (requestId !== headLoadSequence) return;
+      if (requestId !== headLoadSequence) { stopLoading(); return; }
       console.error("Error loading " + url + ":", error);
       stopLoading();
       const container = document.getElementById("container3D");
@@ -5034,13 +5162,16 @@ function loadHead(url, options = {}) {
   );
 }
 
+// QA-VOSS: autoRotate respektiert Reduced Motion.
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.enablePan = false;
 controls.minDistance = 1.65;
 controls.maxDistance = 6.8;
-controls.autoRotate = true;
+controls.autoRotate = !prefersReducedMotion();
 controls.autoRotateSpeed = 1.15;
 
 let musicOn = false;
@@ -5081,6 +5212,7 @@ document.getElementById("music-toggle").onclick = async () => {
 // MAIN PAGE navigation is bound once by the shared site controller below.
 
 let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
+let gagEndTimer = null;
 let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null;
 let rainbowMatStates = [];
 
@@ -5125,19 +5257,27 @@ document.getElementById("heart-btn").onclick = () => {
   document.getElementById("heart-emojis").classList.add("active");
   const sndWolf = document.getElementById("snd-wolf");
   const sndRizz = document.getElementById("snd-rizz");
+  // Sound is served locally now. Keep the error paths defensive so a failed
+  // decode cannot strand the camera gag until the 9 s fallback. endGag is idempotent.
   sndWolf.currentTime = 0;
-  sndWolf.play().catch(() => {});
+  // QA-VOSS: Sound lokal; Fehler beenden den Gag sofort statt nach 9 s.
+  sndWolf.onerror = endGag;
+  sndWolf.play().catch(endGag);
   sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; };
-  setTimeout(endGag, 9000);
+  if (gagEndTimer !== null) clearTimeout(gagEndTimer);
+  gagEndTimer = setTimeout(endGag, 9000);
 };
 
 function endGag() {
+  // QA-VOSS: idempotent — error/onended/timeout feuern alle.
+  if (!gagActive) return; // idempotent: error, onended and timeout may all fire
+  if (gagEndTimer !== null) { clearTimeout(gagEndTimer); gagEndTimer = null; }
   if (gagBase && object) object.position.copy(gagBase);
   if (object) object.rotation.set(0, 0, 0);
   gagActive = false;
   document.getElementById("heart-emojis").classList.remove("active");
   document.getElementById("matrix-bg").style.opacity = "0.34";
-  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = !prefersReducedMotion());
 }
 
 document.getElementById("rainbow-btn").onclick = () => {
@@ -5181,8 +5321,8 @@ function endRainbow() {
   const centerPoint = document.querySelector(".shmup-center");
   if (centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
   controls.enabled = true;
-  controls.autoRotate = true;
-  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = true);
+  controls.autoRotate = !prefersReducedMotion();
+  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = !prefersReducedMotion());
 }
 
 wisdomBtn.onclick = () => {
@@ -5246,7 +5386,7 @@ wisdomBtn.onclick = () => {
     textEl.classList.remove("wisdom-active");
     textEl.textContent = "";
     document.getElementById("matrix-bg").style.opacity = "0.34";
-    controls.autoRotate = true;
+    controls.autoRotate = !prefersReducedMotion();
   };
 
   if ('speechSynthesis' in window) {
@@ -5367,7 +5507,10 @@ loadHead(initialHead.url);
   }
 
   let introCleanedUp = false;
+  let introLaunchTimer = null;
   function cleanupIntro(stopAudio = false) {
+    if (introLaunchTimer !== null) clearTimeout(introLaunchTimer);
+    introLaunchTimer = null;
     if (introCleanedUp) {
       if (stopAudio && audio) { audio.pause(); audio.currentTime = 0; }
       return;
@@ -5533,10 +5676,12 @@ loadHead(initialHead.url);
         audio.currentTime = 0;
         audio.src = `lhu${introVariant}.mp3`;
         audio.load();
+        // iOS only allows play() inside the user-gesture task, not in a timer.
+        audio.play().catch(() => {});
       }
 
-      setTimeout(() => {
-        if (audio) audio.play().catch(() => {});
+      introLaunchTimer = setTimeout(() => {
+        if (introCleanedUp) return; // a skip/entry may have torn the intro down
         introStart = performance.now();
         if (introAnimId !== null) cancelAnimationFrame(introAnimId);
         introAnimId = requestAnimationFrame(animateIntro);
@@ -5567,10 +5712,17 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+// QA-VOSS: Haupt-Render-Loop; site-mode stoppt ihn bei Deep-Links.
 function animate(now = performance.now()) {
   indexAnimationFrame = null;
-  if (!isTabVisible || !indexExperienceActive || indexExperienceSuspended) return;
+  if (!isTabVisible || !indexExperienceActive || indexExperienceSuspended ||
+      document.body.classList.contains('site-mode')) return;
   indexAnimationFrame = requestAnimationFrame(animate);
+  // The backdrop texture must keep animating after the settings panel is closed.
+  window.__lhuUpdateBackdropTexture?.();
+  // Spawn FX must animate on the main stage too, not only inside the settings RAF.
+  // QA-VOSS: Spawn-FX laufen auch ohne geöffnete Einstellungen.
+  window.__lhuUpdateSpawn?.(now, object);
   if (now - lastIndexFrameTime < INDEX_FRAME_INTERVAL) return;
   lastIndexFrameTime = now;
 
@@ -5803,7 +5955,15 @@ window.__lhuPauseIndexExperience = function() {
   try { renderer.dispose(); renderer.forceContextLoss(); } catch (error) {}
   try { hitEnterRenderer.dispose(); hitEnterRenderer.forceContextLoss(); } catch (error) {}
 };
-indexAnimationFrame = isTabVisible ? requestAnimationFrame(animate) : null;
+// The classic shared script runs before this deferred module. On a deep link it
+// already entered site-mode, but its __lhuPauseIndexExperience call was a no-op
+// (the function did not exist yet). Never start the hidden WebGL loop in that case.
+if (document.body.classList.contains('site-mode')) {
+  indexExperienceActive = false;
+  indexExperienceSuspended = true;
+} else {
+  indexAnimationFrame = isTabVisible ? requestAnimationFrame(animate) : null;
+}
 
 let resizeTimeout;
 window.addEventListener("resize", () => {
@@ -5994,6 +6154,12 @@ window.addEventListener("resize", () => {
   };
   let kCurrentUrl = "";
   let kLastBackdrop = "matrix7";
+  let kBackdropTexture = null;
+  // The main render loop lives outside this IIFE; expose a safe updater.
+  // QA-VOSS: Textur bleibt auch nach Schließen der Einstellungen aktuell.
+  window.__lhuUpdateBackdropTexture = () => {
+    if (kBackdropTexture && kScene.background === kBackdropTexture) kBackdropTexture.needsUpdate = true;
+  };
   let kAudioMuted = false;
   let kSfxEnabled = true;
   let audioCtx = null;
@@ -6079,6 +6245,7 @@ window.addEventListener("resize", () => {
     renderTarget.samples = kAntialias ? 4 : 0;
     kComposer = new EffectComposer(kRenderer, renderTarget);
     kComposer.addPass(new RenderPass(kScene, kCamera));
+    // QA-VOSS: Bloom-Output ist deckend → Matrix-Canvas als CanvasTexture in die Szene.
     kBloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 0.72, 0.55, 0.18);
     kBloomPass.enabled = kBloomEnabled;
     kComposer.addPass(kBloomPass);
@@ -6179,11 +6346,22 @@ window.addEventListener("resize", () => {
     settingsRoot.querySelectorAll("[data-pedestal]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.pedestal === mode));
   }
 
+  // QA-VOSS: Matrix-Modi als CanvasTexture, solid als THREE.Color.
   function setKoboBackdrop(mode, color = null) {
     kLastBackdrop = mode;
     settingsRoot.querySelectorAll("[data-backdrop]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.backdrop === mode));
     settingsRoot.querySelectorAll("[data-solid-color]").forEach(btn => btn.classList.remove("is-active"));
     const matrix = document.getElementById("matrix-bg");
+    // Bloom renders through an EffectComposer whose final output is opaque, so
+    // the DOM backdrop behind the WebGL canvas vanishes. Put the same animated
+    // canvas into the scene as a background texture — then bloom sees it too.
+    if ((mode === "matrix7" || mode === "words" || mode === "balls") && matrix) {
+      if (!kBackdropTexture) kBackdropTexture = new THREE.CanvasTexture(matrix);
+      kBackdropTexture.needsUpdate = true;
+      kScene.background = kBackdropTexture;
+    } else {
+      kScene.background = null;
+    }
     if (mode === "matrix7") {
       stage.style.background = "";
       canvasWrap.style.background = "transparent";
@@ -6201,6 +6379,9 @@ window.addEventListener("resize", () => {
       window.setMatrixTheme?.(2);
     } else if (mode === "solid") {
       stage.style.background = color || "#f6f4ef";
+      // The composer output is opaque, so the CSS background alone is hidden.
+      // QA-VOSS: Solid-Farbe muss IN der Szene liegen (Composer deckt CSS ab).
+      kScene.background = new THREE.Color(color || "#f6f4ef");
       canvasWrap.style.background = "transparent";
       if (matrix) matrix.style.opacity = "0";
     }
@@ -6735,6 +6916,7 @@ float lhuStoneNoise(vec3 p) {
     return choices[Math.floor(Math.random() * choices.length)];
   }
 
+  // QA-VOSS: Head-Wechsel triggert Spawn auch ohne Studio.
   function syncKoboMainModel(root, mainMixer, animations = [], url = modelSelect.value, label = "LHU head") {
     if (!root) {
       kModel = null; kMixer = null; kClips = []; kActiveActions = [];
@@ -6789,7 +6971,9 @@ float lhuStoneNoise(vec3 p) {
 
   // Normal head changes and imported GLBs both feed this same main-scene model reference.
   window.__lhuOnMainHeadLoaded = (root, mainMixer, animations, url) => {
-    if (!koboInitialized) return;
+    // Head changes on the main stage must fire the spawn FX even if the settings
+    // panel has never been opened. Initialising here only wires the shared scene.
+    if (!koboInitialized) initKoboStudio();
     const selected = modelSelect.selectedOptions?.[0];
     syncKoboMainModel(root, mainMixer, animations, url, selected?.textContent || "LHU head");
     // Selecting a head in the main pill used to update the model without ever
@@ -6920,6 +7104,7 @@ float lhuStoneNoise(vec3 p) {
       placeKoboCanvas();
       updateDrawerState(true);
       initKoboStudio();
+      setKoboBackdrop(kLastBackdrop); // keep the backdrop visible when bloom is on
       requestAnimationFrame(() => applyKoboResolution());
       const activeHeadUrl = document.getElementById("head-select")?.value || MODELS[0].url;
       // The main head is loaded during page startup by loadHead(initialHead.url).
@@ -6937,6 +7122,8 @@ float lhuStoneNoise(vec3 p) {
 
   function closeKoboStudio() {
     koboActive = false;
+    // Keep the backdrop texture: with bloom enabled the composer output is
+    // opaque, so clearing it here would hide the background on the main stage.
     cancelAnimationFrame(koboRAF); koboRAF = 0;
     updateDrawerState(false);
     overlay.hidden = true;
@@ -7201,6 +7388,32 @@ float lhuStoneNoise(vec3 p) {
   document.getElementById("kobo-snap-studio")?.addEventListener("click", () => captureKoboPng(false));
   document.getElementById("kobo-snap-alpha")?.addEventListener("click", () => captureKoboPng(true));
 
+  /* Shared spawn animation — used by the settings RAF and by the main stage. */
+  // QA-VOSS: geteilte Spawn-Animation für Studio + Hauptbühne.
+function updateKoboSpawn(now, target) {
+    if (!kSpawnState || !target) return;
+    const baseScale = target.userData.baseScale || 1;
+    const basePos = target.userData.basePos || new THREE.Vector3();
+    const baseRot = target.userData.baseRot || new THREE.Euler();
+    const tNorm = Math.min(1, (now - kSpawnState.start) / kSpawnState.dur);
+    const easeOut = 1 - Math.pow(1 - tNorm, 3), wave = Math.sin(tNorm * Math.PI * 3) * (1 - tNorm);
+    if (kSpawnState.type === "pop") { target.scale.setScalar(baseScale * (0.35 + 0.65 * easeOut + wave * 0.24)); target.position.copy(basePos); }
+    else if (kSpawnState.type === "push") { target.scale.setScalar(baseScale); target.position.set(basePos.x, basePos.y, basePos.z + wave * 0.65); }
+    else if (kSpawnState.type === "pew") { target.scale.setScalar(baseScale * (0.85 + 0.15 * easeOut)); target.rotation.y = baseRot.y + (1 - easeOut) * Math.PI * 2; }
+    else if (kSpawnState.type === "noodly") { target.scale.set(baseScale * (1 + wave * 0.28), baseScale * (1 - wave * 0.22), baseScale * (1 + wave * 0.28)); target.rotation.z = wave * 0.28; }
+    else if (kSpawnState.type === "boing") { const squash = Math.sin(tNorm * Math.PI * 4) * (1 - tNorm) * 0.32; target.scale.set(baseScale * (1 - squash * 0.5), baseScale * (1 + squash), baseScale * (1 - squash * 0.5)); target.position.set(basePos.x, basePos.y + Math.abs(wave) * 0.42, basePos.z); }
+    else if (kSpawnState.type === "dong") { target.scale.setScalar(baseScale); target.rotation.z = Math.sin(tNorm * Math.PI * 3.5) * (1 - tNorm) * 0.42; target.position.set(basePos.x, basePos.y - Math.abs(wave) * 0.12, basePos.z); }
+    if (tNorm >= 1) {
+      target.scale.setScalar(baseScale);
+      target.position.copy(basePos);
+      target.rotation.z = baseRot.z;
+      kSpawnState = null;
+      document.documentElement.removeAttribute('data-lhu-spawn');
+    }
+  }
+  window.__lhuUpdateSpawn = updateKoboSpawn;
+  window.__lhuTriggerSpawn = triggerKoboSpawn;
+
   function animateKobo(now) {
     if (!koboActive || !kRenderer) return;
     koboRAF = requestAnimationFrame(animateKobo);
@@ -7225,17 +7438,7 @@ float lhuStoneNoise(vec3 p) {
       } else {
         kModel.position.copy(basePos);
       }
-      if (kSpawnState) {
-        const tNorm = Math.min(1, (now - kSpawnState.start) / kSpawnState.dur);
-        const easeOut = 1 - Math.pow(1 - tNorm, 3), wave = Math.sin(tNorm * Math.PI * 3) * (1 - tNorm);
-        if (kSpawnState.type === "pop") { kModel.scale.setScalar(baseScale * (0.35 + 0.65 * easeOut + wave * 0.24)); kModel.position.copy(basePos); }
-        else if (kSpawnState.type === "push") { kModel.scale.setScalar(baseScale); kModel.position.set(basePos.x, basePos.y, basePos.z + wave * 0.65); }
-        else if (kSpawnState.type === "pew") { kModel.scale.setScalar(baseScale * (0.85 + 0.15 * easeOut)); kModel.rotation.y = baseRot.y + (1 - easeOut) * Math.PI * 2; }
-        else if (kSpawnState.type === "noodly") { kModel.scale.set(baseScale * (1 + wave * 0.28), baseScale * (1 - wave * 0.22), baseScale * (1 + wave * 0.28)); kModel.rotation.z = wave * 0.28; }
-        else if (kSpawnState.type === "boing") { const squash = Math.sin(tNorm * Math.PI * 4) * (1 - tNorm) * 0.32; kModel.scale.set(baseScale * (1 - squash * 0.5), baseScale * (1 + squash), baseScale * (1 - squash * 0.5)); kModel.position.set(basePos.x, basePos.y + Math.abs(wave) * 0.42, basePos.z); }
-        else if (kSpawnState.type === "dong") { kModel.scale.setScalar(baseScale); kModel.rotation.z = Math.sin(tNorm * Math.PI * 3.5) * (1 - tNorm) * 0.42; kModel.position.set(basePos.x, basePos.y - Math.abs(wave) * 0.12, basePos.z); }
-        if (tNorm >= 1) { kModel.scale.setScalar(baseScale); kModel.position.copy(basePos); kModel.rotation.z = baseRot.z; kSpawnState = null; }
-      }
+      updateKoboSpawn(now, kModel);
       if (kFrameHelper?.visible) kFrameHelper.setFromObject(kModel);
       if (kActiveActions.length) {
         const act = kActiveActions[0], slider = document.getElementById("kobo-timeline-slider");
@@ -7243,6 +7446,7 @@ float lhuStoneNoise(vec3 p) {
         document.getElementById("kobo-time-val").textContent = `${act.time.toFixed(2)}s`;
       }
     }
+    if (kBackdropTexture && kScene.background === kBackdropTexture) kBackdropTexture.needsUpdate = true;
     if (kComposer) kComposer.render(); else kRenderer.render(kScene, kCamera);
     kFpsFrames++;
     if (now - kFpsLast >= 500) {
@@ -7507,6 +7711,12 @@ float lhuStoneNoise(vec3 p) {
       .map(([category, route]) => [route, category])
   );
   const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
+  const canonicalEl = document.querySelector('link[rel="canonical"]');
+  // QA-VOSS: canonical je Kategorie nachziehen (SEO).
+  function setCanonical(category) {
+    const route = categoryPaths[category];
+    if (canonicalEl && route) canonicalEl.href = new URL(route, window.location.origin).href;
+  }
 
   function restoreGithubPagesRoute() {
     const encodedRoute = new URLSearchParams(window.location.search).get('__lhu_route');
@@ -7518,6 +7728,7 @@ float lhuStoneNoise(vec3 p) {
       if (!category) return null;
       const cleanUrl = categoryPaths[category] + requested.search + requested.hash;
       window.history.replaceState({ lhuCategory: category }, '', cleanUrl);
+      setCanonical(category);
       return category;
     } catch (error) {
       return null;
@@ -7533,6 +7744,12 @@ float lhuStoneNoise(vec3 p) {
   }
 
   function categoryFromLocation() {
+    // QA-VOSS: /downloads ohne .html auf die eigenständige Paid-Seite umleiten
+    // (seit Entfernung der Verzeichnis-Stubs gibt es dafür keine Datei mehr).
+    if (normalizePath(window.location.pathname) === '/downloads') {
+      window.location.replace('/downloads.html' + window.location.search + window.location.hash);
+      return null;
+    }
     const restored = restoreGithubPagesRoute();
     if (restored) return restored;
     return routeCategories[normalizePath(window.location.pathname)] || categoryFromHash();
@@ -7541,6 +7758,7 @@ float lhuStoneNoise(vec3 p) {
   function writeCategoryRoute(category, replace = false) {
     const route = categoryPaths[category];
     if (!route) return;
+    setCanonical(category);
     const currentPath = normalizePath(window.location.pathname);
     const suffix = window.location.search + window.location.hash;
     if (currentPath === route) {
@@ -8202,6 +8420,9 @@ float lhuStoneNoise(vec3 p) {
     };
     const startCategoryMarquee = () => {
       if (!marqueeTrack || !categoryTicker || categoryTicker.classList.contains('is-collapsed')) return;
+      // QA-VOSS: Marquee läuft immer (Owner-Entscheidung).
+      // The endless category rail is the site's primary navigation and always
+      // moves (owner decision), independent of the OS reduced-motion setting.
       cancelAnimationFrame(marqueeBuildFrame);
       marqueeBuildFrame = requestAnimationFrame(() => {
         const baseGroup = marqueeTrack.querySelector('.marquee-group');
@@ -8324,6 +8545,7 @@ float lhuStoneNoise(vec3 p) {
   function loop(time) {
     animationFrame = null;
     if (!document.body.classList.contains('site-mode') || document.hidden) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let dt = Math.min(100, Math.max(0, (time || performance.now()) - lastTime));
     lastTime = time || performance.now();
     rgbProgress = (rgbProgress + dt * 0.0004) % 6;
@@ -8475,6 +8697,171 @@ float lhuStoneNoise(vec3 p) {
   }
   window.addEventListener('popstate', restoreCategoryFromLocation);
   window.addEventListener('hashchange', restoreCategoryFromLocation);
+})();
+</script>
+<!-- QA-VOSS: optionales stonemarble.glb — Fallback sind die CSS-Murmeln. -->
+<script type="module" id="lhu-marble-nav">
+/* Optional GLB stone-marble navigation. If stonemarble.glb is missing, the
+   CSS planets stay untouched — no errors, no visual change. */
+(async () => {
+  const TINTS = {
+    'VHS MULTIVERSE': 0xe0b422,
+    'HUMANART':       0xe8dfd2,
+    'PROJECTS':       0x2574d4,
+    'STORYTIME':      0x8453c9,
+    'MUSIC':          0xe0312d,
+    'CONTACT':        0x6b8f2a,
+    'DONATE':         0xbd6a26,
+    'ABOUT':          0xe0312d
+  };
+  const SOURCE = 'stonemarble.glb';
+
+  const track = await new Promise(resolve => {
+    const tick = () => {
+      const t = document.getElementById('categoryMarqueeTrack');
+      if (t && t.querySelector('.marquee-planet')) resolve(t);
+      else requestAnimationFrame(tick);
+    };
+    tick();
+  });
+
+  // Modules are already cached by the main scene; no idle deferral needed.
+  // The heavy shader compile happens later via compileAsync(), off the critical path.
+  let THREE, GLTFLoader, DRACOLoader, gltf;
+  try {
+    [THREE, { GLTFLoader }, { DRACOLoader }] = await Promise.all([
+      import('three'),
+      import('three/addons/loaders/GLTFLoader.js'),
+      import('three/addons/loaders/DRACOLoader.js')
+    ]);
+    // stonemarble.glb is Draco-compressed — use the same decoder as the main scene.
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/');
+    draco.setDecoderConfig({ type: 'wasm' }); // ~3x faster decode on phones
+    draco.setWorkerLimit(1);
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(draco);
+    gltf = await loader.loadAsync(SOURCE);
+  } catch (error) {
+    console.warn('[LHU] stonemarble.glb unavailable — CSS planets remain.', error);
+    return;
+  }
+
+  // One transparent canvas for all marbles (not one WebGL context per planet).
+  // Keep it hidden until shaders are compiled so the CSS marbles never blink out.
+  const canvas = document.createElement('canvas');
+  canvas.id = 'lhu-marble-canvas';
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1500;visibility:hidden';
+  document.body.appendChild(canvas);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !matchMedia('(max-width:768px)').matches });
+  const isCompact = matchMedia('(max-width:768px)').matches;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isCompact ? 1 : 2));
+  renderer.setClearColor(0x000000, 0);
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(0, innerWidth, 0, -innerHeight, -1000, 1000);
+  scene.add(new THREE.AmbientLight(0xffffff, 1.55));
+  const key = new THREE.DirectionalLight(0xffffff, 2.1);
+  key.position.set(-3, -4, 6); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x9ec9ff, 0.9);
+  rim.position.set(4, 5, -3); scene.add(rim);
+
+  const bounds = new THREE.Box3().setFromObject(gltf.scene);
+  const dims = bounds.getSize(new THREE.Vector3());
+  const unit = 1 / (Math.max(dims.x, dims.y, dims.z) || 1);
+
+  // One shared glaze material per category colour instead of one per clone —
+  // far fewer materials/shader variants to create on mobile.
+  const glazeMaterials = {};
+  for (const [name, tint] of Object.entries(TINTS)) {
+    glazeMaterials[name] = new THREE.MeshBasicMaterial({
+      color: tint, transparent: true, opacity: 0.4, depthWrite: false
+    });
+  }
+
+  let entries = [];
+  function rebuild() {
+    entries.forEach(e => scene.remove(e.obj));
+    entries = [];
+    track.querySelectorAll('.marquee-category').forEach(cat => {
+      const planet = cat.querySelector('.marquee-planet');
+      if (!planet) return;
+      const key = cat.dataset.cat || '';
+      const glazeMat = glazeMaterials[key];
+      const obj = gltf.scene.clone(true);
+      // Collect first: adding a glaze while traversing would make traverse()
+      // visit the new mesh too and recurse indefinitely.
+      const meshes = [];
+      obj.traverse(part => { if (part.isMesh) meshes.push(part); });
+      for (const part of meshes) {
+        // Soft 40% colour glaze follows the geometry and rotates with it.
+        const glaze = new THREE.Mesh(part.geometry, glazeMat);
+        glaze.scale.setScalar(1.012);
+        part.add(glaze);
+      }
+      scene.add(obj);
+      entries.push({ planet, obj });
+    });
+  }
+  // Cache each planet's offset inside the moving track once. Per frame we then
+  // read only ONE rect (the track) instead of 24 — no layout thrash while the
+  // WAAPI marquee is animating.
+  function cacheOffsets() {
+    const t = track.getBoundingClientRect();
+    for (const e of entries) {
+      const r = e.planet.getBoundingClientRect();
+      e.offsetX = r.left - t.left + r.width / 2;
+      e.offsetY = r.top - t.top + r.height / 2;
+      e.size = Math.max(r.width, r.height);
+    }
+  }
+  rebuild();
+  cacheOffsets();
+  new MutationObserver(() => {
+    const count = track.querySelectorAll('.marquee-category').length;
+    if (count !== entries.length) { rebuild(); cacheOffsets(); }
+  }).observe(track, { childList: true, subtree: true });
+
+  const resize = () => {
+    renderer.setSize(innerWidth, innerHeight, false);
+    camera.right = innerWidth; camera.bottom = -innerHeight;
+    camera.updateProjectionMatrix();
+    cacheOffsets();
+  };
+  addEventListener('resize', resize);
+  resize();
+
+  // Compile shaders before revealing the 3D layer — otherwise the first frame
+  // stalls while WebGL compiles, which is exactly where the marquee "stuck".
+  try { if (renderer.compileAsync) await renderer.compileAsync(scene, camera); } catch (_) {}
+  canvas.style.visibility = 'visible';
+  document.documentElement.classList.add('lhu-marble-3d');
+
+  let last = performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(64, now - last); last = now;
+    const t = track.getBoundingClientRect(); // the only DOM read per frame
+    for (const e of entries) {
+      const x = t.left + e.offsetX;
+      const y = t.top + e.offsetY;
+      if (e.size < 1 || y < 0 || y > innerHeight) { e.obj.visible = false; continue; }
+      e.obj.visible = true;
+      e.obj.position.set(x, -y, 0);
+      e.obj.scale.setScalar(e.size * unit);
+      e.obj.rotation.y += (Math.PI * 2 / 7000) * dt; // full turn ~7s
+    }
+    // Clip to the marquee strip, just like the old CSS overflow:hidden did.
+    const ticker = document.getElementById('duckCrt');
+    if (ticker) {
+      const bounds = ticker.getBoundingClientRect();
+      renderer.setScissorTest(true);
+      renderer.setScissor(bounds.left, innerHeight - bounds.bottom, bounds.width, bounds.height);
+    }
+    renderer.render(scene, camera);
+    renderer.setScissorTest(false);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>

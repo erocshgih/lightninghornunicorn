@@ -1,3 +1,4 @@
+<!-- QA-VOSS: Doku der Wartungskette — nur 404-Spiegel, keine Routen-Stubs. -->
 # Lightning Horn Unicorn — Wartung & Architektur
 
 ## Einstieg
@@ -8,6 +9,9 @@
   `index.html`. GitHub Pages liefert ihn für unbekannte Pfade aus; dadurch
   funktionieren Deep-Links wie `/about`, `/vhsmultiverse` und sogar alte
   `/01_about.html`-Bookmarks ohne Redirect-Stub.
+  Hinweis: Diese Pfade werden mit HTTP-Status **404** ausgeliefert (die Seite
+  rendert trotzdem korrekt). Das ist eine bewusste Entscheidung gegen zusätzliche
+  Verzeichnis-Kopien von `index.html`.
 
 ## Inhalte
 
@@ -42,7 +46,10 @@ tatsächlich existieren. Es sollte immer *„All checks passed"* ausgeben.
 | Legacy-Alias (nummeriert) | `/01_about` … `/08_donate` | Kategorie |
 | Legacy-Alias (alte UI) | `/hire-me` | CONTACT |
 | Alte Datei-URL | `/01_about.html` | Kategorie |
-| Unbekannt | `/irgendwas` | 404-Shell mit Welcome-Card |
+| Unbekannt | `/irgendwas` | 404-Shell mit Welcome-Card (HTTP 404) |
+
+Alle nicht-physischen Pfade – kanonisch und Legacy – laufen über den
+404-Spiegel: funktional korrekt, aber mit HTTP-Status **404**.
 
 ## Externe Abhängigkeiten
 

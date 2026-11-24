@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- QA-VOSS: Reduced Motion stoppt vhsGlitch + crtImagePowerOn. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -194,7 +195,8 @@
             }
 
             @media (prefers-reduced-motion: reduce) {
-                #vhs-preview-img { transition-duration: 0.01ms; }
+                #vhs-preview-img { transition-duration: 0.01ms; animation: none !important; }
+                .vhs-crt-overlay.active { animation: none !important; opacity: 1; }
             }
         </style>
 

@@ -22,6 +22,7 @@ function walk(dir, base) {
   const files = [];
   for (const entry of entries) {
     if (entry.name === 'node_modules' || entry.name === 'tools') continue;
+    if (entry.name.startsWith('_')) continue; // local backups / Jekyll-excluded directories
     const absolute = path.join(dir, entry.name);
     const relative = path.relative(root, absolute).split(path.sep).join('/');
     if (entry.isDirectory()) {

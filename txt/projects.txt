@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- QA-VOSS: neuer Einstiegssatz (Owner-Text); Reduce-Override entfernt. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -373,17 +374,8 @@
             .carousel-dot-3d:hover, .carousel-dot-3d:focus-visible { background: var(--dot-active); color: #fff; }
             @media (max-width: 600px) { .lhu-3d-lightbox__panel { width: 100%; height: 88vh; border-radius: 12px; } }
 
-            /* The GLB loading typography is intentionally animated on desktop and mobile,
-               even when the OS requests reduced motion. Other page animations still respect it. */
-            @media (prefers-reduced-motion: reduce) {
-                .lhu-3d-loading-row__track {
-                    animation-name: lhuLoadingRowFlow !important;
-                    animation-duration: var(--row-speed, 7s) !important;
-                    animation-delay: var(--row-delay, 0s) !important;
-                    animation-timing-function: linear !important;
-                    animation-iteration-count: infinite !important;
-                }
-            }
+            /* Reduced-motion override removed: the global reset must stay effective.
+               The loading row uses the static fallback in reduced-motion mode. */
 
             /* ---------- REDUCED MOTION ---------- */
             @media (prefers-reduced-motion: reduce) {
@@ -499,8 +491,9 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
 
         <section id="PROJECTS">
             <h2 class="category-opening-title" data-lang-en="PROJECTS" data-lang-de="PROJECTS">PROJECTS</h2>
-            <p data-lang-en="Mechanical prototypes, 3D designs &amp; physical concepts"
-               data-lang-de="Mechanische Prototypen, 3D Designs &amp; physische Konzepte">Mechanical prototypes, 3D designs &amp; physical concepts</p>
+            <!-- QA-VOSS: Einstiegssatz nach Owner-Vorgabe ersetzt. -->
+            <p data-lang-en="Creative output, questionably efficient inventions and exceptionally Slavic facial bone structure"
+               data-lang-de="Kreative Outputs, fragwürdig effiziente Erfindungen und außergewöhnlich slawische Gesichtsknochenstruktur">Creative output, questionably efficient inventions and exceptionally Slavic facial bone structure</p>
 
             <div id="projects-accordion"></div>
         </section>

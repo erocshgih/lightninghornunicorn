@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- QA-VOSS: Kapitel-Scroll nur bei Klick → Seite startet oben. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -361,12 +362,13 @@
                         btn.type = 'button';
                         btn.textContent = numStr;
                         btn.setAttribute('aria-label', `Kapitel ${i}`);
-                        btn.addEventListener('click', () => loadChapter(i));
+                        btn.addEventListener('click', () => loadChapter(i, true));
                         navDiv.appendChild(btn);
                     }
                 }
 
-                async function loadChapter(num) {
+                // QA-VOSS: Flag verhindert Auto-Scroll beim ersten Kapitel.
+                async function loadChapter(num, userInitiated = false) {
                     if (disposed) return;
                     if (loadedChapter === num) return;
 
@@ -406,8 +408,13 @@
                         // stale node from another instance.
                         const container = contentDiv.closest('.text-reader-container')
                             || document.querySelector('#mainContent .text-reader-container');
-                        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                        if (container) container.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+                        // Only scroll when the visitor actually picked a chapter. The
+                        // automatic first-chapter load must leave the page at the top.
+                        // QA-VOSS: scrollIntoView NUR nach explizitem Klick.
+                        if (userInitiated && container) {
+                            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                            container.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+                        }
                     } catch (error) {
                         if (error.name === 'AbortError' || disposed || loadToken !== chapterLoadToken) return;
                         contentDiv.innerHTML = '<p>CONNECTION ERROR: CHAPTER COULD NOT BE LOADED.</p>';

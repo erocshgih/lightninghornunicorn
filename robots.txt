@@ -1,0 +1,6 @@
+# QA-VOSS: Disallow /tools/, Sitemap auf die 8 kanonischen Routen.
+User-agent: *
+Allow: /
+Disallow: /tools/
+
+Sitemap: https://www.lightninghornunicorn.com/sitemap.xml
