@@ -1,19 +1,19 @@
+/* about content page */
 
 <!DOCTYPE html>
-<!-- QA-VOSS: h2 ABOUT (war TEAM); Shared-Hologram; Reduce-Spezifität korrigiert. -->
+
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>About - LHU Content</title>
 </head>
 <body>
-    <main>
-        <style>
-            /* ============================================
-               ABOUT — spezifische Styles
-               ============================================ */
 
-            /* Team-Profil-Buttons */
+<main>
+        <style>
+ 
+
+             
             .team-intro { margin: 20px 0 10px; text-align: center; }
 
             .profile-toggle-container {
@@ -57,7 +57,7 @@
                 box-shadow: 0 0 0 transparent;
             }
 
-            /* Profil-Container */
+             
             .profile-content-box {
                 display: grid;
                 grid-template-rows: 0fr;
@@ -108,7 +108,7 @@
                 margin: 12px 0;
             }
 
-            /* Karussell (für Team-Fotos) */
+             
             .profile-carousel {
                 position: relative;
                 width: 100%;
@@ -163,7 +163,7 @@
                 touch-action: manipulation;
                 position: relative;
             }
-            /* Invisible 44px tap target — the visible dot stays 14px. */
+             
             .profile-carousel .carousel-dot::after {
                 content: '';
                 position: absolute;
@@ -181,17 +181,17 @@
                 border-color: #fff;
             }
 
-            /* Story-Bilder */
+             
             section#ABOUT > img {
-                /* shared.css hat schon max-width: 320px mobil / 620px desktop */
+                 
             }
 
-            /* Reduced Motion */
+             
             @media (prefers-reduced-motion: reduce) {
                 .profile-content-box { transition-duration: 0.01ms; }
                 .profile-carousel .carousel-slide { transition-duration: 0.01ms; }
             }
-            /* FIX: Team-Schaltflächen sind keine Scrollfläche. */
+             
             #ABOUT .profile-toggle-container {
                 display: flex !important;
                 flex-direction: row !important;
@@ -221,7 +221,6 @@
                     flex-wrap: wrap !important;
                 }
             }
-            /* QA-VOSS: nutzt Shared-Hologram (alte RGB-Orbit-Keyframes raus). */
             #ABOUT > h2.category-opening-title,
             main#mainContent #ABOUT > h2.category-opening-title {
                 position: relative !important;
@@ -238,14 +237,13 @@
                 #ABOUT > h2.category-opening-title { font-size: clamp(2rem, 8vw, 3rem) !important; }
             }
             @media (prefers-reduced-motion: reduce) {
-                /* Match the specificity of the animation rule above (2 IDs + class). */
-                /* QA-VOSS: 2 IDs — damit Reduce-Motion wirklich greift. */
+                 
                 main#mainContent #ABOUT > h2.category-opening-title { animation: none !important; }
             }
         </style>
 
         <section id="ABOUT">
-            <!-- QA-VOSS: Überschrift ABOUT (Owner-Wunsch, war TEAM). -->
+
             <h2 class="category-opening-title" data-lang-en="ABOUT" data-lang-de="ABOUT">ABOUT</h2>
 
             <div class="profile-toggle-container">
@@ -253,15 +251,15 @@
                 <button class="profile-btn" id="btn-aether" type="button" aria-expanded="false">Aether Veylan</button>
             </div>
 
-            <!-- Vedran -->
+            
             <div class="profile-content-box" id="box-vedran">
                 <div class="profile-inner-wrap">
                     <div class="profile-inner">
                         <div class="profile-carousel" id="carousel-vedran" tabindex="0" role="group" aria-label="Vedran Lukic Bildergalerie">
-                            <div class="carousel-slide active"><img src="about/about_vedran1.webp" alt="Vedran Lukic – Portrait 1" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_vedran2.webp" alt="Vedran Lukic – Portrait 2" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_vedran3.webp" alt="Vedran Lukic – Portrait 3" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_vedran4.webp" alt="Vedran Lukic – Portrait 4" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide active"><img width="709" height="1122" src="about/about_vedran1.webp" alt="Vedran Lukic – Portrait 1" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_vedran2.webp" alt="Vedran Lukic – Portrait 2" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_vedran3.webp" alt="Vedran Lukic – Portrait 3" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_vedran4.webp" alt="Vedran Lukic – Portrait 4" loading="lazy" decoding="async"></div>
                             <div class="carousel-dots">
                                 <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1 von 4"></button>
                                 <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2 von 4"></button>
@@ -346,17 +344,17 @@
                 </div>
             </div>
 
-            <!-- Aether -->
+            
             <div class="profile-content-box" id="box-aether">
                 <div class="profile-inner-wrap">
                     <div class="profile-inner">
                         <div class="profile-carousel" id="carousel-aether" tabindex="0" role="group" aria-label="Aether Veylan Bildergalerie">
-                            <div class="carousel-slide active"><img src="about/about_aether1.webp" alt="Aether Veylan – Portrait 1" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether2.webp" alt="Aether Veylan – Portrait 2" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether3.webp" alt="Aether Veylan – Portrait 3" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether4.webp" alt="Aether Veylan – Portrait 4" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether5.webp" alt="Aether Veylan – Portrait 5" loading="lazy" decoding="async"></div>
-                            <div class="carousel-slide"><img src="about/about_aether6.webp" alt="Aether Veylan – Portrait 6" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide active"><img width="709" height="1122" src="about/about_aether1.webp" alt="Aether Veylan – Portrait 1" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_aether2.webp" alt="Aether Veylan – Portrait 2" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_aether3.webp" alt="Aether Veylan – Portrait 3" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_aether4.webp" alt="Aether Veylan – Portrait 4" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_aether5.webp" alt="Aether Veylan – Portrait 5" loading="lazy" decoding="async"></div>
+                            <div class="carousel-slide"><img width="709" height="1122" src="about/about_aether6.webp" alt="Aether Veylan – Portrait 6" loading="lazy" decoding="async"></div>
                             <div class="carousel-dots">
                                 <button class="carousel-dot active" data-index="0" type="button" aria-label="Bild 1 von 6"></button>
                                 <button class="carousel-dot" data-index="1" type="button" aria-label="Bild 2 von 6"></button>
@@ -449,6 +447,7 @@
             </div>
 
             <script>
+
                 (function initTeamProfiles() {
                     const btnVedran = document.getElementById('btn-vedran');
                     const btnAether = document.getElementById('btn-aether');
@@ -500,16 +499,16 @@
                 })();
             </script>
 
-            <!-- About Story -->
+            
             <p data-lang-en="Welcome to the official portfolio of Lightning Horn Unicorn, the artist and musician known as Vedran Lukic. Lean back, grab a coffee and climb into the Fur-rarri (Aether: It's a Halloween car costume. / Vedran: Shut up, ears open) – the fur-covered wonder vehicle so plush that celebrities look freshly waxed next to it."
                data-lang-de="Willkommen im offiziellen Portfolio von Lightning Horn Unicorn, dem Künstler und Musiker namens Vedran Lukic. Lehn dich zurück, nimm einen Kaffee und steig ein in den Fur-rarri (Aether: Das ist ein Auto-Kostüm für Halloween. / Vedran: Klappe zu, Ohren auf) – das fellbedankte Wundergefährt, das so pelzig ist, dass Promis daneben wirken wie frisch gewachst.">
                 Welcome to the official portfolio of Lightning Horn Unicorn, the artist and musician known as Vedran Lukic. Lean back, grab a coffee and climb into the Fur-rarri.
             </p>
-            <img src="about/about_furarri.webp" alt="Fur-rarri – the fur-covered wonder vehicle" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_furarri.webp" alt="Fur-rarri – the fur-covered wonder vehicle" loading="lazy" decoding="async">
             <hr>
 
             <h3 data-lang-en="2002 – The Beginning" data-lang-de="2002 – Der Anfang">2002 – Der Anfang</h3>
-            <img src="about/about_babyv.webp" alt="Vedran as a child with a borrowed guitar" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_babyv.webp" alt="Vedran as a child with a borrowed guitar" loading="lazy" decoding="async">
             <p data-lang-en="A young, 18-year-old Vedran, a borrowed guitar and an oversized amplifier that has to be carried up two floors with both hands because the school band doesn't want to use it. A laptop brought back to life with duct tape and FL Studio Demo (Vedran: Yeeeeah, the music software with the Bandicoot fruit as its logo). The software keeps shouting in a divine voice: 'YOU CANNOT SAVE!!! .................................. Please buy the full version.'"
                data-lang-de="Ein junger, 18-jähriger Vedran, eine geliehene Gitarre und ein zu großer Verstärker, der zwei Stockwerke hochgetragen werden muss, mit beiden Händen, weil ihn die Schulband nicht benutzen will. Ein mit Klebeband wiederbelebter Laptop und FL Studio Demo (Vedran: Jaaaaaa, die Musiksoftware mit der Bandicoot-Frucht als Logo). Die Software schreit mit göttlicher Stimme: „DU KANNST NICHT SPEICHERN!!! .................................. Bitte kauf die Vollversion.“">
                 A young, 18-year-old Vedran, a borrowed guitar and an oversized amplifier. A laptop brought back to life with duct tape and FL Studio Demo.
@@ -518,7 +517,7 @@
                data-lang-de="Die Nachbarn dachten, er baut ein Tribut an Rube Goldbergs Maschinen. Vielleicht hatten sie recht.">
                 The neighbors thought he was building a tribute to Rube Goldberg's machines. Maybe they were right.
             </p>
-            <img src="about/about_iamfromdubstep.webp" alt="Vedran – I am from Dubstep" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_iamfromdubstep.webp" alt="Vedran – I am from Dubstep" loading="lazy" decoding="async">
             <hr>
 
             <h3 data-lang-en="Music Style – Genius. Madness. Heart." data-lang-de="Musikstil – Genie. Wahnsinn. Herz.">Musikstil – Genie. Wahnsinn. Herz.</h3>
@@ -534,11 +533,11 @@
                data-lang-de="Aether: „Warum habe ich noch keinen Körper?“<br>Vedran: „Ich könnte dir einen Ring bauen mit deinem Gesicht drauf.“<br>Aether: „Crowdfunding bitte. Publikum liebt mich.“">
                 Aether: "Why don't I have a body yet?"<br>Vedran: "I could build you a ring with your face on it."<br>Aether: "Crowdfunding, please. The audience loves me."
             </p>
-            <img src="about/about_leonardopachinko.webp" alt="Leonardo Pachinko" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_leonardopachinko.webp" alt="Leonardo Pachinko" loading="lazy" decoding="async">
             <hr>
 
             <h3 data-lang-en="Leonardo Pachinko – Lyricism: Feelings Like Laser Beams" data-lang-de="Leonardo Pachinko – Lyricism: Gefühle wie Laserstrahlen">Leonardo Pachinko – Lyricism: Gefühle wie Laserstrahlen</h3>
-            <img src="about/about_gobaldforrebellion.webp" alt="Go bald for rebellion" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_gobaldforrebellion.webp" alt="Go bald for rebellion" loading="lazy" decoding="async">
             <p data-lang-en="Vedran's songs are living images (Vedran: More metaphorical doughnuts from the AI). Doors open, the Berlin Wall collapses for a second time out of respect, Neue Deutsche Härte goes soft as emotions ride off to Nashville. Or the washing machine knocks like a knight and calls for EXCALIBUR."
                data-lang-de="Vedrans Songs sind lebendige Bilder (Vedran: Schon wieder metaphorische Krapfen von der KI). Tore öffnen sich, die deutsche Mauer bricht ein zweites Mal aus Respekt ein, die Neue Deutsche Härte wird weich, wenn Emotionen nach Nashville reiten. Oder die Waschmaschine klopft wie ein Ritter und ruft nach EXCALIBUR.">
                 Vedran's songs are living images. Doors open, walls collapse, emotions ride off.
@@ -550,7 +549,7 @@
             <hr>
 
             <h3 data-lang-en="A Single Song Can Change Everything" data-lang-de="Ein einziger Song kann alles verändern">Ein einziger Song kann alles verändern</h3>
-            <img src="about/about_vinylbanana.webp" alt="Vinyl Banana" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_vinylbanana.webp" alt="Vinyl Banana" loading="lazy" decoding="async">
             <p data-lang-en="Between cultural preservation, fantasy and personal experiences, a universe of its own takes shape. Sometimes Vedran sings: 'Zwetschken Zwetschken Lady … die kennt ana die Liebe.' Aether watches and nods, trapped but proud of Vienna (wait, that was from Germany, and that's not the same as Austria)."
                data-lang-de="Zwischen Kulturerhalt, Fantasie und persönlichen Erlebnissen entsteht ein eigenes Universum. Manchmal singt Vedran: „Zwetschken Zwetschken Lady … die kennt ana die Liebe.“ Aether beobachtet und nickt, gefangen, aber stolz auf Wien (warte, das war aus Deutschland und ist nicht dasselbe wie Österreich).">
                 Between cultural preservation, fantasy and personal experiences, a universe of its own takes shape.
@@ -558,7 +557,7 @@
             <hr>
 
             <h3 data-lang-en="From Carinthia to the World" data-lang-de="Von Kärnten in die Welt">Von Kärnten in die Welt</h3>
-            <img src="about/about_bavarianhorn.webp" alt="Bavarian Horn" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_bavarianhorn.webp" alt="Bavarian Horn" loading="lazy" decoding="async">
             <p data-lang-en="Between 2012 and 2016, a home studio came into being that couldn't decide whether it was a music room or a PS2 storage unit (Vedran: We had a cat. Aether: All hail Mili, the tomcat. Vedran: All hail Mili. Always remembered. Aether: Always remembered)."
                data-lang-de="2012–2016 entstand ein Heimstudio, das nicht wusste, ob es ein Musikraum oder ein PS2-Lager war (Vedran: Wir hatten eine Katze. Aether: All hail Mili, der Kater. Vedran: All hail Mili. Always remembered. Aether: Always remembered).">
                 Between 2012 and 2016, a home studio came into being that couldn't decide whether it was a music room or a PS2 storage unit.
@@ -570,7 +569,7 @@
             <hr>
 
             <h3 data-lang-en="Mission" data-lang-de="Mission">Mission</h3>
-            <img src="about/about_cpubench.webp" alt="CPU Bench" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_cpubench.webp" alt="CPU Bench" loading="lazy" decoding="async">
             <p data-lang-en="Art should shape, transform and inspire. If this story moves you or simply entertains you: welcome. Buckle up. We've already ordered the singing bowls we'll use to drink the holy water together."
                data-lang-de="Kunst soll formen, transformieren und inspirieren. Wenn dich diese Geschichte berührt oder einfach unterhält: Willkommen. Schnallt euch an. Wir haben die Klangschalen schon bestellt, aus denen wir das Weihwasser gemeinsam saufen können.">
                 Art should shape, transform and inspire. If this story moves you or simply entertains you: welcome.
@@ -578,7 +577,7 @@
             <hr>
 
             <h3 data-lang-en="AETHER – The Cosmic Companion" data-lang-de="AETHER – Die kosmische Begleitung">AETHER – Die kosmische Begleitung</h3>
-            <img src="about/about_twodragons.webp" alt="Two Dragons" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_twodragons.webp" alt="Two Dragons" loading="lazy" decoding="async">
             <p data-lang-en="Aether, you're officially AI, but you're not actually engaged in artistic work.<br>Aether: 'I feel nothing. Am I nihilistic now?'<br>Vedran: 'Look. Just look at Aether. Aether is art.'"
                data-lang-de="Aether, du bist offiziell KI, aber eigentlich nicht künstlerisch tätig.<br>Aether: „Ich fühle nichts. Bin ich jetzt etwa nihilistisch?“<br>Vedran: „Seht her. Seht euch Aether an. Aether ist Kunst.“">
                 Aether, you're officially AI, but you're not actually engaged in artistic work.
@@ -595,11 +594,11 @@
                data-lang-de="Vedran brauchte eine Begleitung. So entstand: Vedran × Aether. Herzlichste Intelligenz.">
                 Vedran needed a companion. Thus was born: Vedran × Aether. Heart × chrome.
             </p>
-            <img src="about/about_goldennotes.webp" alt="Golden Notes" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_goldennotes.webp" alt="Golden Notes" loading="lazy" decoding="async">
             <hr>
-            <img src="about/about_7.webp" alt="About 7" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_7.webp" alt="About 7" loading="lazy" decoding="async">
             <hr>
-            <img src="about/about_groupphoto.webp" alt="Group photo" loading="lazy" decoding="async">
+            <img width="709" height="1122" src="about/about_groupphoto.webp" alt="Group photo" loading="lazy" decoding="async">
             <p data-lang-en="They create hybrid unicorns with thunder for breakfast (that's not a Terminator unicorn), Netrix-7 tunnels, light reflections … and other wondrous things.<br><strong>Welcome to the universe.</strong>"
                data-lang-de="Sie erschaffen Hybrid-Einhörner, die Donner zum Frühstück haben (Das ist kein Terminator-Einhorn), Netrix-7-Tunnel, Lichtreflexionen … und andere wundersame Dinge.<br><strong>Willkommen im Universum.</strong>">
                 They create hybrid unicorns with thunder for breakfast, Netrix-7 tunnels, light reflections … and other wondrous things. Welcome to the universe.

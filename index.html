@@ -1,45 +1,12 @@
 <!DOCTYPE html>
-<!--
-================================================================================
-LIGHTNING HORN UNICORN | INDEX.HTML | MONOLITHIC GALLERY EDITION
-================================================================================
-Selbststaendige Hauptdatei: HTML + CSS + JavaScript in einer Datei.
-
-SCHNELL ZU FINDEN (STRG + F):
-  [HTML] AUDIO-ELEMENTE             Musik und Soundeffekte
-  [HTML] INTRO-BEREICH              Roter / gelber / blauer Intro-Einstieg
-  [HTML] 3D-ERLEBNIS                3D-Head, Effekte, Buttons und Zitatfenster
-  [HTML] HAUPTSEITE / SITE-SHELL    Menue, Kategorien und Inhaltsbereich
-  [CSS]  SHARED DESIGN SYSTEM       Globale Farben, Themes, Navigation, Layout
-  [CSS]  INDEX DESIGN               Monolithic Gallery, Intro, 3D-Dock & Modals
-  [JS]   HINTERGRUND                Hintergrundanimation & Phasenwechsel
-  [JS]   INDEX-ERLEBNIS             Three.js, 3D-Heads, Intro, Musik und Zitate
-  [JS]   ZITATE / DAILY WISDOM      Deutsche und englische Zitate
-  [JS]   SHARED WEBSITE-FUNKTIONEN  Menue, Kategorien, Content-Lader, Bildzoom
---------------------------------------------------------------------------------
-QA-VOSS: ERINNERUNGSKARTE — grep "QA-VOSS" findet alle Markierungen im Projekt.
-QA-VOSS: P1  Skip-Link über Intro/Lightbox; overflow-x:clip rettet sticky; Reduced-Motion-Overrides raus.
-QA-VOSS: P1  Audio lokal (GOAT/wolf/rizz/rainbow); endGag idempotent + Timer; play() im Gesture-Task.
-QA-VOSS: P1  loadingDepth statt Overlay-Flag; stale Loads rufen stopLoading; disposeMaterial generisch.
-QA-VOSS: P2  sync-404 macht nur den 404-Spiegel (Stubs auf Owner-Wunsch entfernt); canonical + OG-Tags.
-QA-VOSS: P2  robots.txt + sitemap.xml; Downloads noindex + SRI/CSP; Titel var(--text); Modale inert.
-QA-VOSS: P4  Bloom verdeckt DOM-Layer → Matrix-Canvas als CanvasTexture in scene.background.
-QA-VOSS: P6  __lhuUpdateBackdropTexture hält die Textur auch nach Schließen der Einstellungen aktuell.
-QA-VOSS: P7  Solid-Farben als THREE.Color in scene.background; Marquee läuft immer (Owner-Entscheid).
-QA-VOSS: P8  Überschriften ABOUT/DONATE/CONTACT; Projects-Einstieg; Storytime nur bei Klick scrollen.
-QA-VOSS: P9  Spawn-FX: updateKoboSpawn für Studio + Hauptbühne; Trigger auch ohne geöffnete Einstellungen.
-QA-VOSS: P10 Signal-Buttons: eigene ::before/::after-Keyframes je Farbe; Titel-Static-Glow als Fallback.
-QA-VOSS: P11 Optionales stonemarble.glb: 1 Canvas, geteilte Glaze-Materialien, WASM-Draco, Fallback.
-QA-VOSS: P12 Mobile: compileAsync vor Reveal, DPR 1, nur 1 Rect/Frame — gegen Lade-Stottern.
-================================================================================
--->
 <html lang="de">
+<!-- LHU main page: shell, audio, 2d bg, 3d stage, shared js, marble, 404 mirror -->
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <base href="/"/>
 <title>Lightning Horn Unicorn</title>
-<!-- QA-VOSS: canonical; writeCategoryRoute() setzt ihn pro Kategorie nach. -->
+
 <link rel="canonical" href="/"/>
 <link href="lhu_favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="lhu_favicon.png" rel="icon" type="image/png"/>
@@ -54,7 +21,7 @@ QA-VOSS: P12 Mobile: compileAsync vor Reveal, DPR 1, nur 1 Rect/Frame — gegen 
 <meta content="Lightning Horn Unicorn" name="twitter:title"/>
 <meta content="Independent creative universe of Vienna-based artist Vedran Lukic." name="twitter:description"/>
 <meta content="https://www.lightninghornunicorn.com/lhu_favicon.png" name="twitter:image"/>
-<!-- QA-VOSS: OG/Twitter-Tags für Social-Previews (SEO-002). -->
+
 <meta content="Vedran Lukic" name="author"/>
 <meta content="#070708" name="theme-color"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -69,10 +36,7 @@ QA-VOSS: P12 Mobile: compileAsync vor Reveal, DPR 1, nur 1 Rect/Frame — gegen 
 }
 </script>
 
-<!-- ====================================================================== -->
-<!-- [CSS] SHARED DESIGN SYSTEM                                             -->
-<!-- ====================================================================== -->
-<style id="lhu-shared-css">
+<style id="lhu-shared-css">/* LHU design tokens, 4 themes, global reset, a11y focus */
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; padding: 0; }
 html {
@@ -100,7 +64,7 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
-/* ---------- DESIGN TOKENS ---------- */
+ 
 :root {
   --bg:              #f6f4ef;
   --bg-solid:        #ffffff;
@@ -137,7 +101,7 @@ a { color: inherit; text-decoration: none; }
   --shadow-lg:       0 20px 48px rgba(20, 20, 19, 0.12);
   --shadow-pixel:    0 8px 28px rgba(20, 20, 19, 0.07);
 
-  /* Unified Apple-grade System Typography */
+   
   --font-sans:       -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-mono:       ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
   --font-display:    var(--font-sans);
@@ -166,7 +130,7 @@ a { color: inherit; text-decoration: none; }
   --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ---------- THEMES ---------- */
+ 
 html[data-theme="dark"] {
   --bg:            #09090b; --bg-solid: #111114; --bg-elevated: #16161a;
   --card-bg:       #141418; --header-bg: rgba(14, 14, 17, 0.84); --door-bg: #09090b;
@@ -222,7 +186,7 @@ html[data-theme="crt"]::after {
   background-size: 100% 4px;
 }
 
-/* ---------- BASE ---------- */
+ 
 body {
   background: radial-gradient(circle at 50% 0%, var(--bg-glow), transparent 65%), var(--bg);
   color: var(--text);
@@ -233,8 +197,7 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
-  /* `clip` avoids turning <body> into a scroll container, which breaks
-     position:sticky on iOS Safari. Browsers without clip keep the fallback. */
+   
   overflow-x: clip;
   transition: background-color 0.35s ease, color 0.35s ease;
   -webkit-font-smoothing: auto;
@@ -268,35 +231,31 @@ select:focus-visible,
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
-/* Content fragments inject their own <style> late in the cascade and some
-   used to remove the focus ring. This higher-specificity rule guarantees a
-   visible keyboard focus indicator for every injected control. */
+ 
 main#mainContent :is(a, button, [tabindex]):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
-/* Note: deliberately NOT :focus. A mouse click must not leave a permanent
-   outline on frames, carousels and submenus. */
+ 
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 .skip-link {
-  position: fixed; top: -100px; left: 12px; z-index: 200001; /* QA-VOSS: über Intro (100000) + Lightbox (200000). */
-  padding: 10px 16px; background: var(--text); color: var(--bg);
+  position: fixed; top: -100px; left: 12px; z-index: 200001; padding: 10px 16px; background: var(--text); color: var(--bg);
   border-radius: 10px; font-size: var(--fs-sm); font-weight: 600;
 }
 .skip-link:focus { top: 12px; }
 
-/* ---------- SITE SHELL HEADER & SPHERE NAVIGATION ---------- */
+ 
 .header {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: calc(10px + env(safe-area-inset-top)) clamp(12px, 3vw, 28px) 10px;
   background: var(--header-bg);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  /* No separating rule: the glass background and blur are enough. */
+   
   border-bottom: 0;
   position: sticky; top: 0; z-index: 1000;
   width: 100%;
@@ -361,12 +320,12 @@ main#mainContent :is(a, button, [tabindex]):focus-visible {
 .audio-btn:not(.muted) img {
   filter: hue-rotate(var(--dynamic-hue)) saturate(1.8);
 }
-/* Muted state uses the dedicated ghostduck.png artwork, not a greyed duck. */
+ 
 .audio-btn.muted img {
   filter: none !important;
   opacity: 1;
 }
-/* ---------- DUCKY CRT STATUS DISPLAY ---------- */
+ 
 .duck-crt {
   position: relative;
   isolation: isolate;
@@ -446,8 +405,7 @@ main#mainContent :is(a, button, [tabindex]):focus-visible {
   95% { opacity: 0.84; }
 }
 
-
-/* CATEGORY MARQUEE: real clickable planet navigation replaces the CRT copy. */
+ 
 .duck-crt.category-marquee { height:42px; padding:0; border:0; border-radius:999px; background:rgba(255,255,255,.025); box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
 .duck-crt.category-marquee::before,.duck-crt.category-marquee::after { display:none; }
 .marquee-category { display:inline-flex; flex:0 0 auto; align-items:center; gap:8px; padding:3px 2px; border:0; background:transparent; color:var(--text-muted); cursor:pointer; white-space:nowrap; text-transform:uppercase; font:600 11px/1 var(--font-mono); letter-spacing:.035em; }
@@ -612,7 +570,7 @@ main#mainContent :is(a, button, [tabindex]):focus-visible {
   .sphere-category-name { font-size: 9px; }
 }
 
-/* ---------- CONTENT AREA ---------- */
+ 
 main#mainContent {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
   width: 100%; max-width: 100%;
@@ -620,9 +578,8 @@ main#mainContent {
   min-height: calc(100dvh - 80px);
   padding: clamp(36px, 6vw, 76px) clamp(16px, 4vw, 48px) var(--space-xl);
   z-index: 1;
-  overflow-x: hidden; /* fallback for older browsers */
-  overflow-x: clip;   /* QA-VOSS: clip statt hidden — sticky bleibt wirksam. */
-  background: transparent;
+  overflow-x: hidden;  
+  overflow-x: clip;   background: transparent;
   position: relative;
 }
 main#mainContent section,
@@ -716,7 +673,7 @@ main#mainContent > section { animation: sectionFadeIn 0.45s var(--ease-out); }
   }
 }
 
-/* ---------- WELCOME / ERROR CARDS ---------- */
+ 
 .welcome-card, .error-card {
   background: var(--card-bg);
   border: 1px solid var(--border-medium);
@@ -749,7 +706,7 @@ main#mainContent > section { animation: sectionFadeIn 0.45s var(--ease-out); }
   text-transform: uppercase;
 }
 
-/* ---------- DOOR OVERLAY ---------- */
+ 
 #door-overlay { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
 #door-overlay.closed { pointer-events: all; }
 #door-overlay .door-panel {
@@ -776,7 +733,7 @@ main#mainContent > section { animation: sectionFadeIn 0.45s var(--ease-out); }
 #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
 #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
 
-/* ---------- PROJECTS & SHARED MEDIA ---------- */
+ 
 .prod-3d-badge {
   display: inline-flex; align-items: center; justify-content: center;
   margin-left: 10px; padding: 4px 10px;
@@ -799,7 +756,7 @@ main#mainContent #projects-accordion .carousel-slide img {
   object-fit: contain; margin: 0 !important; border-radius: 0; box-shadow: none;
 }
 
-/* ---------- IMAGE FRAME + MAGNIFIER + LIGHTBOX ---------- */
+ 
 main#mainContent .lhu-image-frame {
   position: relative; display: block; width: fit-content; max-width: 100%;
   margin: var(--space-md) auto; isolation: isolate;
@@ -916,9 +873,6 @@ body.site-mode #lhu-index-experience { display: none !important; }
 body.site-mode #site-shell { display: block; min-height: 100vh; min-height: 100dvh; }
 </style>
 
-<!-- ====================================================================== -->
-<!-- [CSS] INDEX DESIGN — MONOLITHIC GALLERY                                -->
-<!-- ====================================================================== -->
 <style id="lhu-index-css">
 :root {
   --gallery-void: #070708;
@@ -943,9 +897,7 @@ body.intro-mode {
 
 #lhu-index-experience[hidden] { display: none !important; }
 
-/* ========================================================================
-   01. CINEMATIC INTRO GATE
-   ======================================================================== */
+ 
 #lhu-intro {
   position: fixed;
   inset: 0;
@@ -978,7 +930,7 @@ body.intro-mode {
   background: radial-gradient(circle at 50% 46%, transparent 25%, rgba(7, 7, 8, 0.75) 88%);
 }
 
-/* Center Stage: 3D Object + Three Signal Spheres */
+ 
 #lhu-enter-panel {
   position: relative;
   z-index: 8;
@@ -1033,7 +985,7 @@ body.intro-mode {
   gap: clamp(18px, 4vw, 28px);
 }
 
-/* Tactile Glass-Sphere Signal Buttons */
+ 
 .lhu-pill {
   position: relative;
   width: clamp(54px, 7.5vh, 66px);
@@ -1126,7 +1078,7 @@ body.intro-mode {
   text-align: center;
 }
 
-/* Edgy / Angular Intro Skip Buttons: 3D HEADS & MAIN PAGE */
+ 
 #intro-skip-buttons {
   display: flex;
   align-items: center;
@@ -1181,9 +1133,7 @@ body.intro-mode {
   #lhu-intro-word .intro-word-row { flex-direction: column; }
 }
 
-/* ========================================================================
-   02. 3D SCULPTURE STAGE (DESKTOP + MOBILE)
-   ======================================================================== */
+ 
 #lhu-index-experience {
   position: relative;
   width: 100%;
@@ -1192,8 +1142,21 @@ body.intro-mode {
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.015) 36%, transparent 68%),
-    var(--gallery-void);
+    var(--lhu-stage-color, var(--gallery-void));
   color: var(--gallery-ink);
+}
+/* Soft marble veining over the chosen stage colour. One small SVG tile is
+   rasterised once and repeated - no per-frame filter cost on mobile. */
+#lhu-index-experience::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23m)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
 }
 
 #matrix-bg {
@@ -1222,7 +1185,7 @@ body.intro-mode {
   touch-action: none;
 }
 
-/* Emojis & FX Layers */
+ 
 #heart-emojis, #rainbow-emojis {
   position: fixed;
   inset: 0;
@@ -1273,7 +1236,7 @@ body.intro-mode {
   100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.15); opacity: 0; }
 }
 
-/* Whisper-quiet Edge Arrows for Backdrop Cycling */
+ 
 .bg-nav-btn {
   position: fixed;
   top: 50%;
@@ -1301,7 +1264,7 @@ body.intro-mode {
 #bg-prev { left: clamp(12px, 2.5vw, 32px); }
 #bg-next { right: clamp(12px, 2.5vw, 32px); }
 
-/* Floating HUD Layer */
+ 
 #ui-layer {
   position: fixed;
   inset: 0;
@@ -1309,7 +1272,7 @@ body.intro-mode {
   pointer-events: none;
 }
 
-/* Top-Right Action Bar (Edgy / Angular Controls) */
+ 
 .ui-top {
   position: absolute;
   top: calc(16px + env(safe-area-inset-top));
@@ -1391,7 +1354,7 @@ body.intro-mode {
 }
 .quote-counter.bump { transform: scale(1.3); }
 
-/* Bottom Ergonomic Dock */
+ 
 .ui-bottom {
   position: absolute;
   bottom: calc(18px + env(safe-area-inset-bottom));
@@ -1478,7 +1441,7 @@ body.intro-mode {
   border-color: var(--gallery-border-strong);
 }
 
-/* Daily Wisdom Card — Holographic Foil Shimmer Typography */
+ 
 #wisdom-display {
   position: fixed;
   top: 50%;
@@ -1532,7 +1495,7 @@ body.intro-mode {
   }
 }
 
-/* Modals */
+ 
 #disclaimer-modal, #quote-modal {
   display: none;
   opacity: 0;
@@ -1573,7 +1536,7 @@ body.intro-mode {
 }
 #quote-mail-link:hover { background: #fff; }
 
-/* Loading Overlay */
+ 
 #index-loading {
   position: fixed;
   inset: 0;
@@ -1598,9 +1561,7 @@ body.intro-mode {
   height: min(56vw, 240px);
 }
 
-/* ========================================================================
-   03. MOBILE & COMPACT VIEWPORT TUNING
-   ======================================================================== */
+ 
 @media (max-width: 600px) {
   .ui-top { right: 12px; gap: 5px; }
   #ui-wrapper, #effect-buttons { gap: 4px; }
@@ -1624,10 +1585,9 @@ body.intro-mode {
   .effect-btn { width: 33px; min-width: 33px; height: 33px; }
 }
 
-/* QA-VOSS: Reduced-Motion-Overrides raus — globaler Reset greift. */
 </style>
 <style id="index-button-shapes-final">
-/* Capsule buttons for text actions; softly rounded squares for icon controls. */
+ 
 .btn,
 .glass:not(.effect-btn),
 #intro-skip-buttons .intro-skip-btn {
@@ -1665,8 +1625,7 @@ body.intro-mode {
 }
 </style>
 <style id="index-all-controls-pill">
-/* Semicircle capsule shape for every clickable button & control across Intro, 3D Heads & Main Page.
-   Only the three colored intro signal selectors and 8 category spheres remain pure circles. */
+ 
 button:not(.lhu-pill):not(.sphere-category),
 select,
 input[type="button"],
@@ -1702,7 +1661,7 @@ main#mainContent input[type="submit"] {
   border-radius: 50% !important;
 }
 
-/* Harmonious semicircle endcap proportions on Desktop & Mobile */
+ 
 .ui-bottom {
   border-radius: 9999px !important;
   padding: 6px 8px !important;
@@ -1768,9 +1727,7 @@ main#mainContent input[type="submit"] {
   }
 }
 
-/* ========================================================================
-   INTEGRATED HEAD VIEWPORT & SETTINGS
-   ======================================================================== */
+ 
 #kobo-3d-overlay {
   position: fixed;
   inset: 0;
@@ -1811,7 +1768,7 @@ main#mainContent input[type="submit"] {
   image-rendering: crisp-edges;
 }
 
-/* Subtle Marble & Rose Aura Frame */
+ 
 #kobo-marble-sheen {
   position: absolute;
   inset: 0;
@@ -1822,7 +1779,7 @@ main#mainContent input[type="submit"] {
     radial-gradient(ellipse at 84% 82%, rgba(232, 93, 117, 0.14), transparent 46%);
 }
 
-/* Top Navigation Bar */
+ 
 .kobo-topbar {
   position: relative;
   z-index: 10;
@@ -1934,7 +1891,7 @@ main#mainContent input[type="submit"] {
   opacity: 0.78;
 }
 
-/* Bottom Studio Control Dock */
+ 
 .kobo-dock-wrap {
   position: relative;
   z-index: 10;
@@ -2102,14 +2059,14 @@ main#mainContent input[type="submit"] {
 </style>
 
 <style id="lhu-integrated-kobo-editorial-css">
-/* Integrated 3D head stage. The LHU interface remains above the transparent render canvas. */
+ 
 #kobo-3d-overlay { position:absolute; inset:0; z-index:50; display:block; overflow:visible; pointer-events:none; background:transparent !important; color:#241914; }
 #kobo-3d-overlay[hidden] { display:none !important; }
 #container3D { position:absolute; inset:0; z-index:0; width:100%; height:100%; touch-action:none; pointer-events:auto; background:transparent; }
 #container3D canvas { display:block; width:100% !important; height:100% !important; touch-action:none; }
 #kobo-marble-sheen, .kobo-topbar { display:none !important; }
 #lhu-index-experience.kobo-studio-active #container3D { visibility:hidden; opacity:0; }
-#lhu-index-experience.kobo-studio-active #matrix-bg { opacity:.52; }
+#lhu-index-experience.kobo-studio-active #matrix-bg { opacity:.34; }
 #ui-layer > .ui-top, #ui-layer > .ui-bottom { z-index:40; }
 .kobo-dock-wrap {
   position:absolute; left:50%; bottom:calc(78px + env(safe-area-inset-bottom));
@@ -2159,14 +2116,14 @@ main#mainContent input[type="submit"] {
 #lhu-index-experience.music-focus #ui-layer { pointer-events:none; }
 #lhu-index-experience.music-focus #ui-wrapper { pointer-events:auto; }
 
-/* Desktop editorial layout: content in the left reading column, imagery/interaction on the right. */
+ 
 @media (min-width: 900px) and (orientation:landscape) {
   main#mainContent .lhu-editorial-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.92fr); column-gap:clamp(28px,4vw,64px); align-items:center; width:100%; margin:clamp(22px,3vw,38px) auto; text-align:left; }
   main#mainContent .lhu-editorial-row:not(.has-media) { grid-template-columns:minmax(0,1fr); }
   main#mainContent .lhu-editorial-copy-column { grid-column:1; display:flex; flex-direction:column; align-items:stretch; gap:10px; min-width:0; }
   main#mainContent .lhu-editorial-media-column { grid-column:2; display:flex; flex-direction:column; align-items:stretch; justify-content:center; gap:14px; min-width:0; }
   main#mainContent .lhu-editorial-media-column:empty { display:none; }
-  /* VHS/Humanart use an explicit media node; About uses the two generated columns. */
+   
   main#mainContent .lhu-editorial-row > .lhu-editorial-copy-item { grid-column:1; text-align:left; }
   main#mainContent .lhu-editorial-row > .lhu-editorial-media-item { grid-column:2; justify-self:stretch; align-self:center; }
   main#mainContent .lhu-editorial-copy-column > * { text-align:left !important; margin-left:0; margin-right:0; }
@@ -2211,7 +2168,7 @@ main#mainContent input[type="submit"] {
   main#mainContent section#DONATE > .donate-form { grid-column:2; grid-row:2; align-self:center; }
 }
 
-/* The drawer and all editorial columns collapse naturally on compact portrait screens. */
+ 
 @media (max-width: 899px), (orientation:portrait) and (max-width:1100px) {
   .kobo-dock-wrap { width:calc(100vw - 18px); bottom:calc(70px + env(safe-area-inset-bottom)); max-height:54dvh; }
   .kobo-panel-card { max-height:calc(54dvh - 56px); padding:10px; border-radius:18px; }
@@ -2240,7 +2197,6 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
 <style id="lhu-editorial-followup-css">
 @media (min-width:900px) and (orientation:landscape) {
   main#mainContent .lhu-profile-editorial { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.8fr); gap:clamp(24px,3vw,48px); align-items:start; }
@@ -2261,7 +2217,6 @@ main#mainContent input[type="submit"] {
   main#mainContent .lhu-music-editorial { display:block; }
 }
 </style>
-
 
 <style id="lhu-kobo-complete-feature-css">
 .kobo-stat-row { color:rgba(36,25,20,.68); font:600 9px/1.4 var(--font-mono); }
@@ -2291,9 +2246,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
 <style id="lhu-single-pill-workspace-css">
-/* One control surface: the original dark pill grows upward; its toolbar remains intact. */
+ 
 .ui-bottom {
   z-index: 40;
   display: flex;
@@ -2398,7 +2352,7 @@ main#mainContent input[type="submit"] {
 .kobo-import-hint { color:rgba(255,255,255,.45); font:500 9px/1 var(--font-mono); letter-spacing:.06em; }
 #kobo-panel-toggle.is-active { background:rgba(255,255,255,.12); color:#fff; border-color:rgba(255,255,255,.26); }
 #kobo-dock-wrap[aria-hidden="true"] { pointer-events:none; }
-#lhu-index-experience.kobo-studio-active #matrix-bg { opacity:.62; }
+#lhu-index-experience.kobo-studio-active #matrix-bg { opacity:.34; }
 
 @media (min-width:900px) and (orientation:landscape) {
   .ui-bottom { width:min(calc(100vw - 56px), 610px); }
@@ -2410,7 +2364,7 @@ main#mainContent input[type="submit"] {
   .kobo-import-hint { display:none; }
 }
 
-/* Touch devices: retain the visible upper 2/3 of the stage; controls scroll in the lower third. */
+ 
 @media (max-width:899px), (orientation:portrait) and (max-width:1100px) {
   .ui-bottom {
     left:8px !important; right:8px !important; bottom:calc(10px + env(safe-area-inset-bottom));
@@ -2458,9 +2412,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
 <style id="lhu-head-pill-visual-fix">
-/* Keep the expanded workspace recognizably part of the original black pill. */
+ 
 .ui-bottom.is-expanded {
   border-radius: 26px !important;
   overflow: hidden;
@@ -2468,7 +2421,7 @@ main#mainContent input[type="submit"] {
   border: 1px solid var(--gallery-border, rgba(255,255,255,.13)) !important;
 }
 
-/* The nested Kobo-era tab panels must not render their old cream-card skin. */
+ 
 #kobo-drawer-card .kobo-panel-card-inner {
   display: flex;
   flex: 1 1 auto;
@@ -2528,7 +2481,7 @@ main#mainContent input[type="submit"] {
 #kobo-drawer-card .kobo-slider-group strong { color: #fff !important; }
 #kobo-drawer-card .kobo-select option { color:#fff; background:#141418; }
 
-/* Desktop: settings on the left, transparent 3D stage on the right. */
+ 
 @media (min-width: 900px) and (orientation: landscape) {
   .ui-bottom.is-expanded {
     border-radius: 26px !important;
@@ -2545,7 +2498,7 @@ main#mainContent input[type="submit"] {
   #kobo-drawer-card { background: transparent !important; }
 }
 
-/* Phones/tablets: the same pill remains a compact, scrollable lower drawer. */
+ 
 @media (max-width: 899px), (orientation: portrait) and (max-width: 1100px) {
   .ui-bottom.is-expanded {
     height: 35dvh;
@@ -2568,9 +2521,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
 <style id="lhu-one-stage-no-nested-room-css">
-/* One continuous 3D stage behind the original controls. */
+ 
 #container3D {
   position: fixed !important;
   inset: 0 !important;
@@ -2580,7 +2532,7 @@ main#mainContent input[type="submit"] {
   height: 100dvh !important;
   min-height: 0 !important;
   background: transparent !important;
-  /* The main head viewport must be visible before the settings drawer opens. */
+   
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
@@ -2602,7 +2554,7 @@ main#mainContent input[type="submit"] {
   visibility: hidden !important;
   opacity: 0 !important;
 }
-/* The separate inset preview pane is intentionally gone. */
+ 
 .kobo-preview-pane { display: none !important; }
 .kobo-dock-wrap {
   position: relative !important;
@@ -2621,7 +2573,7 @@ main#mainContent input[type="submit"] {
   overflow: hidden;
   background: transparent !important;
 }
-/* Desktop: controls grow on the left, the same full-page 3D stage remains visible on the right. */
+ 
 @media (min-width: 900px) and (orientation: landscape) {
   .ui-bottom {
     left: clamp(18px, 3vw, 42px) !important;
@@ -2641,7 +2593,7 @@ main#mainContent input[type="submit"] {
   }
   .kobo-settings-column { flex-basis: 100% !important; }
 }
-/* Mobile: the page remains the single 3D stage; the pill occupies the lower third. */
+ 
 @media (max-width: 899px), (orientation: portrait) and (max-width: 1100px) {
   .ui-bottom.is-expanded {
     left: 6px !important;
@@ -2656,10 +2608,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
-
 <style id="lhu-head-settings-responsive-finish">
-/* Settings open = quiet stage: fade the upper effect/navigation controls away. */
+ 
 #lhu-index-experience .ui-top {
   transition: opacity .22s ease, visibility .22s ease;
 }
@@ -2669,7 +2619,7 @@ main#mainContent input[type="submit"] {
   pointer-events: none !important;
 }
 
-/* The six category tabs are a fixed, non-scrolling navigation grid. */
+ 
 #kobo-drawer-card .kobo-tab-bar,
 .kobo-settings-column > .kobo-tab-bar {
   display: grid !important;
@@ -2695,7 +2645,7 @@ main#mainContent input[type="submit"] {
   text-align: center;
 }
 
-/* Three-column control layout prevents sideways scrolling and keeps control sizes consistent. */
+ 
 #kobo-drawer-card .kobo-panel-card-inner {
   min-width: 0;
   overflow-x: hidden !important;
@@ -2782,7 +2732,7 @@ main#mainContent input[type="submit"] {
   line-height: 1.3;
 }
 
-/* The scroll area is vertical only; navigation remains visible below it. */
+ 
 .kobo-settings-column {
   min-width: 0;
   min-height: 0;
@@ -2798,7 +2748,7 @@ main#mainContent input[type="submit"] {
   scrollbar-color: rgba(255,255,255,.28) transparent;
 }
 
-/* On phones, keep the stage visible and let the compact lower third do the scrolling. */
+ 
 @media (max-width: 899px), (orientation: portrait) and (max-width: 1100px) {
   .ui-bottom.is-expanded {
     height: min(38dvh, 270px) !important;
@@ -2831,13 +2781,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
 <style id="lhu-headlab-desktop-mobile-final">
-/* -------------------------------------------------------------------------
-   HEAD LAB ERGONOMICS
-   Desktop: one expanded black pill, settings left, GLB viewport right.
-   Mobile: centred lower-third settings pill, GLB remains in the upper stage.
-   ------------------------------------------------------------------------- */
+ 
 #lhu-index-experience.kobo-studio-active #container3D {
   visibility: hidden !important;
   opacity: 0 !important;
@@ -2850,7 +2795,7 @@ main#mainContent input[type="submit"] {
   transition: opacity .22s ease, visibility .22s ease;
 }
 
-/* The pill itself owns all controls; no detached/second settings surface. */
+ 
 .ui-bottom.is-expanded {
   box-sizing: border-box !important;
   overflow: hidden !important;
@@ -3039,7 +2984,7 @@ main#mainContent input[type="submit"] {
 .kobo-chip, .kobo-pill-btn, .kobo-select { background:rgba(255,255,255,.07) !important; border-color:rgba(255,255,255,.15) !important; }
 .kobo-chip.is-active, .kobo-pill-btn.is-active { background:rgba(255,255,255,.2) !important; border-color:rgba(255,255,255,.38) !important; }
 
-/* -------------------------- DESKTOP LANDSCAPE --------------------------- */
+ 
 @media (min-width: 900px) and (orientation: landscape) {
   .ui-bottom.is-expanded {
     left: 50% !important;
@@ -3100,7 +3045,7 @@ main#mainContent input[type="submit"] {
   #kobo-drawer-card .kobo-chip-scroll { gap: 8px !important; }
 }
 
-/* ------------------------------ MOBILE ---------------------------------- */
+ 
 @media (max-width: 899px), (orientation: portrait) and (max-width: 1100px) {
   .ui-bottom {
     left: 50% !important;
@@ -3134,7 +3079,7 @@ main#mainContent input[type="submit"] {
     padding: 1px 2px 5px !important;
   }
   .kobo-preview-pane { display: none !important; }
-  /* On phones the same GLB uses the upper stage area, not a second room. */
+   
   #lhu-index-experience.kobo-studio-active > #container3D {
     position: absolute !important;
     inset: 0 0 calc(clamp(166px, 38dvh, 320px) + 20px + env(safe-area-inset-bottom)) 0 !important;
@@ -3202,7 +3147,7 @@ main#mainContent input[type="submit"] {
   .kobo-settings-column > .kobo-tab-bar { gap:4px !important; }
   .kobo-settings-column > .kobo-tab-bar .kobo-pill-btn { font-size:7px !important; }
 }
-/* Two additional light moods: warm SUNSET and cold NEON. */
+ 
 #kobo-3d-overlay[data-mood="sunset"] {
   background: radial-gradient(circle at 50% 38%, #3a1c2e 0%, #1b0f1a 62%, #0d070c 100%);
   color: #fff3e8;
@@ -3233,7 +3178,7 @@ main#mainContent input[type="submit"] {
 </style>
 
 <style id="lhu-single-main-head-viewport-fix">
-/* The settings panel edits the one original Head scene. The overlay is only a transparent drop target. */
+ 
 #kobo-3d-overlay,
 #kobo-3d-overlay[data-mood="midnight"] {
   position: absolute !important;
@@ -3295,10 +3240,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
-
 <style id="lhu-one-main-head-stage-final">
-/* One head, one main scene, one canvas. Settings never create a secondary viewport. */
+ 
 .kobo-preview-pane { display: none !important; }
 .kobo-dock-wrap { width: 100% !important; max-width: none !important; }
 .kobo-settings-column { flex: 1 1 100% !important; width: 100% !important; max-width: none !important; }
@@ -3323,7 +3266,7 @@ main#mainContent input[type="submit"] {
   pointer-events: auto !important;
 }
 @media (min-width: 900px) and (orientation: landscape) {
-  /* The original main 3D stage is presented on the right without a card/frame. */
+   
   #lhu-index-experience.kobo-studio-active #container3D {
     inset: 0 0 0 calc(min(43vw, 640px) + 24px) !important;
     width: auto !important;
@@ -3370,7 +3313,7 @@ main#mainContent input[type="submit"] {
 </style>
 
 <style id="lhu-main-head-visible-before-settings-fix">
-/* Keep the primary GLB viewport alive and visible when the settings pill is closed. */
+ 
 #lhu-index-experience:not(.kobo-studio-active) #container3D {
   visibility: visible !important;
   opacity: 1 !important;
@@ -3384,7 +3327,7 @@ main#mainContent input[type="submit"] {
 </style>
 
 <style id="lhu-headlab-mobile-resizable-sheet">
-/* Mobile Head Lab: compact controls inside a user-resizable bottom sheet. */
+ 
 .kobo-sheet-handle { display:none; }
 @media (max-width: 899px), (orientation: portrait) and (max-width: 1100px) {
   .ui-bottom.is-expanded {
@@ -3474,7 +3417,7 @@ main#mainContent input[type="submit"] {
 </style>
 
 <style id="lhu-headlab-polish-nov20">
-/* Centered intro actions, no emoji labels. */
+ 
 #intro-skip-buttons { flex-direction:column; align-items:center; gap:9px; }
 #intro-skip-buttons .intro-skip-btn { width:min(250px,78vw); min-width:0; }
 @media (min-width:700px) {
@@ -3486,12 +3429,12 @@ main#mainContent input[type="submit"] {
   0%,100% { filter:brightness(1) saturate(1); box-shadow:inset 0 -8px 16px rgba(0,0,0,.55),inset 0 4px 10px rgba(255,255,255,.45),0 12px 28px rgba(0,0,0,.6); }
   50% { filter:brightness(1.13) saturate(1.12); box-shadow:inset 0 -8px 16px rgba(0,0,0,.48),inset 0 4px 10px rgba(255,255,255,.55),0 0 24px currentColor,0 12px 28px rgba(0,0,0,.55); }
 }
-/* Music and main-page actions sit centered below the three effect symbols. */
+ 
 #lhu-index-experience > #ui-layer > .ui-top { flex-direction:column; align-items:center; justify-content:flex-start; gap:9px; }
 #lhu-index-experience #effect-buttons { justify-content:center; }
 #lhu-index-experience #ui-wrapper { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
 #lhu-index-experience #ui-wrapper > button { min-width:112px; }
-/* Six Head Lab tabs: subtle moving glass texture, not loud casino buttons. */
+ 
 .kobo-settings-column > .kobo-tab-bar .kobo-pill-btn {
   position:relative; isolation:isolate; overflow:hidden; border-radius:999px !important;
   background:linear-gradient(115deg,rgba(255,255,255,.065),rgba(255,255,255,.12),rgba(255,255,255,.055)) !important;
@@ -3510,19 +3453,19 @@ main#mainContent input[type="submit"] {
 @keyframes lhuTabSilk { 0%,18% { transform:translateX(-60%) rotate(8deg); opacity:0; } 48% { opacity:.75; } 78%,100% { transform:translateX(60%) rotate(8deg); opacity:0; } }
 .kobo-settings-column > .kobo-tab-bar .kobo-pill-btn:hover { transform:translateY(-2px); box-shadow:0 5px 18px rgba(255,255,255,.08); }
 .kobo-settings-column > .kobo-tab-bar .kobo-pill-btn.is-active { border-radius:999px !important; box-shadow:0 0 20px rgba(255,255,255,.09),inset 0 0 0 1px rgba(255,255,255,.08); }
-/* The opened settings surface assembles in a soft stagger, preserving the pill silhouette. */
+ 
 .ui-bottom.is-expanded { border-radius:28px !important; }
 .ui-bottom.is-expanded .kobo-settings-column { animation:lhuSettingsRise .48s cubic-bezier(.18,.82,.22,1) both; }
 .ui-bottom.is-expanded .kobo-tab-bar { animation:lhuTabsRise .52s .07s cubic-bezier(.18,.82,.22,1) both; }
 @keyframes lhuSettingsRise { from { opacity:0; transform:translateY(18px) scale(.985); filter:blur(5px); } to { opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
 @keyframes lhuTabsRise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-/* Round every control inside the expanded pill, including controls with legacy square rules. */
+ 
 .ui-bottom.is-expanded .kobo-chip,
 .ui-bottom.is-expanded .kobo-pill-btn,
 .ui-bottom.is-expanded .kobo-select,
 .ui-bottom.is-expanded .kobo-slider-group,
 .ui-bottom.is-expanded #kobo-panel-toggle { border-radius:999px !important; }
-/* No extra header telemetry: reclaim the vertical space for actual controls. */
+ 
 .kobo-drawer-heading, .kobo-brand-cluster, .kobo-telemetry-strip { display:none !important; }
 @media (prefers-reduced-motion:reduce) {
   .lhu-pill, .kobo-settings-column > .kobo-tab-bar .kobo-pill-btn::before,
@@ -3530,9 +3473,8 @@ main#mainContent input[type="submit"] {
 }
 </style>
 
-
 <style id="lhu-quick-xray-resolution-fixes">
-  #xray-toggle { font-size:19px; }
+#xray-toggle { font-size:19px; }
   #xray-toggle.is-active {
     color:#b9fff0 !important; border-color:rgba(92,225,198,.8) !important;
     background:rgba(35,150,130,.2) !important;
@@ -3563,9 +3505,8 @@ main#mainContent input[type="submit"] {
   }
 </style>
 
-
 <style id="lhu-editorial-layout-v2">
-/* LHU editorial system v2: a real desktop canvas, deliberate media/text pairing, calm reading widths. */
+ 
 main#mainContent {
   width:100%; max-width:none; padding:clamp(28px,4vw,58px) clamp(18px,4vw,64px) clamp(56px,7vw,92px);
 }
@@ -3578,7 +3519,7 @@ main#mainContent p { max-width:74ch; line-height:1.72; }
 main#mainContent h3 { max-width:28ch; line-height:1.3; margin-top:0; margin-bottom:16px; }
 main#mainContent .category-opening-title { margin-bottom:clamp(28px,4vw,54px); }
 
-/* Story blocks: text and related media share one editorial row. */
+ 
 main#mainContent .lhu-editorial-row {
   display:grid; grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
   gap:clamp(28px,4.2vw,68px); align-items:center;
@@ -3617,7 +3558,7 @@ main#mainContent .lhu-editorial-media-column iframe {
 main#mainContent .lhu-editorial-media-column .lhu-image-frame > img { max-height:min(62vh,560px); }
 main#mainContent .lhu-editorial-media-column .lhu-image-frame { width:100%; }
 
-/* About profiles and timeline */
+ 
 main#mainContent section#ABOUT > .profile-content-box { max-width:1120px; margin-inline:auto; }
 main#mainContent .profile-inner.lhu-profile-editorial {
   display:grid; grid-template-columns:minmax(0,1.08fr) minmax(280px,.92fr);
@@ -3627,14 +3568,14 @@ main#mainContent .profile-inner.lhu-profile-editorial > .lhu-editorial-copy-item
 main#mainContent .profile-inner.lhu-profile-editorial > .lhu-editorial-media-item { grid-column:2; grid-row:1 / span 40; align-self:center; position:sticky; top:24px; max-width:100%; }
 main#mainContent .profile-inner .profile-carousel { max-width:100%; }
 
-/* VHS / Humanart: larger media stage, concise companion column. */
+ 
 main#mainContent #vhs-preview-wrap { max-width:100%; margin:0 0 12px; }
 main#mainContent .vhs-view-toggles, main#mainContent .vhs-dots { justify-content:center; }
 main#mainContent #three-container { height:min(68vh,700px); min-height:440px; margin:0; }
 main#mainContent .three-zoom-controls { justify-content:flex-end; }
 main#mainContent .atom-disclaimer { text-align:left; }
 
-/* Projects: equal dignity for description and media. */
+ 
 main#mainContent #projects-accordion { width:100%; max-width:1220px; margin-inline:auto; }
 main#mainContent .prod-body-inner.lhu-project-editorial {
   display:grid; grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);
@@ -3644,12 +3585,12 @@ main#mainContent .prod-body-inner.lhu-project-editorial .prod-desc { grid-column
 main#mainContent .prod-body-inner.lhu-project-editorial .carousel-wrapper { grid-column:2; grid-row:1; max-width:100%; }
 main#mainContent .prod-body-inner.lhu-project-editorial > .carousel-dots { grid-column:2; grid-row:2; justify-content:center; }
 
-/* Storytime is a reading environment, not a full-width text strip. */
+ 
 main#mainContent .chapter-topnav, main#mainContent .lang-select-container { width:min(100%,1100px); margin-inline:auto; }
 main#mainContent .text-reader-container { width:min(100%,1100px); margin:24px auto 0; padding:clamp(22px,4vw,56px); }
 main#mainContent #text-content { max-width:76ch; margin-inline:auto; line-height:1.78; }
 
-/* Music: generous text column with one anchored visual feature. */
+ 
 main#mainContent .music-content.lhu-music-editorial {
   display:grid; grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr);
   gap:clamp(28px,4vw,64px); align-items:start; max-width:1220px; margin-inline:auto;
@@ -3661,7 +3602,7 @@ main#mainContent .music-content.lhu-music-editorial > .music-video-link {
 }
 main#mainContent .music-content h3 { margin-top:28px; }
 
-/* Contact and Donate become balanced two-column end cards. */
+ 
 main#mainContent section#CONTACT, main#mainContent section#DONATE {
   display:grid; grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);
   gap:0 clamp(30px,4.5vw,72px); align-items:center; max-width:1120px !important;
@@ -3701,7 +3642,7 @@ main#mainContent section#DONATE .transparent-sticker { max-width:min(100%,420px)
 </style>
 
 <style id="lhu-navigation-and-page-corrections">
-/* Compact horizontal category planet strip, always visible in the toolbar. */
+ 
 .strip-wrapper.sphere-nav-toolbar { width:min(100%, 1280px); max-width:1280px; min-height:54px; }
 .nav-toolbar-row { gap:10px; }
 #categorySpherePanel.sphere-menu,
@@ -3746,7 +3687,7 @@ main#mainContent section#DONATE .transparent-sticker { max-width:min(100%,420px)
   .sphere-nav-toolbar .audio-btn img { width:22px; height:22px; }
 }
 
-/* FINAL NAV FIX: visible infinite planet marquee + both duck controls + expandable legacy picker. */
+ 
 .nav-toolbar-row { display:flex !important; align-items:center; width:100%; gap:10px; }
 #duckCrt.category-marquee {
   display:flex !important; position:relative; flex:1 1 auto !important; min-width:0 !important;
@@ -3801,16 +3742,13 @@ main#mainContent section#DONATE .transparent-sticker { max-width:min(100%,420px)
   #categorySpherePanel .sphere-category-grid { flex-wrap:wrap; justify-content:center; }
 }
 
-/* Shared soft hologram glow for every category heading: blue / yellow / red
-   drift slowly around the letters instead of hard chromatic offsets. */
+ 
 main#mainContent h2.category-opening-title {
   color:var(--text) !important; font-weight:900 !important; letter-spacing:.045em !important;
-  /* Static fallback keeps the RGB glow visible when motion is disabled.
-     No !important here, so the animation can take over when it runs. */
+   
   text-shadow:-3px -2px 9px rgba(24,92,255,.72), 3px 3px 11px rgba(224,180,34,.62), 0 0 24px rgba(224,49,45,.48);
   animation:lhu-hologram-title 9s ease-in-out infinite !important;
 }
-/* QA-VOSS: sanfter Blau/Gelb/Rot-Holo für alle Kategorie-Titel. */
 @keyframes lhu-hologram-title {
   0%,100% {
     text-shadow:-5px -3px 12px rgba(24,92,255,.78), 5px 4px 14px rgba(224,180,34,.66), 0 0 28px rgba(224,49,45,.48);
@@ -3823,11 +3761,11 @@ main#mainContent h2.category-opening-title {
   }
 }
 
-/* Keep page headings below the sticky toolbar. */
+ 
 main#mainContent { padding-top:clamp(42px,5vw,72px) !important; }
 main#mainContent > section { scroll-margin-top:110px; }
 
-/* ABOUT: carousel sits at the top-right beside the profile heading and opening copy. */
+ 
 @media (min-width:900px) and (orientation:landscape) {
   main#mainContent .profile-inner.lhu-profile-editorial { grid-template-columns:minmax(0,1fr) minmax(300px,.86fr); align-items:start; }
   main#mainContent .profile-inner.lhu-profile-editorial > .profile-carousel,
@@ -3839,7 +3777,7 @@ main#mainContent > section { scroll-margin-top:110px; }
   main#mainContent .profile-inner.lhu-profile-editorial > p:first-of-type { grid-column:1 !important; }
 }
 
-/* VHS: preserve the intended sequence: large cover, orange selector dots, then text. */
+ 
 main#mainContent section#VHS\ MULTIVERSE.lhu-vhs-clean-layout { display:flex; flex-direction:column; align-items:stretch; }
 main#mainContent section#VHS\ MULTIVERSE #vhs-preview-wrap { order:1; width:min(100%,900px); max-width:900px; min-height:clamp(260px,55vh,620px); margin:0 auto 18px; }
 main#mainContent section#VHS\ MULTIVERSE #vhs-preview-img { max-width:100% !important; max-height:58vh !important; object-fit:contain; }
@@ -3849,7 +3787,7 @@ main#mainContent section#VHS\ MULTIVERSE #vhs-dots .vhs-dot { width:20px; height
 main#mainContent section#VHS\ MULTIVERSE #vhs-dots .vhs-dot.active { background:#ff861d; border-color:#ff861d; transform:scale(1.12); }
 main#mainContent section#VHS\ MULTIVERSE .vhs-content { order:4; width:min(100%,1100px); margin:0 auto; }
 
-/* PROJECTS: accordion entries must not overlap. Keep each item's description and media stacked. */
+ 
 main#mainContent #projects-accordion .prod-body-inner,
 main#mainContent #projects-accordion .prod-body-inner.lhu-project-editorial {
   display:flex !important; flex-direction:column !important; align-items:stretch !important;
@@ -3862,14 +3800,13 @@ main#mainContent #projects-accordion .carousel-dots { display:flex !important; j
 main#mainContent #projects-accordion .carousel-dot { width:20px !important; height:20px !important; border-radius:50% !important; background:#514941 !important; }
 main#mainContent #projects-accordion .carousel-dot.active { background:#ff861d !important; border-color:#ff861d !important; }
 
-/* MUSIC: video thumbnail follows all editorial copy, at the very bottom. */
+ 
 main#mainContent .music-content.lhu-music-editorial { display:flex !important; flex-direction:column !important; align-items:stretch; max-width:1000px; }
 main#mainContent .music-content .music-video-link { order:999 !important; width:min(100%,560px); max-width:560px !important; margin:34px auto 8px !important; position:static !important; }
 @media (prefers-reduced-motion:reduce) { main#mainContent h2.category-opening-title { animation:none !important; } }
 
-
-/* === LHU FINAL LAYOUT PASS === */
-/* Keep only the animated planet rail. The old duplicate static category panel stays hidden. */
+ 
+ 
 #categorySpherePanel, .sphere-menu, #categorySphereGrid { display:none !important; }
 .nav-toolbar-row { min-height:58px !important; }
 #duckCrt.category-marquee {
@@ -3933,7 +3870,7 @@ main#mainContent .music-content .music-video-link { order:999 !important; width:
   #collapseToggle img, #audioToggle img { width:22px !important; height:22px !important; }
 }
 
-/* ABOUT: TEAM is the RGB hero; remove the redundant TEAM subheading. */
+ 
 main#mainContent section#ABOUT > h2.category-opening-title { text-transform:uppercase; }
 main#mainContent section#ABOUT .profile-content-box { max-width:min(100%,1180px) !important; }
 main#mainContent section#ABOUT .profile-inner.lhu-profile-editorial,
@@ -3956,7 +3893,7 @@ main#mainContent section#ABOUT .profile-inner > .lhu-editorial-copy-item p {
 }
 main#mainContent section#ABOUT .profile-inner > h4:first-of-type { color:var(--strip-active); }
 
-/* PROJECTS: media + selectors live in one left field; description is a separate scroll panel on desktop. */
+ 
 @media(min-width:1000px) {
   main#mainContent #projects-accordion .prod-body-inner {
     display:grid !important; grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr) !important;
@@ -4016,10 +3953,9 @@ main#mainContent section#ABOUT .profile-inner > h4:first-of-type { color:var(--s
   }
 }
 
-
 main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !important; color:var(--strip-active) !important; text-align:center !important; }
 
-/* Reset legacy CRT span typography/padding inherited by the new planet chips. */
+ 
 #categoryMarqueeTrack .marquee-planet {
   box-sizing:border-box !important; padding:0 !important; margin:0 !important;
   line-height:0 !important; font-size:0 !important; text-shadow:none !important;
@@ -4036,8 +3972,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 #categoryMarqueeTrack .marquee-category.active .marquee-label { color:var(--text) !important; }
 @media(max-width:760px) { #categoryMarqueeTrack .marquee-label { font-size:9px !important; } }
 
-/* TOUCH ACCESSIBILITY — final word: the compact 34-35px variants above shrank
-   the actual tap targets. Keep the visual size but guarantee a 44px hit area. */
+ 
 .sphere-nav-toolbar .theme-btn,
 .sphere-nav-toolbar .audio-btn,
 .sphere-nav-toolbar .collapse-btn,
@@ -4046,10 +3981,10 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
   min-width:44px !important; min-height:44px !important;
 }
 </style>
-<!-- QA-VOSS: rot/gelb/blau mit je eigenen ::before/::after-Keyframes. -->
+
 <style id="lhu-signal-personality">
-/* Each signal colour gets its own INNER animation; the pill shape stays identical. */
-/* RED — fast, hot interference scan with a sharp flare */
+ 
+ 
 .lhu-pill-red::before {
   background-size:100% 30px;
   animation:signalRedScan 1.35s steps(5) infinite;
@@ -4068,7 +4003,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
   45% { opacity:.85; }
   100% { transform:translateX(58%) rotate(12deg); opacity:0; }
 }
-/* YELLOW — slow radial core pulse with a wide golden shimmer */
+ 
 .lhu-pill-yellow::before {
   background:repeating-radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(255,255,255,.24) 8px 9px, transparent 10px 17px);
   background-size:100% 100%;
@@ -4086,7 +4021,7 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
   0%,100% { transform:translateX(-52%) rotate(-18deg); opacity:.1; }
   50% { transform:translateX(52%) rotate(-18deg); opacity:.72; }
 }
-/* BLUE — cool horizontal wave with a slow rotating orbit */
+ 
 .lhu-pill-blue::before {
   background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(190,235,255,.26) 7px 8px, transparent 9px 15px);
   animation:signalBlueWave 3.1s linear infinite;
@@ -4105,25 +4040,23 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
   50% { opacity:.7; }
   100% { transform:translateX(52%) rotate(152deg); opacity:.12; }
 }
-/* GLB marble navigation: CSS spheres become invisible layout placeholders
-   once stonemarble.glb has loaded successfully. */
+ 
 html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
 </style>
 </head>
 
 <body class="intro-mode">
 <a class="skip-link" href="#mainContent">Zum Inhalt springen</a>
-<!-- [HTML] AUDIO-ELEMENTE -->
+
 <audio id="quackAudio" preload="auto" src="quack/quack01.mp3"></audio>
 <audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
-<audio crossorigin="anonymous" id="background-music" loop="" preload="auto">
+<audio crossorigin="anonymous" id="background-music" loop="" preload="metadata">
   <source src="GOAT.mp3" type="audio/mpeg"/>
 </audio>
 <audio id="snd-wolf" preload="auto" src="wolfwhistttle.mp3"></audio>
 <audio id="snd-rizz" preload="auto" src="rizz-sound-effect.mp3"></audio>
 <audio id="snd-rainbow" preload="auto" src="rainbow.mp3"></audio>
 
-<!-- [HTML] INTRO-BEREICH -->
 <div id="lhu-intro">
   <canvas id="lhu-intro-canvas"></canvas>
   <div id="lhu-intro-vignette"></div>
@@ -4150,7 +4083,6 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
   <div id="lhu-intro-word"></div>
 </div>
 
-<!-- [HTML] 3D-ERLEBNIS -->
 <div id="lhu-index-experience">
   <canvas id="matrix-bg"></canvas>
 
@@ -4180,7 +4112,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
     <span class="loading-text">LOADING</span>
   </div>
 
-  <!-- Integrated 3D controls: the existing bottom pill expands into the workspace. -->
+  
   <div id="kobo-3d-overlay" data-mood="daylight" hidden aria-label="3D stage effects">
     <div class="kobo-drop-hint" id="kobo-drop-hint" aria-hidden="true">DROP GLB TO LOAD</div>
     <div id="kobo-marble-sheen" aria-hidden="true"></div>
@@ -4195,7 +4127,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
         </div>
 
         <div class="kobo-panel-card-inner">
-          <!-- Surface & materials -->
+          
           <div class="kobo-panel-card" id="kobo-panel-surface">
             <div class="kobo-row kobo-import-row">
               <span class="kobo-row-label">IMPORT</span>
@@ -4228,7 +4160,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
             </div>
           </div>
 
-          <!-- Camera / optics -->
+          
           <div class="kobo-panel-card" id="kobo-panel-optics" hidden>
             <div class="kobo-row">
               <span class="kobo-row-label">CAMERA</span>
@@ -4250,7 +4182,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
             </div>
           </div>
 
-          <!-- Render engine -->
+          
           <div class="kobo-panel-card" id="kobo-panel-engine" hidden>
             <div class="kobo-row">
               <span class="kobo-row-label">PRESETS</span>
@@ -4285,7 +4217,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
             </div>
           </div>
 
-          <!-- Studio stage, lighting and backdrops -->
+          
           <div class="kobo-panel-card" id="kobo-panel-stage" hidden>
             <div class="kobo-row">
               <span class="kobo-row-label">BACKDROP</span>
@@ -4321,7 +4253,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
             </div>
           </div>
 
-          <!-- Motion timeline -->
+          
           <div class="kobo-panel-card" id="kobo-panel-motion" hidden>
             <div class="kobo-row">
               <span class="kobo-row-label">MOTION</span>
@@ -4337,7 +4269,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
             </div>
           </div>
 
-          <!-- Effects and image capture -->
+          
           <div class="kobo-panel-card" id="kobo-panel-fx" hidden>
             <div class="kobo-row">
               <span class="kobo-row-label">SPAWN FX</span>
@@ -4354,8 +4286,6 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
               <span class="kobo-row-label">SFX MODE</span>
               <select class="kobo-select" id="kobo-sfx-mode" aria-label="Spawn sound and animation"><option value="random" selected>RANDOM</option><option value="pop">POP</option><option value="push">PUSH</option><option value="pew">PEW</option><option value="noodly">NOODLY</option><option value="boing">BOING</option><option value="dong">DONG</option></select>
             </div>
-
-
 
           </div>
         </div>
@@ -4418,15 +4348,13 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
   </div>
 </div>
 
-
-<!-- [HTML] HAUPTSEITE / SITE-SHELL -->
 <div aria-label="Lightning Horn Unicorn Hauptseite" hidden="hidden" id="site-shell">
   <div class="closed" data-category="ABOUT" id="door-overlay">
     <div class="door-panel"></div>
   </div>
 
   <header class="header" id="headerEl">
-    <!-- One permanent h1 for the document; category titles stay h2. -->
+    
     <h1 class="sr-only" id="site-title">Lightning Horn Unicorn</h1>
     <div class="strip-wrapper sphere-nav-toolbar" id="stripWrapper">
       <div class="nav-toolbar-row">
@@ -4435,10 +4363,10 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
           <div class="duck-crt-track category-marquee-track" id="categoryMarqueeTrack"></div>
         </nav>
         <button aria-label="Duck-Sound stummschalten" class="audio-btn" id="audioToggle" title="Duck-Sound stummschalten" type="button">
-          <img alt="" src="duck.png" data-duck-on="duck.png" data-duck-muted="ghostduck.png"/>
+          <img width="120" height="120" alt="" src="duck.png" data-duck-on="duck.png" data-duck-muted="ghostduck.png"/>
         </button>
         <button aria-label="Kategorienleiste schließen" aria-expanded="true" aria-controls="duckCrt" class="collapse-btn" id="collapseToggle" title="Kategorieauswahl" type="button">
-          <img alt="" src="duck.png"/>
+          <img width="120" height="120" alt="" src="duck.png"/>
         </button>
       </div>
       <section aria-label="Kategorieauswahl" aria-hidden="true" class="sphere-menu is-closed" id="categorySpherePanel">
@@ -4460,10 +4388,29 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
   <p aria-live="polite" class="sr-only" id="a11yStatus" role="status"></p>
 </div>
 
-<!-- ====================================================================== -->
-<!-- [JS] HINTERGRUND                                                     -->
-<!-- ====================================================================== -->
-<script id="lhu-background-js">
+<script id="lhu-background-js">// bg2d canvas loop, matrix, traffic cone phases, 7 words, particles, theme init
+
+(function pickLhuStageColor() {
+  var stage = document.getElementById('lhu-index-experience');
+  if (!stage) return;
+  var palette = [
+    '#070708', '#2a0f14', '#082426', '#1b1030',
+    '#0d2013', '#2b1a08', '#121820', '#241020'
+  ];
+  window.LHU_STAGE_PALETTE = palette.slice();
+  function apply(hex) {
+    stage.style.setProperty('--lhu-stage-color', hex);
+    window.LHU_STAGE_COLOR = hex;
+  }
+  apply(palette[Math.floor(Math.random() * palette.length)]);
+  // Explicit override: LHU_SET_STAGE_COLOR('#082426') pins the colour.
+  window.LHU_SET_STAGE_COLOR = function (hex) {
+    if (palette.indexOf(hex) < 0) return false;
+    apply(hex);
+    return true;
+  };
+})();
+
 (function initBackground() {
   const mcanvas = document.getElementById("matrix-bg");
   const mctx = mcanvas.getContext("2d", { alpha: false });
@@ -4501,43 +4448,52 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
   cctx.font = '50px sans-serif'; cctx.textAlign = 'center'; cctx.textBaseline = 'middle';
   cctx.fillText('🚧', 32, 32);
 
-  function initTheme() {
+function initTheme() {
     W = mcanvas.width = Math.floor(innerWidth * DOWNSCALE);
     H = mcanvas.height = Math.floor(innerHeight * DOWNSCALE);
     cx = W / 2; cy = H / 2;
 
-    stars = [];
-    for (let i = 0; i < 32; i++) {
-      stars.push({ x: (Math.random() - 0.5) * W * 2, y: (Math.random() - 0.5) * H * 2, z: Math.random() * 1000 + 1, s: Math.random() * 2.5 + 1.5 });
+    // Seed particles only once. initTheme() also runs on resize and whenever
+    // the studio toggles the backdrop; re-seeding here reshuffled every "7"
+    // size on each call, which made the background visibly change.
+    if (!stars.length) {
+      for (let i = 0; i < 32; i++) {
+        stars.push({ x: (Math.random() - 0.5) * W * 2, y: (Math.random() - 0.5) * H * 2, z: Math.random() * 1000 + 1, s: Math.random() * 2.5 + 1.5 });
+      }
     }
 
-    balls = [];
-    const particleTypes = [
-      { color: "#ff7c91", glow: "rgba(255,124,145,.24)" },
-      { color: "#70cfff", glow: "rgba(112,207,255,.24)" },
-      { color: "#d7d2c8", glow: "rgba(215,210,200,.2)" }
-    ];
-    for (let i = 0; i < 18; i++) {
-      const particle = particleTypes[i % particleTypes.length];
-      balls.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 1.35, vy: (Math.random() - 0.5) * 1.35, s: Math.random() * 20 + 16, ...particle, phase: Math.random() * Math.PI * 2 });
+    if (!balls.length) {
+      const particleTypes = [
+        { color: "#ff7c91", glow: "rgba(255,124,145,.24)" },
+        { color: "#70cfff", glow: "rgba(112,207,255,.24)" },
+        { color: "#d7d2c8", glow: "rgba(215,210,200,.2)" }
+      ];
+      for (let i = 0; i < 18; i++) {
+        const particle = particleTypes[i % particleTypes.length];
+        balls.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 1.35, vy: (Math.random() - 0.5) * 1.35, s: Math.random() * 20 + 16, ...particle, phase: Math.random() * Math.PI * 2 });
+      }
     }
 
-    conesArr = [];
-    for (let i = 0; i < 24; i++) {
-      conesArr.push({ x: Math.random() * W, y: Math.random() * H, s: Math.random() * 28 + 28, speed: Math.random() * 3 + 2 });
+    if (!conesArr.length) {
+      for (let i = 0; i < 24; i++) {
+        conesArr.push({ x: Math.random() * W, y: Math.random() * H, s: Math.random() * 28 + 28, speed: Math.random() * 3 + 2 });
+      }
     }
   }
 
   window.setMatrixTheme = function(index) {
+    const indexChanged = index !== currentBgIndex;
     currentBgIndex = index;
-    mcanvas.style.opacity = "0.75";
-    initTheme();
+    // Re-seeding the starfield is only meaningful when the backdrop mode
+    // actually changes. Re-running it on every settings open reshuffles the
+    // "7" sizes and makes the background look different without a reason.
+    if (indexChanged) initTheme();
   };
 
   let bgAnimationFrame = null;
   let bgActive = true;
 
-  function drawBg(now = performance.now()) {
+function drawBg(now = performance.now()) {
     bgAnimationFrame = null;
     if (!bgActive || document.hidden || document.body.classList.contains('site-mode')) return;
     if (now - lastBackgroundFrameTime < BACKGROUND_FRAME_INTERVAL) {
@@ -4634,12 +4590,8 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
 })();
 </script>
 
-<!-- ====================================================================== -->
-<!-- [JS] INDEX-ERLEBNIS / THREE.JS                                        -->
-<!-- ====================================================================== -->
-<script id="lhu-index-experience-js" type="module">
-// Use the same Three.js 0.160.0 source declared in the import map.
-// HUMANART shares this global engine, so all 3D areas stay version-aligned.
+<script id="lhu-index-experience-js" type="module">// 3d three stage: scene, lights, heads, kobo studio, bloom, locks camera to hotspots
+
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -4654,8 +4606,6 @@ window.LHU_THREE_REVISION = THREE.REVISION;
 const isMobileDevice = window.matchMedia("(max-width: 768px)").matches ||
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-// Keep the longest internal canvas edge near 1024 px on phones and 1440 px elsewhere.
-// The browser still displays the canvas at its normal CSS size, so the aspect ratio is untouched.
 const getDPR = (width = innerWidth, height = innerHeight) => {
   const maxBufferEdge = isMobileDevice ? 1024 : 1440;
   const dprLimit = isMobileDevice ? 1.10 : 1.25;
@@ -4718,8 +4668,6 @@ const translations = {
 };
 const t = translations[currentLang];
 
-// Every early DOM write is null-safe: when a deep link boots the shell first,
-// the intro nodes can already be gone by the time this deferred module runs.
 const setNodeText = (node, value) => {
   if (node) node.replaceChildren(document.createTextNode(value));
 };
@@ -4732,6 +4680,9 @@ setNodeText(document.getElementById("lhu-site-description"), t.srDescription);
 setNodeText(document.querySelector(".loading-text"), t.loading);
 document.getElementById("lhu-image-slot")?.setAttribute("aria-label", t.imagePlaceholder);
 document.getElementById("lhu-pill-buttons")?.setAttribute("aria-label", t.chooseIntro);
+document.querySelector('[data-intro="red"]')?.setAttribute("aria-label", t.introRed);
+document.querySelector('[data-intro="yellow"]')?.setAttribute("aria-label", t.introYellow);
+document.querySelector('[data-intro="blue"]')?.setAttribute("aria-label", t.introBlue);
 document.getElementById("btn-skip-heads")?.replaceChildren(document.createTextNode(t.skipHeads));
 document.getElementById("btn-skip-main")?.replaceChildren(document.createTextNode(t.skipMain));
 document.getElementById("bg-prev")?.setAttribute("aria-label", t.previousBackground);
@@ -4753,9 +4704,7 @@ document.getElementById("catStrip")?.setAttribute("aria-label", isGerman ? "Kate
 document.getElementById("categorySpherePanel")?.setAttribute("aria-label", isGerman ? "Kategorieauswahl" : "Category selection");
 document.getElementById("mainContent")?.setAttribute("aria-label", isGerman ? "Inhalt" : "Content");
 
-/* ============================================================================
-   [JS-DATEN] ZITATE / DAILY WISDOM
-   ============================================================================ */
+ 
 const dailyWisdom = {
   en: [
     "The early bird catches the worm. Because the worm has no basic radar system.",
@@ -4794,12 +4743,13 @@ function updateWisdomCounter(bump = false) {
 updateWisdomCounter();
 
 let lastModalTrigger = null;
+
 const toggleModal = (id, show) => {
   const el = document.getElementById(id);
   if (!el) return;
   if (show) {
-    // music-focus hides these modals via CSS, and inert backgrounds keep Tab inside.
-    // QA-VOSS: Modale sichtbar + Hintergrund inert (Fokusfalle).
+    
+
     setMusicFocus(false);
     document.getElementById('site-shell')?.setAttribute('inert', '');
     document.getElementById('ui-layer')?.setAttribute('inert', '');
@@ -4842,7 +4792,7 @@ document.addEventListener('keydown', (event) => {
   else if (disclaimerModal?.classList.contains('show')) toggleModal('disclaimer-modal', false);
 });
 
-/* [JS-DATEN] 3D-HEADS */
+ 
 const LAST_HEAD_STORAGE_KEY = 'lhu-last-head';
 const MODELS = [
   { label: "unibrowserloadicorn", url: "https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/heads/unibrowserloadicorn.glb" },
@@ -4901,17 +4851,20 @@ function renderHypnoAscii(now) {
   }
   hypnoAsciiRAF = requestAnimationFrame(renderHypnoAscii);
 }
+
 function startHypnoAscii() { cancelAnimationFrame(hypnoAsciiRAF); hypnoAsciiStartedAt = performance.now(); hypnoAsciiRAF = requestAnimationFrame(renderHypnoAscii); }
-// QA-VOSS: Overlay referenzgezählt — überlappende Loads dürfen es nicht zu früh schließen.
+
 let loadingDepth = 0;
+
 function startLoading() {
   loadingDepth += 1;
   loadingEl.classList.add("show");
   if (hypnoSvgImage.complete && hypnoSvgImage.naturalWidth) startHypnoAscii();
 }
+
 function stopLoading() {
   loadingDepth = Math.max(0, loadingDepth - 1);
-  if (loadingDepth > 0) return; // another head load is still in flight
+  if (loadingDepth > 0) return; 
   loadingEl.classList.remove("show");
   cancelAnimationFrame(hypnoAsciiRAF);
   hypnoAsciiRAF = 0;
@@ -4940,12 +4893,12 @@ const rim = new THREE.DirectionalLight(0xffe6d6, 0.85); rim.position.set(-3, 5, 
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
-dracoLoader.setDecoderConfig({ type: "js" });
+dracoLoader.setDecoderConfig({ type: "wasm" }); 
 dracoLoader.setWorkerLimit(1);
 const loader = new GLTFLoader();
 loader.setDRACOLoader(dracoLoader);
 
-/* --- INTRO 3D PREVIEW --- */
+ 
 const hitEnterSlot = document.getElementById("lhu-image-slot");
 const hitEnterScene = new THREE.Scene();
 const hitEnterCamera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
@@ -4990,7 +4943,7 @@ function restoreHitEnterAppearance() {
 }
 
 function fitHitEnterModel(model) {
-  // Portal preview: two-thirds scale, filling the circle without touching its edge.
+  
   model.scale.multiplyScalar(2 / 3);
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
@@ -5043,7 +4996,7 @@ const hitEnterResizeObserver = new ResizeObserver(() => {
 });
 hitEnterResizeObserver.observe(hitEnterSlot);
 
-/* --- MAIN 3D SCULPTURE LOADER --- */
+ 
 let object = null, mixer = null;
 let activeHeadAnimations = [];
 const clock = new THREE.Clock();
@@ -5059,11 +5012,12 @@ function disposeObject(obj) {
     }
   });
 }
+
 function disposeMaterial(mat) {
   if (!mat) return;
-  // QA-VOSS: generisch alle Texture-Slots + uniforms disposen.
-  // Cover every texture slot (roughnessMap, metalnessMap, aoMap, emissiveMap,
-  // transmissionMap, …) instead of a hardcoded list, and dispose each once.
+
+  
+  
   const textures = new Set();
   for (const value of Object.values(mat)) {
     if (value && value.isTexture) textures.add(value);
@@ -5078,6 +5032,7 @@ function disposeMaterial(mat) {
 }
 
 let headLoadSequence = 0;
+
 function loadHead(url, options = {}) {
   const requestId = ++headLoadSequence;
   startLoading();
@@ -5090,7 +5045,7 @@ function loadHead(url, options = {}) {
     (g) => {
       if (requestId !== headLoadSequence) {
         disposeObject(g.scene);
-        stopLoading(); // balance the startLoading() of this stale request
+        stopLoading(); 
         return;
       }
       object = g.scene;
@@ -5162,7 +5117,6 @@ function loadHead(url, options = {}) {
   );
 }
 
-// QA-VOSS: autoRotate respektiert Reduced Motion.
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -5176,9 +5130,11 @@ controls.autoRotateSpeed = 1.15;
 
 let musicOn = false;
 const music = document.getElementById("background-music");
+
 const setMusicFocus = (active) => {
   document.getElementById("lhu-index-experience")?.classList.toggle("music-focus", Boolean(active));
 };
+
 const stopMusicPlayback = () => {
   music.pause();
   musicOn = false;
@@ -5209,7 +5165,6 @@ document.getElementById("music-toggle").onclick = async () => {
     }
   }
 };
-// MAIN PAGE navigation is bound once by the shared site controller below.
 
 let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
 let gagEndTimer = null;
@@ -5257,10 +5212,10 @@ document.getElementById("heart-btn").onclick = () => {
   document.getElementById("heart-emojis").classList.add("active");
   const sndWolf = document.getElementById("snd-wolf");
   const sndRizz = document.getElementById("snd-rizz");
-  // Sound is served locally now. Keep the error paths defensive so a failed
-  // decode cannot strand the camera gag until the 9 s fallback. endGag is idempotent.
+  
+  
   sndWolf.currentTime = 0;
-  // QA-VOSS: Sound lokal; Fehler beenden den Gag sofort statt nach 9 s.
+
   sndWolf.onerror = endGag;
   sndWolf.play().catch(endGag);
   sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; };
@@ -5269,8 +5224,8 @@ document.getElementById("heart-btn").onclick = () => {
 };
 
 function endGag() {
-  // QA-VOSS: idempotent — error/onended/timeout feuern alle.
-  if (!gagActive) return; // idempotent: error, onended and timeout may all fire
+
+  if (!gagActive) return; 
   if (gagEndTimer !== null) { clearTimeout(gagEndTimer); gagEndTimer = null; }
   if (gagBase && object) object.position.copy(gagBase);
   if (object) object.rotation.set(0, 0, 0);
@@ -5442,7 +5397,7 @@ selectEl.value = initialHead.url;
 selectEl.addEventListener("change", (event) => loadHead(event.target.value));
 loadHead(initialHead.url);
 
-/* --- CINEMATIC INTRO SHADER & THREE-SIGNAL TRIGGER --- */
+ 
 (() => {
   const intro = document.getElementById("lhu-intro");
   const audio = document.getElementById("lhu-intro-audio");
@@ -5451,7 +5406,7 @@ loadHead(initialHead.url);
   document.getElementById("btn-skip-heads")?.addEventListener("click", () => {
     window.__lhuStopIntro?.(true);
   });
-  // MAIN PAGE navigation is bound once by the shared site controller below.
+  
 
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
   const word = document.getElementById("lhu-intro-word");
@@ -5495,7 +5450,7 @@ loadHead(initialHead.url);
     rLoc = gl.getUniformLocation(prog, "r"); tLoc = gl.getUniformLocation(prog, "t"); hLoc = gl.getUniformLocation(prog, "h");
   }
 
-  function resizeIntro() {
+function resizeIntro() {
     const cssWidth = Math.max(1, innerWidth);
     const cssHeight = Math.max(1, innerHeight);
     const introRenderScale = isMobileDevice ? 0.62 : 0.78;
@@ -5508,7 +5463,8 @@ loadHead(initialHead.url);
 
   let introCleanedUp = false;
   let introLaunchTimer = null;
-  function cleanupIntro(stopAudio = false) {
+
+function cleanupIntro(stopAudio = false) {
     if (introLaunchTimer !== null) clearTimeout(introLaunchTimer);
     introLaunchTimer = null;
     if (introCleanedUp) {
@@ -5528,14 +5484,15 @@ loadHead(initialHead.url);
   }
   window.__lhuStopIntro = (stopAudio = true) => cleanupIntro(stopAudio);
 
-  function easeOutElastic(x) {
+function easeOutElastic(x) {
     const c4 = (2 * Math.PI) / 3;
     return x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
   }
 
   const INTRO_WORDS = ["LIGHTNING", "HORN", "UNICORN"];
   let currentSpans = [];
-  function buildWordSpans(wordStr) {
+
+function buildWordSpans(wordStr) {
     word.innerHTML = "";
     currentSpans = [];
     const row = document.createElement("div");
@@ -5565,7 +5522,7 @@ loadHead(initialHead.url);
     word.appendChild(row);
   }
 
-  function animateIntro(now) {
+function animateIntro(now) {
     if (!document.body.contains(intro)) return;
     const timeOffset = (now - introStart) / 1000;
 
@@ -5676,12 +5633,12 @@ loadHead(initialHead.url);
         audio.currentTime = 0;
         audio.src = `lhu${introVariant}.mp3`;
         audio.load();
-        // iOS only allows play() inside the user-gesture task, not in a timer.
+        
         audio.play().catch(() => {});
       }
 
       introLaunchTimer = setTimeout(() => {
-        if (introCleanedUp) return; // a skip/entry may have torn the intro down
+        if (introCleanedUp) return; 
         introStart = performance.now();
         if (introAnimId !== null) cancelAnimationFrame(introAnimId);
         introAnimId = requestAnimationFrame(animateIntro);
@@ -5690,7 +5647,7 @@ loadHead(initialHead.url);
   });
 })();
 
-/* --- RENDER LOOP --- */
+ 
 let isTabVisible = !document.hidden;
 let indexExperienceActive = true;
 let indexAnimationFrame = null;
@@ -5712,16 +5669,15 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-// QA-VOSS: Haupt-Render-Loop; site-mode stoppt ihn bei Deep-Links.
 function animate(now = performance.now()) {
   indexAnimationFrame = null;
   if (!isTabVisible || !indexExperienceActive || indexExperienceSuspended ||
       document.body.classList.contains('site-mode')) return;
   indexAnimationFrame = requestAnimationFrame(animate);
-  // The backdrop texture must keep animating after the settings panel is closed.
+  
   window.__lhuUpdateBackdropTexture?.();
-  // Spawn FX must animate on the main stage too, not only inside the settings RAF.
-  // QA-VOSS: Spawn-FX laufen auch ohne geöffnete Einstellungen.
+  
+
   window.__lhuUpdateSpawn?.(now, object);
   if (now - lastIndexFrameTime < INDEX_FRAME_INTERVAL) return;
   lastIndexFrameTime = now;
@@ -5839,20 +5795,21 @@ function animate(now = performance.now()) {
         phase7Active = true;
       }
 
+      const home = object.userData.basePos || { x: 0, y: 0 };
       if (phase7Active) {
         object.rotation.x += delta * 15;
         object.rotation.y += (0 - object.rotation.y) * (delta * 8);
         object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-        object.position.x += (0 - object.position.x) * (delta * 8);
-        object.position.y += (Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
+        object.position.x += (home.x - object.position.x) * (delta * 8);
+        object.position.y += (home.y + Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
         wasInPhase7 = true;
       } else {
         if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
         object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8);
         object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8);
         object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
-        object.position.x += (0 - object.position.x) * (delta * 8);
-        object.position.y += (0 - object.position.y) * (delta * 8);
+        object.position.x += (home.x - object.position.x) * (delta * 8);
+        object.position.y += (home.y - object.position.y) * (delta * 8);
       }
 
       if (phase4Active) {
@@ -5885,8 +5842,9 @@ function animate(now = performance.now()) {
       object.rotation.x += (0 - object.rotation.x) * (delta * 8);
       object.rotation.y += (0 - object.rotation.y) * (delta * 8);
       object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-      object.position.x += (0 - object.position.x) * (delta * 8);
-      object.position.y += (0 - object.position.y) * (delta * 8);
+      const home = object.userData.basePos || { x: 0, y: 0 };
+      object.position.x += (home.x - object.position.x) * (delta * 8);
+      object.position.y += (home.y - object.position.y) * (delta * 8);
       if (object.userData.emissiveMats) {
         object.userData.emissiveMats.forEach(m => {
           m.emissive.lerp(m.userData.origE, delta * 5);
@@ -5955,9 +5913,7 @@ window.__lhuPauseIndexExperience = function() {
   try { renderer.dispose(); renderer.forceContextLoss(); } catch (error) {}
   try { hitEnterRenderer.dispose(); hitEnterRenderer.forceContextLoss(); } catch (error) {}
 };
-// The classic shared script runs before this deferred module. On a deep link it
-// already entered site-mode, but its __lhuPauseIndexExperience call was a no-op
-// (the function did not exist yet). Never start the hidden WebGL loop in that case.
+
 if (document.body.classList.contains('site-mode')) {
   indexExperienceActive = false;
   indexExperienceSuspended = true;
@@ -5978,9 +5934,7 @@ window.addEventListener("resize", () => {
   }, 150);
 });
 
-/* ============================================================================
-   [JS] INTEGRATED 3D HEAD CONTROLS — pill workspace
-   ============================================================================ */
+ 
 (() => {
   const overlay = document.getElementById("kobo-3d-overlay");
   const canvasWrap = document.getElementById("container3D");
@@ -5995,8 +5949,8 @@ window.addEventListener("resize", () => {
   const stage = document.getElementById("lhu-index-experience");
   if (!overlay || !canvasWrap || !openBtn || !dockWrap || !uiBottom || !modelSelect) return;
 
-  // One renderer, placed in the desktop preview column or in the clear upper
-  // stage area on phones. It is re-parented on orientation/breakpoint changes.
+  
+  
   const settingsColumn = document.createElement("div");
   settingsColumn.className = "kobo-settings-column";
   settingsColumn.id = "kobo-settings-column";
@@ -6012,15 +5966,16 @@ window.addEventListener("resize", () => {
   if (drawerCard) settingsColumn.appendChild(drawerCard);
   if (tabBar) settingsColumn.appendChild(tabBar);
   settingsColumn.prepend(sheetHandle);
-  // The original #container3D canvas is never moved into a second preview box.
-  // Settings operate on the one main scene and the one currently visible head.
+  
+  
   dockWrap.replaceChildren(settingsColumn);
   uiBottom.appendChild(dockWrap);
   const desktopStudioQuery = window.matchMedia("(min-width: 900px) and (orientation: landscape)");
   let koboActive = false;
+
   function placeKoboCanvas() {
-    // Intentionally keep the main viewport in its original DOM position.
-    // CSS gives that same viewport a right-side stage region on desktop.
+    
+    
   }
   desktopStudioQuery.addEventListener?.("change", () => {
     if (koboActive) requestAnimationFrame(() => {
@@ -6032,9 +5987,11 @@ window.addEventListener("resize", () => {
   const headlabMobileQuery = window.matchMedia("(max-width: 899px), (orientation: portrait) and (max-width: 1100px)");
   let headlabSheetDrag = null;
   let headlabSheetHeight = null;
+
   function headlabViewportHeight() {
     return Math.max(1, window.visualViewport?.height || window.innerHeight || 1);
   }
+
   function setHeadlabSheetHeight(heightPx, persist = false) {
     if (!headlabMobileQuery.matches) return null;
     const viewportHeight = headlabViewportHeight();
@@ -6052,6 +6009,7 @@ window.addEventListener("resize", () => {
     }
     return clampedHeight;
   }
+
   function restoreHeadlabSheetHeight() {
     if (!headlabMobileQuery.matches) return;
     const viewportHeight = headlabViewportHeight();
@@ -6074,6 +6032,7 @@ window.addEventListener("resize", () => {
     if (!headlabSheetDrag || event.pointerId !== headlabSheetDrag.pointerId) return;
     setHeadlabSheetHeight(headlabSheetDrag.startHeight + headlabSheetDrag.startY - event.clientY, false);
   });
+
   function finishHeadlabSheetDrag(event) {
     if (!headlabSheetDrag || (event && event.pointerId !== headlabSheetDrag.pointerId)) return;
     headlabSheetDrag = null;
@@ -6102,14 +6061,14 @@ window.addEventListener("resize", () => {
     if (drawerOpen && headlabMobileQuery.matches && !headlabSheetDrag) restoreHeadlabSheetHeight();
   });
 
-  // Imported GLBs remain selected when the settings pill is collapsed and reopened.
+  
   let kImportedModelActive = false;
 
   let koboInitialized = false;
   let drawerOpen = false;
   let koboRAF = 0;
-  // These are aliases to the original Head renderer, camera, scene and controls.
-  // No second WebGLRenderer, Scene, Camera or OrbitControls are created.
+  
+  
   let kScene = scene, kCamera = camera, kRenderer = renderer, kComposer = null, kBloomPass = null, kControls = controls, kClock = clock;
   let kKeyLight, kFillLight, kRimLight, kHemiLight, kGrid, kPlinth, kFrameHelper;
   let kModel = null, kMixer = null, kClips = [], kActiveActions = [];
@@ -6120,7 +6079,7 @@ window.addEventListener("resize", () => {
   let kMood = "daylight";
   let kResScale = 1.0;
   let kMaxFps = 0;
-  let kShadowsOn = true;
+  let kShadowsOn = !isMobileDevice; 
   let kShadowResolution = 256;
   let kVertexSnap = false;
   let kPixelMode = "off";
@@ -6155,8 +6114,8 @@ window.addEventListener("resize", () => {
   let kCurrentUrl = "";
   let kLastBackdrop = "matrix7";
   let kBackdropTexture = null;
-  // The main render loop lives outside this IIFE; expose a safe updater.
-  // QA-VOSS: Textur bleibt auch nach Schließen der Einstellungen aktuell.
+  
+
   window.__lhuUpdateBackdropTexture = () => {
     if (kBackdropTexture && kScene.background === kBackdropTexture) kBackdropTexture.needsUpdate = true;
   };
@@ -6165,10 +6124,12 @@ window.addEventListener("resize", () => {
   let audioCtx = null;
   let kViewCenter = new THREE.Vector3();
 
-  // The model occupies the open right side on desktop and the clear upper area on phones.
+  
+
   function getKoboViewCenter() {
     return kControls ? kControls.target.clone() : new THREE.Vector3();
   }
+
   function syncKoboViewCenter() {
     if (!kControls || !kCamera) return;
     kViewCenter.copy(kControls.target);
@@ -6191,8 +6152,8 @@ window.addEventListener("resize", () => {
   if (kFpsButton) kFpsButton.textContent = "FPS: MAX";
 
   function playKoboSynth(type) {
-    // The Ghost Duck controls the navigation quack only. It must not mute
-    // the main index experience, intro audio, music or Head Lab sound effects.
+    
+    
     if (kAudioMuted || !kSfxEnabled) return;
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -6220,7 +6181,7 @@ window.addEventListener("resize", () => {
   }
 
   function createRenderer() {
-    // Reuse the original main-page WebGL context and canvas.
+    
     kScene = scene;
     kCamera = camera;
     kRenderer = renderer;
@@ -6245,7 +6206,7 @@ window.addEventListener("resize", () => {
     renderTarget.samples = kAntialias ? 4 : 0;
     kComposer = new EffectComposer(kRenderer, renderTarget);
     kComposer.addPass(new RenderPass(kScene, kCamera));
-    // QA-VOSS: Bloom-Output ist deckend → Matrix-Canvas als CanvasTexture in die Szene.
+
     kBloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 0.72, 0.55, 0.18);
     kBloomPass.enabled = kBloomEnabled;
     kComposer.addPass(kBloomPass);
@@ -6262,7 +6223,7 @@ window.addEventListener("resize", () => {
     kClock = clock;
     kViewCenter.copy(kControls.target);
 
-    // Lighting controls now modify the lights that illuminate the main 3D head.
+    
     kHemiLight = ambient;
     kKeyLight = key;
     kFillLight = fill;
@@ -6270,7 +6231,7 @@ window.addEventListener("resize", () => {
     const shadowQuality = document.getElementById("kobo-shadow-quality");
     if (shadowQuality) shadowQuality.value = String(kShadowResolution);
 
-    // Optional stage helpers live in the same main scene and are hidden by default.
+    
     kGrid = new THREE.GridHelper(8, 24, 0xe85d75, 0xd8c3b0);
     kGrid.position.y = -1.15;
     if (Array.isArray(kGrid.material)) kGrid.material.forEach(m => { m.transparent = true; m.opacity = 0.28; });
@@ -6278,11 +6239,14 @@ window.addEventListener("resize", () => {
     kGrid.visible = false;
     kScene.add(kGrid);
 
+    // Wide plinth matching the 8x8 grid footprint. Every head is normalised
+    // to rest just above this surface in syncKoboMainModel().
     const plinthMaterial = new THREE.MeshStandardMaterial({ color: 0xd8c7ba, roughness: 0.72, metalness: 0.04 });
-    kPlinth = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.12, 0.16, 64), plinthMaterial);
+    kPlinth = new THREE.Mesh(new THREE.CylinderGeometry(4.0, 4.15, 0.16, 64), plinthMaterial);
     kPlinth.position.y = -1.14; kPlinth.receiveShadow = true; kPlinth.castShadow = true;
     kPlinth.visible = false;
     kScene.add(kPlinth);
+
     kFrameHelper = new THREE.BoxHelper(object || new THREE.Object3D(), 0xe85d75);
     kFrameHelper.visible = false;
     kScene.add(kFrameHelper);
@@ -6290,7 +6254,7 @@ window.addEventListener("resize", () => {
     createRenderer();
     applyKoboMood("daylight");
     applyKoboPedestal("none");
-    // A deliberate 0° must not be replaced by a fallback of 45°.
+    
     updateKoboLightAngle(Number(document.getElementById("kobo-light-angle")?.value ?? 0));
     syncKoboMainModel(object, mixer, activeHeadAnimations, modelSelect.value, modelSelect.selectedOptions?.[0]?.textContent || "LHU head");
   }
@@ -6346,17 +6310,22 @@ window.addEventListener("resize", () => {
     settingsRoot.querySelectorAll("[data-pedestal]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.pedestal === mode));
   }
 
-  // QA-VOSS: Matrix-Modi als CanvasTexture, solid als THREE.Color.
   function setKoboBackdrop(mode, color = null) {
     kLastBackdrop = mode;
     settingsRoot.querySelectorAll("[data-backdrop]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.backdrop === mode));
     settingsRoot.querySelectorAll("[data-solid-color]").forEach(btn => btn.classList.remove("is-active"));
     const matrix = document.getElementById("matrix-bg");
-    // Bloom renders through an EffectComposer whose final output is opaque, so
-    // the DOM backdrop behind the WebGL canvas vanishes. Put the same animated
-    // canvas into the scene as a background texture — then bloom sees it too.
+    
+    
+    
     if ((mode === "matrix7" || mode === "words" || mode === "balls") && matrix) {
-      if (!kBackdropTexture) kBackdropTexture = new THREE.CanvasTexture(matrix);
+      if (!kBackdropTexture) {
+        kBackdropTexture = new THREE.CanvasTexture(matrix);
+        // The source is a 2D canvas whose pixels are already sRGB. Without
+        // this, Three.js treats them as linear and converts again on output,
+        // turning the near-black backdrop grey and blowing out the "7"s.
+        kBackdropTexture.colorSpace = THREE.SRGBColorSpace;
+      }
       kBackdropTexture.needsUpdate = true;
       kScene.background = kBackdropTexture;
     } else {
@@ -6365,22 +6334,19 @@ window.addEventListener("resize", () => {
     if (mode === "matrix7") {
       stage.style.background = "";
       canvasWrap.style.background = "transparent";
-      if (matrix) matrix.style.opacity = "0.75";
       window.setMatrixTheme?.(0);
     } else if (mode === "words") {
       stage.style.background = "";
       canvasWrap.style.background = "transparent";
-      if (matrix) matrix.style.opacity = "0.75";
       window.setMatrixTheme?.(1);
     } else if (mode === "balls") {
       stage.style.background = "";
       canvasWrap.style.background = "transparent";
-      if (matrix) matrix.style.opacity = "0.75";
       window.setMatrixTheme?.(2);
     } else if (mode === "solid") {
       stage.style.background = color || "#f6f4ef";
-      // The composer output is opaque, so the CSS background alone is hidden.
-      // QA-VOSS: Solid-Farbe muss IN der Szene liegen (Composer deckt CSS ab).
+      
+
       kScene.background = new THREE.Color(color || "#f6f4ef");
       canvasWrap.style.background = "transparent";
       if (matrix) matrix.style.opacity = "0";
@@ -6916,7 +6882,6 @@ float lhuStoneNoise(vec3 p) {
     return choices[Math.floor(Math.random() * choices.length)];
   }
 
-  // QA-VOSS: Head-Wechsel triggert Spawn auch ohne Studio.
   function syncKoboMainModel(root, mainMixer, animations = [], url = modelSelect.value, label = "LHU head") {
     if (!root) {
       kModel = null; kMixer = null; kClips = []; kActiveActions = [];
@@ -6950,6 +6915,23 @@ float lhuStoneNoise(vec3 p) {
     }
     const box = new THREE.Box3().setFromObject(kModel);
     const size = box.getSize(new THREE.Vector3());
+    if (isNewModel) {
+      // Normalise every head to a shared floor: centre it on X/Z and move it
+      // so its lowest point floats just above the plinth top / grid plane.
+      const floorTop = -1.06;   // plinth surface: y -1.14 + half height 0.08
+      const clearance = 0.04;
+      const oldTarget = kControls ? kControls.target.clone() : null;
+      const camOffset = oldTarget ? camera.position.clone().sub(oldTarget) : null;
+      kModel.position.x -= (box.min.x + box.max.x) * 0.5;
+      kModel.position.y += (floorTop + clearance) - box.min.y;
+      kModel.position.z -= (box.min.z + box.max.z) * 0.5;
+      kModel.userData.basePos = kModel.position.clone();
+      box.setFromObject(kModel);
+      box.getSize(size);
+      const newCenter = box.getCenter(new THREE.Vector3());
+      if (kControls) kControls.target.copy(newCenter);
+      if (camOffset) camera.position.copy(newCenter).add(camOffset);
+    }
     kModelRadius = Math.max(size.x, size.y, size.z, 0.01) * 0.5;
     kViewCenter.copy(kControls?.target || box.getCenter(new THREE.Vector3()));
     if (kFrameHelper) {
@@ -7127,6 +7109,11 @@ float lhuStoneNoise(vec3 p) {
     cancelAnimationFrame(koboRAF); koboRAF = 0;
     updateDrawerState(false);
     overlay.hidden = true;
+    // Restore the DOM canvas opacity to the stylesheet value (0.34). The
+    // studio raises it to 0.75 for its 3D backdrop texture; without this the
+    // main stage stays permanently brighter after the settings were opened.
+    const matrixCanvas = document.getElementById("matrix-bg");
+    if (matrixCanvas) matrixCanvas.style.opacity = "";
     stage?.classList.remove("kobo-studio-active");
     placeKoboCanvas();
     requestAnimationFrame(() => applyKoboResolution());
@@ -7170,6 +7157,7 @@ float lhuStoneNoise(vec3 p) {
   // The main pill's head selector is the single built-in model selector.
   // The adjacent import control adds an optional custom GLB without duplicating that list.
   uploadBtn?.addEventListener("click", () => fileInput?.click());
+
   function importKoboFile(file) {
     if (!file) return;
     if (!/\.glb$/i.test(file.name)) { alert("Bitte ein GLB-Modell auswählen."); return; }
@@ -7372,6 +7360,7 @@ float lhuStoneNoise(vec3 p) {
     if (kSfxEnabled) playKoboSynth("pop");
   });
   document.getElementById("kobo-glitch-pulse")?.addEventListener("click", () => { kGlitchPulseUntil = performance.now() + 450; playKoboSynth("glitch"); });
+
   function captureKoboPng(transparentBg) {
     if (!kRenderer || !kScene || !kCamera) return;
     const gridVisibility = kGrid?.visible, plinthVisibility = kPlinth?.visible;
@@ -7389,7 +7378,7 @@ float lhuStoneNoise(vec3 p) {
   document.getElementById("kobo-snap-alpha")?.addEventListener("click", () => captureKoboPng(true));
 
   /* Shared spawn animation — used by the settings RAF and by the main stage. */
-  // QA-VOSS: geteilte Spawn-Animation für Studio + Hauptbühne.
+
 function updateKoboSpawn(now, target) {
     if (!kSpawnState || !target) return;
     const baseScale = target.userData.baseScale || 1;
@@ -7499,10 +7488,8 @@ function updateKoboSpawn(now, target) {
 
 </script>
 
-<!-- ====================================================================== -->
-<!-- [JS] SHARED WEBSITE-FUNKTIONEN                                        -->
-<!-- ====================================================================== -->
-<script id="lhu-shared-js">
+<script id="lhu-shared-js">// shared dom data: category pages, routes, cleaning, lightbox, aria, helpers
+
 // This script is the last element in <body>: the DOM is already complete.
 // Running it immediately (instead of on DOMContentLoaded) keeps the site shell
 // usable even when the deferred Three.js module and its CDN imports are slow
@@ -7561,7 +7548,7 @@ function updateKoboSpawn(now, target) {
   const THEME_ICONS = { light: '☀', dark: '☾', 'mono-gray': '░', 'mono-green': '▓', crt: '▤' };
   const themeBtn = document.getElementById('themeToggle');
 
-  function applyTheme(theme) {
+function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     try { localStorage.setItem('lhu-theme', theme); } catch (e) {}
     if (themeBtn) {
@@ -7594,7 +7581,7 @@ function updateKoboSpawn(now, target) {
   let isMuted = false;
   try { isMuted = localStorage.getItem('lhu-duck-muted') === 'true'; } catch (e) {}
 
-  function syncAudioButtonAppearance() {
+function syncAudioButtonAppearance() {
     if (!audioBtn) return;
     audioBtn.classList.toggle('muted', isMuted);
     if (audioDuckImg) {
@@ -7607,7 +7594,7 @@ function updateKoboSpawn(now, target) {
     audioBtn.setAttribute('title', isMuted ? sharedText.audioOff : sharedText.audioOn);
   }
 
-  function applyDuckMute() {
+function applyDuckMute() {
     // Ghost Duck is deliberately scoped to the single navigation quack sample.
     // It must not mute the index intro, background music, video or 3D synth FX.
     if (quackAudio) quackAudio.muted = isMuted;
@@ -7628,7 +7615,7 @@ function updateKoboSpawn(now, target) {
   const categoryTicker = document.getElementById('duckCrt');
   let categoriesOpen = true;
 
-  function setCategoryMenuOpen(open) {
+function setCategoryMenuOpen(open) {
     categoriesOpen = Boolean(open);
     // The moving planet stripe is the one and only visible category panel.
     categoryTicker?.classList.toggle('is-collapsed', !categoriesOpen);
@@ -7710,15 +7697,16 @@ function updateKoboSpawn(now, target) {
     [...Object.entries(categoryPaths), ...Object.entries(legacyCategoryPaths), ...Object.entries(legacyUiAliases), ...Object.entries(legacyFileRoutes)]
       .map(([category, route]) => [route, category])
   );
+
   const normalizePath = (path) => (path || '/').toLowerCase().replace(/\/+$/, '') || '/';
   const canonicalEl = document.querySelector('link[rel="canonical"]');
-  // QA-VOSS: canonical je Kategorie nachziehen (SEO).
-  function setCanonical(category) {
+
+function setCanonical(category) {
     const route = categoryPaths[category];
     if (canonicalEl && route) canonicalEl.href = new URL(route, window.location.origin).href;
   }
 
-  function restoreGithubPagesRoute() {
+function restoreGithubPagesRoute() {
     const encodedRoute = new URLSearchParams(window.location.search).get('__lhu_route');
     if (!encodedRoute) return null;
     try {
@@ -7735,7 +7723,7 @@ function updateKoboSpawn(now, target) {
     }
   }
 
-  function categoryFromHash(hash = window.location.hash) {
+function categoryFromHash(hash = window.location.hash) {
     const normalized = (hash ? (hash.startsWith('#/') ? hash : '#/' + hash.slice(1).replace(/^\//, '')) : '').toLowerCase();
     const hashRoutes = Object.fromEntries(
       Object.entries(routeCategories).map(([route, category]) => [route.replace(/^\//, '#/'), category])
@@ -7743,8 +7731,8 @@ function updateKoboSpawn(now, target) {
     return hashRoutes[normalized.replace(/\/+$/, '')] || null;
   }
 
-  function categoryFromLocation() {
-    // QA-VOSS: /downloads ohne .html auf die eigenständige Paid-Seite umleiten
+function categoryFromLocation() {
+
     // (seit Entfernung der Verzeichnis-Stubs gibt es dafür keine Datei mehr).
     if (normalizePath(window.location.pathname) === '/downloads') {
       window.location.replace('/downloads.html' + window.location.search + window.location.hash);
@@ -7755,7 +7743,7 @@ function updateKoboSpawn(now, target) {
     return routeCategories[normalizePath(window.location.pathname)] || categoryFromHash();
   }
 
-  function writeCategoryRoute(category, replace = false) {
+function writeCategoryRoute(category, replace = false) {
     const route = categoryPaths[category];
     if (!route) return;
     setCanonical(category);
@@ -7771,12 +7759,46 @@ function updateKoboSpawn(now, target) {
     window.history[method]({ lhuCategory: category }, '', route + suffix);
   }
 
+  // Category SEO: tab title, meta description, JSON-LD per category.
+  const CATEGORY_SEO = {
+    'ABOUT':          { name: 'About', desc: 'The community of creators behind the universe.' },
+    'VHS MULTIVERSE': { name: 'VHS Multiverse', desc: 'VHS covers and a world of music for every mood.' },
+    'HUMANART':       { name: 'HumanArt', desc: 'Original art from the artist.' },
+    'PROJECTS':       { name: 'Projects', desc: '3D heads, sound packs and creative experiments.' },
+    'STORYTIME':      { name: 'Storytime', desc: 'Stories told here, one chapter at a time.' },
+    'MUSIC':          { name: 'Music', desc: 'Downloadables for creators and listeners.' },
+    'CONTACT':        { name: 'Contact', desc: 'Say hello or hire the artist directly.' },
+    'DONATE':         { name: 'Donate', desc: 'Keep the music and the art going.' }
+  };
+
+  function applyCategorySEO(category) {
+    const seo = CATEGORY_SEO[category];
+    if (!seo) return;
+    document.title = `${seo.name} - Lightning Horn Unicorn`;
+    const d = document.querySelector('meta[name="description"]');
+    if (d) d.content = seo.desc;
+    // JSON-LD structured data for the category page.
+    let json = document.getElementById('lhu-category-jsonld');
+    if (!json) {
+      json = document.createElement('script');
+      json.id = 'lhu-category-jsonld';
+      json.setAttribute('type', 'application/ld+json');
+      document.head.appendChild(json);
+    }
+    json.textContent = JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'WebPage',
+      name: seo.name, url: window.location.origin + categoryPaths[category],
+      description: seo.desc, inLanguage: document.documentElement.lang,
+      isPartOf: { '@type': 'WebSite', name: 'Lightning Horn Unicorn', url: window.location.origin + '/' }
+    });
+  }
+
   /* 6. Shared Lightbox Viewer */
   let imageLightbox = null;
   let lightboxPreviousFocus = null;
   const LHU_ZOOM_MAX_PERCENT = 700;
 
-  function ensureImageLightbox() {
+function ensureImageLightbox() {
     if (imageLightbox) return imageLightbox;
 
     const overlay = document.createElement('div');
@@ -8054,13 +8076,13 @@ function updateKoboSpawn(now, target) {
   const a11yStatus = document.getElementById('a11yStatus');
   let currentCategory = '';
 
-  function announceCategory(cat) {
+function announceCategory(cat) {
     if (a11yStatus) {
       a11yStatus.textContent = uiLanguage === 'de' ? `Kategorie ${cat} geladen` : `${cat} category loaded`;
     }
   }
 
-  function showError(cat, targetPage) {
+function showError(cat, targetPage) {
     mainContent.innerHTML = `
       <div class="error-card">
         <h3>${sharedText.loadErrorTitle}</h3>
@@ -8075,7 +8097,7 @@ function updateKoboSpawn(now, target) {
     });
   }
 
-  function markEditorialItems(container, rowIndex = 0) {
+function markEditorialItems(container, rowIndex = 0) {
     if (!container || container.dataset.lhuColumnsBuilt === 'true') return;
     const mediaSelector = '.lhu-image-frame, img, figure, video, iframe, canvas, .profile-carousel, .music-video-link, .music-tape-link, .donate-form, #vhs-preview-wrap, .vhs-view-toggles, .vhs-dots, #three-container, .three-zoom-controls';
     const copyColumn = document.createElement('div');
@@ -8094,7 +8116,7 @@ function updateKoboSpawn(now, target) {
     container.dataset.lhuColumnsBuilt = 'true';
   }
 
-  function wrapEditorialRows(section) {
+function wrapEditorialRows(section) {
     if (!section || section.dataset.lhuEditorialPrepared === 'true') return;
     const children = Array.from(section.children);
     const firstStoryHeading = children.findIndex(el => el.tagName === 'H3');
@@ -8120,7 +8142,7 @@ function updateKoboSpawn(now, target) {
     section.dataset.lhuEditorialPrepared = 'true';
   }
 
-  function applyEditorialLayout(category) {
+function applyEditorialLayout(category) {
     const section = mainContent?.querySelector('section');
     if (!section || section.dataset.lhuEditorialLayout === 'true') return;
     if (category === 'ABOUT') {
@@ -8181,7 +8203,8 @@ function updateKoboSpawn(now, target) {
   // A content master is a full, standalone HTML document. Only the markup
   // inside <main> belongs in the site shell; everything else (DOCTYPE, head,
   // body, standalone scripts) is scaffolding and must never be injected.
-  function normalizeFragmentDocument(htmlText) {
+
+function normalizeFragmentDocument(htmlText) {
     const doc = new DOMParser().parseFromString(htmlText, 'text/html');
     const main = doc.querySelector('main');
     if (main) return main.innerHTML;
@@ -8259,6 +8282,7 @@ function updateKoboSpawn(now, target) {
 
         mainContent.innerHTML = fragmentMarkup;
         mainContent.dataset.loadedCategory = cat;
+        applyCategorySEO(cat);
 
         const lang = window.LHU_LANGUAGE || 'en';
         mainContent.querySelectorAll('[data-lang-en]').forEach(el => {
@@ -8420,7 +8444,7 @@ function updateKoboSpawn(now, target) {
     };
     const startCategoryMarquee = () => {
       if (!marqueeTrack || !categoryTicker || categoryTicker.classList.contains('is-collapsed')) return;
-      // QA-VOSS: Marquee läuft immer (Owner-Entscheidung).
+
       // The endless category rail is the site's primary navigation and always
       // moves (owner decision), independent of the OS reduced-motion setting.
       cancelAnimationFrame(marqueeBuildFrame);
@@ -8542,7 +8566,8 @@ function updateKoboSpawn(now, target) {
 
   /* 8. Door & Hue Loop */
   let wobbleTime = 0, rgbProgress = 0, lastTime = performance.now(), animationFrame = null;
-  function loop(time) {
+
+function loop(time) {
     animationFrame = null;
     if (!document.body.classList.contains('site-mode') || document.hidden) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -8684,7 +8709,7 @@ function updateKoboSpawn(now, target) {
   const directCategory = categoryFromLocation();
   if (directCategory) window.__lhuEnterMainSite({ category: directCategory });
 
-  function restoreCategoryFromLocation() {
+function restoreCategoryFromLocation() {
     const targetCategory = categoryFromLocation();
     if (!targetCategory) {
       // Browser Back from a category to "/" must really leave the site shell.
@@ -8699,8 +8724,8 @@ function updateKoboSpawn(now, target) {
   window.addEventListener('hashchange', restoreCategoryFromLocation);
 })();
 </script>
-<!-- QA-VOSS: optionales stonemarble.glb — Fallback sind die CSS-Murmeln. -->
-<script type="module" id="lhu-marble-nav">
+
+<script type="module" id="lhu-marble-nav">// optional done marble canvas behind marquee, done via gltf when file exists
 /* Optional GLB stone-marble navigation. If stonemarble.glb is missing, the
    CSS planets stay untouched — no errors, no visual change. */
 (async () => {
@@ -8780,6 +8805,7 @@ function updateKoboSpawn(now, target) {
   }
 
   let entries = [];
+
   function rebuild() {
     entries.forEach(e => scene.remove(e.obj));
     entries = [];
@@ -8806,6 +8832,7 @@ function updateKoboSpawn(now, target) {
   // Cache each planet's offset inside the moving track once. Per frame we then
   // read only ONE rect (the track) instead of 24 — no layout thrash while the
   // WAAPI marquee is animating.
+
   function cacheOffsets() {
     const t = track.getBoundingClientRect();
     for (const e of entries) {
@@ -8838,6 +8865,7 @@ function updateKoboSpawn(now, target) {
   document.documentElement.classList.add('lhu-marble-3d');
 
   let last = performance.now();
+
   function frame(now) {
     requestAnimationFrame(frame);
     const dt = Math.min(64, now - last); last = now;

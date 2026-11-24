@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- QA-VOSS: 8 kanonische Routen; Stubs kommen aus sync-404.js. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.lightninghornunicorn.com/</loc></url>
   <url><loc>https://www.lightninghornunicorn.com/about</loc></url>

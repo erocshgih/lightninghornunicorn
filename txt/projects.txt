@@ -1,23 +1,19 @@
+/* projects gallery */
 <!DOCTYPE html>
-<!-- QA-VOSS: neuer Einstiegssatz (Owner-Text); Reduce-Override entfernt. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Projects - LHU Content</title>
 </head>
 <body>
-    <main>
+
+<main>
         <style>
-            /* ============================================
-               PROJECTS — spezifische Styles
-               (Globale Tokens kommen aus shared.css)
-               ============================================ */
-            /* Scoped fallbacks: a :root override here used to replace the
-               shell's design tokens for every category and theme. */
-            /* Only when NO theme is set (standalone direct open). An ID alone
-               would beat html[data-theme="dark"] and force a light card. */
+ 
+             
+             
             html:not([data-theme]) #PROJECTS {
-                /* Fallbacks für Direkt-Aufruf ohne shared.css */
+                 
                 --accent-red:  #e02424;
                 --accent-blue: #1a73e8;
                 --dot:         #d5d0ca;
@@ -37,7 +33,7 @@
             html[data-theme="mono-green"]  #PROJECTS { --dot: #1b5e20; --dot-active: #69f0ae; }
             html[data-theme="crt"]         #PROJECTS { --dot: #2a4a2a; --dot-active: #99ff99; }
 
-            /* SECTION WRAPPER */
+             
             section#PROJECTS {
                 width: 100%;
                 max-width: 920px;
@@ -45,7 +41,7 @@
                 box-sizing: border-box;
             }
 
-            /* ---------- ACCORDION (Kategorie) ---------- */
+             
             .cat-group {
                 border: 2px solid var(--border-soft);
                 border-radius: var(--radius);
@@ -99,7 +95,7 @@
             }
             .cat-group.open > .cat-header .arrow { transform: rotate(90deg); }
 
-            /* ---------- GRID-ROWS-COLLAPSE (Kategorie) ---------- */
+             
             .cat-body {
                 display: grid;
                 grid-template-rows: 0fr;
@@ -111,7 +107,7 @@
                 min-height: 0;
             }
 
-            /* ---------- ACCORDION (Produkt) ---------- */
+             
             .prod-item { border-top: 1px solid var(--border-soft); }
             .prod-item:first-child { border-top: none; }
 
@@ -156,7 +152,7 @@
             }
             .prod-item.open > .prod-header .prod-arrow { transform: rotate(90deg); }
 
-            /* ---------- GRID-ROWS-COLLAPSE (Produkt) ---------- */
+             
             .prod-body {
                 display: grid;
                 grid-template-rows: 0fr;
@@ -173,7 +169,7 @@
                 align-items: center;
             }
 
-            /* ---------- BESCHREIBUNG ---------- */
+             
             .prod-desc {
                 font-family: var(--font-body, 'VT323', monospace);
                 font-size: var(--fs-body-content, 1.1rem);
@@ -195,7 +191,7 @@
                 letter-spacing: 0.02em;
             }
 
-            /* ---------- CAROUSEL ---------- */
+             
             .carousel-wrapper {
                 position: relative;
                 width: 100%;
@@ -254,7 +250,7 @@
                 .carousel-wrapper { max-width: 100%; }
             }
 
-            /* 3D-Modell-Slide */
+             
             .carousel-slide.is-model {
                 aspect-ratio: 1 / 1;
                 width: min(100%, 320px);
@@ -271,7 +267,7 @@
                 display: block;
             }
 
-            /* Model-Loading-Overlay */
+             
             .model-loading {
                 position: absolute;
                 inset: 0;
@@ -301,7 +297,7 @@
             }
             @keyframes modelSpin { to { transform: rotate(360deg); } }
 
-            /* ---------- DOTS ---------- */
+             
             .carousel-dots {
                 display: flex;
                 justify-content: center;
@@ -338,7 +334,7 @@
                 .prod-body-inner { padding: 0 16px 20px; }
             }
 
-            /* ---------- FULLSCREEN 3D MODEL VIEWER ---------- */
+             
             .lhu-3d-lightbox[hidden] { display: none !important; }
             .lhu-3d-lightbox { position: fixed; inset: 0; z-index: 100200; display: flex; align-items: center; justify-content: center; padding: clamp(12px, 3vw, 36px); background: rgba(0,0,0,.94); backdrop-filter: blur(12px); }
             .lhu-3d-lightbox__panel { position: relative; width: min(100%, 1100px); height: min(92vh, 900px); border: 1px solid rgba(255,255,255,.2); border-radius: 18px; background: radial-gradient(circle at 50% 40%, rgba(70,70,70,.22), #080808 72%); overflow: hidden; box-shadow: 0 24px 90px rgba(0,0,0,.6); isolation: isolate; }
@@ -346,8 +342,7 @@
             .lhu-3d-lightbox__close { position: absolute; z-index: 5; top: 14px; right: 14px; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(0,0,0,.72); color: white; font: 28px/1 sans-serif; cursor: pointer; }
             .lhu-3d-lightbox__tools { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px; border-radius: 30px; background: rgba(0,0,0,.72); border: 1px solid rgba(255,255,255,.2); }
             .lhu-3d-lightbox__tools button { min-width: 42px; height: 38px; border: 1px solid rgba(255,255,255,.25); border-radius: 20px; color: white; background: rgba(255,255,255,.1); font: 600 16px sans-serif; cursor: pointer; }
-            /* Render resolution: shrinks the viewer's CSS box, which is what
-               model-viewer uses to compute its framebuffer (box x devicePixelRatio). */
+             
             .lhu-3d-lightbox__resolution {
                 position: absolute; z-index: 5; left: 50%; bottom: 66px;
                 transform: translateX(-50%); display: flex; align-items: center; gap: 10px;
@@ -359,7 +354,7 @@
             .lhu-3d-lightbox__resolution strong { color: #ffb066; font-variant-numeric: tabular-nums; min-width: 46px; text-align: right; }
             .lhu-3d-lightbox__resolution input { width: 140px; min-width: 0; accent-color: #ff861d; cursor: pointer; }
             .carousel-image-error { display:grid; place-items:center; width:100%; height:100%; min-height:140px; padding:16px; text-align:center; color:#ffbaba; background:rgba(0,0,0,.55); font:600 11px/1.4 var(--font-mono,monospace); letter-spacing:.05em; }
-            /* Loading field: 20 moving LOADING rows while the GLB is loading. */
+             
             .lhu-3d-loading-frame { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; isolation: isolate; background: rgba(0,0,0,.58); color: #f3f3f3; opacity: 1; visibility: visible; transition: none; pointer-events: none; font-family: 'Courier New', monospace; }
             .lhu-3d-loading-frame.is-loaded { opacity: 0; visibility: hidden; transition: none !important; }
             .lhu-3d-loading-frame.has-error { background: rgba(0,0,0,.82); color: #ffbaba; }
@@ -374,10 +369,9 @@
             .carousel-dot-3d:hover, .carousel-dot-3d:focus-visible { background: var(--dot-active); color: #fff; }
             @media (max-width: 600px) { .lhu-3d-lightbox__panel { width: 100%; height: 88vh; border-radius: 12px; } }
 
-            /* Reduced-motion override removed: the global reset must stay effective.
-               The loading row uses the static fallback in reduced-motion mode. */
+             
 
-            /* ---------- REDUCED MOTION ---------- */
+             
             @media (prefers-reduced-motion: reduce) {
                 .cat-body,
                 .prod-body { transition-duration: 0.01ms; }
@@ -385,12 +379,9 @@
                 .prod-header .prod-arrow { transition-duration: 0.01ms; }
                 .model-loading .spinner { animation-duration: 2s; }
             }
-        
 
 
-
-/* LHU FIX: stable project accordion sizing. Same/higher specificity than
-   the global index overrides, so the content cannot be compressed again. */
+ 
 main#mainContent #projects-accordion .prod-item > .prod-body {
     display:block !important;
     height:auto !important;
@@ -491,7 +482,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
 
         <section id="PROJECTS">
             <h2 class="category-opening-title" data-lang-en="PROJECTS" data-lang-de="PROJECTS">PROJECTS</h2>
-            <!-- QA-VOSS: Einstiegssatz nach Owner-Vorgabe ersetzt. -->
+
             <p data-lang-en="Creative output, questionably efficient inventions and exceptionally Slavic facial bone structure"
                data-lang-de="Kreative Outputs, fragwürdig effiziente Erfindungen und außergewöhnlich slawische Gesichtsknochenstruktur">Creative output, questionably efficient inventions and exceptionally Slavic facial bone structure</p>
 
@@ -499,20 +490,17 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
         </section>
 
         <script>
-            /* ============================================================
-               PROJECTS — Akkordeon & Carousel (v2.0)
-               ============================================================ */
+
+             
             (function initProjects() {
                 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 const lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
 
-                /* ------------------------------------------------
-                   Model-Viewer lazy-loading (einmalig, mit Guard)
-                   ------------------------------------------------ */
+                 
                 function configureModelViewerRenderScale() {
                     const ModelViewerElement = customElements.get('model-viewer');
                     if (ModelViewerElement && 'minimumRenderScale' in ModelViewerElement) {
-                        // Let model-viewer reduce its internal pixel density more aggressively on slower GPUs.
+                        
                         ModelViewerElement.minimumRenderScale = 0.4;
                     }
                 }
@@ -528,8 +516,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         loader.type = 'module';
                         loader.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js';
                         loader.setAttribute('data-lhu-mv-loader', '1');
-                        // A blocked CDN must be observable instead of leaving
-                        // every model viewer stuck on the LOADING animation.
+                        
+                        
                         loader.addEventListener('error', () => {
                             loader.setAttribute('data-lhu-mv-state', 'error');
                         }, { once: true });
@@ -541,7 +529,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                             loader.setAttribute('data-lhu-mv-state', 'error');
                         });
                 }
-                // Früh anstoßen – zu dem Zeitpunkt, wenn der Nutzer das erste Modell öffnet, ist es bereit.
+                
                 ensureModelViewer();
 
                 const projects = [
@@ -722,7 +710,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
 
                 const state = {};
 
-                /* The 20-row LOADING field remains visible until model-viewer emits load. */
+                 
 
                 let modelLightbox = null;
                 let modelLightboxViewer = null;
@@ -730,8 +718,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                 let currentModelSrc = '';
                 let currentModelLabel = '';
                 const modelLoadTimers = new Set();
-                // Default 0.7 keeps the framebuffer small enough for devices such
-                // as the OnePlus 6T. The visitor can raise it on stronger hardware.
+                
+                
                 const PROJECT_RES_KEY = 'lhu-project-render-scale';
                 let projectRenderScale = 0.7;
                 try {
@@ -739,7 +727,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     if (Number.isFinite(savedScale) && savedScale >= 0.05 && savedScale <= 0.7) {
                         projectRenderScale = savedScale;
                     }
-                } catch (_) { /* storage may be blocked */ }
+                } catch (_) {   }
                 let modelLightboxRendererHandler = null;
                 let projectWatchdog = null;
                 let projectRecovering = false;
@@ -751,7 +739,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     while (proto && depth++ < 40) {
                         for (const symbol of Object.getOwnPropertySymbols(proto)) {
                             if (String(symbol).includes('renderer')) {
-                                try { return viewer[symbol]; } catch (_) { /* ignore */ }
+                                try { return viewer[symbol]; } catch (_) {   }
                             }
                         }
                         proto = Object.getPrototypeOf(proto);
@@ -788,16 +776,16 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     if (readout) readout.textContent = value.toFixed(2) + '×';
                     const viewer = modelLightboxViewer;
                     if (!viewer) return;
-                    // The element keeps its FULL panel size. Only the internal
-                    // device pixel ratio (set when the viewer is created) is
-                    // reduced, so nothing shrinks visually.
-                    // Shadows are the second biggest cost on weaker GPUs.
+                    
+                    
+                    
+                    
                     viewer.setAttribute('shadow-intensity', value < 0.8 ? '0' : '1');
                 }
-                // model-viewer's renderer re-reads window.devicePixelRatio on
-                // every frame. A temporary override is therefore useless: the
-                // renderer resets to 1 immediately. The override must stay
-                // active for as long as the 3D view is in use.
+                
+                
+                
+                
                 let projectDprOverrideActive = false;
                 let projectDprOriginalDescriptor = null;
                 function installProjectDprOverride() {
@@ -812,8 +800,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                 }
                 function removeProjectDprOverride() {
                     if (!projectDprOverrideActive) return;
-                    // Restore the EXACT original descriptor (in Chrome it can be
-                    // an own data property, not a prototype accessor).
+                    
+                    
                     if (projectDprOriginalDescriptor) {
                         Object.defineProperty(window, 'devicePixelRatio', projectDprOriginalDescriptor);
                     } else {
@@ -859,9 +847,9 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
                     modelLightbox.addEventListener('click', e => { if (e.target === modelLightbox) close(); });
                     modelLightbox.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-                    // aria-modal="true" requires Escape to work even after the
-                    // user tabs out of the dialog. The element-level listener
-                    // above alone is not sufficient.
+                    
+                    
+                    
                     modelLightboxEscapeHandler = (e) => {
                         if (e.key === 'Escape' && modelLightbox && !modelLightbox.hidden) close();
                     };
@@ -871,10 +859,10 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         projectRenderScale = Math.min(0.7, Math.max(0.05, Number(event.target.value)));
                         try { localStorage.setItem(PROJECT_RES_KEY, String(projectRenderScale)); } catch (_) {}
                         applyProjectResolution();
-                        // The shared renderer reads DPR only at construction.
-                        // Rebuild it with the new value and reload the same model.
+                        
+                        
                         const MV = customElements.get('model-viewer');
-                        try { MV?.resetSingleton?.(); } catch (_) { /* ignore */ }
+                        try { MV?.resetSingleton?.(); } catch (_) {   }
                         if (currentModelSrc && !modelLightbox?.hidden) {
                             openModelLightbox(currentModelSrc, currentModelLabel);
                         }
@@ -882,8 +870,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     applyProjectResolution();
                     modelLightbox.querySelectorAll('[data-zoom]').forEach(btn => btn.addEventListener('click', () => {
                         const viewer = modelLightboxViewer;
-                        // model-viewer may be undefined when the CDN is blocked,
-                        // or the element may exist but not be upgraded yet.
+                        
+                        
                         if (!viewer || typeof viewer.getCameraOrbit !== 'function') return;
                         const action = btn.dataset.zoom;
                         if (action === 'reset') {
@@ -916,10 +904,10 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     viewer.setAttribute('alt', `${label} – interaktives 3D-Modell`);
                     viewer.setAttribute('camera-controls', '');
                     viewer.setAttribute('touch-action', 'pan-y');
-                    // Auto-rotate keeps the GPU rendering forever, even when
-                    // the visitor is idle. On weaker GPUs (e.g. Adreno 630) that
-                    // can exhaust the WebGL context. The visitor can still drag
-                    // to rotate manually.
+                    
+                    
+                    
+                    
                     if (!reduceMotion && projectRenderScale >= 0.95) {
                         viewer.setAttribute('auto-rotate', '');
                         viewer.setAttribute('auto-rotate-delay', '0');
@@ -949,7 +937,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         console.warn('[LHU] 3D WebGL context lost (render scale ' + projectRenderScale.toFixed(2) + ').');
                         showModelError();
                     });
-                    // Diagnostic: show the render target model-viewer actually chose.
+                    
                     viewer.addEventListener('render-scale', (event) => {
                         const d = event.detail || {};
                         const readout = modelLightbox?.querySelector('.lhu-3d-res-val');
@@ -963,19 +951,19 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     currentModelSrc = modelSrc;
                     currentModelLabel = label;
                     modelLightboxViewer = viewer;
-                    // Full panel size; the persistent DPR override caps only
-                    // the internal framebuffer resolution.
+                    
+                    
                     panel.appendChild(viewer);
                     applyProjectResolution();
-                    // The shared renderer dispatches "contextlost" when the GPU
-                    // drops the context. React by rebuilding the viewer with the
-                    // same model instead of leaving a dead white canvas.
+                    
+                    
+                    
                     projectWatchdog = window.setInterval(() => {
                         if (modelLightbox?.hidden || modelLightboxViewer !== viewer) return;
                         try {
                             const r = getProjectRenderer();
-                            // The custom-element upgrade can complete a tick
-                            // after append: retry until the listener is attached.
+                            
+                            
                             if (!modelLightboxRendererHandler && r && typeof r.addEventListener === 'function') {
                                 modelLightboxRendererHandler = () => recoverProjectViewer('WebGL context lost');
                                 r.addEventListener('contextlost', modelLightboxRendererHandler);
@@ -985,16 +973,16 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                             if (gl && typeof gl.isContextLost === 'function' && gl.isContextLost()) {
                                 recoverProjectViewer('WebGL context lost (watchdog)');
                             }
-                        } catch (_) { /* ignore */ }
+                        } catch (_) {   }
                     }, 1500);
                     box.hidden = false;
                     box.querySelector('.lhu-3d-lightbox__close').focus({preventScroll:true});
-                    // If the CDN is blocked, model-viewer fires neither load nor
-                    // error. A hard timeout turns the endless LOADING wall into
-                    // an honest error state.
+                    
+                    
+                    
                     const loadTimeout = window.setTimeout(() => finishLoad(false), 12000);
                     modelLoadTimers.add(loadTimeout);
-                    // Set the source only after the loader is visible and listeners exist.
+                    
                     requestAnimationFrame(() => {
                         if (modelLightboxViewer === viewer) viewer.setAttribute('src', modelSrc);
                     });
@@ -1003,13 +991,11 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                 let gIdx = 0;
                 const activeModelViewers = new Set();
 
-                /* ------------------------------------------------
-                   Cleanup (registriert beim Menü)
-                   ------------------------------------------------ */
+                 
                 function projectsCleanup() {
-                    // The lightbox lives on document.body, outside #mainContent.
-                    // Hiding it was not enough: every category visit created a
-                    // new node with its own listeners -> permanent accumulation.
+                    
+                    
+                    
                     if (modelLightboxEscapeHandler) {
                         document.removeEventListener('keydown', modelLightboxEscapeHandler);
                         modelLightboxEscapeHandler = null;
@@ -1028,7 +1014,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         try {
                             if (mv.pause) mv.pause();
                             mv.removeAttribute('src');
-                        } catch (e) { /* ignore */ }
+                        } catch (e) {   }
                     });
                     activeModelViewers.clear();
                 }
@@ -1039,9 +1025,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     window.addEventListener('pagehide', projectsCleanup, { once: true });
                 }
 
-                /* ------------------------------------------------
-                   DOM-Aufbau
-                   ------------------------------------------------ */
+                 
                 projects.forEach((group) => {
                     const catEl = document.createElement('div');
                     catEl.className = 'cat-group';
@@ -1104,8 +1088,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                             img.alt = `${prod.name} – Ansicht ${i + 1}`;
                             img.loading = 'lazy';
                             img.decoding = 'async';
-                            // A failed image otherwise shows the browser's broken
-                            // icon ("Kästchen-Gesicht") in the upper corner.
+                            
+                            
                             img.addEventListener('error', () => {
                                 img.hidden = true;
                                 if (slide.querySelector('.carousel-image-error')) return;
@@ -1123,7 +1107,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                         wrapper.appendChild(stage);
                         mediaPanel.appendChild(wrapper);
 
-                        // Bild-Unterpunkte plus optionaler letzter 3D-Unterpunkt.
+                        
                         const dots = document.createElement('div');
                         dots.className = 'carousel-dots';
                         dots.id = 'dots-' + gIdx;
@@ -1171,7 +1155,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     accordion.appendChild(catEl);
                 });
 
-                // Erste Kategorie + erstes Produkt vorab öffnen (wie im Original)
+                
                 const firstCat = accordion.querySelector('.cat-group');
                 if (firstCat) {
                     const header = firstCat.querySelector('.cat-header');
@@ -1185,12 +1169,10 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     }
                 }
 
-                // Nach dem Start-Layout: Modell-Viewer für aktive Slides initialisieren
+                
                 requestAnimationFrame(() => updateStageManager());
 
-                /* ------------------------------------------------
-                   Toggle-Logik
-                   ------------------------------------------------ */
+                 
                 function toggleCat(el) {
                     const isOpen = el.classList.contains('open');
                     document.querySelectorAll('.cat-group').forEach(c => {
@@ -1242,9 +1224,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     updateStageManager();
                 }
 
-                /* ------------------------------------------------
-                   Model-Viewer-Management
-                   ------------------------------------------------ */
+                 
                 function mountModel(slide, modelSrc) {
                     if (slide.querySelector('model-viewer')) return;
                     ensureModelViewer();
@@ -1276,8 +1256,8 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     const hideLoader = () => {
                         if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
                     };
-                    // Sicherheitsnetz, falls weder load noch error feuert.
-                    // Der Timer wird beim Verlassen der Kategorie abgebrochen.
+                    
+                    
                     const loaderFallback = window.setTimeout(hideLoader, 15000);
                     modelLoadTimers.add(loaderFallback);
                     mv.addEventListener('load', () => { clearTimeout(loaderFallback); hideLoader(); }, { once: true });
@@ -1291,7 +1271,7 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     try {
                         if (mv.pause) mv.pause();
                         mv.removeAttribute('src');
-                    } catch (e) { /* ignore */ }
+                    } catch (e) {   }
                     slide.innerHTML = '';
                 }
 
@@ -1311,10 +1291,10 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                                 mountModel(sl, modelSrc);
                                 const mv = sl.querySelector('model-viewer');
                                 if (mv) {
-                                    // An empty attribute still enables rotation.
+                                    
                                     if (reduceMotion) mv.removeAttribute('auto-rotate');
                                     else mv.setAttribute('auto-rotate', '');
-                                    try { if (mv.play) mv.play(); } catch (e) { /* ignore */ }
+                                    try { if (mv.play) mv.play(); } catch (e) {   }
                                 }
                             } else {
                                 unmountModel(sl);

@@ -1,19 +1,17 @@
+/* storytime archive */
 <!DOCTYPE html>
-<!-- QA-VOSS: Kapitel-Scroll nur bei Klick → Seite startet oben. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Storytime - LHU Content</title>
 </head>
 <body>
-    <main>
-        <style>
-            /* ============================================
-               STORYTIME — spezifische Styles
-               (Globale Tokens kommen aus shared.css)
-               ============================================ */
 
-            /* Kapitel-Navigation */
+<main>
+        <style>
+ 
+
+             
             .chapter-topnav {
                 display: flex;
                 flex-wrap: wrap;
@@ -50,7 +48,7 @@
                 box-shadow: 0 0 10px rgba(255, 122, 0, 0.4);
             }
 
-            /* Sprach-Toggle */
+             
             .lang-select-container {
                 display: flex;
                 justify-content: center;
@@ -85,7 +83,7 @@
                 box-shadow: 0 0 12px rgba(128,240,168,0.3);
             }
 
-            /* Text-Reader (Terminal-Look) */
+             
             .text-reader-container {
                 background-color: var(--card-bg);
                 border: 2px solid var(--border-medium);
@@ -98,7 +96,7 @@
                 margin: 0 auto;
             }
 
-            /* CRT-Rauschen (performanter) */
+             
             .text-reader-container::before {
                 content: "";
                 position: absolute;
@@ -121,18 +119,18 @@
             #text-content {
                 font-family: var(--font-body, 'VT323', monospace);
                 font-size: clamp(1.15rem, 1vw + 0.8rem, 1.35rem);
-                color: #00a800; /* Klassisches Terminal-Grün */
+                color: #00a800;  
                 text-align: left;
                 line-height: 1.7;
-                white-space: pre-wrap; 
+                white-space: pre-wrap;
                 word-wrap: break-word;
                 position: relative;
-                z-index: 1; 
+                z-index: 1;
             }
             html[data-theme="dark"] #text-content,
             html[data-theme="mono-gray"] #text-content,
             html[data-theme="crt"] #text-content {
-                color: #69f0ae; /* Helleres Grün für Dark-Modes */
+                color: #69f0ae;  
             }
 
             .loading-text {
@@ -158,9 +156,9 @@
 
         <section id="STORYTIME">
             <h2 class="category-opening-title" data-lang-en="STORYTIME" data-lang-de="STORYTIME">STORYTIME</h2>
-            
+
             <nav id="dynamic-chapter-nav" class="chapter-topnav" aria-label="Kapitel-Navigation">
-                <!-- Wird per JS befüllt -->
+                
             </nav>
 
             <div class="lang-select-container">
@@ -168,8 +166,7 @@
                 <button id="lang-de" class="lang-btn" type="button" aria-pressed="false">DEUTSCH</button>
             </div>
 
-            <!-- Short status only: a live region on the whole chapter used to
-                 make screen readers read ~70 lines on every navigation. -->
+            
             <p class="sr-only" id="storytime-status" role="status" aria-live="polite"></p>
 
             <div class="text-reader-container">
@@ -180,6 +177,7 @@
         </section>
 
         <script>
+
             (function initStorytime() {
                 let totalChapters = 0;
                 let currentChapter = 1;
@@ -255,15 +253,15 @@
 
                 async function scanChapters() {
                     if (disposed) return;
-                    const MAX_CHAPTERS = 999;
+                    const MAX_CHAPTERS = 200;
                     const cacheKey = 'lhu-storytime-chaptercount';
                     let cachedCount = null;
-                    try { cachedCount = sessionStorage.getItem(cacheKey); } catch (_) { /* storage can be blocked */ }
+                    try { cachedCount = sessionStorage.getItem(cacheKey); } catch (_) {   }
 
                     if (cachedCount !== null) {
                         const parsedCount = Number.parseInt(cachedCount, 10);
-                        // A bogus/cache-poisoned value must never generate
-                        // millions of navigation buttons.
+                        
+                        
                         if (Number.isInteger(parsedCount) && parsedCount >= 0 && parsedCount <= MAX_CHAPTERS) {
                             totalChapters = parsedCount;
                             if (totalChapters > 0) {
@@ -277,12 +275,13 @@
                     }
 
                     let count = 1;
-                    // A host that answers 200 with the wrong content type must
-                    // not produce an unbounded request loop.
+                    
+                    
                     while (!disposed && count <= MAX_CHAPTERS) {
                         const numStr = String(count).padStart(6, '0');
                         const controller = new AbortController();
                         scanController = controller;
+                        const scanTimeout = window.setTimeout(() => controller.abort(new DOMException('Chapter scan timed out', 'TimeoutError')), 8000);
                         let response;
                         try {
                             response = await fetch(`chapters/${numStr}.txt`, {
@@ -291,7 +290,7 @@
                                 cache: 'no-store'
                             });
 
-                            // Some static hosts do not implement HEAD for text files.
+                            
                             if (response.status === 405 || response.status === 501) {
                                 response = await fetch(`chapters/${numStr}.txt`, {
                                     method: 'GET',
@@ -299,7 +298,7 @@
                                     cache: 'no-store'
                                 });
                                 if (response.body) {
-                                    try { await response.body.cancel(); } catch (_) { /* already consumed */ }
+                                    try { await response.body.cancel(); } catch (_) {   }
                                 }
                             }
 
@@ -307,7 +306,7 @@
                             if (response.status === 404) break;
                             if (!response.ok) throw new Error(`HTTP ${response.status}`);
                             const contentType = (response.headers.get('content-type') || '').toLowerCase();
-                            // Prevent an SPA fallback page (200 text/html) from looking like an endless archive.
+                            
                             if (contentType.includes('text/html')) break;
                             count++;
                         } catch (error) {
@@ -315,13 +314,14 @@
                             contentDiv.innerHTML = '<p>CONNECTION ERROR: ARCHIVE COULD NOT BE REACHED.</p>';
                             return;
                         } finally {
+                            clearTimeout(scanTimeout);
                             if (scanController === controller) scanController = null;
                         }
                     }
 
                     if (disposed) return;
                     totalChapters = count - 1;
-                    try { sessionStorage.setItem(cacheKey, String(totalChapters)); } catch (_) { /* storage can be blocked */ }
+                    try { sessionStorage.setItem(cacheKey, String(totalChapters)); } catch (_) {   }
 
                     if (totalChapters > 0) {
                         buildNavigation();
@@ -367,7 +367,7 @@
                     }
                 }
 
-                // QA-VOSS: Flag verhindert Auto-Scroll beim ersten Kapitel.
+
                 async function loadChapter(num, userInitiated = false) {
                     if (disposed) return;
                     if (loadedChapter === num) return;
@@ -398,19 +398,19 @@
                         if (disposed || loadToken !== chapterLoadToken) return;
                         parseChapterText(rawText);
                         loadedChapter = num;
-                        // Mark the fetch as finished BEFORE rendering, otherwise
-                        // renderText() would treat its own successful result as
-                        // an in-flight request and skip the chapter text.
+                        
+                        
+                        
                         if (fetchController === controller) fetchController = null;
                         renderText();
 
-                        // Scope to this fragment; a global query could grab a
-                        // stale node from another instance.
+                        
+                        
                         const container = contentDiv.closest('.text-reader-container')
                             || document.querySelector('#mainContent .text-reader-container');
-                        // Only scroll when the visitor actually picked a chapter. The
-                        // automatic first-chapter load must leave the page at the top.
-                        // QA-VOSS: scrollIntoView NUR nach explizitem Klick.
+                        
+                        
+
                         if (userInitiated && container) {
                             const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                             container.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
@@ -436,14 +436,14 @@
 
                 function renderText() {
                     if (disposed) return;
-                    // Do not overwrite an in-flight "LOADING FILE..." message
-                    // when the language buttons are pressed mid-fetch.
+                    
+                    
                     if (fetchController !== null) return;
                     const mainText = currentLang === 'en' ? chapterData.en : chapterData.de;
                     const continuedText = currentLang === 'en' ? '\n\n\n... TO BE CONTINUED ...' : '\n\n\n... FORTSETZUNG FOLGT ...';
                     contentDiv.textContent = mainText + continuedText;
-                    // The document is lang="de"; English chapters must be
-                    // announced with the correct language by screen readers.
+                    
+                    
                     contentDiv.lang = currentLang;
                     const status = document.getElementById('storytime-status');
                     if (status) status.textContent = loadedChapter

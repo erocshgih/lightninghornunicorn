@@ -1,3 +1,4 @@
+/* music player section */
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -5,11 +6,10 @@
     <title>Music - LHU Content</title>
 </head>
 <body>
-    <main>
+
+<main>
         <style>
-            /* ============================================
-               MUSIC — spezifische Styles
-               ============================================ */
+ 
             .music-content {
                 max-width: 70ch;
                 margin: 0 auto;
@@ -43,7 +43,7 @@
                 font-weight: bold;
             }
 
-            /* YouTube Link / Bild */
+             
             .music-video-link {
                 display: block;
                 max-width: 480px;
@@ -59,7 +59,7 @@
                 transform: translateY(-4px) scale(1.02);
                 box-shadow: var(--shadow-lg);
             }
-            /* Never suppress the global focus ring on :focus-visible. */
+             
             .music-video-link:focus-visible {
                 outline: 2px solid var(--accent, #e04836);
                 outline-offset: 3px;
@@ -105,7 +105,7 @@
 
         <section id="MUSIC">
             <h2 class="category-opening-title" data-lang-en="MUSIC" data-lang-de="MUSIC">MUSIC</h2>
-            
+
             <div class="music-content">
                 <p data-lang-en="Would you like to support my music? <br><br><span style='color:var(--strip-active);'>Three ways:</span> Donate, personal purchase via a meeting, or an album against PayPal proof. Afterwards you will receive a personal download token from me."
                    data-lang-de="Du möchtest meine Musik unterstützen? <br><br><span style='color:var(--strip-active);'>Drei Wege:</span> Donate (Spende), persönlicher Kauf (über Treffen) oder ein Album gegen PayPal-Nachweis. Danach erhältst du von mir einen persönlichen Download-Token.">
@@ -115,7 +115,7 @@
                 <hr>
 
                 <h3 data-lang-en="Support and Encounter" data-lang-de="Unterstützung und Begegnung">Unterstützung und Begegnung</h3>
-                
+
                 <p data-lang-en="Thanks to everyone who didn't mind spending 25 € back then, during a personal conversation on the street between 2012 and 2016, to support me as a regional Austrian artist with Croatian and French roots and a recording studio."
                    data-lang-de="Danke an alle, denen die 25 € damals bei einem persönlichen Gespräch auf der Straße zwischen 2012 und 2016 nicht zu viel waren, um mich als regionalen österreichischen Künstler mit kroatischen und französischen Wurzeln und Tonstudio zu unterstützen.">
                     Danke an alle, denen die 25 € damals bei einem persönlichen Gespräch auf der Straße zwischen 2012 und 2016 nicht zu viel waren, um mich als regionalen österreichischen Künstler mit kroatischen und französischen Wurzeln und Tonstudio zu unterstützen.
@@ -331,7 +331,7 @@
                 </p>
 
                 <a href="https://www.youtube.com/watch?v=6mEqVviTbno" target="_blank" rel="noopener noreferrer" class="music-video-link" title="Laserette auf YouTube ansehen">
-                    <img src="music_Laserette.webp" alt="Laserette – Musikvideo auf YouTube" loading="lazy" decoding="async">
+                    <img width="768" height="1095" src="music_Laserette.webp" alt="Laserette – Musikvideo auf YouTube" loading="lazy" decoding="async">
                 </a>
             </div>
 

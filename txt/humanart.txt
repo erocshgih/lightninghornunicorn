@@ -1,3 +1,4 @@
+/* humanart 3d gallery */
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -5,20 +6,18 @@
     <title>Humanart - LHU Content</title>
 </head>
 <body>
-    <main>
-        <style>
-            /* ============================================
-               HUMANART — spezifische Styles
-               (Globale Tokens kommen aus shared.css)
-               ============================================ */
 
-            /* Scoped fallback. A :root override here leaked into the host shell. */
+<main>
+        <style>
+ 
+
+             
             html:not([data-theme]) #HUMANART {
                 --accent-red:  #e02424;
                 --accent-blue: #1a73e8;
             }
 
-            /* 3D-Container */
+             
             #three-container {
                 width: 100%;
                 height: 55vh;
@@ -40,7 +39,7 @@
                 touch-action: none;
             }
 
-            /* Loading-State */
+             
             .loading-text {
                 position: absolute;
                 top: 50%;
@@ -68,7 +67,7 @@
                 opacity: 1;
             }
 
-            /* Hint unter dem 3D-Container */
+             
             .three-hint {
                 position: absolute;
                 bottom: 10px;
@@ -94,7 +93,7 @@
                 100% { opacity: 0; }
             }
 
-            /* Zoom-Buttons */
+             
             .three-zoom-controls {
                 display: flex;
                 justify-content: center;
@@ -130,7 +129,7 @@
             }
             .zoom-btn:active { transform: scale(0.92); }
 
-            /* Disclaimer */
+             
             .atom-disclaimer {
                 font-family: var(--font-body, 'VT323', monospace);
                 font-size: 0.9rem !important;
@@ -142,7 +141,7 @@
                 opacity: 0.85;
             }
 
-            /* Responsive Anpassungen */
+             
             @media (min-width: 769px) {
                 #three-container { height: 62vh; min-height: 460px; }
                 .loading-text { font-size: 0.62rem; }
@@ -153,13 +152,13 @@
                 .atom-disclaimer { font-size: 0.82rem !important; letter-spacing: 0.08em; }
             }
 
-            /* Reduced Motion */
+             
             @media (prefers-reduced-motion: reduce) {
                 .loading-text { animation: none; opacity: 1; }
                 .three-hint   { animation: none; opacity: 0.8; }
             }
 
-            /* Auf Touch-Geräten: grab-Cursor unnötig */
+             
             @media (hover: none) and (pointer: coarse) {
                 #three-container { cursor: default; }
                 #three-container:active { cursor: default; }
@@ -205,18 +204,16 @@
         </section>
 
         <script>
-            /* ============================================================
-               HUMANART — Three.js Cradle (v2.0)
-               Mit vollständiger Lifecycle-Disposal.
-               ============================================================ */
+
+             
             (async function initHumanart3D() {
                 const container  = document.getElementById('three-container');
                 const loaderText = document.getElementById('three-loader');
                 if (!container) return;
 
-                // THREE comes from the host's deferred module and can arrive
-                // AFTER this fragment was injected. Wait for it instead of
-                // giving up permanently on a slow CDN.
+                
+                
+                
                 if (typeof THREE === 'undefined') {
                     const available = await new Promise((resolve) => {
                         const started = Date.now();
@@ -237,9 +234,7 @@
                     }
                 }
 
-                /* ------------------------------------------------
-                   Lifecycle / Cleanup-Stapel
-                   ------------------------------------------------ */
+                 
                 const localCleanups = [];
                 let isDestroyed = false;
                 let hintTimer = null;
@@ -252,7 +247,7 @@
                     }
                 }
 
-                // Fallback für Direkt-Öffnen (kein menu.html drumherum)
+                
                 if (typeof window.__lhuRegisterCleanup !== 'function') {
                     window.addEventListener('pagehide', () => {
                         isDestroyed = true;
@@ -261,9 +256,7 @@
                     }, { once: true });
                 }
 
-                /* ------------------------------------------------
-                   Device / Qualitäts-Probing
-                   ------------------------------------------------ */
+                 
                 const isMobile = window.matchMedia('(max-width: 768px)').matches ||
                     /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
                 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -281,9 +274,7 @@
                     ));
                 }
 
-                /* ------------------------------------------------
-                   Scene / Camera / Renderer
-                   ------------------------------------------------ */
+                 
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(
                     60,
@@ -298,7 +289,7 @@
                     if (!w || !h) return;
                     const aspect = w / h;
                     const baseZ = 220;
-                    // Bei Portrait weiter weg, damit Radius 95 + Sprites passen
+                    
                     const z = aspect < 1 ? baseZ * (1 + (1 - aspect) * 0.65) : baseZ;
                     camera.position.set(0, 0, z);
                     camera.updateProjectionMatrix();
@@ -310,12 +301,12 @@
                         alpha: true,
                         antialias: false,
                         powerPreference: 'low-power',
-                        // Wichtig: Verhindert voreiligen Context-Verlust
+                        
                         failIfMajorPerformanceCaveat: false
                     });
                 } catch (error) {
-                    // WebGL can be unavailable or the context limit exhausted
-                    // (the host already uses several contexts). Fail visibly.
+                    
+                    
                     if (loaderText) {
                         loaderText.innerText = '⚠ 3D-KONTEXT NICHT VERFÜGBAR';
                         loaderText.classList.add('is-error');
@@ -338,9 +329,7 @@
                     return;
                 }
 
-                /* ------------------------------------------------
-                   Controls
-                   ------------------------------------------------ */
+                 
                 if (typeof THREE.OrbitControls !== 'function') {
                     if (loaderText) {
                         loaderText.innerText = '⚠ 3D-STEUERUNG NICHT VERFÜGBAR';
@@ -361,9 +350,9 @@
                 controls.rotateSpeed = isMobile ? 0.7 : 1.0;
                 controls.zoomSpeed = isMobile ? 0.8 : 1.0;
 
-                // Keyboard rotation: the canvas itself cannot be focused in a
-                // meaningful way, so the container is focusable and handles
-                // arrow keys through the same camera controls.
+                
+                
+                
                 const onContainerKeydown = (event) => {
                     const step = 0.14;
                     let dTheta = 0, dPhi = 0;
@@ -384,9 +373,7 @@
                 };
                 container.addEventListener('keydown', onContainerKeydown);
 
-                /* ------------------------------------------------
-                   Zoom-Buttons
-                   ------------------------------------------------ */
+                 
                 const zoomInBtn  = document.getElementById('zoom-in');
                 const zoomOutBtn = document.getElementById('zoom-out');
                 const zoomListeners = [];
@@ -408,9 +395,7 @@
                 attachZoom(zoomInBtn, 0.78);
                 attachZoom(zoomOutBtn, 1.28);
 
-                /* ------------------------------------------------
-                   Loading-Progress
-                   ------------------------------------------------ */
+                 
                 const sourceNodes = document.querySelectorAll('#image-data-source span');
                 const imageUrls = Array.from(sourceNodes).map(n => n.getAttribute('data-src')).filter(Boolean);
                 const total = imageUrls.length;
@@ -425,7 +410,7 @@
                         loaderText.textContent = `RENDERING ${done}/${total}`;
                     } else {
                         loaderText.style.display = 'none';
-                        // Hint einblenden
+                        
                         if (!reduceMotion) {
                             const hint = document.createElement('div');
                             hint.className = 'three-hint';
@@ -442,9 +427,7 @@
                 }
                 updateProgress();
 
-                /* ------------------------------------------------
-                   Sprite-Layout (Fibonacci-Kugel)
-                   ------------------------------------------------ */
+                 
                 const nodesData = [];
                 const radius = 80;
                 const baseSize = isMobile ? 26 : 32;
@@ -459,13 +442,11 @@
                     ));
                 }
 
-                /* ------------------------------------------------
-                   Texture Loading
-                   ------------------------------------------------ */
+                 
                 const textureLoader = new THREE.TextureLoader();
-                const textures = [];       // für Disposal
-                const materials = [];      // für Disposal
-                const sprites = [];        // für Scene-Removal
+                const textures = [];       
+                const materials = [];      
+                const sprites = [];        
 
                 imageUrls.forEach((url, i) => {
                     const pendingTexture = textureLoader.load(
@@ -473,7 +454,7 @@
                         (texture) => {
                             if (isDestroyed) { texture.dispose(); return; }
 
-                            // Qualitätseinstellungen
+                            
                             texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
                             texture.minFilter = THREE.LinearFilter;
                             texture.magFilter = THREE.LinearFilter;
@@ -481,7 +462,7 @@
 
                             const img = texture.image;
                             if (!img || !img.width || !img.height) {
-                                // Kein Bild → Fehler zählen
+                                
                                 failedCount++;
                                 texture.dispose();
                                 updateProgress();
@@ -511,9 +492,9 @@
                         },
                         undefined,
                         (err) => {
-                            // Even a failed load returns a Texture object.
-                            // Dispose it so a navigation during loading does
-                            // not leak GPU resources.
+                            
+                            
+                            
                             if (pendingTexture) pendingTexture.dispose();
                             if (isDestroyed) return;
                             failedCount++;
@@ -524,9 +505,7 @@
                     if (isDestroyed && pendingTexture) pendingTexture.dispose();
                 });
 
-                /* ------------------------------------------------
-                   Animation Loop
-                   ------------------------------------------------ */
+                 
                 let animationId = null;
                 let lastFrameTime = 0;
                 const clock = new THREE.Clock();
@@ -542,7 +521,7 @@
                     const delta = clock.getDelta();
 
                     if (!reduceMotion) {
-                        // Leichte Eigenrotation der Szene — bleibt erhalten
+                        
                         scene.rotation.y -= 0.0005 * (delta * 60);
                         scene.rotation.x -= 0.0002 * (delta * 60);
                     }
@@ -553,7 +532,7 @@
 
                 function startAnimate() {
                     if (animationId === null) {
-                        clock.getDelta(); // Reset, damit kein Zeitsprung
+                        clock.getDelta(); 
                         lastFrameTime = 0;
                         animationId = requestAnimationFrame(animate);
                     }
@@ -565,18 +544,14 @@
                     }
                 }
 
-                /* ------------------------------------------------
-                   Visibility Handling
-                   ------------------------------------------------ */
+                 
                 const onVisibility = () => {
                     if (document.hidden) stopAnimate();
                     else startAnimate();
                 };
                 document.addEventListener('visibilitychange', onVisibility);
 
-                /* ------------------------------------------------
-                   Resize Handling
-                   ------------------------------------------------ */
+                 
                 let resizeRAF = null;
 
                 function handleResize() {
@@ -602,9 +577,7 @@
                 }
                 window.addEventListener('resize', handleResize, { passive: true });
 
-                /* ------------------------------------------------
-                   CLEANUP
-                   ------------------------------------------------ */
+                 
                 registerCleanup(() => {
                     if (isDestroyed) return;
                     isDestroyed = true;
@@ -613,7 +586,7 @@
 
                     if (hintTimer) { clearTimeout(hintTimer); hintTimer = null; }
 
-                    // Event Listener
+                    
                     document.removeEventListener('visibilitychange', onVisibility);
                     window.removeEventListener('resize', handleResize);
                     if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null; }
@@ -624,7 +597,7 @@
                     });
                     zoomListeners.length = 0;
 
-                    // Scene
+                    
                     sprites.forEach(sprite => {
                         if (sprite.parent) sprite.parent.remove(sprite);
                     });
@@ -639,33 +612,31 @@
                     textures.forEach(tex => tex.dispose());
                     textures.length = 0;
 
-                    // Controls
+                    
                     if (controls) {
                         controls.enabled = false;
                         if (controls.dispose) controls.dispose();
                     }
 
-                    // Renderer
+                    
                     try {
                         if (renderer.forceContextLoss) renderer.forceContextLoss();
                         renderer.dispose();
                     } catch (e) {
-                        // Manche Browser werfen bei wiederholtem Dispose — ignorieren
+                        
                     }
                     if (renderer.domElement && renderer.domElement.parentNode) {
                         renderer.domElement.parentNode.removeChild(renderer.domElement);
                     }
 
-                    // Loading-Text zurücksetzen (falls noch sichtbar)
+                    
                     if (loaderText) {
                         loaderText.textContent = '';
                         loaderText.style.display = 'none';
                     }
                 });
 
-                /* ------------------------------------------------
-                   Los
-                   ------------------------------------------------ */
+                 
                 startAnimate();
             })();
         </script>

@@ -1,18 +1,16 @@
+/* vhs multiverse fragment */
 <!DOCTYPE html>
-<!-- QA-VOSS: Reduced Motion stoppt vhsGlitch + crtImagePowerOn. -->
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>VHS Multiverse - LHU Content</title>
 </head>
 <body>
-    <main>
+
+<main>
         <style>
-            /* ============================================
-               VHS MULTIVERSE — spezifische Styles
-               ============================================ */
-            /* Scoped to this category: a :root override here used to leak into
-               the shell (theme button, marquee, lightbox) for the whole visit. */
+ 
+             
             html:not([data-theme]) [id="VHS MULTIVERSE"] {
                 --dot:         #d5d0ca;
                 --dot-active:  #b33;
@@ -30,7 +28,7 @@
                 box-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
             }
 
-            /* Preview-Wrapper */
+             
             #vhs-preview-wrap {
                 width: 100%;
                 max-width: 520px;
@@ -93,7 +91,7 @@
             }
             #vhs-preview-img.visible { opacity: 1; }
 
-            /* Fehler-Placeholder (wenn Bild 404) */
+             
             #vhs-preview-error {
                 display: none;
                 position: absolute;
@@ -113,8 +111,7 @@
             #vhs-preview-error.show { display: flex; }
             #vhs-preview-error .err-icon { font-size: 32px; }
 
-
-            /* View-Toggles */
+             
             #vhs-view-toggles {
                 display: flex;
                 justify-content: center;
@@ -156,7 +153,7 @@
                 border-color: var(--dot);
             }
 
-            /* Dots */
+             
             #vhs-dots {
                 display: flex;
                 justify-content: center;
@@ -205,7 +202,7 @@
 
             <div id="vhs-preview-wrap" tabindex="0" role="group" aria-label="VHS-Galerie. Pfeiltasten links/rechts zum Navigieren.">
                 <button class="vhs-nav-btn" id="vhs-prev" type="button" aria-label="Vorheriges Cover">&#9664;</button>
-                <img id="vhs-preview-img" src="" alt="" title="Cover Ansicht" loading="lazy" decoding="async">
+                <img id="vhs-preview-img" alt="" title="Cover Ansicht" loading="lazy" decoding="async">
                 <div id="vhs-preview-error" role="alert" hidden>
                     <span class="err-icon">⚠</span>
                     <span>Cover konnte nicht geladen werden</span>
@@ -231,6 +228,7 @@
         </section>
 
         <script>
+
             (function initVHS() {
                 const baseUrl = 'vhsmultiverse/';
 
@@ -288,7 +286,7 @@
                     const item = vhsData[idx];
                     if (!item) return;
 
-                    // View-Buttons aktualisieren
+                    
                     viewBtns.forEach(btn => {
                         const v = btn.dataset.view;
                         const has = item.views.includes(v);
@@ -300,7 +298,7 @@
                     const safeView = item.views.includes(view) ? view : 'front';
                     const url = baseUrl + `vhsmultiverse_${item.id}_${safeView}.webp`;
 
-                    // Reset Fehler
+                    
                     if (errorBox) { errorBox.classList.remove('show'); errorBox.hidden = true; }
                     preview.classList.remove('visible');
                     preview.setAttribute('aria-disabled', 'true');
