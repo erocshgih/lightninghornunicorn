@@ -75,7 +75,7 @@
             main#mainContent .lhu-donate-stage {
               position: relative; display: block; width: 100%;
               max-width: 340px; margin: var(--space-md) auto;
-              isolation: isolate;
+              isolation: isolate; overflow: visible !important;
             }
             main#mainContent .lhu-donate-stage .sticker-link { position: relative; z-index: 2; }
             main#mainContent .lhu-donate-stage .transparent-sticker {
@@ -114,7 +114,7 @@
             }
             /* Flying coins. */
             main#mainContent .lhu-donate-coin {
-              position: absolute; z-index: 4; width: 112px !important; height: 112px !important;
+              position: absolute; z-index: 20; width: 112px !important; height: 112px !important;
               max-width: 112px !important; max-height: 112px !important; margin: 0 !important;
               object-fit: contain; border-radius: 0 !important; box-shadow: none !important;
               pointer-events: none; will-change: transform, opacity;
@@ -236,20 +236,48 @@
             <h2 class="category-opening-title" data-lang-en="DONATE" data-lang-de="DONATE">DONATE</h2>
 
             <div class="lhu-donate-copy">
-                <p class="lhu-donate-line lhu-donate-line--greeting">VERIRRTER REISENDER ... ENDLICH BIST DU ANGEKOMMEN!!!</p>
-                <p class="lhu-donate-line lhu-donate-line--dialog-q">Was? Deine Geldsäcke sind zu schwer?</p>
-                <p class="lhu-donate-line lhu-donate-line--dialog-body">Lass mich dir helfen, etwas von deinem mühevollen Mamon abzunehmen ...</p>
-                <p class="lhu-donate-line lhu-donate-line--crickets"><em>Grillenzirpen übertönt die eigenartige Stille</em></p>
-                <p class="lhu-donate-line lhu-donate-line--prophecy">Als der Schilling heute auf die Hochglocke fiel, spürte ich beim achten Froschgesang, dass du kommen würdest.</p>
-                <p class="lhu-donate-line lhu-donate-line--explanation">Wir haben schon wieder etwas gebaut. Aber ohne dass man etwas hebt und von einem Ort zum anderen bewegt, gibt es weniger Bewegung auf dieser Welt.</p>
-                <p class="lhu-donate-line lhu-donate-line--appeal">Deshalb appelliere ich an dich, edler Reisender!</p>
-                <p class="lhu-donate-line lhu-donate-line--appeal-body">Hilf mir, Mrrrphadora van Donatia, den Namen meiner Donatianer in Ehren zu halten!</p>
-                <p class="lhu-donate-line lhu-donate-line--click-cta">Erhebe deine Finger, aktiviere deine rapiden Klickfähigkeiten und hilf mir, diese schweren Säcke zu stemmen!</p>
-                <p class="lhu-donate-line lhu-donate-line--buildup">Und zwar um ...</p>
-                <p class="lhu-donate-line lhu-donate-line--dots">...</p>
-                <p class="lhu-donate-line lhu-donate-line--nunja"><em>Nun ja.</em></p>
-                <p class="lhu-donate-line lhu-donate-line--finale">UM ZU SPENDEN!</p>
-                <p class="lhu-donate-line lhu-donate-line--thanks">Vielen Dank.</p>
+                <p class="lhu-donate-line lhu-donate-line--greeting"
+                       data-lang-de="VERIRRTER REISENDER ... ENDLICH BIST DU ANGEKOMMEN!!!"
+                       data-lang-en="LOST TRAVELLER ... YOU HAVE FINALLY ARRIVED!!!">VERIRRTER REISENDER ... ENDLICH BIST DU ANGEKOMMEN!!!</p>
+                <p class="lhu-donate-line lhu-donate-line--dialog-q"
+                       data-lang-de="Was? Deine Geldsäcke sind zu schwer?"
+                       data-lang-en="What? Your money bags too heavy?">Was? Deine Geldsäcke sind zu schwer?</p>
+                <p class="lhu-donate-line lhu-donate-line--dialog-body"
+                       data-lang-de="Lass mich dir helfen, etwas von deinem mühevollen Mamon abzunehmen ..."
+                       data-lang-en="Let me help you unburden yourself of some of that hard-earned mammon ...">Lass mich dir helfen, etwas von deinem mühevollen Mamon abzunehmen ...</p>
+                <p class="lhu-donate-line lhu-donate-line--crickets"
+                       data-lang-de="&lt;em&gt;Grillenzirpen übertönt die eigenartige Stille&lt;/em&gt;"
+                       data-lang-en="&lt;em&gt;Crickets chirping drown out the peculiar silence&lt;/em&gt;"><em>Grillenzirpen übertönt die eigenartige Stille</em></p>
+                <p class="lhu-donate-line lhu-donate-line--prophecy"
+                       data-lang-de="Als der Schilling heute auf die Hochglocke fiel, spürte ich beim achten Froschgesang, dass du kommen würdest."
+                       data-lang-en="As the schilling rang against the high bell today, I sensed — midway through the eighth frogsong — that you would come.">Als der Schilling heute auf die Hochglocke fiel, spürte ich beim achten Froschgesang, dass du kommen würdest.</p>
+                <p class="lhu-donate-line lhu-donate-line--explanation"
+                       data-lang-de="Wir haben schon wieder etwas gebaut. Aber ohne dass man etwas hebt und von einem Ort zum anderen bewegt, gibt es weniger Bewegung auf dieser Welt."
+                       data-lang-en="We have built something again. But unless you lift things and carry them from one place to another, there is precious little movement in this world.">Wir haben schon wieder etwas gebaut. Aber ohne dass man etwas hebt und von einem Ort zum anderen bewegt, gibt es weniger Bewegung auf dieser Welt.</p>
+                <p class="lhu-donate-line lhu-donate-line--appeal"
+                       data-lang-de="Deshalb appelliere ich an dich, edler Reisender!"
+                       data-lang-en="Therefore I appeal to you, noble traveller!">Deshalb appelliere ich an dich, edler Reisender!</p>
+                <p class="lhu-donate-line lhu-donate-line--appeal-body"
+                       data-lang-de="Hilf mir, Mrrrphadora van Donatia, den Namen meiner Donatianer in Ehren zu halten!"
+                       data-lang-en="Help me, Mrrrphadora van Donatia, keep the name of my Donatians in honour!">Hilf mir, Mrrrphadora van Donatia, den Namen meiner Donatianer in Ehren zu halten!</p>
+                <p class="lhu-donate-line lhu-donate-line--click-cta"
+                       data-lang-de="Erhebe deine Finger, aktiviere deine rapiden Klickfähigkeiten und hilf mir, diese schweren Säcke zu stemmen!"
+                       data-lang-en="Raise your fingers, activate your rapid clicking skills, and help me heave these heavy sacks!">Erhebe deine Finger, aktiviere deine rapiden Klickfähigkeiten und hilf mir, diese schweren Säcke zu stemmen!</p>
+                <p class="lhu-donate-line lhu-donate-line--buildup"
+                       data-lang-de="Und zwar um ..."
+                       data-lang-en="And that is for ...">Und zwar um ...</p>
+                <p class="lhu-donate-line lhu-donate-line--dots"
+                       data-lang-de="..."
+                       data-lang-en="...">...</p>
+                <p class="lhu-donate-line lhu-donate-line--nunja"
+                       data-lang-de="&lt;em&gt;Nun ja.&lt;/em&gt;"
+                       data-lang-en="&lt;em&gt;Well, then.&lt;/em&gt;"><em>Nun ja.</em></p>
+                <p class="lhu-donate-line lhu-donate-line--finale"
+                       data-lang-de="UM ZU SPENDEN!"
+                       data-lang-en="TO DONATE!">UM ZU SPENDEN!</p>
+                <p class="lhu-donate-line lhu-donate-line--thanks"
+                       data-lang-de="Vielen Dank."
+                       data-lang-en="Thank you.">Vielen Dank.</p>
             </div>
 
             
@@ -351,15 +379,16 @@
                 coin.src = 'donate/coin.png';
                 coin.alt = ''; coin.setAttribute('aria-hidden', 'true');
                 var w = stage.clientWidth, h = stage.clientHeight;
-                var sx = w * (0.2 + Math.random() * 0.6);
-                var sy = h - 6;
+                var sx = w * (0.3 + Math.random() * 0.4);
+                var sy = h - 20;
                 coin.style.left = (sx - 56) + 'px';
                 coin.style.top = (sy - 56) + 'px';
                 stage.appendChild(coin);
                 var dx = w / 2 - sx, dy = h / 2 - sy;
                 var frames = [
                   { transform: 'translate(0,0) scale(0.55) rotate(0deg)', opacity: 0 },
-                  { transform: 'translate(' + (dx * 0.55) + 'px,' + (dy * 0.55 - 120) + 'px) scale(1.2) rotate(220deg)', opacity: 1, offset: 0.5 },
+                  { transform: 'translate(' + (dx * 0.35) + 'px,' + (dy * 0.35 - 150) + 'px) scale(1.2) rotate(160deg)', opacity: 1, offset: 0.12 },
+                  { transform: 'translate(' + (dx * 0.72) + 'px,' + (dy * 0.72 - 95) + 'px) scale(1.1) rotate(300deg)', opacity: 1, offset: 0.82 },
                   { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(0.7) rotate(400deg)', opacity: 0 }
                 ];
                 if (coin.animate) {

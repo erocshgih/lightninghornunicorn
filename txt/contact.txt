@@ -84,22 +84,162 @@
                 section#CONTACT p { font-size: 1.25rem; line-height: 1.8; }
                 .tape-image { max-width: 500px; }
             }
+
+            /* ---- LET'S MAKE SOMETHING HAPPEN / LHU PRICE INDEX ---- */
+            main#mainContent section#CONTACT .lhu-contact-copy { margin: var(--space-lg) auto; }
+            main#mainContent section#CONTACT .lhu-contact-line {
+              font-family: var(--font-sans); margin: 0 auto 18px; text-align: center;
+              max-width: 700px; font-size: 18px; font-weight: 400; line-height: 1.6;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line strong { font-weight: 700; }
+            main#mainContent section#CONTACT .lhu-contact-line--title {
+              font-size: 38px; font-weight: 900; text-transform: uppercase;
+              line-height: 1.15; margin-bottom: 30px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--quiet { color: var(--text-soft); }
+            main#mainContent section#CONTACT .lhu-contact-line--subhead {
+              font-size: 23px; font-weight: 800; line-height: 1.3; margin-top: 30px; margin-bottom: 24px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--service {
+              text-align: left; max-width: 640px; line-height: 1.7; margin-bottom: 20px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--service strong { font-size: 20px; }
+            main#mainContent section#CONTACT .lhu-contact-line--mailbox {
+              font-size: 17px; font-style: italic; color: var(--text-muted);
+              margin-top: 30px; margin-bottom: var(--space-lg);
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--price-title {
+              font-size: 38px; font-weight: 900; text-transform: uppercase;
+              line-height: 1.15; margin-top: var(--space-xl); margin-bottom: 12px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--tagline {
+              font-size: 17px; font-style: italic; color: var(--text-muted);
+              margin-bottom: 35px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--gag {
+              font-size: 14px; font-style: italic; opacity: 0.68;
+              margin-top: 20px; margin-bottom: 35px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--price {
+              text-align: left; max-width: 680px; line-height: 1.7; margin-bottom: 26px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--price strong { font-size: 20px; }
+            main#mainContent section#CONTACT .lhu-contact-line--boring {
+              font-size: 23px; font-weight: 800; text-transform: uppercase;
+              line-height: 1.3; margin-top: 45px; margin-bottom: 22px;
+            }
+            main#mainContent section#CONTACT .lhu-contact-line--legal { font-size: 16px; color: var(--text-muted); }
+            main#mainContent section#CONTACT .lhu-contact-line--disclaimer {
+              font-size: 14px; font-style: italic; color: var(--text-soft); margin-top: 25px;
+            }
+            @media (max-width: 640px) {
+              main#mainContent section#CONTACT .lhu-contact-line { font-size: 16px; }
+              main#mainContent section#CONTACT .lhu-contact-line--title,
+              main#mainContent section#CONTACT .lhu-contact-line--price-title { font-size: 28px; }
+              main#mainContent section#CONTACT .lhu-contact-line--subhead,
+              main#mainContent section#CONTACT .lhu-contact-line--boring { font-size: 19px; }
+              main#mainContent section#CONTACT .lhu-contact-line--service strong,
+              main#mainContent section#CONTACT .lhu-contact-line--price strong { font-size: 17px; }
+              main#mainContent section#CONTACT .lhu-contact-line--mailbox,
+              main#mainContent section#CONTACT .lhu-contact-line--tagline { font-size: 14px; }
+              main#mainContent section#CONTACT .lhu-contact-line--gag,
+              main#mainContent section#CONTACT .lhu-contact-line--disclaimer { font-size: 13px; }
+            }
         </style>
 
         <section id="CONTACT">
 
             <h2 class="category-opening-title" data-lang-en="CONTACT" data-lang-de="CONTACT">CONTACT</h2>
 
-            <p data-lang-en="Have a project that needs an independent creative mind and hands-on execution? Hire me for website design and development, 3D design and modelling, music production, sculptural work, visual concepts, creative direction or ambitious artistic collaborations. From the first rough idea to the finished object, I can help shape the whole thing."
-               data-lang-de="Du hast ein Projekt, das einen eigenständigen kreativen Kopf und praktische Umsetzung braucht? Engagiere mich für Website-Design und Entwicklung, 3D-Design und Modellierung, Musikproduktion, bildhauerische Arbeiten, visuelle Konzepte, Creative Direction oder ambitionierte Kunstprojekte. Von der ersten rohen Idee bis zum fertigen Objekt kann ich den gesamten Prozess mitgestalten.">
-                Du hast ein Projekt, das einen eigenständigen kreativen Kopf und praktische Umsetzung braucht? Engagiere mich für Website-Design und Entwicklung, 3D-Design und Modellierung, Musikproduktion, bildhauerische Arbeiten, visuelle Konzepte, Creative Direction oder ambitionierte Kunstprojekte. Von der ersten rohen Idee bis zum fertigen Objekt kann ich den gesamten Prozess mitgestalten.
-            </p>
-
-            <p data-lang-en="Tell me what you are building, making, imagining or trying to bring into the world. Click the mailbox below and let's talk."
-               data-lang-de="Erzähl mir, was du baust, gestaltest, planst oder in die Welt bringen willst. Klick auf den Briefkasten und lass uns sprechen."
-               style="font-family: var(--font-display); font-size: var(--fs-xs); color: var(--text-soft); margin-bottom: var(--space-md); line-height: 2;">
-                Klick auf den Briefkasten unten, um eine Email zu senden.
-            </p>
+            <div class="lhu-contact-copy">
+                <p class="lhu-contact-line lhu-contact-line--title"
+                   data-lang-de="LET'S MAKE SOMETHING HAPPEN."
+                   data-lang-en="LET'S MAKE SOMETHING HAPPEN.">LET'S MAKE SOMETHING HAPPEN.</p>
+                <p class="lhu-contact-line lhu-contact-line--lead"
+                   data-lang-de="Du hast eine Idee, ein Projekt oder einfach eine Frage? Oder möchtest du dich nur melden, um Hallo zu sagen?"
+                   data-lang-en="Got an idea, a project, or just a question? Or maybe you only want to say hello?">Du hast eine Idee, ein Projekt oder einfach eine Frage? Oder möchtest du dich nur melden, um Hallo zu sagen?</p>
+                <p class="lhu-contact-line lhu-contact-line--lead"
+                   data-lang-de="Dann mach das ruhig. Wir freuen uns über jede Nachricht."
+                   data-lang-en="Then go ahead. We're happy about every message.">Dann mach das ruhig. Wir freuen uns über jede Nachricht.</p>
+                <p class="lhu-contact-line lhu-contact-line--quiet"
+                   data-lang-de="Du musst nicht gleich einen fertigen Auftrag mitbringen. Wir werden niemanden beim ersten Kontakt mit Preisen, Angeboten oder irgendwelchen Verbindlichkeiten bombardieren. Manchmal beginnt etwas Interessantes einfach mit einem Gespräch."
+                   data-lang-en="You don't need to show up with a finished brief. We won't bomb anyone with prices, quotes or any kind of obligation on first contact. Sometimes something interesting starts with a conversation.">Du musst nicht gleich einen fertigen Auftrag mitbringen. Wir werden niemanden beim ersten Kontakt mit Preisen, Angeboten oder irgendwelchen Verbindlichkeiten bombardieren. Manchmal beginnt etwas Interessantes einfach mit einem Gespräch.</p>
+                <p class="lhu-contact-line lhu-contact-line--subhead"
+                   data-lang-de="&lt;strong&gt;Wobei wir helfen können:&lt;/strong&gt;"
+                   data-lang-en="&lt;strong&gt;What we can help with:&lt;/strong&gt;"><strong>Wobei wir helfen können:</strong></p>
+                <p class="lhu-contact-line lhu-contact-line--service"
+                   data-lang-de="&lt;strong&gt;01. Webdesign &amp;amp; Entwicklung&lt;/strong&gt;&lt;br&gt;Individuelle Websites, digitale Präsentationen und kreative Weblösungen."
+                   data-lang-en="&lt;strong&gt;01. Web Design &amp;amp; Development&lt;/strong&gt;&lt;br&gt;Custom websites, digital presentations and creative web solutions."><strong>01. Webdesign &amp; Entwicklung</strong><br>Individuelle Websites, digitale Präsentationen und kreative Weblösungen.</p>
+                <p class="lhu-contact-line lhu-contact-line--service"
+                   data-lang-de="&lt;strong&gt;02. 3D-Design &amp;amp; Modellierung&lt;/strong&gt;&lt;br&gt;3D-Modelle, Produktvisualisierungen, Charaktere und Designobjekte."
+                   data-lang-en="&lt;strong&gt;02. 3D Design &amp;amp; Modelling&lt;/strong&gt;&lt;br&gt;3D models, product visualisations, characters and design objects."><strong>02. 3D-Design &amp; Modellierung</strong><br>3D-Modelle, Produktvisualisierungen, Charaktere und Designobjekte.</p>
+                <p class="lhu-contact-line lhu-contact-line--service"
+                   data-lang-de="&lt;strong&gt;03. Visuelles Design &amp;amp; Konzeptgestaltung&lt;/strong&gt;&lt;br&gt;Logos, visuelle Identitäten, Artwork, grafische Gestaltung und Bildkonzepte."
+                   data-lang-en="&lt;strong&gt;03. Visual Design &amp;amp; Concept Work&lt;/strong&gt;&lt;br&gt;Logos, visual identities, artwork, graphic design and image concepts."><strong>03. Visuelles Design &amp; Konzeptgestaltung</strong><br>Logos, visuelle Identitäten, Artwork, grafische Gestaltung und Bildkonzepte.</p>
+                <p class="lhu-contact-line lhu-contact-line--service"
+                   data-lang-de="&lt;strong&gt;04. Musikproduktion &amp;amp; Sounddesign&lt;/strong&gt;&lt;br&gt;Komposition, Musikproduktion, Arrangement und individuelle Klangwelten."
+                   data-lang-en="&lt;strong&gt;04. Music Production &amp;amp; Sound Design&lt;/strong&gt;&lt;br&gt;Composition, music production, arrangement and custom sound worlds."><strong>04. Musikproduktion &amp; Sounddesign</strong><br>Komposition, Musikproduktion, Arrangement und individuelle Klangwelten.</p>
+                <p class="lhu-contact-line lhu-contact-line--service"
+                   data-lang-de="&lt;strong&gt;05. Creative Direction &amp;amp; Konzeptentwicklung&lt;/strong&gt;&lt;br&gt;Kreative Strategien, Projektideen, künstlerische Leitung und die Entwicklung außergewöhnlicher Konzepte."
+                   data-lang-en="&lt;strong&gt;05. Creative Direction &amp;amp; Concept Development&lt;/strong&gt;&lt;br&gt;Creative strategies, project ideas, artistic direction and the development of extraordinary concepts."><strong>05. Creative Direction &amp; Konzeptentwicklung</strong><br>Kreative Strategien, Projektideen, künstlerische Leitung und die Entwicklung außergewöhnlicher Konzepte.</p>
+                <p class="lhu-contact-line lhu-contact-line--quiet"
+                   data-lang-de="Von der ersten Idee bis zur fertigen Umsetzung."
+                   data-lang-en="From the first idea to the finished result.">Von der ersten Idee bis zur fertigen Umsetzung.</p>
+                <p class="lhu-contact-line lhu-contact-line--quiet"
+                   data-lang-de="Erzähl uns, was du vorhast. Oder sag einfach Hallo."
+                   data-lang-en="Tell us what you're planning. Or just say hello.">Erzähl uns, was du vorhast. Oder sag einfach Hallo.</p>
+                <p class="lhu-contact-line lhu-contact-line--mailbox"
+                   data-lang-de="Der Briefkasten wartet. Er zählt vielleicht schon die Sekunden. Ich weiß nicht, warum wir dem Teil ein Gesicht und ein Bewusstsein gegeben haben, aber seitdem will der Postler nicht mehr weggehen."
+                   data-lang-en="The mailbox is waiting. It may already be counting the seconds. We don't know why we gave that thing a face and a consciousness, but ever since, the postman refuses to leave.">Der Briefkasten wartet. Er zählt vielleicht schon die Sekunden. Ich weiß nicht, warum wir dem Teil ein Gesicht und ein Bewusstsein gegeben haben, aber seitdem will der Postler nicht mehr weggehen.</p>
+                <p class="lhu-contact-line lhu-contact-line--price-title"
+                   data-lang-de="THE LHU ALTERNATIVE PRICE INDEX"
+                   data-lang-en="THE LHU ALTERNATIVE PRICE INDEX">THE LHU ALTERNATIVE PRICE INDEX</p>
+                <p class="lhu-contact-line lhu-contact-line--tagline"
+                   data-lang-de="Professional creativity. Questionable financial comparisons."
+                   data-lang-en="Professional creativity. Questionable financial comparisons.">Professional creativity. Questionable financial comparisons.</p>
+                <p class="lhu-contact-line lhu-contact-line--price-intro"
+                   data-lang-de="Wir haben uns Gedanken über faire Preise gemacht. Wirklich. Wir haben gerechnet, verglichen und sogar kurz versucht macgyver zu kidnappen damit er eine ki in den taschenrechner baut."
+                   data-lang-en="We gave fair pricing some thought. Really. We calculated, we compared, and we briefly tried to kidnap MacGyver so he could build an AI into our calculator.">Wir haben uns Gedanken über faire Preise gemacht. Wirklich. Wir haben gerechnet, verglichen und sogar kurz versucht macgyver zu kidnappen damit er eine ki in den taschenrechner baut.</p>
+                <p class="lhu-contact-line lhu-contact-line--gag"
+                   data-lang-de="Er ging nicht ans telefon."
+                   data-lang-en="He didn't answer the phone.">Er ging nicht ans telefon.</p>
+                <p class="lhu-contact-line lhu-contact-line--price-intro"
+                   data-lang-de="Deshalb präsentieren wir den LHU Alternative Price Index. Eine kleine Orientierungshilfe für Menschen, die wissen möchten, was kreative Arbeit ungefähr kostet, aber keine Lust auf eine Excel-Tabelle haben."
+                   data-lang-en="So here is the LHU Alternative Price Index. A little orientation aid for people who want to know roughly what creative work costs but have no appetite for a spreadsheet.">Deshalb präsentieren wir den LHU Alternative Price Index. Eine kleine Orientierungshilfe für Menschen, die wissen möchten, was kreative Arbeit ungefähr kostet, aber keine Lust auf eine Excel-Tabelle haben.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;01. Kleine Designarbeit&lt;/strong&gt;&lt;br&gt;Ungefähr acht Bier, vier Shots und ein Samstagabend, an dem man am nächsten Morgen nicht seine Bank-App deinstallieren möchte. Das Einhorn geht natürlich nicht am Samstag in die dorfdisco aber wir sind uns sicher das viele diese angabe verstehen werden."
+                   data-lang-en="&lt;strong&gt;01. Small design job&lt;/strong&gt;&lt;br&gt;Roughly eight beers, four shots and a Saturday night you won't want to uninstall your banking app the next morning. The unicorn, of course, does not go to the village disco on a Saturday — but we're fairly sure many of you will understand the reference."><strong>01. Kleine Designarbeit</strong><br>Ungefähr acht Bier, vier Shots und ein Samstagabend, an dem man am nächsten Morgen nicht seine Bank-App deinstallieren möchte. Das Einhorn geht natürlich nicht am Samstag in die dorfdisco aber wir sind uns sicher das viele diese angabe verstehen werden.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;02. Logo-Design&lt;/strong&gt;&lt;br&gt;Drei richtig gute Restaurantbesuche. Nicht diese Restaurants, bei denen man nach dem Essen noch schnell eine pizza braucht, weil die Portion aus zwei Erbsen und einer visuellen feng shui beratung bestanden."
+                   data-lang-en="&lt;strong&gt;02. Logo design&lt;/strong&gt;&lt;br&gt;Three really good restaurant visits. Not those restaurants where you need a pizza afterwards because the portion consisted of two peas and a visual feng shui consultation."><strong>02. Logo-Design</strong><br>Drei richtig gute Restaurantbesuche. Nicht diese Restaurants, bei denen man nach dem Essen noch schnell eine pizza braucht, weil die Portion aus zwei Erbsen und einer visuellen feng shui beratung bestanden.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;03. 3D-Modellierung&lt;/strong&gt;&lt;br&gt;Ein gebrauchtes Mountainbike aus dem Jahr 2012. Mit Gebrauchsspuren, funktionierenden Bremsen und einer Rechnung. Wir sind schließlich keine Barbaren."
+                   data-lang-en="&lt;strong&gt;03. 3D modelling&lt;/strong&gt;&lt;br&gt;A used mountain bike from 2012. With signs of wear, working brakes and a receipt. We're not barbarians."><strong>03. 3D-Modellierung</strong><br>Ein gebrauchtes Mountainbike aus dem Jahr 2012. Mit Gebrauchsspuren, funktionierenden Bremsen und einer Rechnung. Wir sind schließlich keine Barbaren.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;04. Musikproduktion&lt;/strong&gt;&lt;br&gt;Dreißig vegetarische Pizzen und ein Monatsvorrat Vitamin C und D. Genug Energie, um einen Song fertigzustellen, bevor die Nachbarn anfangen, an die Wand zu klopfen."
+                   data-lang-en="&lt;strong&gt;04. Music production&lt;/strong&gt;&lt;br&gt;Thirty vegetarian pizzas and a month's supply of vitamin C and D. Enough energy to finish a song before the neighbours start banging on the wall."><strong>04. Musikproduktion</strong><br>Dreißig vegetarische Pizzen und ein Monatsvorrat Vitamin C und D. Genug Energie, um einen Song fertigzustellen, bevor die Nachbarn anfangen, an die Wand zu klopfen.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;05. Kleine Website&lt;/strong&gt;&lt;br&gt;Ein gebrauchter japanischer Kleinwagen. Vier Räder, funktionierende Batterie und ein Motor, der nicht klingt, als würde er gerade seine letzten gebete in motorölisch zu sprechen."
+                   data-lang-en="&lt;strong&gt;05. Small website&lt;/strong&gt;&lt;br&gt;A used Japanese compact car. Four wheels, a working battery and an engine that doesn't sound like it's reciting its last prayers in motor oil."><strong>05. Kleine Website</strong><br>Ein gebrauchter japanischer Kleinwagen. Vier Räder, funktionierende Batterie und ein Motor, der nicht klingt, als würde er gerade seine letzten gebete in motorölisch zu sprechen.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;06. Komplette Website&lt;/strong&gt;&lt;br&gt;Ein Nustan Promgerta. TÜV bis gestern, ein mysteriöses Geräusch aus dem Motorraum und ein lebendiges Huhn auf dem Beifahrersitz. Ei inklusive."
+                   data-lang-en="&lt;strong&gt;06. Complete website&lt;/strong&gt;&lt;br&gt;A Nustan Promgerta. MOT yesterday, a mysterious noise from the engine bay and a live chicken in the passenger seat. Egg included."><strong>06. Komplette Website</strong><br>Ein Nustan Promgerta. TÜV bis gestern, ein mysteriöses Geräusch aus dem Motorraum und ein lebendiges Huhn auf dem Beifahrersitz. Ei inklusive.</p>
+                <p class="lhu-contact-line lhu-contact-line--price"
+                   data-lang-de="&lt;strong&gt;07. Creative Direction&lt;/strong&gt;&lt;br&gt;Ein Jahr Kleingartenpacht, eine Hängematte und eine großzügige Walnussversorgung. Die Krähenallianz ist uns wichtig und die brauchen wallnüsse."
+                   data-lang-en="&lt;strong&gt;07. Creative direction&lt;/strong&gt;&lt;br&gt;A year of allotment rent, a hammock and a generous walnut supply. The crow alliance matters to us and they need walnuts."><strong>07. Creative Direction</strong><br>Ein Jahr Kleingartenpacht, eine Hängematte und eine großzügige Walnussversorgung. Die Krähenallianz ist uns wichtig und die brauchen wallnüsse.</p>
+                <p class="lhu-contact-line lhu-contact-line--boring"
+                   data-lang-de="THE BORING BUT NECESSARY PART"
+                   data-lang-en="THE BORING BUT NECESSARY PART">THE BORING BUT NECESSARY PART</p>
+                <p class="lhu-contact-line lhu-contact-line--legal"
+                   data-lang-de="Diese Vergleiche sind natürlich nicht als tatsächliche Zahlungsforderungen gemeint. Sie dienen der humorvollen Veranschaulichung unserer ungefähren Preisrichtwerte."
+                   data-lang-en="These comparisons are of course not meant as actual payment demands. They serve as a humorous illustration of our approximate price guidelines.">Diese Vergleiche sind natürlich nicht als tatsächliche Zahlungsforderungen gemeint. Sie dienen der humorvollen Veranschaulichung unserer ungefähren Preisrichtwerte.</p>
+                <p class="lhu-contact-line lhu-contact-line--legal"
+                   data-lang-de="Der tatsächliche Preis richtet sich nach Umfang, Aufwand und Anforderungen des jeweiligen Projekts. Konkrete Angebote werden individuell in Euro vereinbart."
+                   data-lang-en="The actual price depends on scope, effort and the requirements of the individual project. Concrete quotes are agreed individually in euros.">Der tatsächliche Preis richtet sich nach Umfang, Aufwand und Anforderungen des jeweiligen Projekts. Konkrete Angebote werden individuell in Euro vereinbart.</p>
+                <p class="lhu-contact-line lhu-contact-line--disclaimer"
+                   data-lang-de="Alle Angaben ohne Gewähr.&amp;#x20;"
+                   data-lang-en="All information without guarantee.&amp;#x20;">Alle Angaben ohne Gewähr.&#x20;</p>
+            </div>
 
             <a href="mailto:lightninghornunicorn@gmail.com" class="music-tape-link" aria-label="Email an Lightning Horn Unicorn senden">
                 <div class="wobble-glitch-container">
