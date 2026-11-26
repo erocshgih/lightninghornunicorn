@@ -42,9 +42,12 @@
             }
 
              
+            /* ===== PROJECTS ART DIRECTION: all borders red, all type in blue tones ===== */
+            #PROJECTS { --proj-blue: #3aa0ff; --proj-blue-bright: #8fd0ff; --proj-blue-deep: #1f5fa8; --proj-red: #e0312d; }
+
             .cat-group {
-                border: 2px solid var(--border-soft);
-                border-radius: var(--radius);
+                border: 2px solid var(--proj-red);
+                border-radius: 0;
                 margin-bottom: 12px;
                 overflow: hidden;
                 background: var(--card-bg);
@@ -52,9 +55,13 @@
                 width: 100%;
             }
             .cat-group.open {
-                border-color: var(--strip-active);
-                box-shadow: 0 0 16px rgba(255, 154, 60, 0.18);
+                border-color: var(--proj-red);
+                box-shadow: 0 0 16px rgba(224, 49, 45, 0.18);
             }
+            /* All type in blue tones */
+            #PROJECTS, #PROJECTS * { color: var(--proj-blue) !important; }
+            #PROJECTS h1, #PROJECTS h2, #PROJECTS h3, #PROJECTS h4, #PROJECTS strong { color: var(--proj-blue-bright) !important; }
+            #PROJECTS .prod-meta, #PROJECTS .prod-tag, #PROJECTS .carousel-dot { color: var(--proj-blue-deep) !important; }
 
             .cat-header {
                 display: flex;
@@ -108,7 +115,7 @@
             }
 
              
-            .prod-item { border-top: 1px solid var(--border-soft); }
+            .prod-item { border-top: 1px solid var(--proj-red); }
             .prod-item:first-child { border-top: none; }
 
             .prod-header {
@@ -202,7 +209,7 @@
                 box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
                 background: var(--card-bg);
                 box-sizing: border-box;
-                border: 2px solid var(--border-soft);
+                border: 2px solid var(--proj-red);
                 contain: layout paint;
             }
             .carousel-stage {
@@ -840,9 +847,15 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     document.body.appendChild(modelLightbox);
                     const close = () => {
                         modelLightbox.hidden = true;
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
                         stopProjectWatchdog();
                         if (modelLightboxViewer) { modelLightboxViewer.remove(); modelLightboxViewer = null; }
                         removeProjectDprOverride();
+                        if (projectLightboxTrigger && typeof projectLightboxTrigger.focus === 'function') {
+                            try { projectLightboxTrigger.focus({ preventScroll: true }); } catch (_) {}
+                        }
+                        projectLightboxTrigger = null;
                     };
                     modelLightbox.querySelector('.lhu-3d-lightbox__close').addEventListener('click', close);
                     modelLightbox.addEventListener('click', e => { if (e.target === modelLightbox) close(); });
@@ -887,7 +900,10 @@ main#mainContent #projects-accordion .prod-media-panel .carousel-slide.active {
                     }));
                     return modelLightbox;
                 }
+                let projectLightboxTrigger = null;
                 function openModelLightbox(modelSrc, label) {
+                    projectLightboxTrigger = document.activeElement;
+                    document.body.style.overflow = 'hidden';
                     installProjectDprOverride();
                     ensureModelViewer();
                     const box = ensureModelLightbox();

@@ -34,16 +34,16 @@
             }
             .chapter-topnav button:hover,
             .chapter-topnav button:focus-visible {
-                background: var(--strip-active);
-                color: #111;
-                border-color: var(--strip-active);
+                background: #7ee8a2;
+                color: #0a2a14;
+                border-color: #7ee8a2;
                 transform: translateY(-2px);
                 outline: none;
             }
             .chapter-topnav button.current {
-                background: var(--strip-active);
-                color: #111;
-                border-color: var(--border-strong, #14120f);
+                background: #7ee8a2;
+                color: #0a2a14;
+                border-color: #4fb87a;
                 font-weight: bold;
                 box-shadow: 0 0 10px rgba(255, 122, 0, 0.4);
             }
@@ -156,6 +156,8 @@
 
         <section id="STORYTIME">
             <h2 class="category-opening-title" data-lang-en="STORYTIME" data-lang-de="STORYTIME">STORYTIME</h2>
+
+            <p class="lhu-contact-line lhu-contact-line--lead" data-lang-de="Hier findest du Geschichten, Kapitel und Fragmente aus dem LHU-Archiv. Stöbere dich durch, lies was dich interessiert und lass dich von den Worten überraschen." data-lang-en="Here you'll find stories, chapters and fragments from the LHU archive. Browse through, read what catches your eye and let the words surprise you.">Hier findest du Geschichten, Kapitel und Fragmente aus dem LHU-Archiv. Stöbere dich durch, lies was dich interessiert und lass dich von den Worten überraschen.</p>
 
             <nav id="dynamic-chapter-nav" class="chapter-topnav" aria-label="Kapitel-Navigation">
                 

@@ -150,6 +150,22 @@
                 #three-container { height: 48vh; min-height: 320px; }
                 .zoom-btn { width: 44px; height: 44px; font-size: 20px; }
                 .atom-disclaimer { font-size: 0.82rem !important; letter-spacing: 0.08em; }
+            section#HUMANART > p {
+                font-family: var(--font-body, 'VT323', monospace);
+                font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+                line-height: 1.65;
+                max-width: 72ch;
+                margin: 18px auto;
+                text-align: center;
+            }
+            section#HUMANART > p span[style*="font-weight: bold"] {
+                font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+                letter-spacing: 0.04em;
+            }
+            section#HUMANART .category-opening-title {
+                letter-spacing: 0.12em;
+                text-shadow: 0 0 18px rgba(224, 36, 36, 0.35);
+            }
             }
 
              

@@ -6,6 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <title>About - LHU Content</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -14,6 +17,139 @@
  
 
              
+            /* ===== TYPOGRAPHY & VISUAL DESIGN BRIEF: ABOUT PAGE ===== */
+
+            /* Font families */
+            #ABOUT {
+                --about-font-display: 'Space Grotesk', sans-serif;
+                --about-font-body: 'Inter', sans-serif;
+                --about-font-accent: 'Bebas Neue', sans-serif;
+            }
+
+            /* Editorial palette (scoped to About) — adapts to light/daylight themes */
+            #ABOUT {
+                --about-bg: #111116;
+                --about-text: #F2F0EB;
+                --about-text-secondary: #A5A5AE;
+                --about-accent: #ff3b30;
+                --about-yellow: #ffd60a;
+                --about-blue: #32ade6;
+                --about-aether: #A34DFF;
+                --about-border: #303039;
+            }
+            html[data-theme="light"] #ABOUT,
+            html[data-theme="daylight"] #ABOUT {
+                --about-bg: #f6f4ef;
+                --about-text: #141413;
+                --about-text-secondary: #5c5852;
+                --about-border: #d5d0ca;
+                --about-aether: #7a2fd0;
+            }
+            html[data-theme="mono-gray"] #ABOUT {
+                --about-bg: #1e1e1e;
+                --about-text: #f0f0f0;
+                --about-text-secondary: #b0b0b0;
+            }
+
+            /* Apply dark palette to About section */
+            #ABOUT {
+                background: var(--about-bg);
+                color: var(--about-text);
+            }
+
+            /* Typography hierarchy */
+            #ABOUT .category-opening-title {
+                font-family: var(--about-font-accent) !important;
+                font-weight: 700 !important;
+                letter-spacing: -0.03em !important;
+                line-height: 1.1 !important;
+            }
+
+            #ABOUT .profile-inner h4 {
+                font-family: var(--about-font-display) !important;
+                font-weight: 600 !important;
+                font-size: clamp(1.5rem, 2.2vw, 1.875rem) !important;
+                letter-spacing: -0.01em !important;
+                line-height: 1.2 !important;
+                color: var(--about-text) !important;
+                margin-top: 28px !important;
+                margin-bottom: 14px !important;
+            }
+
+            #ABOUT .profile-inner p {
+                font-family: var(--about-font-body) !important;
+                font-size: clamp(1rem, 1.1vw, 1.125rem) !important;
+                line-height: 1.7 !important;
+                color: var(--about-text) !important;
+                max-width: 720px !important;
+                margin: 14px auto !important;
+            }
+
+            #ABOUT .profile-inner p:first-of-type {
+                font-size: clamp(1.125rem, 1.3vw, 1.25rem) !important;
+                font-weight: 500 !important;
+            }
+
+            #ABOUT .profile-inner li {
+                font-family: var(--about-font-body) !important;
+                font-size: clamp(1rem, 1.1vw, 1.125rem) !important;
+                line-height: 1.65 !important;
+                color: var(--about-text) !important;
+            }
+
+            /* Keep inline colors in the text (red/yellow/blue) — do NOT override with !important */
+            #ABOUT strong {
+                font-weight: 600 !important;
+            }
+            /* Default accent for skill labels that have no inline color */
+            #ABOUT .profile-inner li > strong {
+                color: var(--about-accent) !important;
+            }
+            /* Give section headings a rotating red/yellow/blue rhythm */
+            #ABOUT .profile-inner h4:nth-of-type(3n+1) { color: var(--about-accent) !important; }
+            #ABOUT .profile-inner h4:nth-of-type(3n+2) { color: var(--about-yellow) !important; }
+            #ABOUT .profile-inner h4:nth-of-type(3n+3) { color: var(--about-blue) !important; }
+
+            /* Metadata / labels */
+            #ABOUT .atom-disclaimer {
+                font-family: var(--about-font-display) !important;
+                font-size: clamp(0.6875rem, 0.8vw, 0.8125rem) !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.08em !important;
+                color: var(--about-text-secondary) !important;
+                text-transform: uppercase !important;
+            }
+
+            /* Aether-specific styling — ultraviolet overrides the red/yellow/blue rhythm */
+            #box-aether .profile-inner h4,
+            #box-aether .profile-inner h4:nth-of-type(n) {
+                color: var(--about-aether) !important;
+            }
+            #box-aether .profile-inner {
+                border-left: 2px solid var(--about-aether);
+                padding-left: 20px;
+            }
+
+            /* Vedran dialogue accents — red/yellow/blue site signature */
+            #box-vedran .profile-inner h4 {
+                color: var(--about-accent) !important;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                #ABOUT .profile-inner h4 {
+                    font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
+                }
+                #ABOUT .profile-inner p {
+                    font-size: 1rem !important;
+                }
+                #ABOUT .profile-inner p:first-of-type {
+                    font-size: 1.125rem !important;
+                }
+            }
+
+            /* ===== END TYPOGRAPHY BRIEF ===== */
+
             .team-intro { margin: 20px 0 10px; text-align: center; }
 
             .profile-toggle-container {
@@ -83,12 +219,27 @@
 
             .profile-inner h4 {
                 font-family: var(--font-display, 'Press Start 2P', monospace);
-                font-size: var(--fs-md);
+                font-size: clamp(0.85rem, 1.6vw, 1.1rem);
                 color: var(--strip-active);
                 margin-bottom: 12px;
                 margin-top: 4px;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
+                line-height: 1.3;
+            }
+            .profile-inner h4:not(:first-child) { margin-top: 22px; }
+            .profile-inner p {
+                font-family: var(--font-body, 'VT323', monospace);
+                font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+                line-height: 1.6;
+                margin: 12px 0;
+            }
+            .profile-inner p:first-of-type {
+                font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+                font-weight: 500;
+            }
+            .profile-inner li {
+                font-size: clamp(1rem, 1.4vw, 1.2rem);
             }
             .profile-inner h4:not(:first-child) { margin-top: 22px; }
             .profile-inner ul {
@@ -98,12 +249,10 @@
             .profile-inner li {
                 margin-bottom: 10px;
                 font-family: var(--font-body, 'VT323', monospace);
-                font-size: var(--fs-body-content, 1.1rem);
                 line-height: 1.55;
             }
             .profile-inner p {
                 font-family: var(--font-body, 'VT323', monospace);
-                font-size: var(--fs-body-content, 1.1rem);
                 line-height: 1.6;
                 margin: 12px 0;
             }
@@ -114,11 +263,43 @@
                 width: 100%;
                 max-width: 500px;
                 margin: 15px auto 24px;
-                overflow: hidden;
+                overflow: visible;
                 border-radius: 8px;
                 border: 2px solid var(--border-soft);
                 background: var(--card-bg);
                 contain: layout paint;
+            }
+            .profile-carousel::before {
+                content: "";
+                position: absolute;
+                inset: -4px;
+                border-radius: 12px;
+                background: conic-gradient(from 0deg, var(--accent, #e04836), transparent 60%, var(--accent-blue, #2574d4), transparent 90%, var(--accent, #e04836));
+                animation: aboutFrameSpin 8s linear infinite;
+                opacity: 0.55;
+                z-index: -1;
+                pointer-events: none;
+                -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                -webkit-mask-composite: xor;
+                mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                mask-composite: exclude;
+                padding: 2px;
+            }
+            @keyframes aboutFrameSpin {
+                to { transform: rotate(360deg); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .profile-carousel::before { animation: none; opacity: 0.3; }
+            }
+            .profile-carousel img {
+                animation: aboutImgFloat 5s ease-in-out infinite;
+            }
+            @keyframes aboutImgFloat {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-4px); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .profile-carousel img { animation: none; }
             }
             .profile-carousel .carousel-slide {
                 position: absolute;

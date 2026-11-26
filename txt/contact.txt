@@ -80,6 +80,25 @@
                 .tape-image { transition: none; }
             }
 
+            .lhu-mailbox-frame { position: relative; overflow: hidden; }
+            .lhu-pushme-overlay {
+                position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+                transform: rotate(-45deg); transform-origin: center center;
+                opacity: 0.35; color: #ff2a2a; font-weight: 900;
+                font-size: clamp(0.9rem, 2.2vw, 1.4rem); letter-spacing: 0.12em;
+                text-transform: lowercase; mix-blend-mode: multiply; z-index: 2;
+                display: flex; align-items: center; justify-content: center;
+            }
+            .lhu-pushme-track { display: flex; flex-direction: column; animation: lhu-pushme-scroll 6s linear infinite; }
+            .lhu-pushme-track span { display: block; white-space: nowrap; line-height: 1.15; text-align: center; }
+            @keyframes lhu-pushme-scroll {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-50%); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .lhu-pushme-overlay { animation: none; }
+            }
+
             @media (min-width: 769px) {
                 section#CONTACT p { font-size: 1.25rem; line-height: 1.8; }
                 .tape-image { max-width: 500px; }
@@ -101,7 +120,7 @@
               font-size: 23px; font-weight: 800; line-height: 1.3; margin-top: 30px; margin-bottom: 24px;
             }
             main#mainContent section#CONTACT .lhu-contact-line--service {
-              text-align: left; max-width: 640px; line-height: 1.7; margin-bottom: 20px;
+              text-align: center; max-width: 640px; line-height: 1.7; margin-bottom: 20px; margin-left: auto; margin-right: auto;
             }
             main#mainContent section#CONTACT .lhu-contact-line--service strong { font-size: 20px; }
             main#mainContent section#CONTACT .lhu-contact-line--mailbox {
@@ -121,7 +140,7 @@
               margin-top: 20px; margin-bottom: 35px;
             }
             main#mainContent section#CONTACT .lhu-contact-line--price {
-              text-align: left; max-width: 680px; line-height: 1.7; margin-bottom: 26px;
+              text-align: center; max-width: 680px; line-height: 1.7; margin-bottom: 26px; margin-left: auto; margin-right: auto;
             }
             main#mainContent section#CONTACT .lhu-contact-line--price strong { font-size: 20px; }
             main#mainContent section#CONTACT .lhu-contact-line--boring {
@@ -164,7 +183,22 @@
                 <p class="lhu-contact-line lhu-contact-line--quiet"
                    data-lang-de="Du musst nicht gleich einen fertigen Auftrag mitbringen. Wir werden niemanden beim ersten Kontakt mit Preisen, Angeboten oder irgendwelchen Verbindlichkeiten bombardieren. Manchmal beginnt etwas Interessantes einfach mit einem Gespräch."
                    data-lang-en="You don't need to show up with a finished brief. We won't bomb anyone with prices, quotes or any kind of obligation on first contact. Sometimes something interesting starts with a conversation.">Du musst nicht gleich einen fertigen Auftrag mitbringen. Wir werden niemanden beim ersten Kontakt mit Preisen, Angeboten oder irgendwelchen Verbindlichkeiten bombardieren. Manchmal beginnt etwas Interessantes einfach mit einem Gespräch.</p>
-                <p class="lhu-contact-line lhu-contact-line--subhead"
+            <a href="mailto:lightninghornunicorn@gmail.com" class="music-tape-link lhu-mailbox-link" aria-label="Email an Lightning Horn Unicorn senden">
+                <div class="wobble-glitch-container lhu-mailbox-frame">
+                    <img width="768" height="1144" src="unicornmail.webp" alt="Der ironische Furry-Einhorn-Briefkasten" class="tape-image" loading="lazy" decoding="async">
+                    <div class="analog-glow"></div>
+                    <div class="lhu-pushme-overlay" aria-hidden="true">
+                        <div class="lhu-pushme-track">
+                            <span>push me</span><span>push me</span><span>push me</span><span>push me</span>
+                            <span>push me</span><span>push me</span><span>push me</span><span>push me</span>
+                            <span>push me</span><span>push me</span><span>push me</span><span>push me</span>
+                            <span>push me</span><span>push me</span><span>push me</span><span>push me</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <p class="lhu-contact-line lhu-contact-line--subhead"
                    data-lang-de="&lt;strong&gt;Wobei wir helfen können:&lt;/strong&gt;"
                    data-lang-en="&lt;strong&gt;What we can help with:&lt;/strong&gt;"><strong>Wobei wir helfen können:</strong></p>
                 <p class="lhu-contact-line lhu-contact-line--service"
@@ -241,18 +275,6 @@
                    data-lang-en="All information without guarantee.&amp;#x20;">Alle Angaben ohne Gewähr.&#x20;</p>
             </div>
 
-            <a href="mailto:lightninghornunicorn@gmail.com" class="music-tape-link" aria-label="Email an Lightning Horn Unicorn senden">
-                <div class="wobble-glitch-container">
-                    <img width="768" height="1144" src="unicornmail.webp" alt="Der ironische Furry-Einhorn-Briefkasten TRK-2000 mit Nano Banana" class="tape-image" loading="lazy" decoding="async">
-                    <div class="analog-glow"></div>
-                </div>
-            </a>
-
-            <p class="system-status"
-               data-lang-en="&#9889; TRK-2000 SYSTEM ONLINE &#9889;"
-               data-lang-de="&#9889; TRK-2000 SYSTEM ONLINE &#9889;">
-                &#9889; TRK-2000 SYSTEM ONLINE &#9889;
-            </p>
         </section>
 
         

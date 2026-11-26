@@ -15,16 +15,19 @@
                 margin: 0 auto;
             }
             .music-content h3 {
-                color: var(--strip-active);
                 font-family: var(--font-display, 'Press Start 2P', monospace);
-                font-size: var(--fs-md);
+                font-size: clamp(0.9rem, 1.6vw, 1.2rem);
                 margin-top: var(--space-lg);
                 margin-bottom: var(--space-sm);
                 line-height: 1.5;
+                letter-spacing: 0.06em;
             }
+            .music-content h3:nth-of-type(3n+1) { color: var(--accent-red, #e02424); text-shadow: 0 0 10px rgba(224, 36, 36, 0.3); }
+            .music-content h3:nth-of-type(3n+2) { color: var(--accent-yellow, #e0b422); text-shadow: 0 0 10px rgba(224, 180, 34, 0.3); }
+            .music-content h3:nth-of-type(3n+3) { color: var(--accent-blue, #2574d4); text-shadow: 0 0 10px rgba(37, 116, 212, 0.3); }
             .music-content p {
                 font-family: var(--font-body, 'VT323', monospace);
-                font-size: var(--fs-body-content, 1.1rem);
+                font-size: clamp(1.05rem, 1.5vw, 1.3rem);
                 line-height: 1.65;
                 margin: var(--space-sm) 0;
                 text-align: left;
@@ -64,27 +67,7 @@
                 outline: 2px solid var(--accent, #e04836);
                 outline-offset: 3px;
             }
-            .music-video-link::after {
-                content: '▶';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 60px;
-                height: 60px;
-                background: rgba(0, 0, 0, 0.65);
-                color: #fff;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 24px;
-                pointer-events: none;
-                transition: background 0.2s;
-            }
-            .music-video-link:hover::after {
-                background: var(--accent-red, #e02424);
-            }
+            /* Play-button overlay removed — the thumbnail already links to YouTube. */
             .music-video-link img {
                 width: 100%;
                 height: auto;
@@ -97,9 +80,18 @@
                 text-align: center;
                 margin-top: var(--space-xl);
                 font-family: var(--font-display, 'Press Start 2P', monospace);
-                font-size: var(--fs-lg);
+                font-size: clamp(0.9rem, 1.4vw, 1.1rem);
                 color: var(--accent-red);
                 text-shadow: 0 0 10px rgba(224, 36, 36, 0.3);
+            }
+            /* Consistent red/yellow/blue rhythm for headings and body accents */
+            .music-content h3 { font-weight: 700; }
+            .music-content p { font-weight: 400; }
+            .music-content span[style*="color:var(--strip-active)"] { font-weight: 600; }
+            @media (max-width: 768px) {
+                .music-content h3 { font-size: clamp(0.85rem, 3.5vw, 1.1rem); }
+                .music-content p { font-size: 1rem; }
+                .music-outro { font-size: 0.9rem; }
             }
         </style>
 

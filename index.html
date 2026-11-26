@@ -181,9 +181,9 @@ html[data-theme="mono-green"] main#mainContent {
 }
 html[data-theme="crt"]::after {
   content: ""; position: fixed; inset: 0; z-index: 9000; pointer-events: none;
-  opacity: 0.14;
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 2px, transparent 2px, transparent 4px);
-  background-size: 100% 4px;
+  opacity: 0.7;
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px, transparent 1px, transparent 3px);
+  background-size: 100% 3px;
 }
 
  
@@ -272,6 +272,53 @@ main#mainContent :is(a, button, [tabindex]):focus-visible {
   margin: 0 auto;
   overflow: hidden;
   border: 1px solid var(--border-medium);
+}
+.strip-wrapper.sphere-nav-toolbar .nav-toolbar-row > :not(#collapseToggle) {
+  transition: opacity 0.25s ease, transform 0.25s ease, max-width 0.25s ease, margin 0.25s ease, padding 0.25s ease;
+}
+.strip-wrapper.sphere-nav-toolbar.is-collapsed .nav-toolbar-row > :not(#collapseToggle) {
+  display: none !important;
+}
+.strip-wrapper.sphere-nav-toolbar.is-collapsed .nav-toolbar-row {
+  justify-content: flex-end;
+}
+.strip-wrapper.sphere-nav-toolbar.is-collapsed {
+  max-width: 42px !important;
+  width: 42px !important;
+  min-height: 42px !important;
+  height: 42px !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1), margin 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.strip-wrapper.sphere-nav-toolbar.is-collapsed .nav-toolbar-row {
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  justify-content: flex-end;
+}
+/* Make the header transparent when the strip is collapsed */
+.header:has(.strip-wrapper.is-collapsed) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#collapseToggle {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
   border-radius: 18px;
   background: var(--card-bg);
   box-shadow: var(--shadow-pixel);
@@ -350,12 +397,12 @@ main#mainContent :is(a, button, [tabindex]):focus-visible {
   pointer-events: none;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(160, 255, 180, 0.11) 0,
-    rgba(160, 255, 180, 0.11) 1px,
+    rgba(160, 255, 180, 0.25) 0,
+    rgba(160, 255, 180, 0.25) 1px,
     transparent 1px,
     transparent 3px
   );
-  opacity: 0.62;
+  opacity: 0.7;
 }
 .duck-crt::after {
   content: "";
@@ -733,6 +780,28 @@ main#mainContent > section { animation: sectionFadeIn 0.45s var(--ease-out); }
 #door-overlay.closed .door-panel { transform: translate3d(0, 0%, 0); }
 #door-overlay.open .door-panel   { transform: translate3d(0, -120%, 0); }
 
+/* Per-category pixel-art head effects on door tiles */
+#door-overlay[data-category="ABOUT"] .door-tile { animation: doorFxJump 0.9s ease-in-out infinite; }
+#door-overlay[data-category="VHS MULTIVERSE"] .door-tile { animation: doorFxHolo 1.6s steps(2, end) infinite; filter: hue-rotate(180deg) saturate(1.6) brightness(1.1); }
+#door-overlay[data-category="HUMANART"] .door-tile { animation: doorFxGlitter 1.2s ease-in-out infinite; filter: brightness(1.3) saturate(1.4); }
+#door-overlay[data-category="PROJECTS"] .door-tile { animation: doorFxTron 1.4s linear infinite; filter: hue-rotate(150deg) brightness(1.4) saturate(2); }
+#door-overlay[data-category="STORYTIME"] .door-tile { animation: doorFxSonar 1.8s ease-in-out infinite; filter: hue-rotate(90deg) saturate(1.8) brightness(1.2); }
+#door-overlay[data-category="MUSIC"] .door-tile { animation: doorFxSoundwave 0.8s ease-in-out infinite; }
+#door-overlay[data-category="CONTACT"] .door-tile { animation: doorFxVibrate 0.35s linear infinite; }
+#door-overlay[data-category="DONATE"] .door-tile { animation: doorFxBobbly 1.1s ease-in-out infinite; }
+
+@keyframes doorFxJump { 0%,100% { transform: var(--t, none) translateY(0); } 50% { transform: var(--t, none) translateY(-6px); } }
+@keyframes doorFxHolo { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+@keyframes doorFxGlitter { 0%,100% { filter: brightness(1.3) saturate(1.4); } 50% { filter: brightness(1.8) saturate(1.8) contrast(1.1); } }
+@keyframes doorFxTron { 0% { box-shadow: 0 0 0 0 rgba(0, 220, 255, 0.6); } 50% { box-shadow: 0 0 12px 2px rgba(0, 220, 255, 0.9); } 100% { box-shadow: 0 0 0 0 rgba(0, 220, 255, 0.6); } }
+@keyframes doorFxSonar { 0%,100% { opacity: 1; } 50% { opacity: 0.5; filter: hue-rotate(90deg) saturate(2) brightness(1.4); } }
+@keyframes doorFxSoundwave { 0%,100% { transform: var(--t, none) scaleY(1); } 50% { transform: var(--t, none) scaleY(1.08); } }
+@keyframes doorFxVibrate { 0%,100% { transform: var(--t, none) translate(0,0); } 25% { transform: var(--t, none) translate(-1px,1px); } 75% { transform: var(--t, none) translate(1px,-1px); } }
+@keyframes doorFxBobbly { 0%,100% { transform: var(--t, none) rotate(0deg) scale(1); } 25% { transform: var(--t, none) rotate(-2deg) scale(1.03); } 75% { transform: var(--t, none) rotate(2deg) scale(0.98); } }
+@media (prefers-reduced-motion: reduce) {
+  #door-overlay .door-tile { animation: none !important; }
+}
+
  
 .prod-3d-badge {
   display: inline-flex; align-items: center; justify-content: center;
@@ -949,6 +1018,7 @@ body.intro-mode {
   pointer-events: none;
 }
 
+
 .portal-frame {
   position: relative;
   width: min(64vw, 340px, 40dvh);
@@ -958,6 +1028,7 @@ body.intro-mode {
   border-radius: 50%;
   background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01) 58%, transparent 72%);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  overflow: hidden;
 }
 #lhu-image-slot {
   width: 92%;
@@ -2158,7 +2229,7 @@ main#mainContent input[type="submit"] {
   main#mainContent .music-content > .music-video-link { grid-column:2; grid-row:1 / span 50; position:sticky; top:22px; max-width:100%; margin:20px 0; align-self:start; }
   main#mainContent section#CONTACT { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.78fr); gap:0 clamp(28px,4vw,64px); align-items:center; }
   main#mainContent section#CONTACT > .category-opening-title { grid-column:1 / -1; }
-  main#mainContent section#CONTACT > p:not(.system-status) { grid-column:1; text-align:left; margin-left:0; margin-right:0; }
+  main#mainContent section#CONTACT > p:not(.system-status) { grid-column:1; text-align:center; margin-left:auto; margin-right:auto; }
   main#mainContent section#CONTACT > .music-tape-link { grid-column:2; grid-row:2 / span 3; align-self:center; }
   main#mainContent section#CONTACT > .system-status { grid-column:1; text-align:left; }
   main#mainContent section#DONATE { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.75fr); gap:0 clamp(28px,4vw,64px); align-items:center; }
@@ -3591,14 +3662,27 @@ main#mainContent .text-reader-container { width:min(100%,1100px); margin:24px au
 main#mainContent #text-content { max-width:76ch; margin-inline:auto; line-height:1.78; }
 
  
+/* Music editorial: two-column layout on desktop, single column on mobile. */
 main#mainContent .music-content.lhu-music-editorial {
-  display:grid; grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr);
-  gap:clamp(28px,4vw,64px); align-items:start; max-width:1220px; margin-inline:auto;
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);
+  grid-template-areas:
+    "title  title"
+    "text   media"
+    "outro  media";
+  column-gap:clamp(24px,4vw,64px);
+  row-gap:0;
+  align-items:start;
+  max-width:1180px;
+  margin-inline:auto;
 }
-main#mainContent .music-content.lhu-music-editorial > *:not(.music-video-link) { grid-column:1; }
+main#mainContent .music-content.lhu-music-editorial > h2 { grid-area:title; }
+main#mainContent .music-content.lhu-music-editorial > p,
+main#mainContent .music-content.lhu-music-editorial > hr { grid-area:text; }
+main#mainContent .music-content.lhu-music-editorial > .music-outro { grid-area:outro; }
 main#mainContent .music-content.lhu-music-editorial > .music-video-link {
-  grid-column:2; grid-row:1 / span 60; position:sticky; top:26px;
-  max-width:100%; margin:18px 0; align-self:start;
+  grid-area:media; position:sticky; top:22px; max-width:100%;
+  margin:8px 0; align-self:start;
 }
 main#mainContent .music-content h3 { margin-top:28px; }
 
@@ -3610,7 +3694,7 @@ main#mainContent section#CONTACT, main#mainContent section#DONATE {
 main#mainContent section#CONTACT > .category-opening-title,
 main#mainContent section#DONATE > .category-opening-title,
 main#mainContent section#DONATE > .warning-text { grid-column:1 / -1; }
-main#mainContent section#CONTACT > p:not(.system-status),
+main#mainContent section#CONTACT > p:not(.system-status) { grid-column:1; text-align:center; margin-left:auto; margin-right:auto; }
 main#mainContent section#DONATE > p:not(.warning-text) { grid-column:1; text-align:left; margin-left:0; margin-right:0; }
 main#mainContent section#CONTACT > .music-tape-link { grid-column:2; grid-row:2 / span 3; align-self:center; }
 main#mainContent section#CONTACT > .system-status { grid-column:1; text-align:left; }
@@ -3629,11 +3713,17 @@ main#mainContent section#DONATE .transparent-sticker { max-width:min(100%,420px)
   main#mainContent .profile-inner.lhu-profile-editorial { display:block; }
   main#mainContent .profile-inner.lhu-profile-editorial > .lhu-editorial-media-item { position:static; margin:18px auto; }
   main#mainContent .prod-body-inner.lhu-project-editorial { display:flex; flex-direction:column; align-items:stretch; }
-  main#mainContent .music-content.lhu-music-editorial { display:flex; flex-direction:column; }
-  main#mainContent .music-content.lhu-music-editorial > .music-video-link { position:static; order:-1; width:min(100%,560px); margin:10px auto 24px; }
+  /* Mobile: single column, video after the text. */
+  main#mainContent .music-content.lhu-music-editorial {
+    display:flex; flex-direction:column; align-items:stretch; gap:0;
+  }
+  main#mainContent .music-content.lhu-music-editorial > .music-video-link {
+    position:static; order:1; width:min(100%,560px); margin:24px auto 8px;
+  }
   main#mainContent section#CONTACT, main#mainContent section#DONATE { display:flex; flex-direction:column; align-items:stretch; }
   main#mainContent section#CONTACT > .music-tape-link, main#mainContent section#DONATE > .donate-form { align-self:center; width:min(100%,560px); }
-  main#mainContent section#CONTACT > p:not(.system-status), main#mainContent section#DONATE > p:not(.warning-text) { text-align:left; }
+  main#mainContent section#CONTACT > p:not(.system-status) { text-align:center; }
+  main#mainContent section#DONATE > p:not(.warning-text) { text-align:left; }
   main#mainContent #three-container { height:55vh; min-height:340px; }
 }
 @media (prefers-reduced-motion:reduce) {
@@ -3801,8 +3891,11 @@ main#mainContent #projects-accordion .carousel-dot { width:20px !important; heig
 main#mainContent #projects-accordion .carousel-dot.active { background:#ff861d !important; border-color:#ff861d !important; }
 
  
+/* Small-phone and reduced-width fallback: one column, video last. */
 main#mainContent .music-content.lhu-music-editorial { display:flex !important; flex-direction:column !important; align-items:stretch; max-width:1000px; }
 main#mainContent .music-content .music-video-link { order:999 !important; width:min(100%,560px); max-width:560px !important; margin:34px auto 8px !important; position:static !important; }
+/* Remove any play-icon overlay on the music video thumbnail (no function). */
+main#mainContent .music-video-link::after { display:none !important; content:none !important; }
 @media (prefers-reduced-motion:reduce) { main#mainContent h2.category-opening-title { animation:none !important; } }
 
  
@@ -4089,7 +4182,7 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
   <div id="heart-emojis"></div>
   <div id="rainbow-emojis"></div>
 
-  <div id="wisdom-display"></div>
+  <div aria-live="polite" aria-atomic="true" id="wisdom-display"></div>
 
   <div id="shmup-container">
     <div class="shmup-center">
@@ -4707,24 +4800,77 @@ document.getElementById("mainContent")?.setAttribute("aria-label", isGerman ? "I
  
 const dailyWisdom = {
   en: [
+    "Blood is thicker than water, so vampires must be obese.",
+    "get more comfortable... become furniture.",
+    "What doesn't kill you makes you stronger. That's a lie invented by bears, so you fight them unarmed.",
+    "Don't move: now your shadow is unemployed.",
+    "Give your meat a good old slap if you are not a robot.",
+    "Forgive me, I learn daily... that you massage dead cows with salt and fire, just to turn them into poop later.",
+    "but who is gay... but who asked first?",
+    "Your problem has a solution. but currently they are divorced.",
+    "I walk with God, but he usually takes the bus. How else would the bus exist except through God's love only (and human craftsmanship, obviously)...",
+    "Doctor said: You did not forget your password. That's dehydration from explosive diarrhea.",
+    "If you can't sleep, read your local hobo a good-night story while you invite them to a pyjama party.",
+    "One apple a day keeps the doctor away if you throw it fast enough at him...",
+    "You look like you don't have it all together, is what you say, huh? Very interesting. You seem like someone who could be nice to other people, but you are not. Looks can be deceiving.",
+    "If you can't make flowers perfectly today, tomorrow your wife will just nod and pack her bags.",
+    "Ra, ra, Rasputin, unstoppable goon machine, he drinks gasoline, Burning penis. Canceled...",
+    "Please support living artists. Vienna markets dead legends while living artists struggle for attention. Mozart, Zombie Falco, and Manner wafers: Is that the full extent of your cultural imagination?",
+    "The mirror still asks for an autograph – but the car doesn't fit in the mirror. Wumms.",
+    "A drop hollows a stone. Now it's a hole, and the drop slips straight through. Buggered.",
     "The early bird catches the worm. Because the worm has no basic radar system.",
     "your bones called... they are calcium",
     "If a man says viruses are not your Friends is this man the antivirus."
   ],
   de: [
+    "Blut ist dicker als Wasser – also müssen Vampire übergewichtig sein.",
+    "Mach es dir bequemer... werde zum Möbelstück.",
+    "Was dich nicht umbringt, macht dich stärker. Das ist eine Lüge, die Bären erfunden haben, damit du unbewaffnet gegen sie kämpfst.",
+    "Beweg dich nicht. Jetzt ist dein Schatten arbeitslos.",
+    "Gib deinem Fleisch einen guten Klaps, falls du kein Roboter bist.",
+    "Verzeih mir, ich lerne täglich dazu... dass ihr tote Kühe mit Salz und Feuer massiert, nur um sie später in Kot zu verwandeln.",
+    "Aber wer ist gay... aber wer hat zuerst gefragt?",
+    "Dein Problem hat eine Lösung. Derzeit sind sie geschieden.",
+    "Ich gehe mit Gott, aber er nimmt meist den Bus. Wie sollte der Bus sonst existieren – als bloß durch Gottes Liebe (und natürlich durch menschliches Handwerk und Planung)...",
+    "Der Arzt sagte: Du hast dein Passwort nicht vergessen. Das ist Dehydrierung durch explosiven Durchfall.",
+    "Wenn du nicht schlafen kannst, lies dem örtlichen Obdachlosen eine Gute-Nacht-Geschichte vor – und lade ihn zur Pyjama-Party ein.",
+    "Ein Apfel am Tag hält den Arzt fern – wenn du ihn schnell genug nach ihm wirfst...",
+    "Du siehst aus, als hättest du nicht alles im Griff, sagst du zu mir, was? Sehr interessant. Du wirkst wie jemand, der nett zu anderen sein könnte – aber du bist es nicht. Der Schein trügt.",
+    "Wenn du heute kannst Blumen klar macken, dann morgen deine Frau nickt Koffer packen.",
+    "Ra, ra, Rasputin, unaufhaltsame Prügelkeule, sein Lümmel trinkt Benzin, brennt jetzt krumm lean. Abgesagt...",
+    "Bitte unterstützt lebende Künstler. Wien vermarktet tote Legenden, während lebende Künstler um Aufmerksamkeit ringen. Mozart, Zombie-Falco und Manner-Schnitten: Ist das der ganze Umfang eurer kulturellen Breite?",
+    "Der Spiegel verlangt heute noch ein Autogramm – aber das Auto passt nicht in den Spiegel. Wumms.",
+    "A Tropfn höhlt an Stoan. Jetzt is a a Loch, und da Tropfn flutscht durch. Ausgschissn.",
     "Der frühe Vogel fängt den Wurm. Weil der Wurm kein grundlegendes Radarsystem hat.",
-    "deine knochen haben angerufen... sie sind kalzium",
+    "Deine knochen haben angerufen... Sie sind Kalzium",
     "Wenn ein Mann sagt, Viren sind nicht deine Freunde, ist dieser Mann dann das Antivirus?..."
   ]
 };
 
 let availableWisdomIndices = [];
 let currentWisdomLang = '';
+
+// First-visit handling: on the very first load of a session we keep the UI
+// quiet (no loading overlay, no spawn sound) while everything loads in the
+// background. sessionStorage keeps this scoped to one tab/session.
+const lhuFirstVisit = !sessionStorage.getItem('lhuHasLoadedOnce');
+try { sessionStorage.setItem('lhuHasLoadedOnce', '1'); } catch (e) {}
 let isTyping = false;
 
 const wisdomCounterEl = document.getElementById('quote-counter');
 const wisdomBtn = document.getElementById('wisdom-btn');
 
+// Preload SpeechSynthesis voices (async in Chromium). Cache the last list.
+let cachedVoices = [];
+function refreshVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const v = window.speechSynthesis.getVoices();
+  if (v && v.length) cachedVoices = v;
+}
+refreshVoices();
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
 function updateWisdomCounter(bump = false) {
   if (!wisdomCounterEl) return;
   const lang = isGerman ? 'de' : 'en';
@@ -4858,6 +5004,7 @@ let loadingDepth = 0;
 
 function startLoading() {
   loadingDepth += 1;
+  if (lhuFirstVisit) return;
   loadingEl.classList.add("show");
   if (hypnoSvgImage.complete && hypnoSvgImage.naturalWidth) startHypnoAscii();
 }
@@ -4885,6 +5032,102 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById("container3D").appendChild(renderer.domElement);
 
+// Debug/error capture for old devices: log shader compile errors, texture errors,
+// and context loss to a global array + console. Enable with ?debug=1 in URL.
+window.LHU_ERRORS = window.LHU_ERRORS || [];
+function logLhuError(kind, detail) {
+  try { window.LHU_ERRORS.push({ kind, detail: String(detail), t: Date.now() }); } catch (e) {}
+  console.error("[LHU]", kind, detail);
+}
+// (Shader compile and texImage2D patching removed — they can cause issues on some browsers.
+// Errors are still captured via the GLTF loader error callback and the debug overlay.)
+
+// WebGL capability dump (helps diagnose black textures on old GPUs).
+(function dumpWebGLCaps() {
+  try {
+    const gl = renderer.getContext();
+    const dbg = gl.getExtension && gl.getExtension("WEBGL_debug_renderer_info");
+    const info = {
+      renderer: THREE.REVISION,
+      webgl: gl instanceof WebGL2RenderingContext ? "2" : "1",
+      vendor: dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR),
+      rendererStr: dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
+      maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
+      maxRenderbufferSize: gl.getParameter(gl.MAX_RENDERBUFFER_SIZE),
+      maxVertexUniforms: gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS),
+      maxFragmentUniforms: gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS),
+      extensions: (gl.getSupportedExtensions() || []).join(", ")
+    };
+    window.LHU_WEBGL = info;
+    console.info("[LHU WebGL]", JSON.stringify(info));
+  } catch (e) { console.warn("[LHU WebGL] dump failed", e); }
+})();
+
+// Debug overlay: shown when ?debug=1 is in the URL. Displays WebGL caps + errors.
+(function setupDebugOverlay() {
+  try {
+    if (!/[?&]debug=1/.test(location.search)) return;
+    const box = document.createElement("div");
+    box.id = "lhu-debug-overlay";
+    box.style.cssText = "position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:rgba(0,0,0,.85);color:#0f0;font:11px/1.4 monospace;z-index:99999;padding:8px;white-space:pre-wrap;";
+    document.body.appendChild(box);
+    const refresh = () => {
+      const caps = window.LHU_WEBGL || {};
+      const errs = (window.LHU_ERRORS || []).map(e => e.kind + ": " + e.detail).join("\n");
+      box.textContent = "WEBGL: " + JSON.stringify(caps, null, 0) + "\n\nERRORS:\n" + (errs || "(none)");
+    };
+    refresh();
+    setInterval(refresh, 2000);
+  } catch (e) {}
+})();
+
+// Sanitize textures for low-end GPUs: clamp to MAX_TEXTURE_SIZE, disable mipmaps
+// for NPOT textures (WebGL1 requires POT for mipmaps), ensure sRGB colorSpace.
+function sanitizeTextures(root) {
+  if (!root) return;
+  const gl = renderer.getContext();
+  const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 2048;
+  const isWebGL2 = gl instanceof WebGL2RenderingContext;
+  const hasSrgbExt = !!gl.getExtension("EXT_sRGB");
+  const hasAniso = !!gl.getExtension("EXT_texture_filter_anisotropic");
+  // NOTE: keep this minimal — aggressive canvas conversion broke textures on WebGL2.
+  root.traverse((child) => {
+    if (!child.isMesh || !child.material) return;
+    const mats = Array.isArray(child.material) ? child.material : [child.material];
+    mats.forEach((m) => {
+      if (!m) return;
+      for (const key of Object.keys(m)) {
+        const t = m[key];
+        if (!t || !t.isTexture) continue;
+        try {
+          // Wait for image to be available.
+          if (!t.image) return;
+          // Only clamp oversized textures — do NOT convert all textures to canvas,
+          // as this broke textures on WebGL2 devices.
+          if (t.image.width > maxTex || t.image.height > maxTex) {
+            const scale = maxTex / Math.max(t.image.width, t.image.height);
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.floor(t.image.width * scale));
+            canvas.height = Math.max(1, Math.floor(t.image.height * scale));
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(t.image, 0, 0, canvas.width, canvas.height);
+            t.image = canvas;
+            t.needsUpdate = true;
+          }
+          const w = t.image.width, h = t.image.height;
+          const isPOT = (w & (w - 1)) === 0 && (h & (h - 1)) === 0;
+          // On WebGL1, disable mipmaps for NPOT textures.
+          if (!isWebGL2 && !isPOT) {
+            t.generateMipmaps = false;
+            t.minFilter = THREE.LinearFilter;
+          }
+          t.needsUpdate = true;
+        } catch (e) { logLhuError("texture-sanitize", e && e.message); }
+      }
+    });
+  });
+}
+
 const ambient = new THREE.HemisphereLight(0xfff7ee, 0xd8bfa8, 0.95);
 scene.add(ambient);
 const key = new THREE.DirectionalLight(0xffffff, 1.0); key.position.set(5, 5, 5); scene.add(key);
@@ -4893,7 +5136,11 @@ const rim = new THREE.DirectionalLight(0xffe6d6, 0.85); rim.position.set(-3, 5, 
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/");
-dracoLoader.setDecoderConfig({ type: "wasm" }); 
+const _wasmSupported = (function () {
+  try { return typeof WebAssembly === "object" && typeof WebAssembly.instantiate === "function"; }
+  catch (e) { return false; }
+})();
+dracoLoader.setDecoderConfig({ type: _wasmSupported ? "wasm" : "js" }); 
 dracoLoader.setWorkerLimit(1);
 const loader = new GLTFLoader();
 loader.setDRACOLoader(dracoLoader);
@@ -4913,6 +5160,49 @@ hitEnterRenderer.setClearColor(0x000000, 0);
 hitEnterRenderer.outputColorSpace = THREE.SRGBColorSpace;
 hitEnterSlot.appendChild(hitEnterRenderer.domElement);
 
+// WebGL context loss recovery (common on mobile / old GPUs).
+function attachContextLossHandler(renderer, label) {
+  const canvas = renderer.domElement;
+  canvas.addEventListener("webglcontextlost", (e) => {
+    e.preventDefault();
+    console.warn("[LHU] WebGL context lost:", label);
+  }, false);
+  canvas.addEventListener("webglcontextrestored", () => {
+    console.info("[LHU] WebGL context restored:", label);
+    try { renderer.setSize(canvas.clientWidth || innerWidth, canvas.clientHeight || innerHeight); } catch (err) {}
+  }, false);
+}
+attachContextLossHandler(renderer, "main");
+attachContextLossHandler(hitEnterRenderer, "hitenter");
+
+// Drag to spin hitenter.glb faster; returns to base speed when released.
+(function attachHitEnterDrag() {
+  const canvas = hitEnterRenderer.domElement;
+  canvas.style.touchAction = "none";
+  canvas.style.cursor = "grab";
+  canvas.addEventListener("pointerdown", (e) => {
+    if (!hitEnterObject) return;
+    hitEnterDragging = true;
+    hitEnterLastX = e.clientX;
+    canvas.setPointerCapture?.(e.pointerId);
+    canvas.style.cursor = "grabbing";
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    if (!hitEnterDragging || !hitEnterObject) return;
+    const dx = e.clientX - hitEnterLastX;
+    hitEnterLastX = e.clientX;
+    hitEnterSpinBoost += dx * 1.0;
+    hitEnterSpinBoost = Math.max(-200, Math.min(200, hitEnterSpinBoost));
+  });
+  const endDrag = () => {
+    hitEnterDragging = false;
+    canvas.style.cursor = "grab";
+  };
+  canvas.addEventListener("pointerup", endDrag);
+  canvas.addEventListener("pointercancel", endDrag);
+  canvas.addEventListener("lostpointercapture", endDrag);
+})();
+
 hitEnterScene.add(new THREE.AmbientLight(0xffffff, 3.0));
 hitEnterScene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 2.5));
 const hitKey = new THREE.DirectionalLight(0xffffff, 4.0); hitKey.position.set(3, 5, 6); hitEnterScene.add(hitKey);
@@ -4921,6 +5211,9 @@ const hitRim = new THREE.DirectionalLight(0xff8c22, 3.5); hitRim.position.set(0,
 
 let hitEnterObject = null, hitEnterMixer = null;
 let hitEnterEmissiveMats = [];
+let hitEnterSpinBoost = 0;
+let hitEnterDragging = false;
+let hitEnterLastX = 0;
 let hitEnterPauseUntil = 0;
 let hitEnterFlashActive = false;
 
@@ -4977,6 +5270,7 @@ loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/ma
       }
     });
   });
+  sanitizeTextures(hitEnterObject);
   hitEnterScene.add(hitEnterObject);
   fitHitEnterModel(hitEnterObject);
   if (g.animations.length) {
@@ -5050,6 +5344,8 @@ function loadHead(url, options = {}) {
       }
       object = g.scene;
       scene.add(object);
+      // Debug: log material and texture info.
+      sanitizeTextures(object);
       const selectedModel = MODELS.find(model => model.url === url);
       const headSelect = document.getElementById('head-select');
       if (headSelect) headSelect.value = url;
@@ -5187,9 +5483,10 @@ function interruptWisdom() {
   if (!wisdomActive) return;
   wisdomActive = false;
   isTyping = false;
-  if (typewriterInterval) clearInterval(typewriterInterval);
-  if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
+  if (typewriterInterval) { clearInterval(typewriterInterval); typewriterInterval = null; }
+  if (wisdomFallbackTimeout) { clearTimeout(wisdomFallbackTimeout); wisdomFallbackTimeout = null; }
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  window._lhuUtterance = null;
 
   const textEl = document.getElementById("wisdom-display");
   textEl.classList.remove("wisdom-active");
@@ -5280,7 +5577,7 @@ function endRainbow() {
   tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = !prefersReducedMotion());
 }
 
-wisdomBtn.onclick = () => {
+if (wisdomBtn) wisdomBtn.onclick = () => {
   if (!object || gagActive || rainbowActive) return;
 
   if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
@@ -5338,6 +5635,10 @@ wisdomBtn.onclick = () => {
   const cleanupWisdom = () => {
     wisdomActive = false;
     isTyping = false;
+    if (typewriterInterval) { clearInterval(typewriterInterval); typewriterInterval = null; }
+    if (wisdomFallbackTimeout) { clearTimeout(wisdomFallbackTimeout); wisdomFallbackTimeout = null; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    window._lhuUtterance = null;
     textEl.classList.remove("wisdom-active");
     textEl.textContent = "";
     document.getElementById("matrix-bg").style.opacity = "0.34";
@@ -5349,13 +5650,15 @@ wisdomBtn.onclick = () => {
     const utterance = new SpeechSynthesisUtterance(phrase);
     window._lhuUtterance = utterance;
     utterance.lang = isGerman ? 'de-DE' : 'en-US';
-    const headIdx = document.getElementById("head-select").selectedIndex;
+    const _headSelectEl = document.getElementById("head-select");
+    const headIdx = (_headSelectEl && _headSelectEl.selectedIndex >= 0) ? _headSelectEl.selectedIndex : 0;
     const profiles = [ { p: 0.1, r: 1.35 }, { p: 1.8, r: 1.45 }, { p: 0.4, r: 1.25 }, { p: 0.8, r: 1.35 }, { p: 1.5, r: 1.40 }, { p: 1.2, r: 1.30 }, { p: 0.9, r: 1.35 } ];
     const prof = profiles[headIdx % profiles.length];
     utterance.pitch = prof.p;
     utterance.rate = prof.r;
     const voices = synth.getVoices();
-    const langVoices = voices.filter(v => v.lang.startsWith(isGerman ? "de" : "en"));
+    const voiceList = (voices && voices.length) ? voices : cachedVoices;
+    const langVoices = voiceList.filter(v => v.lang.startsWith(isGerman ? "de" : "en"));
     if (langVoices.length > 0) utterance.voice = langVoices[headIdx % langVoices.length];
     utterance.onend = () => { isTyping = false; };
     synth.speak(utterance);
@@ -5483,6 +5786,7 @@ function cleanupIntro(stopAudio = false) {
     }
   }
   window.__lhuStopIntro = (stopAudio = true) => cleanupIntro(stopAudio);
+
 
 function easeOutElastic(x) {
     const c4 = (2 * Math.PI) / 3;
@@ -5749,7 +6053,8 @@ function animate(now = performance.now()) {
     } else if (wisdomActive) {
       let targetRotX = 0;
       if (isTyping) {
-        const headIdx = document.getElementById("head-select").selectedIndex;
+        const _headSelectEl2 = document.getElementById("head-select");
+        const headIdx = (_headSelectEl2 && _headSelectEl2.selectedIndex >= 0) ? _headSelectEl2.selectedIndex : 0;
         const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00];
         const currentRate = rates[headIdx % rates.length];
         targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25;
@@ -5868,7 +6173,13 @@ function animate(now = performance.now()) {
   if (hitEnterSlot.isConnected) {
     if (!hitEnterPaused) {
       if (hitEnterMixer) hitEnterMixer.update(delta);
-      if (hitEnterObject) hitEnterObject.rotation.y += delta * 0.75;
+      if (hitEnterObject) {
+        hitEnterObject.rotation.y += delta * (0.75 + hitEnterSpinBoost);
+        if (!hitEnterDragging) {
+          hitEnterSpinBoost *= Math.max(0, 1 - delta * 3);
+          if (Math.abs(hitEnterSpinBoost) < 0.001) hitEnterSpinBoost = 0;
+        }
+      }
     }
     hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
   }
@@ -6146,6 +6457,7 @@ window.addEventListener("resize", () => {
   };
   const kResSlider = document.getElementById("kobo-res-slider");
   const kResValue = document.getElementById("kobo-res-val");
+  let kResChanging = false;
   const kFpsButton = document.getElementById("kobo-fps-btn");
   if (kResSlider) kResSlider.value = String(kResScale);
   if (kResValue) kResValue.textContent = `${kResScale.toFixed(2)}×`;
@@ -6960,7 +7272,7 @@ float lhuStoneNoise(vec3 p) {
     syncKoboMainModel(root, mainMixer, animations, url, selected?.textContent || "LHU head");
     // Selecting a head in the main pill used to update the model without ever
     // firing the spawn animation. The fullscreen importer already did this.
-    triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted);
+    triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted || lhuFirstVisit);
   };
 
   function loadKoboModel(url, labelOverride = null) {
@@ -7040,7 +7352,7 @@ float lhuStoneNoise(vec3 p) {
       }
       kCurrentObjectUrl = url.startsWith("blob:") ? url : "";
       hideKoboLoadStatus(`${fileNameEl?.textContent || "Model"} loaded`);
-      triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted);
+      triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted || lhuFirstVisit);
     }, (event) => {
       if (requestId !== kLoadRequestId) return;
       const total = Number(event.total) || 0;
@@ -7249,7 +7561,7 @@ float lhuStoneNoise(vec3 p) {
     if (kModel) kModel.traverse(c => { if (c.isMesh) applyTextureFilter(c.material); });
   }));
 
-  kResSlider?.addEventListener("input", e => { kResScale = Math.min(1, Number(e.target.value)); kResValue.textContent = `${kResScale.toFixed(2)}×`; applyKoboResolution(); });
+  kResSlider?.addEventListener("input", e => { kResChanging = true; kResScale = Math.min(1, Number(e.target.value)); kResValue.textContent = `${kResScale.toFixed(2)}×`; applyKoboResolution(); requestAnimationFrame(() => { kResChanging = false; }); });
   const FPS_STEPS = [12, 15, 24, 30, 60, 0];
   kFpsButton?.addEventListener("click", e => {
     const idx = FPS_STEPS.indexOf(kMaxFps); kMaxFps = FPS_STEPS[(idx + 1) % FPS_STEPS.length];
@@ -7455,6 +7767,7 @@ function updateKoboSpawn(now, target) {
   });
 
   const resizeKobo = () => {
+    if (kResChanging) return;
     placeKoboCanvas();
     if (!koboActive) return;
     syncKoboViewCenter();
@@ -7620,6 +7933,8 @@ function setCategoryMenuOpen(open) {
     // The moving planet stripe is the one and only visible category panel.
     categoryTicker?.classList.toggle('is-collapsed', !categoriesOpen);
     categoryTicker?.setAttribute('aria-hidden', String(!categoriesOpen));
+    // Collapse the whole top strip to just the duck button for more space.
+    stripWrapper?.classList.toggle('is-collapsed', !categoriesOpen);
     // Retain an empty, hidden legacy panel node for compatibility with old code.
     categoryPanel?.classList.add('is-closed');
     categoryPanel?.setAttribute('aria-hidden', 'true');
