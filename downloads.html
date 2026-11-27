@@ -1,3 +1,4 @@
+<!-- LHU DOWNLOADS — standalone page with its own CSS/JS and CDN loaders; not linked publicly. -->
 <!DOCTYPE html>
 <!-- duckloads standalone page: music downloads, player, jazips; uses three+glb duck -->
 <html lang="de">
@@ -753,7 +754,7 @@
         <span class="np-time" id="np-current">0:00</span>
         <div class="np-bar" id="np-bar">
           <div class="np-fill" id="np-fill">
-            <img width="120" height="120" class="np-thumb visible" id="np-thumb" src="duck.png" alt="">
+            <img width="120" height="120" class="np-thumb visible" id="np-thumb" src="pixelart/duck.png" alt="">
           </div>
           <div class="np-loader-icon" id="np-loader"></div>
         </div>
@@ -800,7 +801,7 @@ function initLimitAudio() {
 
 function playQuackSound() {
   try {
-    var quack = new Audio('quack/quack01.mp3');
+    var quack = new Audio('soundfx/quack01.mp3');
     quack.volume = 0.8;
     quack.play().catch(function() {});
   } catch(e) {}
@@ -1006,7 +1007,7 @@ function unlockSecret() {
           ]
         },
         { title: 'The Legend Of Furarri', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_THE_LEGEND_OF_FURARRI.mp3' },
-        { title: 'Universal Lazer Goat', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_GOAT.mp3' }
+        { title: 'Universal Lazer Goat', file: 'downloads/ROCK_METAL_POWERMETAL_METALCORE_PUNK/LIGHTNING_HORN_UNICORN_UNIVERSAL_LAZER_demosongs/GOAT.mp3' }
       ]
     }
   ];
@@ -1016,7 +1017,7 @@ function unlockSecret() {
     canvas.style.display = 'none';
     if (canvas.parentNode.querySelector('.duck-fallback')) return;
     var fallback = document.createElement('img');
-    fallback.src = 'duck.png';
+    fallback.src = 'pixelart/duck.png';
     fallback.alt = '';
     fallback.className = 'duck-fallback';
     fallback.style.width = '100px';
@@ -1057,7 +1058,7 @@ function initIntroDuck() {
     var duckMats = [];
     var loader = new THREE.GLTFLoader();
 
-    loader.load('glb/rubberduck.glb', function(gltf) {
+    loader.load('downloads/rubberduck.glb', function(gltf) {
       duckMesh = gltf.scene;
       duckMesh.scale.set(1.4, 1.4, 1.4);
       duckMesh.position.set(0, -0.4, 0);
@@ -1919,7 +1920,7 @@ Vedran Lukic & Aether Veylan`;
   if (flock) {
     for (var k = 0; k < 15; k++) {
       var d = document.createElement('div'); d.className = 'duck';
-      var img = document.createElement('img'); img.src = 'duck.png';
+      var img = document.createElement('img'); img.src = 'pixelart/duck.png';
       var size = 16 + Math.floor(Math.random() * 20);
       d.style.top = Math.floor(Math.random() * 90) + 'vh';
       d.style.animation = 'duckFly ' + (15 + Math.random() * 15) + 's linear infinite';
@@ -1956,7 +1957,7 @@ Vedran Lukic & Aether Veylan`;
       ducks3D.push({ mesh: m, speed: 14 / (12 + Math.random() * 8), born: performance.now(), lifetime: 20000 });
     }
 
-    gltfLoader.load('glb/rubberduck.glb', function(gltf) {
+    gltfLoader.load('downloads/rubberduck.glb', function(gltf) {
       duckTemplate = gltf.scene;
       spawnBackgroundDuck();
       function scheduleBackgroundDuck() {

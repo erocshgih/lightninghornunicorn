@@ -1,26 +1,34 @@
 <!DOCTYPE html>
-<html lang="de">
+<!--
+LH UNICORN — SELF-CONTAINED ENTRY PAGE
+index.html: intro portal, three signal pills, hit-enter GLB, buttons.
+3dheads.html: 3D stage, head gallery, Kobo studio, effects, quotes, music-driven dance.
+Both carry the shared design CSS, a small module for their 3D renderer, the
+shared helper runtime and their own inline code. Only one WebGL context each.
+-->
+<html lang="de" data-theme="dark">
 <!-- LHU main page: shell, audio, 2d bg, 3d stage, shared js, marble, 404 mirror -->
 <head>
+<script>try{var t=localStorage.getItem("lhu-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <base href="/"/>
 <title>Lightning Horn Unicorn</title>
 
 <link rel="canonical" href="/"/>
-<link href="lhu_favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="lhu_favicon.png" rel="icon" type="image/png"/>
-<link href="lhu_favicon.png" rel="apple-touch-icon"/>
+<link href="Favicon/lhu_favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="Favicon/lhu_favicon.png" rel="icon" type="image/png"/>
+<link href="Favicon/lhu_favicon.png" rel="apple-touch-icon"/>
 <meta content="Lightning Horn Unicorn — Independent creative universe of Vienna-based artist Vedran Lukic." name="description"/>
 <meta content="website" property="og:type"/>
 <meta content="https://www.lightninghornunicorn.com/" property="og:url"/>
 <meta content="Lightning Horn Unicorn" property="og:title"/>
 <meta content="Independent creative universe of Vienna-based artist Vedran Lukic." property="og:description"/>
-<meta content="https://www.lightninghornunicorn.com/lhu_favicon.png" property="og:image"/>
+<meta content="https://www.lightninghornunicorn.com/Favicon/lhu_favicon.png" property="og:image"/>
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="Lightning Horn Unicorn" name="twitter:title"/>
 <meta content="Independent creative universe of Vienna-based artist Vedran Lukic." name="twitter:description"/>
-<meta content="https://www.lightninghornunicorn.com/lhu_favicon.png" name="twitter:image"/>
+<meta content="https://www.lightninghornunicorn.com/Favicon/lhu_favicon.png" name="twitter:image"/>
 
 <meta content="Vedran Lukic" name="author"/>
 <meta content="#070708" name="theme-color"/>
@@ -3493,8 +3501,7 @@ main#mainContent input[type="submit"] {
 #intro-skip-buttons .intro-skip-btn { width:min(250px,78vw); min-width:0; }
 @media (min-width:700px) {
   .lhu-pill { animation: lhuSignalBreath 4.8s ease-in-out infinite; }
-  .lhu-pill-yellow { animation-delay:-1.6s; }
-  .lhu-pill-blue { animation-delay:-3.2s; }
+
 }
 @keyframes lhuSignalBreath {
   0%,100% { filter:brightness(1) saturate(1); box-shadow:inset 0 -8px 16px rgba(0,0,0,.55),inset 0 4px 10px rgba(255,255,255,.45),0 12px 28px rgba(0,0,0,.6); }
@@ -4078,77 +4085,73 @@ main#mainContent section#ABOUT .aether-profile-tagline { font-style:italic !impo
 <style id="lhu-signal-personality">
  
  
-.lhu-pill-red::before {
-  background-size:100% 30px;
-  animation:signalRedScan 1.35s steps(5) infinite;
-}
-.lhu-pill-red::after {
-  background:linear-gradient(115deg, transparent 40%, rgba(255,140,110,.55) 50%, transparent 60%);
-  animation:signalRedFlare 2.6s ease-out infinite;
-}
-@keyframes signalRedScan {
-  0% { background-position:0 -30px; opacity:.28; }
-  50% { opacity:.7; }
-  100% { background-position:0 30px; opacity:.28; }
-}
-@keyframes signalRedFlare {
-  0%,12% { transform:translateX(-58%) rotate(12deg); opacity:0; }
-  45% { opacity:.85; }
-  100% { transform:translateX(58%) rotate(12deg); opacity:0; }
-}
- 
-.lhu-pill-yellow::before {
-  background:repeating-radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(255,255,255,.24) 8px 9px, transparent 10px 17px);
-  background-size:100% 100%;
-  animation:signalYellowPulse 3.8s ease-in-out infinite;
-}
-.lhu-pill-yellow::after {
-  background:linear-gradient(115deg, transparent 44%, rgba(255,246,190,.6) 50%, transparent 56%);
-  animation:signalYellowShine 6.4s ease-in-out infinite;
-}
-@keyframes signalYellowPulse {
-  0%,100% { transform:scale(.8); opacity:.22; }
-  50% { transform:scale(1.15); opacity:.7; }
-}
-@keyframes signalYellowShine {
-  0%,100% { transform:translateX(-52%) rotate(-18deg); opacity:.1; }
-  50% { transform:translateX(52%) rotate(-18deg); opacity:.72; }
-}
- 
-.lhu-pill-blue::before {
-  background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(190,235,255,.26) 7px 8px, transparent 9px 15px);
-  animation:signalBlueWave 3.1s linear infinite;
-}
-.lhu-pill-blue::after {
-  background:linear-gradient(200deg, transparent 42%, rgba(150,220,255,.58) 50%, transparent 58%);
-  animation:signalBlueOrbit 5.4s linear infinite;
-}
-@keyframes signalBlueWave {
-  0% { background-position:-30px 0; opacity:.3; }
-  50% { opacity:.68; }
-  100% { background-position:30px 0; opacity:.3; }
-}
-@keyframes signalBlueOrbit {
-  0% { transform:translateX(-52%) rotate(-28deg); opacity:.12; }
-  50% { opacity:.7; }
-  100% { transform:translateX(52%) rotate(152deg); opacity:.12; }
-}
+
  
 html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
 </style>
+<style id="lhu-webgl-fallback">
+html.lhu-no-webgl #lhu-index-experience,html.lhu-webgl-lost #lhu-index-experience{display:none!important}
+html.lhu-no-webgl #lhu-intro-canvas{display:none!important}
+.lhu-fallback{position:fixed;inset:0;z-index:400000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(7,7,8,.97);color:#f5f4f0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;text-align:center}
+html.lhu-no-webgl .lhu-fallback,html.lhu-webgl-lost .lhu-fallback{display:flex}
+.lhu-fallback-box{max-width:480px;width:100%;border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:clamp(24px,6vw,42px);background:rgba(18,18,22,.85)}
+.lhu-fallback-box h2{font-size:clamp(1.3rem,4vw,2rem);margin:0 0 12px;letter-spacing:-.03em}
+.lhu-fallback-box p{color:rgba(245,244,240,.66);line-height:1.6;margin:0 0 22px;font-size:.95rem}
+.lhu-fallback-box a{display:inline-block;padding:12px 22px;border-radius:12px;background:#f5f4f0;color:#09090b;font-weight:700;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+.lhu-fallback-box a:focus-visible{outline:2px solid #ff6b4a;outline-offset:3px}
+</style>
+<script id="lhu-capability-check">
+(function () {
+  var ok = false;
+  try {
+    var c = document.createElement('canvas');
+    ok = !!(c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl'));
+  } catch (e) { ok = false; }
+  window.LHU_NO_WEBGL = !ok;
+  window.LHU_LOW_END = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+  window.LHU_MID_RANGE = !window.LHU_LOW_END &&
+    ((navigator.hardwareConcurrency || 8) <= 8 || (navigator.deviceMemory || 8) <= 8);
+  if (!ok) document.documentElement.classList.add('lhu-no-webgl');
+  document.addEventListener('webglcontextlost', function () {
+    document.documentElement.classList.add('lhu-webgl-lost');
+  }, true);
+})();
+</script>
+<style id="lhu-pill-sonar">
+.pill-sonar{position:absolute;inset:0;border-radius:50%;pointer-events:none;overflow:hidden;}
+.pill-sonar::before,.pill-sonar::after{content:"";position:absolute;inset:12%;border-radius:50%;border:3px solid rgba(var(--pill-rgb),.9);box-shadow:0 0 12px rgba(var(--pill-rgb),.28);animation:lhuPillSonar 2.6s ease-out infinite;}
+.pill-sonar::after{animation-delay:-1.3s;}
+.sonar-red{--pill-rgb:255,59,48;}
+.sonar-yellow{--pill-rgb:255,214,10;}
+.sonar-blue{--pill-rgb:50,173,230;}
+@keyframes lhuPillSonar{0%{transform:scale(.25);opacity:.95}60%{opacity:.35}100%{transform:scale(2.2);opacity:0}}
+/* Keep the intro buttons alive even when the OS requests reduced motion. */
+@media (prefers-reduced-motion:reduce){
+  #lhu-intro .lhu-pill{animation-name:lhuSignalBreath!important;animation-duration:4.8s!important;animation-iteration-count:infinite!important;}
+  .pill-sonar::before,.pill-sonar::after{animation-duration:2.6s!important;animation-iteration-count:infinite!important;opacity:.95!important;}
+}
+</style>
+<style id="lhu-intro-mode-fallback">#lhu-index-experience{display:none!important}</style>
 </head>
 
 <body class="intro-mode">
-<a class="skip-link" href="#mainContent">Zum Inhalt springen</a>
+<div class="lhu-fallback" role="alert">
+<div class="lhu-fallback-box">
+<h2 data-lang-de="3D NICHT VERFÜGBAR" data-lang-en="3D NOT AVAILABLE">3D NICHT VERFÜGBAR</h2>
+<p data-lang-de="Dieses Gerät oder dieser Browser unterstützt kein WebGL bzw. der Grafikkontext wurde verloren. Die restliche Website funktioniert trotzdem." data-lang-en="This device or browser does not support WebGL, or the graphics context was lost. The rest of the website still works.">Dieses Gerät oder dieser Browser unterstützt kein WebGL bzw. der Grafikkontext wurde verloren. Die restliche Website funktioniert trotzdem.</p>
+<a href="/about.html" data-lang-de="Zur Website" data-lang-en="To the website">Zur Website</a>
+</div>
+</div>
+<a class="skip-link" href="#mainContent" data-lang-de="Zum Inhalt springen" data-lang-en="Skip to content">Zum Inhalt springen</a>
 
-<audio id="quackAudio" preload="auto" src="quack/quack01.mp3"></audio>
-<audio id="lhu-intro-audio" preload="auto" src="lhuyellow.mp3"></audio>
+<audio id="quackAudio" preload="auto" src="soundfx/quack01.mp3"></audio>
+<audio id="lhu-intro-audio" preload="auto" src="introsounds/lhuyellow.mp3"></audio>
 <audio crossorigin="anonymous" id="background-music" loop="" preload="metadata">
-  <source src="GOAT.mp3" type="audio/mpeg"/>
+  <source src="demosongs/GOAT.mp3" type="audio/mpeg"/>
 </audio>
-<audio id="snd-wolf" preload="auto" src="wolfwhistttle.mp3"></audio>
-<audio id="snd-rizz" preload="auto" src="rizz-sound-effect.mp3"></audio>
-<audio id="snd-rainbow" preload="auto" src="rainbow.mp3"></audio>
+<audio id="snd-wolf" preload="auto" src="soundfx/wolfwhistle.mp3"></audio>
+<audio id="snd-rizz" preload="auto" src="soundfx/rizz-sound-effect.mp3"></audio>
+<audio id="snd-rainbow" preload="auto" src="soundfx/rainbow.mp3"></audio>
 
 <div id="lhu-intro">
   <canvas id="lhu-intro-canvas"></canvas>
@@ -4161,9 +4164,9 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
 
     <div class="intro-entry">
       <div aria-label="Choose signal" id="lhu-pill-buttons">
-        <button class="lhu-pill lhu-pill-red" data-intro="red" type="button"></button>
-        <button class="lhu-pill lhu-pill-yellow" data-intro="yellow" type="button"></button>
-        <button class="lhu-pill lhu-pill-blue" data-intro="blue" type="button"></button>
+        <button class="lhu-pill lhu-pill-red" data-intro="red" type="button"><span class="pill-sonar sonar-red"></span></button>
+        <button class="lhu-pill lhu-pill-yellow" data-intro="yellow" type="button"><span class="pill-sonar sonar-yellow"></span></button>
+        <button class="lhu-pill lhu-pill-blue" data-intro="blue" type="button"><span class="pill-sonar sonar-blue"></span></button>
       </div>
       <div id="lhu-intro-hint">CHOOSE SIGNAL</div>
       <div id="intro-skip-buttons">
@@ -4456,10 +4459,10 @@ html.lhu-marble-3d .marquee-planet { opacity:0 !important; }
           <div class="duck-crt-track category-marquee-track" id="categoryMarqueeTrack"></div>
         </nav>
         <button aria-label="Duck-Sound stummschalten" class="audio-btn" id="audioToggle" title="Duck-Sound stummschalten" type="button">
-          <img width="120" height="120" alt="" src="duck.png" data-duck-on="duck.png" data-duck-muted="ghostduck.png"/>
+          <img width="120" height="120" alt="" src="pixelart/duck.png" data-duck-on="pixelart/duck.png" data-duck-muted="pixelart/ghostduck.png"/>
         </button>
         <button aria-label="Kategorienleiste schließen" aria-expanded="true" aria-controls="duckCrt" class="collapse-btn" id="collapseToggle" title="Kategorieauswahl" type="button">
-          <img width="120" height="120" alt="" src="duck.png"/>
+          <img width="120" height="120" alt="" src="pixelart/duck.png"/>
         </button>
       </div>
       <section aria-label="Kategorieauswahl" aria-hidden="true" class="sphere-menu is-closed" id="categorySpherePanel">
@@ -4695,13 +4698,15 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 
 window.THREE = Object.assign({}, THREE, { OrbitControls });
 window.LHU_THREE_REVISION = THREE.REVISION;
+if (!window.LHU_NO_WEBGL) {
 
 const isMobileDevice = window.matchMedia("(max-width: 768px)").matches ||
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 const getDPR = (width = innerWidth, height = innerHeight) => {
-  const maxBufferEdge = isMobileDevice ? 1024 : 1440;
-  const dprLimit = isMobileDevice ? 1.10 : 1.25;
+  const perfScale = window.LHU_LOW_END ? 0.72 : (window.LHU_MID_RANGE ? 0.85 : 1);
+  const maxBufferEdge = (isMobileDevice ? 1024 : 1440) * perfScale;
+  const dprLimit = (isMobileDevice ? 1.10 : 1.25) * perfScale;
   const longestEdge = Math.max(1, width, height);
   return Math.max(0.25, Math.min(
     window.devicePixelRatio || 1,
@@ -4710,7 +4715,7 @@ const getDPR = (width = innerWidth, height = innerHeight) => {
   ));
 };
 window.LHU_GET_RENDER_DPR = getDPR;
-const INDEX_TARGET_FPS = isMobileDevice ? 30 : 45;
+const INDEX_TARGET_FPS = (isMobileDevice || window.LHU_LOW_END || window.LHU_MID_RANGE) ? 30 : 45;
 const INDEX_FRAME_INTERVAL = 1000 / INDEX_TARGET_FPS;
 
 const browserLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
@@ -4958,7 +4963,7 @@ const hypnoSourceCanvas = document.createElement("canvas");
 hypnoSourceCanvas.width = hypnoSourceCanvas.height = isMobileDevice ? 176 : 208;
 const hypnoSourceCtx = hypnoSourceCanvas.getContext("2d", { willReadFrequently: true });
 const hypnoSvgImage = new Image();
-hypnoSvgImage.src = "hypnoload.svg";
+hypnoSvgImage.src = "loadinganimation/hypnoload.svg";
 let hypnoAsciiRAF = 0;
 let hypnoAsciiStartedAt = 0;
 hypnoSvgImage.onload = () => { if (loadingEl.classList.contains("show")) startHypnoAscii(); };
@@ -5021,16 +5026,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, 0.1, 1000);
 camera.position.set(2.55, 0, 2.55);
 
-const renderer = new THREE.WebGLRenderer({
-  alpha: true,
-  antialias: !isMobileDevice,
-  preserveDrawingBuffer: true,
-  powerPreference: "low-power"
-});
-renderer.setPixelRatio(getDPR(innerWidth, innerHeight));
-renderer.setSize(innerWidth, innerHeight);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-document.getElementById("container3D").appendChild(renderer.domElement);
+/* LHU INTRO MODE: main WebGL renderer intentionally omitted (1 context only). */
 
 // Debug/error capture for old devices: log shader compile errors, texture errors,
 // and context loss to a global array + console. Enable with ?debug=1 in URL.
@@ -5042,26 +5038,7 @@ function logLhuError(kind, detail) {
 // (Shader compile and texImage2D patching removed — they can cause issues on some browsers.
 // Errors are still captured via the GLTF loader error callback and the debug overlay.)
 
-// WebGL capability dump (helps diagnose black textures on old GPUs).
-(function dumpWebGLCaps() {
-  try {
-    const gl = renderer.getContext();
-    const dbg = gl.getExtension && gl.getExtension("WEBGL_debug_renderer_info");
-    const info = {
-      renderer: THREE.REVISION,
-      webgl: gl instanceof WebGL2RenderingContext ? "2" : "1",
-      vendor: dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR),
-      rendererStr: dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
-      maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
-      maxRenderbufferSize: gl.getParameter(gl.MAX_RENDERBUFFER_SIZE),
-      maxVertexUniforms: gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS),
-      maxFragmentUniforms: gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS),
-      extensions: (gl.getSupportedExtensions() || []).join(", ")
-    };
-    window.LHU_WEBGL = info;
-    console.info("[LHU WebGL]", JSON.stringify(info));
-  } catch (e) { console.warn("[LHU WebGL] dump failed", e); }
-})();
+/* LHU INTRO MODE: capability dump skipped (no renderer yet at this point). */
 
 // Debug overlay: shown when ?debug=1 is in the URL. Displays WebGL caps + errors.
 (function setupDebugOverlay() {
@@ -5085,7 +5062,7 @@ function logLhuError(kind, detail) {
 // for NPOT textures (WebGL1 requires POT for mipmaps), ensure sRGB colorSpace.
 function sanitizeTextures(root) {
   if (!root) return;
-  const gl = renderer.getContext();
+  const gl = hitEnterRenderer.getContext();
   const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 2048;
   const isWebGL2 = gl instanceof WebGL2RenderingContext;
   const hasSrgbExt = !!gl.getExtension("EXT_sRGB");
@@ -5172,7 +5149,7 @@ function attachContextLossHandler(renderer, label) {
     try { renderer.setSize(canvas.clientWidth || innerWidth, canvas.clientHeight || innerHeight); } catch (err) {}
   }, false);
 }
-attachContextLossHandler(renderer, "main");
+/* main renderer omitted in intro mode */
 attachContextLossHandler(hitEnterRenderer, "hitenter");
 
 // Drag to spin hitenter.glb faster; returns to base speed when released.
@@ -5253,7 +5230,7 @@ function fitHitEnterModel(model) {
   hitEnterCamera.updateProjectionMatrix();
 }
 
-loader.load("https://raw.githubusercontent.com/erocshgih/lightninghornunicorn/main/glb/hitenter.glb", (g) => {
+loader.load("intro%20glbs/hitenter.glb", (g) => {
   hitEnterObject = g.scene;
   hitEnterObject.traverse((child) => {
     if (!child.isMesh || !child.material) return;
@@ -5291,416 +5268,6 @@ const hitEnterResizeObserver = new ResizeObserver(() => {
 hitEnterResizeObserver.observe(hitEnterSlot);
 
  
-let object = null, mixer = null;
-let activeHeadAnimations = [];
-const clock = new THREE.Clock();
-
-function disposeObject(obj) {
-  if (!obj) return;
-  obj.traverse((child) => {
-    if (child.geometry) child.geometry.dispose();
-    if (child.isSkinnedMesh && child.skeleton) child.skeleton.dispose();
-    if (child.material) {
-      if (Array.isArray(child.material)) child.material.forEach(m => disposeMaterial(m));
-      else disposeMaterial(child.material);
-    }
-  });
-}
-
-function disposeMaterial(mat) {
-  if (!mat) return;
-
-  
-  
-  const textures = new Set();
-  for (const value of Object.values(mat)) {
-    if (value && value.isTexture) textures.add(value);
-  }
-  if (mat.uniforms) {
-    for (const uniform of Object.values(mat.uniforms)) {
-      if (uniform && uniform.value && uniform.value.isTexture) textures.add(uniform.value);
-    }
-  }
-  textures.forEach(texture => texture.dispose());
-  mat.dispose();
-}
-
-let headLoadSequence = 0;
-
-function loadHead(url, options = {}) {
-  const requestId = ++headLoadSequence;
-  startLoading();
-  document.getElementById('head-load-error')?.remove();
-  if (object) { scene.remove(object); disposeObject(object); object = null; }
-  if (mixer) { mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot()); mixer = null; }
-
-  loader.load(
-    url,
-    (g) => {
-      if (requestId !== headLoadSequence) {
-        disposeObject(g.scene);
-        stopLoading(); 
-        return;
-      }
-      object = g.scene;
-      scene.add(object);
-      // Debug: log material and texture info.
-      sanitizeTextures(object);
-      const selectedModel = MODELS.find(model => model.url === url);
-      const headSelect = document.getElementById('head-select');
-      if (headSelect) headSelect.value = url;
-      if (selectedModel) {
-        try { localStorage.setItem(LAST_HEAD_STORAGE_KEY, selectedModel.label); } catch (error) {}
-      }
-      object.userData.emissiveMats = [];
-      object.traverse((child) => {
-        if (child.isMesh && child.material) {
-          const mats = Array.isArray(child.material) ? child.material : [child.material];
-          mats.forEach(m => {
-            if (m.emissive) {
-              m.userData.origE = m.emissive.clone();
-              m.userData.origI = m.emissiveIntensity !== undefined ? m.emissiveIntensity : 1;
-              object.userData.emissiveMats.push(m);
-            }
-          });
-        }
-      });
-      const headBox = new THREE.Box3().setFromObject(object);
-      const headSphere = new THREE.Sphere();
-      const headSize = new THREE.Vector3();
-      headBox.getBoundingSphere(headSphere);
-      headBox.getSize(headSize);
-      const safeMinDistance = Math.max(
-        headSphere.radius * 1.52,
-        Math.max(headSize.x, headSize.y, headSize.z) * 0.98,
-        1.55
-      );
-      controls.enablePan = false;
-      controls.target.copy(headSphere.center);
-      controls.minDistance = safeMinDistance;
-      controls.maxDistance = Math.max(safeMinDistance * 3.2, 6.8);
-      if (camera.position.distanceTo(controls.target) < safeMinDistance) {
-        const dir = camera.position.clone().sub(controls.target);
-        if (dir.lengthSq() < 1e-5) dir.set(1, 0, 1);
-        dir.normalize().multiplyScalar(safeMinDistance * 1.15);
-        camera.position.copy(controls.target).add(dir);
-      }
-      controls.update();
-
-      activeHeadAnimations = g.animations || [];
-      if (activeHeadAnimations.length) {
-        mixer = new THREE.AnimationMixer(object);
-        activeHeadAnimations.forEach(clip => mixer.clipAction(clip).play());
-      }
-      window.__lhuOnMainHeadLoaded?.(object, mixer, activeHeadAnimations, url);
-      stopLoading();
-    },
-    (event) => {
-      if (typeof options.onProgress === "function") options.onProgress(event);
-    },
-    (error) => {
-      if (requestId !== headLoadSequence) { stopLoading(); return; }
-      console.error("Error loading " + url + ":", error);
-      stopLoading();
-      const container = document.getElementById("container3D");
-      const errDiv = document.createElement("div");
-      errDiv.id = 'head-load-error';
-      errDiv.setAttribute('role', 'alert');
-      errDiv.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff5b52;font-family:-apple-system,sans-serif;font-size:14px;text-align:center;background:rgba(16,16,20,0.92);padding:20px 26px;border:1px solid rgba(255,255,255,0.15);border-radius:10px;max-width:86vw;line-height:1.5;";
-      errDiv.textContent = t.loadModelError;
-      container.appendChild(errDiv);
-    }
-  );
-}
-
-const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.enablePan = false;
-controls.minDistance = 1.65;
-controls.maxDistance = 6.8;
-controls.autoRotate = !prefersReducedMotion();
-controls.autoRotateSpeed = 1.15;
-
-let musicOn = false;
-const music = document.getElementById("background-music");
-
-const setMusicFocus = (active) => {
-  document.getElementById("lhu-index-experience")?.classList.toggle("music-focus", Boolean(active));
-};
-
-const stopMusicPlayback = () => {
-  music.pause();
-  musicOn = false;
-  setMusicFocus(false);
-  document.getElementById("music-toggle").textContent = t.playMusic;
-};
-document.getElementById("music-toggle").onclick = async () => {
-  const musicButton = document.getElementById("music-toggle");
-  if (musicOn) {
-    stopMusicPlayback();
-  } else {
-    try {
-      if (window.__lhuKoboIsActive?.()) window.__lhuCloseKoboStudio?.();
-      music.currentTime = 0;
-      await music.play();
-      musicOn = true;
-      music.loop = true;
-      setMusicFocus(true);
-      musicButton.textContent = t.stopMusic;
-      musicPlayTime = 0;
-      musicPhase = 0;
-      wasInPhase7 = false;
-    } catch (error) {
-      musicOn = false;
-      setMusicFocus(false);
-      musicButton.textContent = t.playMusic;
-      console.warn("LHU music playback could not start:", error);
-    }
-  }
-};
-
-let gagActive = false, gagStart = 0, gagBase = null, gagSize = new THREE.Vector3(), camTween = null;
-let gagEndTimer = null;
-let rainbowActive = false, rainbowStart = 0, rainbowBaseRot = null, rainbowBasePos = null, rainbowBaseScale = null;
-let rainbowMatStates = [];
-
-let wisdomActive = false;
-let typewriterInterval = null;
-let wisdomFallbackTimeout = null;
-let musicPlayTime = 0, musicPhase = 0;
-let wasInPhase7 = false;
-
-function tweenCamera(toPos, toTarget, dur, onDone) {
-  camTween = { fromPos: camera.position.clone(), toPos: toPos.clone(), fromTarget: controls.target.clone(), toTarget: toTarget.clone(), start: performance.now(), dur, onDone };
-  controls.enabled = false;
-  controls.autoRotate = false;
-}
-
-function interruptWisdom() {
-  if (!wisdomActive) return;
-  wisdomActive = false;
-  isTyping = false;
-  if (typewriterInterval) { clearInterval(typewriterInterval); typewriterInterval = null; }
-  if (wisdomFallbackTimeout) { clearTimeout(wisdomFallbackTimeout); wisdomFallbackTimeout = null; }
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-  window._lhuUtterance = null;
-
-  const textEl = document.getElementById("wisdom-display");
-  textEl.classList.remove("wisdom-active");
-  textEl.textContent = "";
-  document.getElementById("matrix-bg").style.opacity = "0.34";
-}
-
-document.getElementById("heart-btn").onclick = () => {
-  interruptWisdom();
-  if (!object || gagActive || rainbowActive) return;
-
-  stopMusicPlayback();
-  gagActive = true; gagStart = performance.now(); gagBase = object.position.clone();
-  document.getElementById("matrix-bg").style.opacity = "0";
-  const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize);
-  const center = new THREE.Vector3(); box.getCenter(center);
-  const eye = new THREE.Vector3(center.x, box.max.y - gagSize.y * 0.12, center.z + gagSize.z * 0.1);
-  const closePos = eye.clone().add(new THREE.Vector3(gagSize.x * 0.25, gagSize.y * 0.02, gagSize.z * 0.55 + gagSize.length() * 0.35));
-  tweenCamera(closePos, eye, 650);
-  document.getElementById("heart-emojis").classList.add("active");
-  const sndWolf = document.getElementById("snd-wolf");
-  const sndRizz = document.getElementById("snd-rizz");
-  
-  
-  sndWolf.currentTime = 0;
-
-  sndWolf.onerror = endGag;
-  sndWolf.play().catch(endGag);
-  sndWolf.onended = () => { sndRizz.currentTime = 0; sndRizz.play().catch(endGag); sndRizz.onended = endGag; };
-  if (gagEndTimer !== null) clearTimeout(gagEndTimer);
-  gagEndTimer = setTimeout(endGag, 9000);
-};
-
-function endGag() {
-
-  if (!gagActive) return; 
-  if (gagEndTimer !== null) { clearTimeout(gagEndTimer); gagEndTimer = null; }
-  if (gagBase && object) object.position.copy(gagBase);
-  if (object) object.rotation.set(0, 0, 0);
-  gagActive = false;
-  document.getElementById("heart-emojis").classList.remove("active");
-  document.getElementById("matrix-bg").style.opacity = "0.34";
-  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = !prefersReducedMotion());
-}
-
-document.getElementById("rainbow-btn").onclick = () => {
-  interruptWisdom();
-  if (!object || gagActive || rainbowActive) return;
-
-  stopMusicPlayback();
-  rainbowActive = true; rainbowStart = performance.now();
-  rainbowBaseRot = object.rotation.clone(); rainbowBasePos = object.position.clone(); rainbowBaseScale = object.scale.clone();
-  document.getElementById("matrix-bg").style.opacity = "0";
-  rainbowMatStates = [];
-  if (object.userData.emissiveMats) {
-    object.userData.emissiveMats.forEach(m => { rainbowMatStates.push({ mat: m, col: m.emissive.clone(), int: m.emissiveIntensity }); });
-  }
-  document.getElementById("rainbow-aura").classList.add("active");
-  document.getElementById("rainbow-emojis").classList.add("active");
-  const box = new THREE.Box3().setFromObject(object); box.getSize(gagSize);
-  const center = new THREE.Vector3(); box.getCenter(center);
-  const maxDim = Math.max(gagSize.x, gagSize.y, gagSize.z);
-  tweenCamera(new THREE.Vector3(0, center.y, maxDim * 2.3), center, 450);
-  const snd = document.getElementById("snd-rainbow");
-  snd.currentTime = 0;
-  snd.play().catch(() => {});
-  controls.enabled = false;
-  controls.autoRotate = false;
-};
-
-function endRainbow() {
-  rainbowActive = false;
-  if (object) {
-    if (rainbowBaseRot) object.rotation.copy(rainbowBaseRot);
-    if (rainbowBasePos) object.position.copy(rainbowBasePos);
-    if (rainbowBaseScale) object.scale.copy(rainbowBaseScale);
-  }
-  rainbowBasePos = null;
-  rainbowMatStates.forEach(s => { s.mat.emissive.copy(s.col); if (s.int !== undefined) s.mat.emissiveIntensity = s.int; });
-  document.getElementById("rainbow-aura").classList.remove("active");
-  document.getElementById("rainbow-emojis").classList.remove("active");
-  document.getElementById("shmup-container").style.display = "none";
-  document.getElementById("matrix-bg").style.opacity = "0.34";
-  const centerPoint = document.querySelector(".shmup-center");
-  if (centerPoint) { centerPoint.style.left = "50%"; centerPoint.style.top = "50%"; }
-  controls.enabled = true;
-  controls.autoRotate = !prefersReducedMotion();
-  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 700, () => controls.autoRotate = !prefersReducedMotion());
-}
-
-if (wisdomBtn) wisdomBtn.onclick = () => {
-  if (!object || gagActive || rainbowActive) return;
-
-  if (wisdomFallbackTimeout) clearTimeout(wisdomFallbackTimeout);
-  if (typewriterInterval) clearInterval(typewriterInterval);
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-  isTyping = false;
-
-  stopMusicPlayback();
-  wisdomActive = true;
-  document.getElementById("matrix-bg").style.opacity = "0.14";
-
-  tweenCamera(new THREE.Vector3(2.55, 0, 2.55), new THREE.Vector3(0, 0, 0), 400, () => {
-    controls.autoRotate = false;
-    if (object) object.rotation.set(0, 0, 0);
-  });
-
-  const targetLang = isGerman ? 'de' : 'en';
-  const activeWisdom = isGerman ? dailyWisdom.de : dailyWisdom.en;
-
-  if (currentWisdomLang !== targetLang) {
-    currentWisdomLang = targetLang;
-    availableWisdomIndices = activeWisdom.map((_, index) => index);
-  }
-
-  if (availableWisdomIndices.length === 0) {
-    availableWisdomIndices = activeWisdom.map((_, index) => index);
-    wisdomCounterEl.style.background = "#fff";
-    wisdomCounterEl.style.color = "#000";
-    setTimeout(() => { wisdomCounterEl.style.background = "#ff4b3e"; wisdomCounterEl.style.color = "#fff"; }, 300);
-  }
-
-  const randomIndexWithinAvailable = Math.floor(Math.random() * availableWisdomIndices.length);
-  const selectedQuoteIndex = availableWisdomIndices[randomIndexWithinAvailable];
-  availableWisdomIndices.splice(randomIndexWithinAvailable, 1);
-
-  updateWisdomCounter(true);
-
-  const phrase = activeWisdom[selectedQuoteIndex];
-  const textEl = document.getElementById("wisdom-display");
-
-  textEl.textContent = "";
-  textEl.classList.add("wisdom-active");
-
-  let charIndex = 0;
-  const typingSpeed = 16;
-  const totalTypeTime = phrase.length * typingSpeed;
-  isTyping = true;
-
-  typewriterInterval = setInterval(() => {
-    textEl.textContent += phrase.charAt(charIndex);
-    charIndex++;
-    if (charIndex >= phrase.length) { clearInterval(typewriterInterval); isTyping = false; }
-  }, typingSpeed);
-
-  const cleanupWisdom = () => {
-    wisdomActive = false;
-    isTyping = false;
-    if (typewriterInterval) { clearInterval(typewriterInterval); typewriterInterval = null; }
-    if (wisdomFallbackTimeout) { clearTimeout(wisdomFallbackTimeout); wisdomFallbackTimeout = null; }
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    window._lhuUtterance = null;
-    textEl.classList.remove("wisdom-active");
-    textEl.textContent = "";
-    document.getElementById("matrix-bg").style.opacity = "0.34";
-    controls.autoRotate = !prefersReducedMotion();
-  };
-
-  if ('speechSynthesis' in window) {
-    const synth = window.speechSynthesis;
-    const utterance = new SpeechSynthesisUtterance(phrase);
-    window._lhuUtterance = utterance;
-    utterance.lang = isGerman ? 'de-DE' : 'en-US';
-    const _headSelectEl = document.getElementById("head-select");
-    const headIdx = (_headSelectEl && _headSelectEl.selectedIndex >= 0) ? _headSelectEl.selectedIndex : 0;
-    const profiles = [ { p: 0.1, r: 1.35 }, { p: 1.8, r: 1.45 }, { p: 0.4, r: 1.25 }, { p: 0.8, r: 1.35 }, { p: 1.5, r: 1.40 }, { p: 1.2, r: 1.30 }, { p: 0.9, r: 1.35 } ];
-    const prof = profiles[headIdx % profiles.length];
-    utterance.pitch = prof.p;
-    utterance.rate = prof.r;
-    const voices = synth.getVoices();
-    const voiceList = (voices && voices.length) ? voices : cachedVoices;
-    const langVoices = voiceList.filter(v => v.lang.startsWith(isGerman ? "de" : "en"));
-    if (langVoices.length > 0) utterance.voice = langVoices[headIdx % langVoices.length];
-    utterance.onend = () => { isTyping = false; };
-    synth.speak(utterance);
-  }
-
-  const speechEstTime = phrase.length * 80;
-  wisdomFallbackTimeout = setTimeout(cleanupWisdom, Math.max(totalTypeTime + 3000, speechEstTime + 2000));
-};
-
-function spawnEmojis(containerId, char, count, sizeBase, sizeVar) {
-  const container = document.getElementById(containerId);
-  for (let i = 0; i < count; i++) {
-    const e = document.createElement("span");
-    e.className = "fast-rise-emoji";
-    e.textContent = char;
-    e.style.setProperty("--left", `${Math.random() * 100}%`);
-    e.style.setProperty("--size", `${sizeBase + Math.random() * sizeVar}px`);
-    e.style.setProperty("--dur", `${1.6 + Math.random() * 1.1}s`);
-    e.style.setProperty("--delay", `${-Math.random() * 2}s`);
-    e.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`);
-    container.appendChild(e);
-  }
-}
-spawnEmojis("heart-emojis", "❤️", 28, 52, 34);
-spawnEmojis("rainbow-emojis", "🌈", 36, 28, 18);
-
-const selectEl = document.getElementById("head-select");
-MODELS.forEach(m => {
-  const opt = document.createElement("option");
-  opt.value = m.url;
-  opt.textContent = m.label;
-  selectEl.appendChild(opt);
-});
-
-let savedHeadLabel = null;
-try { savedHeadLabel = localStorage.getItem(LAST_HEAD_STORAGE_KEY); } catch (error) {}
-const initialHead = MODELS.find(model => model.label === savedHeadLabel) || MODELS[0];
-selectEl.value = initialHead.url;
-selectEl.addEventListener("change", (event) => loadHead(event.target.value));
-loadHead(initialHead.url);
-
- 
 (() => {
   const intro = document.getElementById("lhu-intro");
   const audio = document.getElementById("lhu-intro-audio");
@@ -5715,6 +5282,14 @@ loadHead(initialHead.url);
   const word = document.getElementById("lhu-intro-word");
 
   let W = 0, H = 0, introStart = 0;
+  let introDuration = 3.5;
+  function readIntroDuration() {
+    try {
+      const d = audio && Number(audio.duration);
+      if (d && isFinite(d) && d > 0.5) return d;
+    } catch (e) {}
+    return 3.5;
+  }
   let introVariant = "yellow";
   let introAnimId = null;
 
@@ -5733,7 +5308,7 @@ loadHead(initialHead.url);
     float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
     mat2 rot(float a) { float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
     float noise(vec2 p) { vec2 i=floor(p), f=fract(p); float a=hash12(i), b=hash12(i+vec2(1.,0.)), c=hash12(i+vec2(0.,1.)), d=hash12(i+vec2(1.,1.)); vec2 u = smoothstep(0.0, 1.0, f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y); }
-    float fbm(vec2 p) { float v=0., a=0.5; for(int i=0;i<5;++i){ v+=a*noise(p); p*=rot(0.45)*2.; a*=0.5; } return v; }
+    float fbm(vec2 p) { float v=0., a=0.5; for(int i=0;i<${window.LHU_LOW_END ? 3 : 5};++i){ v+=a*noise(p); p*=rot(0.45)*2.; a*=0.5; } return v; }
     void main() {
       vec2 uv = gl_FragCoord.xy / r.xy; uv = 2.0 * uv - 1.0; uv.x *= r.x / r.y;
       uv += 2.0 * fbm(uv * 1.0 + 0.8 * t * 1.5) - 1.0;
@@ -5756,7 +5331,7 @@ loadHead(initialHead.url);
 function resizeIntro() {
     const cssWidth = Math.max(1, innerWidth);
     const cssHeight = Math.max(1, innerHeight);
-    const introRenderScale = isMobileDevice ? 0.62 : 0.78;
+    const introRenderScale = (isMobileDevice ? 0.62 : 0.78) * (window.LHU_LOW_END ? 0.72 : (window.LHU_MID_RANGE ? 0.85 : 1));
     W = Math.max(1, Math.round(cssWidth * introRenderScale));
     H = Math.max(1, Math.round(cssHeight * introRenderScale));
     canvas.width = W;
@@ -5828,6 +5403,7 @@ function buildWordSpans(wordStr) {
 
 function animateIntro(now) {
     if (!document.body.contains(intro)) return;
+    if (introDuration === 3.5) introDuration = readIntroDuration();
     const timeOffset = (now - introStart) / 1000;
 
     if (gl) {
@@ -5837,10 +5413,11 @@ function animateIntro(now) {
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
+    const introSpan = Math.max(0.6, (introDuration - 0.2) / 3);
     const seqT = timeOffset - 0.1;
-    if (seqT >= 0 && seqT < 3.3) {
-      const index = Math.min(2, Math.floor(seqT / 1.1));
-      const local = seqT - index * 1.1;
+    if (seqT >= 0 && seqT < introDuration - 0.2) {
+      const index = Math.min(2, Math.floor(seqT / introSpan));
+      const local = seqT - index * introSpan;
       const currentWordStr = INTRO_WORDS[index];
 
       if (word.dataset.currentWord !== currentWordStr) {
@@ -5849,42 +5426,27 @@ function animateIntro(now) {
       }
       word.style.opacity = "1";
 
-      const p = Math.min(1, Math.max(0, local * 1.2));
+      const p = Math.min(1, Math.max(0, local / (introSpan * 0.75)));
       const pText = Math.min(1, p * 1.5);
 
       currentSpans.forEach((letter, i) => {
-        if (introVariant === "red") {
-          const pLocal = Math.max(0, Math.min(1, (pText - i * 0.03) * 2.2));
-          if (pLocal < 1) {
-            const glitchX = Math.sin(now * 0.05 + i) * 22 * (1 - pLocal);
-            letter.style.transform = `translate3d(${glitchX}px, 0, 0) scaleY(${1.4 - pLocal * 0.4})`;
-            letter.style.opacity = pLocal;
-          } else {
-            letter.style.transform = "translate3d(0, 0, 0)";
-            letter.style.opacity = 1;
-          }
-        } else if (introVariant === "yellow") {
-          const pLocal = Math.max(0, Math.min(1, (pText - i * 0.035) * 3));
-          letter.style.transform = `translate3d(0, 0, ${-160 * (1 - pLocal)}px) rotateX(${40 * (1 - pLocal)}deg)`;
-          letter.style.filter = `blur(${14 * (1 - pLocal)}px)`;
+        const pLocal = Math.max(0, Math.min(1, (pText - i * 0.03) * 2.2));
+        if (pLocal < 1) {
+          const glitchX = Math.sin(now * 0.05 + i) * 22 * (1 - pLocal);
+          letter.style.transform = `translate3d(${glitchX}px, 0, 0) scaleY(${1.4 - pLocal * 0.4})`;
           letter.style.opacity = pLocal;
-        } else if (introVariant === "blue") {
-          const pLocal = Math.max(0, Math.min(1, (pText - i * 0.025) * 2.2));
-          if (pLocal < 1) {
-            letter.style.transform = `translate3d(0, 0, 0) scale(${1 - Math.sin(pLocal * Math.PI) * 0.25})`;
-            letter.style.opacity = Math.min(1, pLocal * 3);
-          } else {
-            letter.style.transform = "translate3d(0, 0, 0)";
-            letter.style.opacity = 1;
-          }
+        } else {
+          letter.style.transform = "translate3d(0, 0, 0)";
+          letter.style.opacity = 1;
         }
+        letter.style.filter = "none";
       });
     } else {
       word.style.opacity = "0";
       word.dataset.currentWord = "";
     }
 
-    if (timeOffset >= 3.5) {
+    if (timeOffset >= introDuration) {
       cleanupIntro(false);
       return;
     }
@@ -5935,10 +5497,11 @@ function animateIntro(now) {
       if (audio) {
         audio.pause();
         audio.currentTime = 0;
-        audio.src = `lhu${introVariant}.mp3`;
+        audio.src = `introsounds/lhu${introVariant}.mp3`;
         audio.load();
         
         audio.play().catch(() => {});
+        introDuration = readIntroDuration();
       }
 
       introLaunchTimer = setTimeout(() => {
@@ -5950,1855 +5513,33 @@ function animateIntro(now) {
     });
   });
 })();
-
- 
-let isTabVisible = !document.hidden;
-let indexExperienceActive = true;
-let indexAnimationFrame = null;
-let lastIndexFrameTime = 0;
-
-document.addEventListener("visibilitychange", () => {
-  isTabVisible = !document.hidden;
-  if (isTabVisible) {
-    clock.getDelta();
-    lastIndexFrameTime = 0;
-    if (indexExperienceActive && indexAnimationFrame === null) {
-      indexAnimationFrame = requestAnimationFrame(animate);
-    }
-    if (musicOn && music.paused) music.play().catch(() => {});
-  } else {
-    if (indexAnimationFrame !== null) cancelAnimationFrame(indexAnimationFrame);
-    indexAnimationFrame = null;
-    if (musicOn) music.pause();
-  }
-});
-
-function animate(now = performance.now()) {
-  indexAnimationFrame = null;
-  if (!isTabVisible || !indexExperienceActive || indexExperienceSuspended ||
-      document.body.classList.contains('site-mode')) return;
-  indexAnimationFrame = requestAnimationFrame(animate);
-  
-  window.__lhuUpdateBackdropTexture?.();
-  
-
-  window.__lhuUpdateSpawn?.(now, object);
-  if (now - lastIndexFrameTime < INDEX_FRAME_INTERVAL) return;
-  lastIndexFrameTime = now;
-
-  const delta = clock.getDelta();
-  if (mixer) mixer.update(delta);
-
-  if (camTween) {
-    const k = Math.min(1, (performance.now() - camTween.start) / camTween.dur);
-    const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-    camera.position.lerpVectors(camTween.fromPos, camTween.toPos, e);
-    controls.target.lerpVectors(camTween.fromTarget, camTween.toTarget, e);
-    camera.lookAt(controls.target);
-    if (k >= 1) { if (camTween.onDone) camTween.onDone(); camTween = null; controls.enabled = true; }
-  } else {
-    controls.update();
-    if (!gagActive && !rainbowActive && controls.minDistance > 0) {
-      const dist = camera.position.distanceTo(controls.target);
-      if (dist < controls.minDistance) {
-        const pushOut = camera.position.clone().sub(controls.target);
-        if (pushOut.lengthSq() < 1e-6) pushOut.set(0, 0, 1);
-        pushOut.normalize().multiplyScalar(controls.minDistance);
-        camera.position.copy(controls.target).add(pushOut);
-      }
-    }
-  }
-
-  if (object) {
-    if (gagActive) {
-      const tt = (performance.now() - gagStart) / 1000;
-      const amp = gagSize.length() * 0.04;
-      object.position.x = gagBase.x + Math.sin(tt * 5) * amp;
-      object.position.z = gagBase.z + (Math.sin(tt * 10) * 0.5 + 0.5) * amp * 0.6;
-      object.position.y = gagBase.y + Math.sin(tt * 5 + Math.PI / 2) * amp * 0.4;
-      object.rotation.z = Math.sin(tt * 5) * 0.08;
-      object.rotation.y = Math.sin(tt * 3) * 0.12;
-    } else if (rainbowActive) {
-      const tt = (performance.now() - rainbowStart) / 1000;
-      if (tt < 0.35) {
-        const u = tt / 0.35;
-        object.position.y = rainbowBasePos.y + Math.pow(u, 3) * 20;
-      } else if (tt < 0.45) {
-        object.scale.setScalar(0.75);
-        object.position.y = rainbowBasePos.y - 14;
-        object.position.z = rainbowBasePos.z - 15;
-      } else if (tt < 2.45) {
-        const u = (tt - 0.45) / 2.0;
-        object.position.y = (rainbowBasePos.y - 14) + (u * 28);
-        object.position.z = rainbowBasePos.z - 15;
-        object.rotation.y = rainbowBaseRot.y + (u * Math.PI * 2 * 3);
-        object.rotation.x = rainbowBaseRot.x + 0.4;
-        const pulse = 0.7 + 0.3 * Math.sin(tt * 28);
-        const hue = (tt * 260) % 360;
-        if (object.userData.emissiveMats) {
-          object.userData.emissiveMats.forEach(m => {
-            m.emissive.setHSL(hue / 360, 1, 0.52);
-            if (m.emissiveIntensity !== undefined) m.emissiveIntensity = 0.35 + pulse * 3.0;
-          });
-        }
-        const screenPos = object.position.clone().project(camera);
-        const screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth;
-        const screenY = -(screenPos.y * 0.5 - 0.5) * window.innerHeight;
-        const crossfire = document.getElementById("shmup-container");
-        const centerPoint = crossfire.querySelector(".shmup-center");
-        if (centerPoint) { centerPoint.style.left = screenX + "px"; centerPoint.style.top = screenY + "px"; }
-        crossfire.style.display = (tt >= 0.7 && tt < 2.2) ? "block" : "none";
-      }
-      if (tt >= 2.45) endRainbow();
-    } else if (wisdomActive) {
-      let targetRotX = 0;
-      if (isTyping) {
-        const _headSelectEl2 = document.getElementById("head-select");
-        const headIdx = (_headSelectEl2 && _headSelectEl2.selectedIndex >= 0) ? _headSelectEl2.selectedIndex : 0;
-        const rates = [0.85, 1.15, 0.70, 1.05, 1.10, 0.95, 1.00];
-        const currentRate = rates[headIdx % rates.length];
-        targetRotX = Math.sin(performance.now() * 0.04 * currentRate) * 0.25;
-      }
-      object.rotation.x += (targetRotX - object.rotation.x) * (delta * 12);
-      object.rotation.y += (0 - object.rotation.y) * (delta * 8);
-      object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-    } else if (musicOn) {
-      musicPlayTime += delta;
-      const loopTime = musicPlayTime % 70;
-      const baseFreq = Math.PI / (60 / 138 * 0.5);
-
-      let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
-      let phase4Active = false, phase6Active = false, phase7Active = false;
-
-      if (loopTime < 30 || loopTime >= 40) window.isTrafficConePhase = false;
-
-      if (loopTime < 10) {
-        musicPhase += baseFreq * delta;
-        targetRotX = Math.sin(musicPhase) * 0.08;
-      } else if (loopTime < 20) {
-        musicPhase += baseFreq * 2.0 * delta;
-        targetRotX = Math.sin(musicPhase) * 0.14;
-      } else if (loopTime < 30) {
-        musicPhase += baseFreq * 0.4 * delta;
-        targetRotX = Math.sin(musicPhase * 2) * 0.06 - 0.04;
-        targetRotY = Math.sin(musicPhase) * 0.45;
-        targetRotZ = Math.cos(musicPhase) * 0.22;
-      } else if (loopTime < 40) {
-        phase4Active = true;
-        window.isTrafficConePhase = true;
-        targetRotX = Math.sin(loopTime * 40) * 0.08;
-        targetRotY = Math.sin(loopTime * 47) * 0.08;
-      } else if (loopTime < 50) {
-        musicPhase += baseFreq * 1.5 * delta;
-        targetRotY = Math.sin(musicPhase) * 0.35;
-        targetRotZ = Math.sin(musicPhase * 2) * 0.05;
-      } else if (loopTime < 60) {
-        phase6Active = true;
-        musicPhase += baseFreq * delta;
-        targetRotX = Math.sin(musicPhase) * 0.08;
-      } else {
-        phase7Active = true;
-      }
-
-      const home = object.userData.basePos || { x: 0, y: 0 };
-      if (phase7Active) {
-        object.rotation.x += delta * 15;
-        object.rotation.y += (0 - object.rotation.y) * (delta * 8);
-        object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-        object.position.x += (home.x - object.position.x) * (delta * 8);
-        object.position.y += (home.y + Math.abs(Math.sin(loopTime * 15)) * 0.3 - object.position.y) * (delta * 8);
-        wasInPhase7 = true;
-      } else {
-        if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
-        object.rotation.x += (targetRotX - object.rotation.x) * (delta * 8);
-        object.rotation.y += (targetRotY - object.rotation.y) * (delta * 8);
-        object.rotation.z += (targetRotZ - object.rotation.z) * (delta * 8);
-        object.position.x += (home.x - object.position.x) * (delta * 8);
-        object.position.y += (home.y - object.position.y) * (delta * 8);
-      }
-
-      if (phase4Active) {
-        const blink = Math.floor(loopTime * 4) % 2 === 0;
-        let targetColor = new THREE.Color(blink ? 0xff6600 : 0x111111);
-        if (object.userData.emissiveMats) {
-          object.userData.emissiveMats.forEach(m => { m.emissive.copy(targetColor); if (m.emissiveIntensity !== undefined) m.emissiveIntensity = blink ? 3.5 : 0.5; });
-        }
-      } else if (phase6Active) {
-        const cycle = (loopTime % 1.5) / 1.5;
-        let targetColor = new THREE.Color();
-        if (cycle < 0.33) targetColor.setHex(0xff3b30);
-        else if (cycle < 0.66) targetColor.setHex(0xffd60a);
-        else targetColor.setHex(0x32ade6);
-        if (object.userData.emissiveMats) {
-          object.userData.emissiveMats.forEach(m => { m.emissive.lerp(targetColor, delta * 12); if (m.emissiveIntensity !== undefined) m.emissiveIntensity = 2.5; });
-        }
-      } else if (object.userData.emissiveMats) {
-        object.userData.emissiveMats.forEach(m => {
-          m.emissive.lerp(m.userData.origE, delta * 5);
-          if (m.emissiveIntensity !== undefined) {
-            let targetI = m.userData.origI !== undefined ? m.userData.origI : 1;
-            m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5);
+/* LHU INTRO MODE: dedicated hit-enter render loop (no main stage). */
+(function () {
+  var last = performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (document.hidden) { last = now; return; }
+    var delta = Math.min(0.05, (now - last) / 1000); last = now;
+    var paused = hitEnterFlashActive && now < hitEnterPauseUntil;
+    if (hitEnterFlashActive && !paused) restoreHitEnterAppearance();
+    if (hitEnterSlot && hitEnterSlot.isConnected) {
+      if (!paused) {
+        if (hitEnterMixer) hitEnterMixer.update(delta);
+        if (hitEnterObject) {
+          hitEnterObject.rotation.y += delta * (0.75 + hitEnterSpinBoost);
+          if (!hitEnterDragging) {
+            hitEnterSpinBoost *= Math.max(0, 1 - delta * 3);
+            if (Math.abs(hitEnterSpinBoost) < 0.001) hitEnterSpinBoost = 0;
           }
-        });
-      }
-    } else {
-      window.isTrafficConePhase = false;
-      if (wasInPhase7) { object.rotation.x = object.rotation.x % (Math.PI * 2); wasInPhase7 = false; }
-      object.rotation.x += (0 - object.rotation.x) * (delta * 8);
-      object.rotation.y += (0 - object.rotation.y) * (delta * 8);
-      object.rotation.z += (0 - object.rotation.z) * (delta * 8);
-      const home = object.userData.basePos || { x: 0, y: 0 };
-      object.position.x += (home.x - object.position.x) * (delta * 8);
-      object.position.y += (home.y - object.position.y) * (delta * 8);
-      if (object.userData.emissiveMats) {
-        object.userData.emissiveMats.forEach(m => {
-          m.emissive.lerp(m.userData.origE, delta * 5);
-          if (m.emissiveIntensity !== undefined) {
-            let targetI = m.userData.origI !== undefined ? m.userData.origI : 1;
-            m.emissiveIntensity += (targetI - m.emissiveIntensity) * (delta * 5);
-          }
-        });
-      }
-    }
-  }
-
-  window.__lhuUpdateKoboShaderFx?.(now);
-  if (typeof window.__lhuRenderMainThree === "function") window.__lhuRenderMainThree();
-  else renderer.render(scene, camera);
-
-  const hitEnterNow = performance.now();
-  const hitEnterPaused = hitEnterFlashActive && hitEnterNow < hitEnterPauseUntil;
-  if (hitEnterFlashActive && !hitEnterPaused) restoreHitEnterAppearance();
-
-  if (hitEnterSlot.isConnected) {
-    if (!hitEnterPaused) {
-      if (hitEnterMixer) hitEnterMixer.update(delta);
-      if (hitEnterObject) {
-        hitEnterObject.rotation.y += delta * (0.75 + hitEnterSpinBoost);
-        if (!hitEnterDragging) {
-          hitEnterSpinBoost *= Math.max(0, 1 - delta * 3);
-          if (Math.abs(hitEnterSpinBoost) < 0.001) hitEnterSpinBoost = 0;
         }
       }
-    }
-    hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
-  }
-}
-
-let indexExperienceSuspended = false;
-window.__lhuSetIndexExperienceSuspended = function(suspended) {
-  indexExperienceSuspended = Boolean(suspended);
-  if (indexExperienceSuspended) {
-    if (indexAnimationFrame !== null) {
-      cancelAnimationFrame(indexAnimationFrame);
-      indexAnimationFrame = null;
-    }
-  } else if (indexExperienceActive && isTabVisible && indexAnimationFrame === null) {
-    clock.getDelta();
-    lastIndexFrameTime = 0;
-    indexAnimationFrame = requestAnimationFrame(animate);
-  }
-};
-
-window.__lhuPauseIndexExperience = function() {
-  if (!indexExperienceActive) return;
-  indexExperienceActive = false;
-  indexExperienceSuspended = true;
-  headLoadSequence += 1;
-  stopLoading();
-
-  if (indexAnimationFrame !== null) cancelAnimationFrame(indexAnimationFrame);
-  indexAnimationFrame = null;
-
-  if (musicOn) stopMusicPlayback();
-  window.isTrafficConePhase = false;
-
-  if (controls && typeof controls.dispose === 'function') controls.dispose();
-  if (mixer) { mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot()); mixer = null; }
-  if (object) { scene.remove(object); disposeObject(object); object = null; }
-  if (hitEnterMixer) { hitEnterMixer.stopAllAction(); hitEnterMixer.uncacheRoot(hitEnterMixer.getRoot()); hitEnterMixer = null; }
-  if (hitEnterObject) { hitEnterScene.remove(hitEnterObject); disposeObject(hitEnterObject); hitEnterObject = null; }
-  if (hitEnterResizeObserver) hitEnterResizeObserver.disconnect();
-  if (dracoLoader && typeof dracoLoader.dispose === 'function') dracoLoader.dispose();
-
-  try { renderer.dispose(); renderer.forceContextLoss(); } catch (error) {}
-  try { hitEnterRenderer.dispose(); hitEnterRenderer.forceContextLoss(); } catch (error) {}
-};
-
-if (document.body.classList.contains('site-mode')) {
-  indexExperienceActive = false;
-  indexExperienceSuspended = true;
-} else {
-  indexAnimationFrame = isTabVisible ? requestAnimationFrame(animate) : null;
-}
-
-let resizeTimeout;
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    if (window.__lhuIsKoboStudioActive?.()) return;
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setPixelRatio(getDPR(innerWidth, innerHeight));
-    renderer.setSize(innerWidth, innerHeight);
-    window.__lhuResizeMainThree?.(innerWidth, innerHeight);
-  }, 150);
-});
-
- 
-(() => {
-  const overlay = document.getElementById("kobo-3d-overlay");
-  const canvasWrap = document.getElementById("container3D");
-  if (!canvasWrap) return;
-  canvasWrap.setAttribute("aria-label", "Interactive 3D model viewport");
-  const openBtn = document.getElementById("kobo-panel-toggle");
-  const modelSelect = document.getElementById("head-select");
-  const uploadBtn = document.getElementById("kobo-upload-btn");
-  const dockWrap = document.getElementById("kobo-dock-wrap");
-  const uiBottom = document.querySelector(".ui-bottom");
-  const fileInput = document.getElementById("kobo-file-input");
-  const stage = document.getElementById("lhu-index-experience");
-  if (!overlay || !canvasWrap || !openBtn || !dockWrap || !uiBottom || !modelSelect) return;
-
-  
-  
-  const settingsColumn = document.createElement("div");
-  settingsColumn.className = "kobo-settings-column";
-  settingsColumn.id = "kobo-settings-column";
-  const sheetHandle = document.createElement("div");
-  sheetHandle.className = "kobo-sheet-handle";
-  sheetHandle.id = "kobo-sheet-handle";
-  sheetHandle.setAttribute("role", "separator");
-  sheetHandle.setAttribute("aria-label", "Drag to resize Head Lab settings");
-  sheetHandle.setAttribute("aria-orientation", "horizontal");
-  sheetHandle.tabIndex = 0;
-  const drawerCard = document.getElementById("kobo-drawer-card");
-  const tabBar = dockWrap.querySelector(".kobo-tab-bar");
-  if (drawerCard) settingsColumn.appendChild(drawerCard);
-  if (tabBar) settingsColumn.appendChild(tabBar);
-  settingsColumn.prepend(sheetHandle);
-  
-  
-  dockWrap.replaceChildren(settingsColumn);
-  uiBottom.appendChild(dockWrap);
-  const desktopStudioQuery = window.matchMedia("(min-width: 900px) and (orientation: landscape)");
-  let koboActive = false;
-
-  function placeKoboCanvas() {
-    
-    
-  }
-  desktopStudioQuery.addEventListener?.("change", () => {
-    if (koboActive) requestAnimationFrame(() => {
-      syncKoboViewCenter();
-      applyKoboResolution();
-    });
-  });
-  const settingsRoot = settingsColumn;
-  const headlabMobileQuery = window.matchMedia("(max-width: 899px), (orientation: portrait) and (max-width: 1100px)");
-  let headlabSheetDrag = null;
-  let headlabSheetHeight = null;
-
-  function headlabViewportHeight() {
-    return Math.max(1, window.visualViewport?.height || window.innerHeight || 1);
-  }
-
-  function setHeadlabSheetHeight(heightPx, persist = false) {
-    if (!headlabMobileQuery.matches) return null;
-    const viewportHeight = headlabViewportHeight();
-    const minHeight = viewportHeight * 0.26;
-    const maxHeight = viewportHeight * 0.84;
-    const clampedHeight = Math.max(minHeight, Math.min(maxHeight, heightPx));
-    const ratio = clampedHeight / viewportHeight;
-    const cssValue = `${(ratio * 100).toFixed(2)}dvh`;
-    headlabSheetHeight = clampedHeight;
-    uiBottom.style.setProperty("--headlab-sheet-height", cssValue);
-    stage?.style.setProperty("--headlab-sheet-height", cssValue);
-    sheetHandle.setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
-    if (persist) {
-      try { localStorage.setItem("lhu-headlab-sheet-ratio", String(ratio)); } catch (error) {}
-    }
-    return clampedHeight;
-  }
-
-  function restoreHeadlabSheetHeight() {
-    if (!headlabMobileQuery.matches) return;
-    const viewportHeight = headlabViewportHeight();
-    let ratio = 0.42;
-    try {
-      const saved = Number(localStorage.getItem("lhu-headlab-sheet-ratio"));
-      if (Number.isFinite(saved) && saved > 0) ratio = saved;
-    } catch (error) {}
-    setHeadlabSheetHeight(viewportHeight * ratio, false);
-  }
-  sheetHandle.addEventListener("pointerdown", event => {
-    if (!headlabMobileQuery.matches || !drawerOpen || event.button > 0) return;
-    event.preventDefault();
-    const currentHeight = headlabSheetHeight || uiBottom.getBoundingClientRect().height || headlabViewportHeight() * 0.42;
-    headlabSheetDrag = { pointerId: event.pointerId, startY: event.clientY, startHeight: currentHeight };
-    uiBottom.classList.add("is-sheet-dragging");
-    sheetHandle.setPointerCapture?.(event.pointerId);
-  });
-  sheetHandle.addEventListener("pointermove", event => {
-    if (!headlabSheetDrag || event.pointerId !== headlabSheetDrag.pointerId) return;
-    setHeadlabSheetHeight(headlabSheetDrag.startHeight + headlabSheetDrag.startY - event.clientY, false);
-  });
-
-  function finishHeadlabSheetDrag(event) {
-    if (!headlabSheetDrag || (event && event.pointerId !== headlabSheetDrag.pointerId)) return;
-    headlabSheetDrag = null;
-    uiBottom.classList.remove("is-sheet-dragging");
-    if (headlabSheetHeight) setHeadlabSheetHeight(headlabSheetHeight, true);
-  }
-  sheetHandle.addEventListener("pointerup", finishHeadlabSheetDrag);
-  sheetHandle.addEventListener("pointercancel", finishHeadlabSheetDrag);
-  sheetHandle.addEventListener("lostpointercapture", finishHeadlabSheetDrag);
-  sheetHandle.addEventListener("keydown", event => {
-    if (!headlabMobileQuery.matches || !drawerOpen) return;
-    if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
-    event.preventDefault();
-    const step = headlabViewportHeight() * 0.08 * (event.key === "ArrowUp" ? 1 : -1);
-    setHeadlabSheetHeight((headlabSheetHeight || uiBottom.getBoundingClientRect().height) + step, true);
-  });
-  headlabMobileQuery.addEventListener?.("change", () => {
-    if (drawerOpen && headlabMobileQuery.matches) restoreHeadlabSheetHeight();
-    else if (!headlabMobileQuery.matches) {
-      uiBottom.style.removeProperty("--headlab-sheet-height");
-      stage?.style.removeProperty("--headlab-sheet-height");
-      headlabSheetHeight = null;
-    }
-  });
-  window.visualViewport?.addEventListener?.("resize", () => {
-    if (drawerOpen && headlabMobileQuery.matches && !headlabSheetDrag) restoreHeadlabSheetHeight();
-  });
-
-  
-  let kImportedModelActive = false;
-
-  let koboInitialized = false;
-  let drawerOpen = false;
-  let koboRAF = 0;
-  
-  
-  let kScene = scene, kCamera = camera, kRenderer = renderer, kComposer = null, kBloomPass = null, kControls = controls, kClock = clock;
-  let kKeyLight, kFillLight, kRimLight, kHemiLight, kGrid, kPlinth, kFrameHelper;
-  let kModel = null, kMixer = null, kClips = [], kActiveActions = [];
-  let kAnimEnabled = true;
-  let kShaderMode = "texture";
-  let kQuickXrayActive = false;
-  let kQuickXrayRestoreMode = "texture";
-  let kMood = "daylight";
-  let kResScale = 1.0;
-  let kMaxFps = 0;
-  let kShadowsOn = !isMobileDevice; 
-  let kShadowResolution = 256;
-  let kVertexSnap = false;
-  let kPixelMode = "off";
-  let kTextureFilter = "smooth";
-  let kJitterAmount = 0;
-  const kJitterUniform = { value: 0 };
-  let kModelRadius = 1;
-  let kModelMaterialCount = 0;
-  let kModelMorphCount = 0;
-  let kLoadRequestId = 0;
-  let kCurrentObjectUrl = "";
-  let kAntialias = !isMobileDevice;
-  let kDither = false;
-  let kBloomEnabled = false;
-  let kFrameEnabled = false;
-  let kPedestalMode = "none";
-  let kAnimSpeed = 1;
-  let kLastRenderTime = 0;
-  let kFpsFrames = 0, kFpsLast = performance.now();
-  let kGlitchPulseUntil = 0;
-  let kSpawnState = null;
-  let kOriginalStates = new WeakMap();
-  let kCustomMaterials = [];
-  let kChromeEnvironment = null;
-  window.__lhuUpdateKoboShaderFx = (now = performance.now()) => {
-    const time = now * 0.001;
-    kCustomMaterials.forEach(material => {
-      if (material.userData?.koboFxTimeUniform) material.userData.koboFxTimeUniform.value = time;
-      if (material.uniforms?.uTime) material.uniforms.uTime.value = time;
-    });
-  };
-  let kCurrentUrl = "";
-  let kLastBackdrop = "matrix7";
-  let kBackdropTexture = null;
-  
-
-  window.__lhuUpdateBackdropTexture = () => {
-    if (kBackdropTexture && kScene.background === kBackdropTexture) kBackdropTexture.needsUpdate = true;
-  };
-  let kAudioMuted = false;
-  let kSfxEnabled = true;
-  let audioCtx = null;
-  let kViewCenter = new THREE.Vector3();
-
-  
-
-  function getKoboViewCenter() {
-    return kControls ? kControls.target.clone() : new THREE.Vector3();
-  }
-
-  function syncKoboViewCenter() {
-    if (!kControls || !kCamera) return;
-    kViewCenter.copy(kControls.target);
-    kControls.update();
-  }
-
-  const tabPanels = {
-    surface: document.getElementById("kobo-panel-surface"),
-    optics: document.getElementById("kobo-panel-optics"),
-    engine: document.getElementById("kobo-panel-engine"),
-    stage: document.getElementById("kobo-panel-stage"),
-    motion: document.getElementById("kobo-panel-motion"),
-    fx: document.getElementById("kobo-panel-fx")
-  };
-  const kResSlider = document.getElementById("kobo-res-slider");
-  const kResValue = document.getElementById("kobo-res-val");
-  let kResChanging = false;
-  const kFpsButton = document.getElementById("kobo-fps-btn");
-  if (kResSlider) kResSlider.value = String(kResScale);
-  if (kResValue) kResValue.textContent = `${kResScale.toFixed(2)}×`;
-  if (kFpsButton) kFpsButton.textContent = "FPS: MAX";
-
-  function playKoboSynth(type) {
-    
-    
-    if (kAudioMuted || !kSfxEnabled) return;
-    try {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      if (!audioCtx) audioCtx = new AC();
-      if (audioCtx.state === "suspended") audioCtx.resume();
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      const tones = {
-        pop: ["sine", 240, 680, 0.15], push: ["triangle", 150, 52, 0.25],
-        pew: ["sawtooth", 1180, 180, 0.26], noodly: ["sine", 320, 420, 0.45],
-        boing: ["triangle", 160, 410, 0.47], dong: ["sine", 196, 146.8, 0.78],
-        glitch: ["square", 95, 640, 0.22]
-      };
-      const [wave, from, to, duration] = tones[type] || tones.pop;
-      osc.type = wave;
-      osc.frequency.setValueAtTime(from, now);
-      osc.frequency.exponentialRampToValueAtTime(Math.max(1, to), now + duration * 0.72);
-      gain.gain.setValueAtTime(type === "dong" ? 0.2 : 0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-      osc.start(now); osc.stop(now + duration + 0.01);
-    } catch (e) {}
-  }
-
-  function createRenderer() {
-    
-    kScene = scene;
-    kCamera = camera;
-    kRenderer = renderer;
-    kControls = controls;
-    kClock = clock;
-    kRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-    kRenderer.toneMappingExposure = Number(document.getElementById("kobo-exposure")?.value || 2);
-    kRenderer.shadowMap.enabled = kShadowsOn;
-    kRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    if (kKeyLight) {
-      kKeyLight.castShadow = kShadowsOn;
-      kKeyLight.shadow.mapSize.set(kShadowResolution, kShadowResolution);
-    }
-    try { kComposer?.dispose(); } catch (error) {}
-    const width = Math.max(1, canvasWrap.clientWidth || innerWidth);
-    const height = Math.max(1, canvasWrap.clientHeight || innerHeight);
-    const renderTarget = new THREE.WebGLRenderTarget(width, height, {
-      type: THREE.HalfFloatType,
-      depthBuffer: true,
-      stencilBuffer: false
-    });
-    renderTarget.samples = kAntialias ? 4 : 0;
-    kComposer = new EffectComposer(kRenderer, renderTarget);
-    kComposer.addPass(new RenderPass(kScene, kCamera));
-
-    kBloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 0.72, 0.55, 0.18);
-    kBloomPass.enabled = kBloomEnabled;
-    kComposer.addPass(kBloomPass);
-    applyKoboResolution();
-  }
-
-  function initKoboStudio() {
-    if (koboInitialized) return;
-    koboInitialized = true;
-    kScene = scene;
-    kCamera = camera;
-    kRenderer = renderer;
-    kControls = controls;
-    kClock = clock;
-    kViewCenter.copy(kControls.target);
-
-    
-    kHemiLight = ambient;
-    kKeyLight = key;
-    kFillLight = fill;
-    kRimLight = rim;
-    const shadowQuality = document.getElementById("kobo-shadow-quality");
-    if (shadowQuality) shadowQuality.value = String(kShadowResolution);
-
-    
-    kGrid = new THREE.GridHelper(8, 24, 0xe85d75, 0xd8c3b0);
-    kGrid.position.y = -1.15;
-    if (Array.isArray(kGrid.material)) kGrid.material.forEach(m => { m.transparent = true; m.opacity = 0.28; });
-    else { kGrid.material.transparent = true; kGrid.material.opacity = 0.28; }
-    kGrid.visible = false;
-    kScene.add(kGrid);
-
-    // Wide plinth matching the 8x8 grid footprint. Every head is normalised
-    // to rest just above this surface in syncKoboMainModel().
-    const plinthMaterial = new THREE.MeshStandardMaterial({ color: 0xd8c7ba, roughness: 0.72, metalness: 0.04 });
-    kPlinth = new THREE.Mesh(new THREE.CylinderGeometry(4.0, 4.15, 0.16, 64), plinthMaterial);
-    kPlinth.position.y = -1.14; kPlinth.receiveShadow = true; kPlinth.castShadow = true;
-    kPlinth.visible = false;
-    kScene.add(kPlinth);
-
-    kFrameHelper = new THREE.BoxHelper(object || new THREE.Object3D(), 0xe85d75);
-    kFrameHelper.visible = false;
-    kScene.add(kFrameHelper);
-
-    createRenderer();
-    applyKoboMood("daylight");
-    applyKoboPedestal("none");
-    
-    updateKoboLightAngle(Number(document.getElementById("kobo-light-angle")?.value ?? 0));
-    syncKoboMainModel(object, mixer, activeHeadAnimations, modelSelect.value, modelSelect.selectedOptions?.[0]?.textContent || "LHU head");
-  }
-
-  function applyKoboResolution() {
-    if (!kRenderer || !kCamera) return;
-    const width = Math.max(1, canvasWrap.clientWidth || innerWidth);
-    const height = Math.max(1, canvasWrap.clientHeight || innerHeight);
-    const pixelFactor = kPixelMode === "coarse" ? 0.28 : kPixelMode === "fine" ? 0.52 : 1;
-    const effectiveDpr = Math.min(getDPR(width, height), Math.max(0.25, getDPR(width, height) * Math.min(1, kResScale) * pixelFactor));
-    kCamera.aspect = width / height;
-    kCamera.updateProjectionMatrix();
-    kRenderer.setPixelRatio(effectiveDpr);
-    kRenderer.setSize(width, height, false);
-    if (kComposer) kComposer.setSize(width, height);
-    if (kBloomPass) kBloomPass.setSize(width, height);
-    canvasWrap.classList.toggle("is-pixelated", kPixelMode !== "off");
-    if (kRenderer.domElement) kRenderer.domElement.style.imageRendering = kPixelMode === "off" ? "auto" : "pixelated";
-  }
-
-  function applyKoboMood(mood) {
-    kMood = mood;
-    overlay.setAttribute("data-mood", mood);
-    settingsRoot.querySelectorAll("[data-mood-btn]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.moodBtn === mood));
-    if (!kKeyLight) return;
-    if (mood === "daylight") {
-      kHemiLight.color.setHex(0xfff9f2); kHemiLight.groundColor.setHex(0xd9c2ad);
-      kKeyLight.color.setHex(0xfff4e6); kRimLight.color.setHex(0xe85d75);
-    } else if (mood === "midnight") {
-      kHemiLight.color.setHex(0xc9d6ff); kHemiLight.groundColor.setHex(0x1a1522);
-      kKeyLight.color.setHex(0xff9e6d); kRimLight.color.setHex(0xff5277);
-    } else if (mood === "sunset") {
-      kHemiLight.color.setHex(0xffd7b0); kHemiLight.groundColor.setHex(0x2b1020);
-      kKeyLight.color.setHex(0xff9a52); kRimLight.color.setHex(0xc94f9e);
-    } else if (mood === "neon") {
-      kHemiLight.color.setHex(0xa8f0ff); kHemiLight.groundColor.setHex(0x0b0a1a);
-      kKeyLight.color.setHex(0x4df0ff); kRimLight.color.setHex(0xff36c8);
+      hitEnterRenderer.render(hitEnterScene, hitEnterCamera);
     }
   }
-
-  function updateKoboLightAngle(deg) {
-    if (!kKeyLight) return;
-    const rad = THREE.MathUtils.degToRad(deg);
-    kKeyLight.position.set(Math.cos(rad) * 5, 5.5, Math.sin(rad) * 5);
-    kFillLight.position.set(-Math.cos(rad) * 4.5, 2.3, -Math.sin(rad) * 4.5);
-    kRimLight.position.set(-Math.sin(rad) * 4, 3.6, Math.cos(rad) * 4);
-  }
-
-  function applyKoboPedestal(mode) {
-    kPedestalMode = mode;
-    if (kGrid) kGrid.visible = mode === "grid";
-    if (kPlinth) kPlinth.visible = mode === "marble";
-    settingsRoot.querySelectorAll("[data-pedestal]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.pedestal === mode));
-  }
-
-  function setKoboBackdrop(mode, color = null) {
-    kLastBackdrop = mode;
-    settingsRoot.querySelectorAll("[data-backdrop]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.backdrop === mode));
-    settingsRoot.querySelectorAll("[data-solid-color]").forEach(btn => btn.classList.remove("is-active"));
-    const matrix = document.getElementById("matrix-bg");
-    
-    
-    
-    if ((mode === "matrix7" || mode === "words" || mode === "balls") && matrix) {
-      if (!kBackdropTexture) {
-        kBackdropTexture = new THREE.CanvasTexture(matrix);
-        // The source is a 2D canvas whose pixels are already sRGB. Without
-        // this, Three.js treats them as linear and converts again on output,
-        // turning the near-black backdrop grey and blowing out the "7"s.
-        kBackdropTexture.colorSpace = THREE.SRGBColorSpace;
-      }
-      kBackdropTexture.needsUpdate = true;
-      kScene.background = kBackdropTexture;
-    } else {
-      kScene.background = null;
-    }
-    if (mode === "matrix7") {
-      stage.style.background = "";
-      canvasWrap.style.background = "transparent";
-      window.setMatrixTheme?.(0);
-    } else if (mode === "words") {
-      stage.style.background = "";
-      canvasWrap.style.background = "transparent";
-      window.setMatrixTheme?.(1);
-    } else if (mode === "balls") {
-      stage.style.background = "";
-      canvasWrap.style.background = "transparent";
-      window.setMatrixTheme?.(2);
-    } else if (mode === "solid") {
-      stage.style.background = color || "#f6f4ef";
-      
-
-      kScene.background = new THREE.Color(color || "#f6f4ef");
-      canvasWrap.style.background = "transparent";
-      if (matrix) matrix.style.opacity = "0";
-    }
-  }
-
-  function disposeKoboCustomMaterials() {
-    kCustomMaterials.forEach(m => { try { m.dispose(); } catch (e) {} });
-    kCustomMaterials = [];
-  }
-
-  function createKoboXrayMaterial(origMat) {
-    const baseColor = origMat?.color ? origMat.color.clone() : new THREE.Color(0xf6ede4);
-    const map = origMat?.map || null;
-    const mat = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      side: THREE.DoubleSide,
-      uniforms: {
-        uColor: { value: baseColor },
-        uRimColor: { value: new THREE.Color(0xff8c5a) },
-        uCoreTint: { value: new THREE.Color(0x5ce1e6) },
-        uMap: { value: map },
-        uHasMap: { value: map ? 1 : 0 },
-        uTime: { value: 0 }
-      },
-      vertexShader: `
-        varying vec3 vNormalView;
-        varying vec3 vViewPos;
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          vec3 n = length(normal) > 0.0001 ? normalize(normal) : vec3(0.0, 1.0, 0.0);
-          vNormalView = normalize(normalMatrix * n);
-          vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          vViewPos = -mv.xyz;
-          gl_Position = projectionMatrix * mv;
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 uColor;
-        uniform vec3 uRimColor;
-        uniform vec3 uCoreTint;
-        uniform sampler2D uMap;
-        uniform float uHasMap;
-        uniform float uTime;
-        varying vec3 vNormalView;
-        varying vec3 vViewPos;
-        varying vec2 vUv;
-        void main() {
-          vec3 N = gl_FrontFacing ? normalize(vNormalView) : -normalize(vNormalView);
-          vec3 V = normalize(vViewPos);
-          float fresnel = pow(1.0 - clamp(abs(dot(N, V)), 0.0, 1.0), 2.1);
-          vec4 texel = uHasMap > 0.5 ? texture2D(uMap, vUv) : vec4(1.0);
-          vec3 surface = uColor * texel.rgb;
-          float scan = 0.92 + 0.08 * sin(vViewPos.y * 28.0 - uTime * 3.0);
-          vec3 edge = mix(uCoreTint, uRimColor, fresnel);
-          vec3 finalColor = clamp(mix(surface * 0.85, edge, fresnel * 0.78) * scan, 0.0, 1.0);
-          float alpha = clamp(0.22 + fresnel * 0.68, 0.20, 0.92);
-          gl_FragColor = vec4(finalColor, alpha);
-        }
-      `
-    });
-    mat.dithering = kDither;
-    kCustomMaterials.push(mat);
-    return mat;
-  }
-
-  function applyTextureFilter(material) {
-    const list = Array.isArray(material) ? material : [material];
-    const textureSlots = ["map", "normalMap", "roughnessMap", "metalnessMap", "emissiveMap", "aoMap", "alphaMap", "bumpMap", "displacementMap"];
-    list.forEach(mat => {
-      if (!mat) return;
-      textureSlots.forEach(slot => {
-        const tex = mat[slot];
-        if (!tex?.isTexture) return;
-        if (!tex.userData.koboOriginalFilter) {
-          tex.userData.koboOriginalFilter = { minFilter: tex.minFilter, magFilter: tex.magFilter, anisotropy: tex.anisotropy };
-        }
-        if (kTextureFilter === "nearest") {
-          tex.magFilter = THREE.NearestFilter;
-          tex.minFilter = THREE.NearestFilter;
-          tex.anisotropy = 1;
-        } else {
-          const original = tex.userData.koboOriginalFilter;
-          tex.minFilter = original.minFilter;
-          tex.magFilter = original.magFilter;
-          tex.anisotropy = original.anisotropy;
-        }
-        tex.needsUpdate = true;
-      });
-    });
-  }
-
-  function attachKoboVertexJitter(material) {
-    if (!material || material.userData.koboJitterAttached) return;
-    const originalCompile = material.onBeforeCompile;
-    const originalKey = material.customProgramCacheKey?.bind(material);
-    material.onBeforeCompile = shader => {
-      if (typeof originalCompile === "function") originalCompile(shader);
-      shader.uniforms.uKoboVertexJitter = kJitterUniform;
-      shader.vertexShader = "uniform float uKoboVertexJitter;\n" + shader.vertexShader.replace(
-        "#include <project_vertex>",
-        `#include <project_vertex>\nif (uKoboVertexJitter > 0.001) { float snapGrid = mix(340.0, 44.0, clamp(uKoboVertexJitter,0.0,1.0)); float wSafe = max(abs(gl_Position.w), 0.0001) * (gl_Position.w < 0.0 ? -1.0 : 1.0); vec3 ndc = gl_Position.xyz / wSafe; ndc.xy = floor(snapGrid * ndc.xy + 0.5) / snapGrid; gl_Position.xyz = ndc * wSafe; }`
-      );
-    };
-    material.customProgramCacheKey = () => `${originalKey ? originalKey() : "material"}|lhu-kobo-jitter-v1`;
-    material.userData.koboJitterAttached = true;
-    material.needsUpdate = true;
-  }
-
-  function createKoboAnimatedEffectMaterial(mode, sourceMaterial) {
-    // Clone the GLB material so maps, skinning, morph targets and material flags survive.
-    const material = sourceMaterial?.clone?.() || new THREE.MeshStandardMaterial({ color: 0xf4e6d8 });
-    const timeUniform = { value: 0 };
-    const originalCompile = material.onBeforeCompile;
-    const originalCacheKey = material.customProgramCacheKey?.bind(material);
-    material.onBeforeCompile = shader => {
-      if (typeof originalCompile === "function") originalCompile(shader);
-
-      shader.uniforms.uLhuFxTime = timeUniform;
-      const vertexCommon = "#include <common>";
-      const projectVertex = "#include <project_vertex>";
-      const fragmentCommon = "#include <common>";
-      const outputAnchor = "#include <opaque_fragment>";
-
-      if (shader.vertexShader.includes(vertexCommon)) {
-        shader.vertexShader = shader.vertexShader.replace(
-          vertexCommon,
-          `${vertexCommon}\n${mode === "glitch" ? "uniform float uLhuFxTime;\n" : ""}varying vec2 vLhuFxUv;\nvarying vec3 vLhuFxNormal;\nvarying vec3 vLhuFxViewPos;`
-        );
-      } else {
-        console.warn(`[LHU Head Lab] ${mode}: vertex common chunk not found.`);
-      }
-      if (shader.vertexShader.includes(projectVertex)) {
-        const vertexGlitch = mode === "glitch" ? `
-          float lhuVertexBand = floor(transformed.y * 25.0 + uLhuFxTime * 14.0);
-          float lhuVertexSeed = fract(sin(lhuVertexBand * 12.9898 + floor(uLhuFxTime * 11.0) * 78.233) * 43758.5453);
-          float lhuVertexGate = step(0.76, lhuVertexSeed);
-          gl_Position.x += (lhuVertexSeed - 0.5) * 0.16 * lhuVertexGate * gl_Position.w;
-        ` : "";
-        shader.vertexShader = shader.vertexShader.replace(
-          projectVertex,
-          `${projectVertex}\n${vertexGlitch}\nvLhuFxUv = transformed.xy;\nvLhuFxNormal = normalize(normalMatrix * objectNormal);\nvLhuFxViewPos = -mvPosition.xyz;`
-        );
-      } else {
-        console.warn(`[LHU Head Lab] ${mode}: project_vertex chunk not found.`);
-      }
-      if (shader.fragmentShader.includes(fragmentCommon)) {
-        shader.fragmentShader = shader.fragmentShader.replace(
-          fragmentCommon,
-          `${fragmentCommon}\nuniform float uLhuFxTime;\nvarying vec2 vLhuFxUv;\nvarying vec3 vLhuFxNormal;\nvarying vec3 vLhuFxViewPos;`
-        );
-      } else {
-        console.warn(`[LHU Head Lab] ${mode}: fragment common chunk not found.`);
-      }
-
-      const effectCode = mode === "holo" ? `
-        vec3 lhuN = normalize(vLhuFxNormal);
-        vec3 lhuV = normalize(vLhuFxViewPos);
-        float lhuFresnel = pow(1.0 - clamp(abs(dot(lhuN, lhuV)), 0.0, 1.0), 2.15);
-        float lhuHue = vLhuFxUv.y * 3.8 + vLhuFxUv.x * 1.65 + uLhuFxTime * 0.42;
-        vec3 lhuSpectrum = 0.52 + 0.48 * cos(6.28318 * (lhuHue + vec3(0.0, 0.333, 0.667)));
-        float lhuScan = 0.5 + 0.5 * sin(vLhuFxUv.y * 210.0 - uLhuFxTime * 7.0);
-        float lhuShimmer = pow(max(0.0, sin(lhuHue * 8.0 + uLhuFxTime * 2.0)), 18.0);
-        vec3 lhuHolo = mix(lhuSpectrum, vec3(0.30, 0.96, 1.0), lhuFresnel * 0.55);
-        outgoingLight = mix(outgoingLight, lhuHolo, 0.76);
-        outgoingLight += lhuSpectrum * (0.16 + lhuFresnel * 0.52);
-        outgoingLight += vec3(0.45, 0.92, 1.0) * (lhuScan * 0.07 + lhuShimmer * 0.24);
-      ` : `
-        float lhuBand = floor(vLhuFxUv.y * 24.0 + uLhuFxTime * 12.0);
-        float lhuSeed = fract(sin(dot(vec2(lhuBand, floor(uLhuFxTime * 11.0)), vec2(12.9898, 78.233))) * 43758.5453);
-        float lhuGate = step(0.58, lhuSeed);
-        float lhuShift = (lhuSeed - 0.5) * 1.15 * lhuGate;
-        float lhuSlice = step(0.90, fract(vLhuFxUv.y * 17.0 + uLhuFxTime * 3.7));
-        float lhuFlicker = step(0.74, fract(sin(floor(uLhuFxTime * 19.0) * 91.7) * 43758.5));
-        vec3 lhuBase = outgoingLight;
-        vec3 lhuDigital = vec3(max(0.0, lhuBase.r + lhuShift + 0.30 * lhuGate),
-                               max(0.0, lhuBase.g * (1.0 - 0.55 * lhuGate) + 0.18 * lhuGate),
-                               max(0.0, lhuBase.b - lhuShift + 0.42 * lhuGate));
-        outgoingLight = mix(lhuBase, lhuDigital, 0.88);
-        outgoingLight = mix(outgoingLight, vec3(0.02, 0.92, 1.0), lhuSlice * 0.92);
-        outgoingLight += vec3(1.0, 0.04, 0.34) * lhuGate * 0.42;
-        outgoingLight += vec3(0.38, 0.95, 1.0) * lhuFlicker * 0.24;
-      `;
-
-      if (shader.fragmentShader.includes(outputAnchor)) {
-        shader.fragmentShader = shader.fragmentShader.replace(outputAnchor, `${effectCode}\n${outputAnchor}`);
-      } else {
-        console.warn(`[LHU Head Lab] ${mode}: opaque_fragment chunk not found; effect not injected.`);
-      }
-      material.userData.koboCompiledShader = shader;
-    };
-    material.customProgramCacheKey = () => `${originalCacheKey ? originalCacheKey() : material.type}|lhu-${mode}-fx-v3`;
-    material.userData.koboFxTimeUniform = timeUniform;
-    material.userData.koboFxMode = mode;
-    material.needsUpdate = true;
-    kCustomMaterials.push(material);
-    return material;
-  }
-
-  function createKoboGraniteMaterial(sourceMaterial) {
-    // Procedural granite: no external image or UV map required, so every GLB mesh gets a stone grain.
-    const material = sourceMaterial?.clone?.() || new THREE.MeshStandardMaterial();
-    material.map = null;
-    material.color?.setHex(0xffffff);
-    material.vertexColors = false;
-    material.emissive?.setHex(0x000000);
-    material.emissiveMap = null;
-    material.roughness = 0.96;
-    material.metalness = 0.015;
-    const originalCompile = material.onBeforeCompile;
-    const originalCacheKey = material.customProgramCacheKey?.bind(material);
-
-    material.onBeforeCompile = shader => {
-      if (typeof originalCompile === "function") originalCompile(shader);
-      const common = "#include <common>";
-      const project = "#include <project_vertex>";
-      const colorChunk = "#include <color_fragment>";
-      if (shader.vertexShader.includes(common)) {
-        shader.vertexShader = shader.vertexShader.replace(common, `${common}\nvarying vec3 vLhuStonePos;`);
-      }
-      if (shader.vertexShader.includes(project)) {
-        shader.vertexShader = shader.vertexShader.replace(project, `${project}\nvLhuStonePos = transformed;`);
-      }
-      if (shader.fragmentShader.includes(common)) {
-        shader.fragmentShader = shader.fragmentShader.replace(common, `${common}
-varying vec3 vLhuStonePos;
-float lhuStoneHash(vec3 p) {
-  p = fract(p * 0.1031);
-  p += vec3(dot(p, p.yzx + 33.33));
-  return fract((p.x + p.y) * p.z);
-}
-float lhuStoneNoise(vec3 p) {
-  vec3 i = floor(p);
-  vec3 f = fract(p);
-  f = f * f * (3.0 - 2.0 * f);
-  float n000 = lhuStoneHash(i + vec3(0.0,0.0,0.0));
-  float n100 = lhuStoneHash(i + vec3(1.0,0.0,0.0));
-  float n010 = lhuStoneHash(i + vec3(0.0,1.0,0.0));
-  float n110 = lhuStoneHash(i + vec3(1.0,1.0,0.0));
-  float n001 = lhuStoneHash(i + vec3(0.0,0.0,1.0));
-  float n101 = lhuStoneHash(i + vec3(1.0,0.0,1.0));
-  float n011 = lhuStoneHash(i + vec3(0.0,1.0,1.0));
-  float n111 = lhuStoneHash(i + vec3(1.0,1.0,1.0));
-  float nx00 = mix(n000, n100, f.x);
-  float nx10 = mix(n010, n110, f.x);
-  float nx01 = mix(n001, n101, f.x);
-  float nx11 = mix(n011, n111, f.x);
-  return mix(mix(nx00, nx10, f.y), mix(nx01, nx11, f.y), f.z);
-}`);
-      }
-      const stoneCode = `
-        vec3 lhuP = vLhuStonePos;
-        float lhuCloud = lhuStoneNoise(lhuP * 5.5);
-        float lhuCloudFine = lhuStoneNoise(lhuP * 14.0 + 7.3);
-        float lhuGrain = lhuStoneNoise(lhuP * 58.0);
-        float lhuMicro = lhuStoneNoise(lhuP * 132.0 + 19.1);
-        float lhuVeinField = lhuStoneNoise(lhuP * 10.5 + lhuCloud * 2.4);
-        float lhuVein = smoothstep(0.77, 0.91, 1.0 - abs(lhuVeinField - 0.5) * 2.0);
-        float lhuSpeck = step(0.79, lhuStoneHash(floor(lhuP * 115.0)));
-        vec3 lhuStoneDark = vec3(0.19, 0.20, 0.21);
-        vec3 lhuStoneMid = vec3(0.43, 0.44, 0.43);
-        vec3 lhuStoneLight = vec3(0.69, 0.68, 0.64);
-        vec3 lhuStoneColor = mix(lhuStoneDark, lhuStoneMid, smoothstep(0.22, 0.78, lhuCloud * 0.68 + lhuCloudFine * 0.32));
-        lhuStoneColor = mix(lhuStoneColor, lhuStoneLight, smoothstep(0.69, 0.91, lhuGrain) * 0.46);
-        lhuStoneColor = mix(lhuStoneColor, vec3(0.12, 0.13, 0.14), lhuVein * 0.34);
-        lhuStoneColor += vec3(0.22, 0.21, 0.19) * lhuSpeck * 0.20;
-        lhuStoneColor += (lhuMicro - 0.5) * 0.10;
-        diffuseColor.rgb = clamp(lhuStoneColor, 0.08, 0.82);
-      `;
-      if (shader.fragmentShader.includes(colorChunk)) {
-        shader.fragmentShader = shader.fragmentShader.replace(colorChunk, `${colorChunk}\n${stoneCode}`);
-      } else {
-        console.warn("[LHU Head Lab] GRANITE: color_fragment chunk not found; stone texture not injected.");
-      }
-      material.userData.koboGraniteShader = shader;
-    };
-    material.customProgramCacheKey = () => `${originalCacheKey ? originalCacheKey() : material.type}|lhu-granite-procedural-v1`;
-    material.needsUpdate = true;
-    kCustomMaterials.push(material);
-    return material;
-  }
-
-  function getKoboChromeEnvironment() {
-    if (kChromeEnvironment) return kChromeEnvironment;
-    const envCanvas = document.createElement("canvas");
-    envCanvas.width = 1024;
-    envCanvas.height = 512;
-    const ctx = envCanvas.getContext("2d");
-    if (!ctx) return null;
-    const base = ctx.createLinearGradient(0, 0, 0, envCanvas.height);
-    base.addColorStop(0, "#171b24");
-    base.addColorStop(0.28, "#626b79");
-    base.addColorStop(0.52, "#e2e7ef");
-    base.addColorStop(0.72, "#515a69");
-    base.addColorStop(1, "#11141b");
-    ctx.fillStyle = base;
-    ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
-    // Long softboxes create readable studio reflections across curved surfaces.
-    const softbox = (x, y, w, h, color, blur = 34) => {
-      ctx.save();
-      ctx.shadowColor = color;
-      ctx.shadowBlur = blur;
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, w, h);
-      ctx.restore();
-    };
-    softbox(90, 65, 74, 360, "rgba(255,255,255,.88)", 46);
-    softbox(270, 110, 30, 270, "rgba(132,190,255,.82)", 34);
-    softbox(440, 35, 115, 55, "rgba(255,255,255,.96)", 40);
-    softbox(620, 90, 48, 320, "rgba(255,255,255,.88)", 40);
-    softbox(835, 120, 92, 245, "rgba(255,255,255,.76)", 38);
-    softbox(720, 435, 190, 24, "rgba(130,175,255,.62)", 28);
-    const vignette = ctx.createLinearGradient(0, 0, envCanvas.width, 0);
-    vignette.addColorStop(0, "rgba(0,0,0,.45)");
-    vignette.addColorStop(0.12, "rgba(0,0,0,0)");
-    vignette.addColorStop(0.88, "rgba(0,0,0,0)");
-    vignette.addColorStop(1, "rgba(0,0,0,.42)");
-    ctx.fillStyle = vignette;
-    ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
-    const texture = new THREE.CanvasTexture(envCanvas);
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-    if ("colorSpace" in texture && THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
-    kChromeEnvironment = texture;
-    return kChromeEnvironment;
-  }
-
-  function makeKoboPresetMaterial(mode, sourceMaterial) {
-    let material = null;
-    if (mode === "holo" || mode === "glitch") {
-      return createKoboAnimatedEffectMaterial(mode, sourceMaterial);
-    }
-    if (mode === "solid") {
-      material = new THREE.MeshStandardMaterial({ color: 0xf4e6d8, roughness: 0.55, metalness: 0.04, flatShading: kVertexSnap });
-    } else if (mode === "wire") {
-      material = new THREE.MeshBasicMaterial({ color: 0xe85d75, wireframe: true, side: THREE.DoubleSide });
-    } else if (mode === "granite") {
-      return createKoboGraniteMaterial(sourceMaterial);
-    } else if (mode === "gold") {
-      material = new THREE.MeshPhysicalMaterial({ color: 0xffc64d, emissive: 0x4b2600, emissiveIntensity: 0.16, roughness: 0.28, metalness: 0.58, clearcoat: 0.7, clearcoatRoughness: 0.2 });
-    } else if (mode === "chrome") {
-      material = new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        roughness: 0.075,
-        metalness: 1.0,
-        clearcoat: 0.82,
-        clearcoatRoughness: 0.055,
-        envMap: getKoboChromeEnvironment(),
-        envMapIntensity: 2.15
-      });
-    } else if (mode === "normals") {
-      material = new THREE.MeshNormalMaterial({ flatShading: kVertexSnap, side: THREE.DoubleSide });
-    }
-    if (material) {
-      material.dithering = kDither;
-      if (kJitterAmount > 0 || kVertexSnap) attachKoboVertexJitter(material);
-      kCustomMaterials.push(material);
-    }
-    return material;
-  }
-
-  function applyKoboShaderMode(mode) {
-    const validModes = ["texture", "xray", "solid", "wire", "holo", "granite", "gold", "chrome", "glitch", "normals"];
-    if (!validModes.includes(mode)) return;
-    kShaderMode = mode;
-    if (mode !== "xray" && kQuickXrayActive) {
-      kQuickXrayActive = false;
-      const quickXrayButton = document.getElementById("xray-toggle");
-      quickXrayButton?.classList.remove("is-active");
-      quickXrayButton?.setAttribute("aria-pressed", "false");
-    }
-    settingsRoot.querySelectorAll("[data-mode]").forEach(btn => btn.classList.toggle("is-active", btn.dataset.mode === mode));
-
-    // Always edit the actual model currently mounted in the main website scene.
-    if (object && kModel !== object) {
-      syncKoboMainModel(object, mixer, activeHeadAnimations, modelSelect.value, modelSelect.selectedOptions?.[0]?.textContent || "LHU head");
-    }
-    if (!kModel || kModel !== object) return;
-
-    disposeKoboCustomMaterials();
-    kModel.traverse(child => {
-      if (!child.isMesh) return;
-      const original = kOriginalStates.get(child);
-      if (!original) return;
-      const sourceList = Array.isArray(original.material) ? original.material : [original.material];
-      const nextList = sourceList.map(source => {
-        if (mode === "texture") {
-          const clone = source?.clone ? source.clone() : source;
-          if (clone) {
-            clone.dithering = kDither;
-            if (kJitterAmount > 0 || kVertexSnap) attachKoboVertexJitter(clone);
-            kCustomMaterials.push(clone);
-          }
-          return clone;
-        }
-        if (mode === "xray") return createKoboXrayMaterial(source);
-        return makeKoboPresetMaterial(mode, source);
-      });
-      child.material = Array.isArray(original.material) ? nextList : nextList[0];
-      const activeMaterials = Array.isArray(child.material) ? child.material : [child.material];
-      activeMaterials.forEach(material => {
-        if (!material) return;
-        material.dithering = kDither;
-        material.needsUpdate = true;
-        applyTextureFilter(material);
-      });
-    });
-    updateKoboTelemetry();
-    // A prompt redraw makes the material change visible immediately.
-    if (kRenderer && kScene && kCamera) {
-      try { if (kComposer) kComposer.render(); else kRenderer.render(kScene, kCamera); } catch (error) { console.warn("Material update render failed:", error); }
-    }
-  }
-
-  // A dedicated brain button toggles X-ray without opening the settings drawer.
-  window.__lhuToggleQuickXray = () => {
-    const button = document.getElementById("xray-toggle");
-    if (!kQuickXrayActive) {
-      kQuickXrayRestoreMode = kShaderMode === "xray" ? "texture" : kShaderMode;
-      kQuickXrayActive = true;
-      applyKoboShaderMode("xray");
-    } else {
-      const restoreMode = kQuickXrayRestoreMode || "texture";
-      kQuickXrayActive = false;
-      applyKoboShaderMode(restoreMode);
-    }
-    button?.classList.toggle("is-active", kQuickXrayActive);
-    button?.setAttribute("aria-pressed", String(kQuickXrayActive));
-    return kQuickXrayActive;
-  };
-  document.getElementById("xray-toggle")?.addEventListener("click", () => window.__lhuToggleQuickXray?.());
-
-  function updateKoboTelemetry() {
-    let meshes = 0, tris = 0, morphs = 0;
-    const materials = new Set();
-    if (kModel) kModel.traverse(c => {
-      if (c.isMesh && c.geometry) {
-        meshes++;
-        const idx = c.geometry.index, pos = c.geometry.attributes.position;
-        tris += idx ? Math.round(idx.count / 3) : (pos ? Math.round(pos.count / 3) : 0);
-        if (c.morphTargetDictionary) morphs += Object.keys(c.morphTargetDictionary).length;
-        const list = Array.isArray(kOriginalStates.get(c)?.material) ? kOriginalStates.get(c).material : [kOriginalStates.get(c)?.material];
-        list.forEach(m => { if (m) materials.add(m.uuid); });
-      }
-    });
-    kModelMaterialCount = materials.size; kModelMorphCount = morphs;
-    const values = {
-      "kobo-stat-meshes": `MESH ${meshes}`,
-      "kobo-stat-tris": `TRIS ${tris.toLocaleString()}`,
-      "kobo-stat-materials": `MAT ${materials.size}`,
-      "kobo-stat-morphs": `SHAPE KEYS ${morphs}`
-    };
-    Object.entries(values).forEach(([id, value]) => { const el = document.getElementById(id); if (el) el.textContent = value; });
-  }
-
-  function updateKoboLoadStatus(percent, detail, title = "LOADING GLB") {
-    const panel = document.getElementById("kobo-load-status");
-    const value = Math.max(0, Math.min(100, Number(percent) || 0));
-    if (panel) panel.hidden = false;
-    const titleEl = document.getElementById("kobo-load-title"), percentEl = document.getElementById("kobo-load-percent");
-    const bar = document.getElementById("kobo-load-bar"), detailEl = document.getElementById("kobo-load-detail");
-    if (titleEl) titleEl.textContent = title;
-    if (percentEl) percentEl.textContent = `${Math.round(value)}%`;
-    if (bar) bar.style.width = `${value}%`;
-    if (detailEl) detailEl.textContent = detail || "Loading…";
-  }
-
-  function hideKoboLoadStatus(detail = "Model ready") {
-    const panel = document.getElementById("kobo-load-status");
-    if (panel) panel.hidden = true;
-    const live = document.getElementById("a11yStatus");
-    if (live) live.textContent = detail;
-  }
-
-  function updateKoboOptics() {
-    if (!kCamera) return;
-    const baseNear = Math.max(kModelRadius / 500, 0.0001);
-    const slicePct = Number(document.getElementById("kobo-clip-slider")?.value || 0);
-    if (slicePct <= 0) kCamera.near = baseNear;
-    else {
-      const distToCenter = kCamera.position.distanceTo(kControls?.target || new THREE.Vector3());
-      const frontDist = Math.max(distToCenter - kModelRadius * 0.65, baseNear);
-      const backDist = distToCenter + kModelRadius * 0.65;
-      kCamera.near = THREE.MathUtils.lerp(frontDist, backDist, slicePct / 100);
-    }
-    kCamera.far = Math.max(kModelRadius * 500, 100);
-    kCamera.updateProjectionMatrix();
-  }
-
-  function fitKoboModel(root) {
-    const box = new THREE.Box3().setFromObject(root);
-    const center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z, 0.01), normScale = 2 / maxDim;
-    kModelRadius = maxDim;
-    root.scale.setScalar(normScale); root.position.sub(center.multiplyScalar(normScale));
-    root.userData.baseScale = normScale; root.userData.basePos = root.position.clone(); root.userData.baseRot = root.rotation.clone();
-    updateKoboOptics();
-  }
-
-  function buildKoboAnimationUi(animations) {
-    const select = document.getElementById("kobo-animation-select");
-    const scrub = document.getElementById("kobo-timeline-slider");
-    select.replaceChildren(); kClips = animations || []; kActiveActions = [];
-    if (!kClips.length) {
-      select.add(new Option("No animation clips", "")); select.disabled = true; scrub.disabled = true; scrub.value = 0; scrub.max = 1;
-      document.getElementById("kobo-play-btn").disabled = true;
-      document.getElementById("kobo-time-val").textContent = "0.00s";
-      return;
-    }
-    kClips.forEach((clip, i) => select.add(new Option(`${clip.name || `Clip ${i+1}`} · ${clip.duration.toFixed(2)}s`, String(i))));
-    select.disabled = false; scrub.disabled = false; document.getElementById("kobo-play-btn").disabled = false;
-    playKoboAnimation("0");
-  }
-
-  function playKoboAnimation(value) {
-    if (!kMixer || !kClips.length) return;
-    kMixer.stopAllAction(); kActiveActions = [];
-    const clip = kClips[Number(value)];
-    if (!clip) return;
-    const action = kMixer.clipAction(clip); action.reset(); action.play(); action.paused = !kAnimEnabled; kActiveActions.push(action);
-    const scrub = document.getElementById("kobo-timeline-slider");
-    scrub.max = String(Math.max(0.01, clip.duration)); scrub.value = 0;
-    document.getElementById("kobo-time-val").textContent = `0.00s`;
-    document.getElementById("kobo-play-btn").textContent = kAnimEnabled ? "PAUSE" : "PLAY";
-  }
-
-  function resolveKoboSpawnType() {
-    const selected = document.getElementById("kobo-sfx-mode")?.value || "random";
-    if (selected !== "random") return selected;
-    const choices = ["pop", "push", "pew", "noodly", "boing", "dong"];
-    return choices[Math.floor(Math.random() * choices.length)];
-  }
-
-  function syncKoboMainModel(root, mainMixer, animations = [], url = modelSelect.value, label = "LHU head") {
-    if (!root) {
-      kModel = null; kMixer = null; kClips = []; kActiveActions = [];
-      kOriginalStates = new WeakMap();
-      updateKoboTelemetry();
-      return;
-    }
-    const isNewModel = kModel !== root;
-    if (isNewModel) {
-      disposeKoboCustomMaterials();
-      kOriginalStates = new WeakMap();
-    }
-    kModel = root;
-    kMixer = mainMixer || null;
-    kClips = animations || [];
-    kActiveActions = [];
-    kModel.traverse(child => {
-      if (!child.isMesh) return;
-      child.castShadow = true;
-      child.receiveShadow = true;
-      if (isNewModel) {
-        // Keep immutable references to the GLB's original materials so every preset
-        // can be switched to and from without inheriting the previous preset.
-        kOriginalStates.set(child, { material: child.material });
-      }
-    });
-    if (isNewModel) {
-      kModel.userData.baseScale = kModel.scale.x || 1;
-      kModel.userData.basePos = kModel.position.clone();
-      kModel.userData.baseRot = kModel.rotation.clone();
-    }
-    const box = new THREE.Box3().setFromObject(kModel);
-    const size = box.getSize(new THREE.Vector3());
-    if (isNewModel) {
-      // Normalise every head to a shared floor: centre it on X/Z and move it
-      // so its lowest point floats just above the plinth top / grid plane.
-      const floorTop = -1.06;   // plinth surface: y -1.14 + half height 0.08
-      const clearance = 0.04;
-      const oldTarget = kControls ? kControls.target.clone() : null;
-      const camOffset = oldTarget ? camera.position.clone().sub(oldTarget) : null;
-      kModel.position.x -= (box.min.x + box.max.x) * 0.5;
-      kModel.position.y += (floorTop + clearance) - box.min.y;
-      kModel.position.z -= (box.min.z + box.max.z) * 0.5;
-      kModel.userData.basePos = kModel.position.clone();
-      box.setFromObject(kModel);
-      box.getSize(size);
-      const newCenter = box.getCenter(new THREE.Vector3());
-      if (kControls) kControls.target.copy(newCenter);
-      if (camOffset) camera.position.copy(newCenter).add(camOffset);
-    }
-    kModelRadius = Math.max(size.x, size.y, size.z, 0.01) * 0.5;
-    kViewCenter.copy(kControls?.target || box.getCenter(new THREE.Vector3()));
-    if (kFrameHelper) {
-      kScene.remove(kFrameHelper);
-      kFrameHelper.geometry?.dispose?.();
-      kFrameHelper = new THREE.BoxHelper(kModel, 0xe85d75);
-      kFrameHelper.visible = kFrameEnabled;
-      kScene.add(kFrameHelper);
-    }
-    buildKoboAnimationUi(animations || []);
-    if (isNewModel) applyKoboShaderMode(kShaderMode);
-    else updateKoboTelemetry();
-    updateKoboOptics();
-    updateKoboTelemetry();
-    kCurrentUrl = url || "";
-    const fileNameEl = document.getElementById("kobo-file-name");
-    if (fileNameEl) fileNameEl.textContent = label || "LHU head";
-  }
-
-  // Normal head changes and imported GLBs both feed this same main-scene model reference.
-  window.__lhuOnMainHeadLoaded = (root, mainMixer, animations, url) => {
-    // Head changes on the main stage must fire the spawn FX even if the settings
-    // panel has never been opened. Initialising here only wires the shared scene.
-    if (!koboInitialized) initKoboStudio();
-    const selected = modelSelect.selectedOptions?.[0];
-    syncKoboMainModel(root, mainMixer, animations, url, selected?.textContent || "LHU head");
-    // Selecting a head in the main pill used to update the model without ever
-    // firing the spawn animation. The fullscreen importer already did this.
-    triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted || lhuFirstVisit);
-  };
-
-  function loadKoboModel(url, labelOverride = null) {
-    initKoboStudio();
-    const requestId = ++kLoadRequestId;
-    updateKoboLoadStatus(0, "Connecting to model source…");
-    if (labelOverride) {
-      let customOpt = modelSelect.querySelector('option[data-custom="1"]');
-      if (!customOpt) {
-        customOpt = document.createElement("option");
-        customOpt.dataset.custom = "1";
-        modelSelect.appendChild(customOpt);
-      }
-      customOpt.value = url;
-      customOpt.textContent = labelOverride;
-      modelSelect.value = url;
-    } else if ([...modelSelect.options].some(option => option.value === url)) {
-      modelSelect.value = url;
-    }
-
-    loader.load(url, (gltf) => {
-      if (requestId !== kLoadRequestId) { disposeObject(gltf.scene); return; }
-      const nextModel = gltf.scene;
-      nextModel.traverse(child => {
-        if (!child.isMesh) return;
-        child.castShadow = true;
-        child.receiveShadow = true;
-      });
-
-      // Replace the actual main-page head, not a second inspector-only copy.
-      if (object) { scene.remove(object); disposeObject(object); }
-      if (mixer) { mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot()); mixer = null; }
-      object = nextModel;
-      scene.add(object);
-      object.userData.emissiveMats = [];
-      object.traverse(child => {
-        if (!child.isMesh || !child.material) return;
-        const mats = Array.isArray(child.material) ? child.material : [child.material];
-        mats.forEach(mat => {
-          if (mat?.emissive) {
-            mat.userData.origE = mat.emissive.clone();
-            mat.userData.origI = mat.emissiveIntensity !== undefined ? mat.emissiveIntensity : 1;
-            object.userData.emissiveMats.push(mat);
-          }
-        });
-      });
-
-      // Match the original main-head framing logic while keeping this model in the same scene.
-      const box = new THREE.Box3().setFromObject(object);
-      const sphere = new THREE.Sphere();
-      const size = box.getSize(new THREE.Vector3());
-      box.getBoundingSphere(sphere);
-      const safeMinDistance = Math.max(sphere.radius * 1.52, Math.max(size.x, size.y, size.z) * 0.98, 1.55);
-      controls.enablePan = false;
-      controls.target.copy(sphere.center);
-      controls.minDistance = safeMinDistance;
-      controls.maxDistance = Math.max(safeMinDistance * 3.2, 6.8);
-      if (camera.position.distanceTo(controls.target) < safeMinDistance) {
-        const direction = camera.position.clone().sub(controls.target);
-        if (direction.lengthSq() < 1e-5) direction.set(1, 0, 1);
-        direction.normalize().multiplyScalar(safeMinDistance * 1.15);
-        camera.position.copy(controls.target).add(direction);
-      }
-      controls.update();
-
-      activeHeadAnimations = gltf.animations || [];
-      if (activeHeadAnimations.length) {
-        mixer = new THREE.AnimationMixer(object);
-        activeHeadAnimations.forEach(clip => mixer.clipAction(clip).play());
-      }
-      modelSelect.value = url;
-      syncKoboMainModel(object, mixer, activeHeadAnimations, url, labelOverride || modelSelect.selectedOptions?.[0]?.textContent || "LHU head");
-      const fileNameEl = document.getElementById("kobo-file-name");
-      if (fileNameEl) fileNameEl.textContent = labelOverride || modelSelect.selectedOptions?.[0]?.textContent || "LHU head";
-      if (kCurrentObjectUrl && kCurrentObjectUrl !== url && kCurrentObjectUrl.startsWith("blob:")) {
-        try { URL.revokeObjectURL(kCurrentObjectUrl); } catch (error) {}
-      }
-      kCurrentObjectUrl = url.startsWith("blob:") ? url : "";
-      hideKoboLoadStatus(`${fileNameEl?.textContent || "Model"} loaded`);
-      triggerKoboSpawn(resolveKoboSpawnType(), !kSfxEnabled || kAudioMuted || lhuFirstVisit);
-    }, (event) => {
-      if (requestId !== kLoadRequestId) return;
-      const total = Number(event.total) || 0;
-      const percent = total > 0 ? (event.loaded / total) * 100 : 14;
-      const size = total > 0 ? `${(event.loaded / 1048576).toFixed(2)} / ${(total / 1048576).toFixed(2)} MB` : `${(event.loaded / 1048576).toFixed(2)} MB received`;
-      updateKoboLoadStatus(percent, size);
-    }, error => {
-      if (requestId !== kLoadRequestId) return;
-      console.error("3D model load failed:", error);
-      if (url.startsWith("blob:")) { try { URL.revokeObjectURL(url); } catch (e) {} }
-      updateKoboLoadStatus(100, "Could not load this GLB. The previous model stays visible.", "LOAD FAILED");
-      const live = document.getElementById("a11yStatus");
-      if (live) live.textContent = "3D-Modell konnte nicht geladen werden. Das vorherige Modell bleibt erhalten.";
-    });
-  }
-
-  function triggerKoboSpawn(type, silent = false) {
-    if (!kModel) return;
-    kSpawnState = { type, start: performance.now(), dur: 680 };
-    // Small public telemetry hook: lets styling/tests observe the active FX.
-    document.documentElement.setAttribute('data-lhu-spawn', type);
-    if (!silent) playKoboSynth(type);
-  }
-
-  function updateDrawerState(open) {
-    drawerOpen = Boolean(open);
-    overlay.classList.toggle("is-open", drawerOpen);
-    uiBottom.classList.toggle("is-expanded", drawerOpen);
-    stage?.classList.toggle("head-settings-open", drawerOpen);
-    dockWrap.setAttribute("aria-hidden", String(!drawerOpen));
-    openBtn.setAttribute("aria-expanded", String(drawerOpen));
-    openBtn.classList.toggle("is-active", drawerOpen);
-    if (drawerOpen && headlabMobileQuery.matches) restoreHeadlabSheetHeight();
-  }
-
-  function openKoboStudio() {
-    interruptWisdom();
-    if (!koboActive) {
-      window.__lhuSetIndexExperienceSuspended?.(true);
-      overlay.hidden = false;
-      stage?.classList.add("kobo-studio-active");
-      koboActive = true;
-      placeKoboCanvas();
-      updateDrawerState(true);
-      initKoboStudio();
-      setKoboBackdrop(kLastBackdrop); // keep the backdrop visible when bloom is on
-      requestAnimationFrame(() => applyKoboResolution());
-      const activeHeadUrl = document.getElementById("head-select")?.value || MODELS[0].url;
-      // The main head is loaded during page startup by loadHead(initialHead.url).
-      // Opening settings must never be responsible for starting or restarting that request.
-      // If the initial request is still in flight, its load callback will update this shared scene.
-      if (object && kModel !== object) {
-        syncKoboMainModel(object, mixer, activeHeadAnimations, activeHeadUrl, modelSelect.selectedOptions?.[0]?.textContent || "LHU head");
-      }
-      kClock.getDelta();
-      cancelAnimationFrame(koboRAF); koboRAF = requestAnimationFrame(animateKobo);
-    } else {
-      updateDrawerState(true);
-    }
-  }
-
-  function closeKoboStudio() {
-    koboActive = false;
-    // Keep the backdrop texture: with bloom enabled the composer output is
-    // opaque, so clearing it here would hide the background on the main stage.
-    cancelAnimationFrame(koboRAF); koboRAF = 0;
-    updateDrawerState(false);
-    overlay.hidden = true;
-    // Restore the DOM canvas opacity to the stylesheet value (0.34). The
-    // studio raises it to 0.75 for its 3D backdrop texture; without this the
-    // main stage stays permanently brighter after the settings were opened.
-    const matrixCanvas = document.getElementById("matrix-bg");
-    if (matrixCanvas) matrixCanvas.style.opacity = "";
-    stage?.classList.remove("kobo-studio-active");
-    placeKoboCanvas();
-    requestAnimationFrame(() => applyKoboResolution());
-    window.__lhuSetIndexExperienceSuspended?.(false);
-  }
-
-  window.__lhuIsKoboStudioActive = () => koboActive;
-  window.__lhuCloseKoboStudio = closeKoboStudio;
-  window.__lhuKoboIsActive = () => koboActive;
-  window.__lhuRenderMainThree = () => {
-    if (kComposer) kComposer.render();
-    else renderer.render(scene, camera);
-  };
-  window.__lhuResizeMainThree = (width, height) => {
-    if (kComposer) kComposer.setSize(Math.max(1, width), Math.max(1, height));
-    if (kBloomPass) kBloomPass.setSize(Math.max(1, width), Math.max(1, height));
-  };
-  openBtn.addEventListener("click", () => {
-    if (!koboActive) openKoboStudio();
-    else closeKoboStudio();
-  });
-
-  // Selecting another head keeps the integrated inspector in sync with the main selector.
-  document.getElementById("head-select")?.addEventListener("change", (event) => {
-    const selectedOption = event.target.selectedOptions?.[0];
-    kImportedModelActive = selectedOption?.dataset.custom === "1";
-    if (!kImportedModelActive) {
-      const importedOption = modelSelect.querySelector('option[data-custom="1"]');
-      if (importedOption) importedOption.remove();
-    }
-  });
-
-  // Drawer tab navigation.
-  let activeTab = "surface";
-  settingsRoot.querySelectorAll("[data-kobo-tab]").forEach(btn => btn.addEventListener("click", () => {
-    activeTab = btn.dataset.koboTab;
-    settingsRoot.querySelectorAll("[data-kobo-tab]").forEach(b => b.classList.toggle("is-active", b === btn));
-    Object.entries(tabPanels).forEach(([key, panel]) => { if (panel) panel.hidden = key !== activeTab; });
-  }));
-
-  // The main pill's head selector is the single built-in model selector.
-  // The adjacent import control adds an optional custom GLB without duplicating that list.
-  uploadBtn?.addEventListener("click", () => fileInput?.click());
-
-  function importKoboFile(file) {
-    if (!file) return;
-    if (!/\.glb$/i.test(file.name)) { alert("Bitte ein GLB-Modell auswählen."); return; }
-    const blobUrl = URL.createObjectURL(file);
-    kImportedModelActive = true;
-    loadKoboModel(blobUrl, file.name.replace(/\.glb$/i, ""));
-  }
-  fileInput?.addEventListener("change", e => { importKoboFile(e.target.files?.[0]); e.target.value = ""; });
-  [canvasWrap, overlay].forEach(target => {
-    target.addEventListener("dragenter", e => { e.preventDefault(); overlay.classList.add("is-dragging"); });
-    target.addEventListener("dragover", e => { e.preventDefault(); overlay.classList.add("is-dragging"); });
-    target.addEventListener("dragleave", e => {
-      const next = e.relatedTarget;
-      if (!next || (!overlay.contains(next) && !canvasWrap.contains(next))) overlay.classList.remove("is-dragging");
-    });
-    target.addEventListener("drop", e => { e.preventDefault(); overlay.classList.remove("is-dragging"); importKoboFile(e.dataTransfer?.files?.[0]); });
-  });
-
-  // Material presets, mood lighting and camera views.
-  settingsRoot.querySelectorAll("[data-mode]").forEach(btn => btn.addEventListener("click", () => applyKoboShaderMode(btn.dataset.mode)));
-  settingsRoot.querySelectorAll("[data-mood-btn]").forEach(btn => btn.addEventListener("click", () => applyKoboMood(btn.dataset.moodBtn)));
-  settingsRoot.querySelectorAll("[data-angle]").forEach(btn => btn.addEventListener("click", () => {
-    if (!kCamera || !kControls) return;
-    const a = btn.dataset.angle;
-    const center = getKoboViewCenter();
-    kViewCenter.copy(center);
-    kControls.target.copy(center);
-    const dist = Math.max(3.1, kModelRadius * 1.8);
-    if (a === "front") kCamera.position.set(center.x, center.y + 0.08 * dist, center.z + dist);
-    else if (a === "threequarter" || a === "reset") kCamera.position.set(center.x + dist * 0.72, center.y + dist * 0.30, center.z + dist * 0.82);
-    else if (a === "profile" || a === "side") kCamera.position.set(center.x + dist, center.y + 0.06 * dist, center.z);
-    else if (a === "top") kCamera.position.set(center.x, center.y + dist * 1.18, center.z + dist * 0.06);
-    kCamera.lookAt(center); kControls.update(); updateKoboOptics();
-    settingsRoot.querySelectorAll("[data-angle]").forEach(b => b.classList.toggle("is-active", b === btn));
-  }));
-  document.getElementById("kobo-turntable-btn")?.addEventListener("click", e => {
-    if (!kControls) return; kControls.autoRotate = !kControls.autoRotate;
-    e.currentTarget.classList.toggle("is-active", kControls.autoRotate);
-  });
-  document.getElementById("kobo-zoom-in")?.addEventListener("click", () => {
-    if (!kCamera || !kControls) return;
-    const dir = kCamera.position.clone().sub(kControls.target).multiplyScalar(0.8);
-    if (dir.length() >= kControls.minDistance) { kCamera.position.copy(kControls.target).add(dir); kControls.update(); }
-  });
-  document.getElementById("kobo-zoom-out")?.addEventListener("click", () => {
-    if (!kCamera || !kControls) return;
-    const dir = kCamera.position.clone().sub(kControls.target).multiplyScalar(1.25);
-    if (dir.length() <= kControls.maxDistance) { kCamera.position.copy(kControls.target).add(dir); kControls.update(); }
-  });
-  document.getElementById("kobo-fov-slider")?.addEventListener("input", e => {
-    const val = Number(e.target.value); document.getElementById("kobo-fov-val").textContent = `${val}°`;
-    if (kCamera) { kCamera.fov = val; kCamera.updateProjectionMatrix(); }
-  });
-  document.getElementById("kobo-clip-slider")?.addEventListener("input", e => {
-    const val = Number(e.target.value); document.getElementById("kobo-clip-val").textContent = `${val}%`;
-    updateKoboOptics();
-  });
-
-  // Render profiles and direct graphics controls.
-  const PRESET_CONFIGS = {
-    potato: { res: 0.15, fps: 15, shadows: false, shadowRes: 256, snap: false, jitter: 0.35, pixel: "coarse", texture: "nearest", aa: false, dither: true, bloom: false },
-    handheld: { res: 0.50, fps: 30, shadows: true, shadowRes: 256, snap: false, jitter: 0, pixel: "fine", texture: "nearest", aa: false, dither: false, bloom: false },
-    studio: { res: 1.0, fps: 0, shadows: true, shadowRes: 256, snap: false, jitter: 0, pixel: "off", texture: "smooth", aa: true, dither: false, bloom: false },
-    overkill: { res: 1.0, fps: 0, shadows: true, shadowRes: 2048, snap: false, jitter: 0, pixel: "off", texture: "smooth", aa: true, dither: false, bloom: true }
-  };
-  settingsRoot.querySelectorAll("[data-preset]").forEach(btn => btn.addEventListener("click", () => {
-    const cfg = PRESET_CONFIGS[btn.dataset.preset]; if (!cfg) return;
-    settingsRoot.querySelectorAll("[data-preset]").forEach(b => b.classList.toggle("is-active", b === btn));
-    kResScale = Math.min(1, cfg.res); kMaxFps = cfg.fps; kShadowsOn = cfg.shadows; kShadowResolution = cfg.shadowRes;
-    kVertexSnap = cfg.snap; kJitterAmount = cfg.jitter; kPixelMode = cfg.pixel; kTextureFilter = cfg.texture; kAntialias = cfg.aa; kDither = cfg.dither; kBloomEnabled = cfg.bloom;
-    kResSlider.value = String(cfg.res); kResValue.textContent = `${cfg.res.toFixed(2)}×`;
-    kFpsButton.textContent = `FPS: ${cfg.fps === 0 ? "MAX" : cfg.fps}`;
-    const sh = document.getElementById("kobo-shadow-btn"); sh.textContent = `SHADOWS: ${kShadowsOn ? "ON" : "OFF"}`; sh.classList.toggle("is-active", kShadowsOn);
-    document.getElementById("kobo-shadow-quality").value = String(cfg.shadowRes);
-    const snap = document.getElementById("kobo-vertex-snap-btn"); snap.textContent = `VERTEX SNAP: ${kVertexSnap ? "ON" : "OFF"}`; snap.classList.toggle("is-active", kVertexSnap);
-    const pixel = document.getElementById("kobo-pixel-btn"); pixel.textContent = `PIXEL: ${kPixelMode.toUpperCase()}`; pixel.classList.toggle("is-active", kPixelMode !== "off");
-    const aa = document.getElementById("kobo-antialias-btn"); aa.textContent = `MSAA: ${kAntialias ? "4X ON" : "OFF"}`; aa.classList.toggle("is-active", kAntialias);
-    const dither = document.getElementById("kobo-dither-btn"); dither.textContent = `16-BIT DITHER: ${kDither ? "ON" : "OFF"}`; dither.classList.toggle("is-active", kDither);
-    document.getElementById("kobo-jitter-slider").value = String(Math.round(kJitterAmount * 100));
-    document.getElementById("kobo-jitter-val").textContent = `${Math.round(kJitterAmount * 100)}%`;
-    kJitterUniform.value = kVertexSnap ? Math.max(kJitterAmount, 0.35) : kJitterAmount;
-    document.querySelectorAll("[data-tex-filter]").forEach(b => b.classList.toggle("is-active", b.dataset.texFilter === kTextureFilter));
-    document.querySelectorAll("[data-tex-filter]").forEach(b => { b.disabled = false; });
-    const bloom = document.getElementById("kobo-bloom-btn"); bloom.textContent = `BLOOM: ${kBloomEnabled ? "ON" : "OFF"}`; bloom.classList.toggle("is-active", kBloomEnabled);
-    if (kKeyLight) { kKeyLight.castShadow = kShadowsOn; kKeyLight.shadow.mapSize.set(kShadowResolution, kShadowResolution); }
-    if (kRenderer) kRenderer.shadowMap.enabled = kShadowsOn;
-    if (kBloomPass) kBloomPass.enabled = kBloomEnabled;
-    createRenderer(); if (kModel) applyKoboShaderMode(kShaderMode); applyKoboResolution();
-    if (kModel) kModel.traverse(c => { if (c.isMesh) applyTextureFilter(c.material); });
-  }));
-
-  kResSlider?.addEventListener("input", e => { kResChanging = true; kResScale = Math.min(1, Number(e.target.value)); kResValue.textContent = `${kResScale.toFixed(2)}×`; applyKoboResolution(); requestAnimationFrame(() => { kResChanging = false; }); });
-  const FPS_STEPS = [12, 15, 24, 30, 60, 0];
-  kFpsButton?.addEventListener("click", e => {
-    const idx = FPS_STEPS.indexOf(kMaxFps); kMaxFps = FPS_STEPS[(idx + 1) % FPS_STEPS.length];
-    e.currentTarget.textContent = `FPS: ${kMaxFps === 0 ? "MAX" : kMaxFps}`;
-  });
-  settingsRoot.querySelectorAll("[data-tex-filter]").forEach(btn => btn.addEventListener("click", () => {
-    kTextureFilter = btn.dataset.texFilter;
-    settingsRoot.querySelectorAll("[data-tex-filter]").forEach(b => b.classList.toggle("is-active", b === btn));
-    if (kModel) kModel.traverse(c => { if (c.isMesh) applyTextureFilter(c.material); });
-  }));
-  document.getElementById("kobo-shadow-btn")?.addEventListener("click", e => {
-    kShadowsOn = !kShadowsOn; e.currentTarget.textContent = `SHADOWS: ${kShadowsOn ? "ON" : "OFF"}`;
-    e.currentTarget.classList.toggle("is-active", kShadowsOn);
-    if (kRenderer) kRenderer.shadowMap.enabled = kShadowsOn; if (kKeyLight) kKeyLight.castShadow = kShadowsOn;
-  });
-  document.getElementById("kobo-shadow-quality")?.addEventListener("change", e => {
-    if (e.target.value === "off") {
-      kShadowsOn = false;
-      const toggle = document.getElementById("kobo-shadow-btn"); toggle.textContent = "SHADOWS: OFF"; toggle.classList.remove("is-active");
-      if (kRenderer) kRenderer.shadowMap.enabled = false; if (kKeyLight) kKeyLight.castShadow = false;
-      return;
-    }
-    kShadowResolution = Number(e.target.value); kShadowsOn = true;
-    const toggle = document.getElementById("kobo-shadow-btn"); toggle.textContent = "SHADOWS: ON"; toggle.classList.add("is-active");
-    if (kRenderer) kRenderer.shadowMap.enabled = true;
-    if (kKeyLight) { kKeyLight.castShadow = true; kKeyLight.shadow.mapSize.set(kShadowResolution, kShadowResolution); kKeyLight.shadow.map?.dispose?.(); kKeyLight.shadow.map = null; kKeyLight.shadow.needsUpdate = true; }
-  });
-  document.getElementById("kobo-vertex-snap-btn")?.addEventListener("click", e => {
-    kVertexSnap = !kVertexSnap; e.currentTarget.textContent = `VERTEX SNAP: ${kVertexSnap ? "ON" : "OFF"}`;
-    e.currentTarget.classList.toggle("is-active", kVertexSnap); kJitterUniform.value = kVertexSnap ? Math.max(kJitterAmount, 0.35) : kJitterAmount; applyKoboShaderMode(kShaderMode);
-  });
-  document.getElementById("kobo-pixel-btn")?.addEventListener("click", e => {
-    const steps = ["off", "coarse", "fine"]; kPixelMode = steps[(steps.indexOf(kPixelMode) + 1) % steps.length];
-    e.currentTarget.textContent = `PIXEL: ${kPixelMode.toUpperCase()}`; e.currentTarget.classList.toggle("is-active", kPixelMode !== "off");
-    if (kModel) applyKoboShaderMode(kShaderMode); applyKoboResolution();
-  });
-  document.getElementById("kobo-antialias-btn")?.addEventListener("click", e => {
-    kAntialias = !kAntialias; e.currentTarget.textContent = `MSAA: ${kAntialias ? "ON" : "OFF"}`;
-    e.currentTarget.classList.toggle("is-active", kAntialias);
-    if (koboInitialized) { createRenderer(); if (kModel) applyKoboShaderMode(kShaderMode); }
-  });
-  document.getElementById("kobo-dither-btn")?.addEventListener("click", e => {
-    kDither = !kDither; e.currentTarget.textContent = `16-BIT DITHER: ${kDither ? "ON" : "OFF"}`;
-    e.currentTarget.classList.toggle("is-active", kDither); if (kModel) applyKoboShaderMode(kShaderMode);
-  });
-  document.getElementById("kobo-jitter-slider")?.addEventListener("input", e => {
-    kJitterAmount = Number(e.target.value) / 100;
-    document.getElementById("kobo-jitter-val").textContent = `${e.target.value}%`;
-    kJitterUniform.value = kVertexSnap ? Math.max(kJitterAmount, 0.35) : kJitterAmount;
-  });
-
-  // Background and studio stage.
-  settingsRoot.querySelectorAll("[data-backdrop]").forEach(btn => btn.addEventListener("click", () => setKoboBackdrop(btn.dataset.backdrop)));
-  settingsRoot.querySelectorAll("[data-solid-color]").forEach(btn => btn.addEventListener("click", () => {
-    settingsRoot.querySelectorAll("[data-solid-color]").forEach(b => b.classList.toggle("is-active", b === btn));
-    setKoboBackdrop("solid", btn.dataset.solidColor);
-  }));
-  document.getElementById("kobo-bg-color")?.addEventListener("input", e => setKoboBackdrop("solid", e.target.value));
-  settingsRoot.querySelectorAll("[data-pedestal]").forEach(btn => btn.addEventListener("click", () => applyKoboPedestal(btn.dataset.pedestal)));
-  document.getElementById("kobo-light-angle")?.addEventListener("input", e => {
-    const v = Number(e.target.value); document.getElementById("kobo-light-angle-val").textContent = `${String(v).padStart(3, "0")}°`; updateKoboLightAngle(v);
-  });
-  document.getElementById("kobo-exposure")?.addEventListener("input", e => {
-    const v = Number(e.target.value); document.getElementById("kobo-exposure-val").textContent = v.toFixed(1);
-    if (kRenderer) kRenderer.toneMappingExposure = v;
-  });
-  document.getElementById("kobo-bloom-btn")?.addEventListener("click", e => {
-    kBloomEnabled = !kBloomEnabled; if (kBloomPass) kBloomPass.enabled = kBloomEnabled;
-    e.currentTarget.textContent = `BLOOM: ${kBloomEnabled ? "ON" : "OFF"}`; e.currentTarget.classList.toggle("is-active", kBloomEnabled);
-  });
-  document.getElementById("kobo-frame-btn")?.addEventListener("click", e => {
-    kFrameEnabled = !kFrameEnabled; if (kFrameHelper) kFrameHelper.visible = kFrameEnabled;
-    e.currentTarget.textContent = `FRAME: ${kFrameEnabled ? "ON" : "OFF"}`; e.currentTarget.classList.toggle("is-active", kFrameEnabled);
-  });
-
-  // Animation clip selection, timeline scrubber and speed.
-  document.getElementById("kobo-animation-select")?.addEventListener("change", e => playKoboAnimation(e.target.value));
-  document.getElementById("kobo-anim-toggle")?.addEventListener("click", e => {
-    kAnimEnabled = !kAnimEnabled;
-    e.currentTarget.textContent = `ANIM: ${kAnimEnabled ? "ON" : "OFF"}`; e.currentTarget.classList.toggle("is-active", kAnimEnabled);
-    kActiveActions.forEach(a => { a.paused = !kAnimEnabled; });
-    document.getElementById("kobo-play-btn").textContent = kAnimEnabled ? "PAUSE" : "PLAY";
-  });
-  document.getElementById("kobo-play-btn")?.addEventListener("click", e => {
-    kAnimEnabled = !kAnimEnabled; kActiveActions.forEach(a => { a.paused = !kAnimEnabled; });
-    e.currentTarget.textContent = kAnimEnabled ? "PAUSE" : "PLAY";
-    const animBtn = document.getElementById("kobo-anim-toggle"); animBtn.textContent = `ANIM: ${kAnimEnabled ? "ON" : "OFF"}`; animBtn.classList.toggle("is-active", kAnimEnabled);
-  });
-  document.getElementById("kobo-timeline-slider")?.addEventListener("input", e => {
-    if (!kActiveActions.length) return;
-    kAnimEnabled = false; kActiveActions.forEach(a => { a.paused = true; a.time = Number(e.target.value) % a.getClip().duration; });
-    kMixer?.update(0); document.getElementById("kobo-time-val").textContent = `${Number(e.target.value).toFixed(2)}s`;
-    document.getElementById("kobo-play-btn").textContent = "PLAY";
-    const animBtn = document.getElementById("kobo-anim-toggle"); animBtn.textContent = "ANIM: OFF"; animBtn.classList.remove("is-active");
-  });
-  document.getElementById("kobo-speed-slider")?.addEventListener("input", e => {
-    kAnimSpeed = Number(e.target.value); if (kMixer) kMixer.timeScale = kAnimSpeed;
-    document.getElementById("kobo-speed-val").textContent = `${kAnimSpeed.toFixed(1)}×`;
-  });
-
-  // Spawn animations, snapshots and alpha export.
-  settingsRoot.querySelectorAll("[data-spawn]").forEach(btn => btn.addEventListener("click", () => triggerKoboSpawn(btn.dataset.spawn, false)));
-  document.getElementById("kobo-sound-btn")?.addEventListener("click", e => {
-    kSfxEnabled = !kSfxEnabled;
-    e.currentTarget.textContent = `AUDIO: ${kSfxEnabled ? "ON" : "OFF"}`;
-    e.currentTarget.classList.toggle("is-active", kSfxEnabled);
-    e.currentTarget.setAttribute("aria-pressed", String(kSfxEnabled));
-    if (kSfxEnabled) playKoboSynth("pop");
-  });
-  document.getElementById("kobo-glitch-pulse")?.addEventListener("click", () => { kGlitchPulseUntil = performance.now() + 450; playKoboSynth("glitch"); });
-
-  function captureKoboPng(transparentBg) {
-    if (!kRenderer || !kScene || !kCamera) return;
-    const gridVisibility = kGrid?.visible, plinthVisibility = kPlinth?.visible;
-    if (transparentBg) { if (kGrid) kGrid.visible = false; if (kPlinth) kPlinth.visible = false; canvasWrap.style.background = "transparent"; }
-    if (kComposer) kComposer.render(); else kRenderer.render(kScene, kCamera);
-    try {
-      const dataUrl = kRenderer.domElement.toDataURL("image/png");
-      const baseName = (document.getElementById("kobo-file-name")?.textContent || "lhu-model").replace(/[^a-z0-9_-]+/gi, "_");
-      const a = document.createElement("a"); a.href = dataUrl; a.download = `${baseName}_${transparentBg ? "alpha" : "studio"}.png`; a.click();
-    } catch (error) { console.warn("Snapshot could not be created:", error); }
-    if (kGrid) kGrid.visible = gridVisibility;
-    if (kPlinth) kPlinth.visible = plinthVisibility;
-  }
-  document.getElementById("kobo-snap-studio")?.addEventListener("click", () => captureKoboPng(false));
-  document.getElementById("kobo-snap-alpha")?.addEventListener("click", () => captureKoboPng(true));
-
-  /* Shared spawn animation — used by the settings RAF and by the main stage. */
-
-function updateKoboSpawn(now, target) {
-    if (!kSpawnState || !target) return;
-    const baseScale = target.userData.baseScale || 1;
-    const basePos = target.userData.basePos || new THREE.Vector3();
-    const baseRot = target.userData.baseRot || new THREE.Euler();
-    const tNorm = Math.min(1, (now - kSpawnState.start) / kSpawnState.dur);
-    const easeOut = 1 - Math.pow(1 - tNorm, 3), wave = Math.sin(tNorm * Math.PI * 3) * (1 - tNorm);
-    if (kSpawnState.type === "pop") { target.scale.setScalar(baseScale * (0.35 + 0.65 * easeOut + wave * 0.24)); target.position.copy(basePos); }
-    else if (kSpawnState.type === "push") { target.scale.setScalar(baseScale); target.position.set(basePos.x, basePos.y, basePos.z + wave * 0.65); }
-    else if (kSpawnState.type === "pew") { target.scale.setScalar(baseScale * (0.85 + 0.15 * easeOut)); target.rotation.y = baseRot.y + (1 - easeOut) * Math.PI * 2; }
-    else if (kSpawnState.type === "noodly") { target.scale.set(baseScale * (1 + wave * 0.28), baseScale * (1 - wave * 0.22), baseScale * (1 + wave * 0.28)); target.rotation.z = wave * 0.28; }
-    else if (kSpawnState.type === "boing") { const squash = Math.sin(tNorm * Math.PI * 4) * (1 - tNorm) * 0.32; target.scale.set(baseScale * (1 - squash * 0.5), baseScale * (1 + squash), baseScale * (1 - squash * 0.5)); target.position.set(basePos.x, basePos.y + Math.abs(wave) * 0.42, basePos.z); }
-    else if (kSpawnState.type === "dong") { target.scale.setScalar(baseScale); target.rotation.z = Math.sin(tNorm * Math.PI * 3.5) * (1 - tNorm) * 0.42; target.position.set(basePos.x, basePos.y - Math.abs(wave) * 0.12, basePos.z); }
-    if (tNorm >= 1) {
-      target.scale.setScalar(baseScale);
-      target.position.copy(basePos);
-      target.rotation.z = baseRot.z;
-      kSpawnState = null;
-      document.documentElement.removeAttribute('data-lhu-spawn');
-    }
-  }
-  window.__lhuUpdateSpawn = updateKoboSpawn;
-  window.__lhuTriggerSpawn = triggerKoboSpawn;
-
-  function animateKobo(now) {
-    if (!koboActive || !kRenderer) return;
-    koboRAF = requestAnimationFrame(animateKobo);
-    if (kMaxFps > 0 && kMaxFps < 120) {
-      const minInterval = 1000 / kMaxFps;
-      if (now - kLastRenderTime < minInterval) return;
-    }
-    kLastRenderTime = now;
-    const dt = Math.min(0.05, kClock.getDelta());
-    if (kMixer && kAnimEnabled) kMixer.update(dt * kAnimSpeed);
-    if (kControls) kControls.update();
-    if (kModel) {
-      const baseScale = kModel.userData.baseScale || 1;
-      const basePos = kModel.userData.basePos || new THREE.Vector3();
-      const baseRot = kModel.userData.baseRot || new THREE.Euler();
-      window.__lhuUpdateKoboShaderFx?.(now);
-      const glitchActive = now < kGlitchPulseUntil || kShaderMode === "glitch";
-      if (glitchActive) {
-        const pulseAmount = Math.max(kJitterAmount, 0.035);
-        kModel.position.x = basePos.x + (Math.random() - 0.5) * pulseAmount;
-        kModel.position.y = basePos.y + (Math.random() - 0.5) * pulseAmount * 0.65;
-      } else {
-        kModel.position.copy(basePos);
-      }
-      updateKoboSpawn(now, kModel);
-      if (kFrameHelper?.visible) kFrameHelper.setFromObject(kModel);
-      if (kActiveActions.length) {
-        const act = kActiveActions[0], slider = document.getElementById("kobo-timeline-slider");
-        if (slider && kAnimEnabled) slider.value = String(act.time % act.getClip().duration);
-        document.getElementById("kobo-time-val").textContent = `${act.time.toFixed(2)}s`;
-      }
-    }
-    if (kBackdropTexture && kScene.background === kBackdropTexture) kBackdropTexture.needsUpdate = true;
-    if (kComposer) kComposer.render(); else kRenderer.render(kScene, kCamera);
-    kFpsFrames++;
-    if (now - kFpsLast >= 500) {
-      const fps = Math.round(kFpsFrames * 1000 / (now - kFpsLast));
-      const fpsEl = document.getElementById("kobo-stat-fps"); if (fpsEl) fpsEl.textContent = `${fps} FPS`;
-      kFpsFrames = 0; kFpsLast = now;
-    }
-  }
-
-  window.addEventListener("keydown", event => {
-    if (!koboActive || /^(INPUT|SELECT|TEXTAREA)$/.test(event.target?.tagName || "")) return;
-    const key = event.key.toLowerCase();
-    if (key === "r") settingsRoot.querySelector('[data-angle="reset"]')?.click();
-    else if (key === "g") document.getElementById("kobo-glitch-pulse")?.click();
-    else if (key === "h") updateDrawerState(!drawerOpen);
-    else if (event.code === "Space" && !document.getElementById("kobo-play-btn")?.disabled) { event.preventDefault(); document.getElementById("kobo-play-btn")?.click(); }
-  });
-
-  const resizeKobo = () => {
-    if (kResChanging) return;
-    placeKoboCanvas();
-    if (!koboActive) return;
-    syncKoboViewCenter();
-    applyKoboResolution();
-  };
-  window.addEventListener("resize", resizeKobo);
-  if ("ResizeObserver" in window) {
-    const koboResizeObserver = new ResizeObserver(resizeKobo);
-    koboResizeObserver.observe(canvasWrap);
-  }
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && koboActive && !koboRAF) { kClock?.getDelta(); koboRAF = requestAnimationFrame(animateKobo); }
-    else if (document.hidden && koboRAF) { cancelAnimationFrame(koboRAF); koboRAF = 0; }
-  });
-  window.__lhuDisposeKoboStudio = () => {
-    closeKoboStudio();
-    // The main page owns the scene, renderer, controls and currently selected head.
-    // Only inspector-created helpers and post-processing resources are released here.
-    if (kGrid) { kScene.remove(kGrid); kGrid.geometry?.dispose?.(); (Array.isArray(kGrid.material) ? kGrid.material : [kGrid.material]).forEach(m => m?.dispose?.()); kGrid = null; }
-    if (kPlinth) { kScene.remove(kPlinth); kPlinth.geometry?.dispose?.(); kPlinth.material?.dispose?.(); kPlinth = null; }
-    if (kFrameHelper) { kScene.remove(kFrameHelper); kFrameHelper.geometry?.dispose?.(); kFrameHelper = null; }
-    disposeKoboCustomMaterials();
-    window.__lhuUpdateKoboShaderFx = null;
-    try { kChromeEnvironment?.dispose?.(); } catch (e) {}
-    kChromeEnvironment = null;
-    try { kComposer?.dispose(); } catch (e) {}
-    kComposer = null; kBloomPass = null;
-    if (kCurrentObjectUrl) { try { URL.revokeObjectURL(kCurrentObjectUrl); } catch (e) {} kCurrentObjectUrl = ""; }
-  };
+  requestAnimationFrame(frame);
 })();
 
+}
 </script>
 
 <script id="lhu-shared-js">// shared dom data: category pages, routes, cleaning, lightbox, aria, helpers
@@ -7889,8 +5630,8 @@ function applyTheme(theme) {
   const audioBtn = document.getElementById('audioToggle');
   const audioDuckImg = audioBtn?.querySelector('img');
   const quackAudio = document.getElementById('quackAudio');
-  const duckOnSrc = audioDuckImg?.dataset.duckOn || 'duck.png';
-  const duckMutedSrc = audioDuckImg?.dataset.duckMuted || 'ghostduck.png';
+  const duckOnSrc = audioDuckImg?.dataset.duckOn || 'pixelart/duck.png';
+  const duckMutedSrc = audioDuckImg?.dataset.duckMuted || 'pixelart/ghostduck.png';
   let isMuted = false;
   try { isMuted = localStorage.getItem('lhu-duck-muted') === 'true'; } catch (e) {}
 
@@ -9040,171 +6781,72 @@ function restoreCategoryFromLocation() {
 })();
 </script>
 
-<script type="module" id="lhu-marble-nav">// optional done marble canvas behind marquee, done via gltf when file exists
-/* Optional GLB stone-marble navigation. If stonemarble.glb is missing, the
-   CSS planets stay untouched — no errors, no visual change. */
-(async () => {
-  const TINTS = {
-    'VHS MULTIVERSE': 0xe0b422,
-    'HUMANART':       0xe8dfd2,
-    'PROJECTS':       0x2574d4,
-    'STORYTIME':      0x8453c9,
-    'MUSIC':          0xe0312d,
-    'CONTACT':        0x6b8f2a,
-    'DONATE':         0xbd6a26,
-    'ABOUT':          0xe0312d
-  };
-  const SOURCE = 'stonemarble.glb';
-
-  const track = await new Promise(resolve => {
-    const tick = () => {
-      const t = document.getElementById('categoryMarqueeTrack');
-      if (t && t.querySelector('.marquee-planet')) resolve(t);
-      else requestAnimationFrame(tick);
-    };
-    tick();
-  });
-
-  // Modules are already cached by the main scene; no idle deferral needed.
-  // The heavy shader compile happens later via compileAsync(), off the critical path.
-  let THREE, GLTFLoader, DRACOLoader, gltf;
+<!-- LHU: marble-nav omitted on entry pages (no site shell) -->
+<script id="lhu-language-wiring">
+(function () {
   try {
-    [THREE, { GLTFLoader }, { DRACOLoader }] = await Promise.all([
-      import('three'),
-      import('three/addons/loaders/GLTFLoader.js'),
-      import('three/addons/loaders/DRACOLoader.js')
-    ]);
-    // stonemarble.glb is Draco-compressed — use the same decoder as the main scene.
-    const draco = new DRACOLoader();
-    draco.setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/gltf/');
-    draco.setDecoderConfig({ type: 'wasm' }); // ~3x faster decode on phones
-    draco.setWorkerLimit(1);
-    const loader = new GLTFLoader();
-    loader.setDRACOLoader(draco);
-    gltf = await loader.loadAsync(SOURCE);
-  } catch (error) {
-    console.warn('[LHU] stonemarble.glb unavailable — CSS planets remain.', error);
-    return;
-  }
-
-  // One transparent canvas for all marbles (not one WebGL context per planet).
-  // Keep it hidden until shaders are compiled so the CSS marbles never blink out.
-  const canvas = document.createElement('canvas');
-  canvas.id = 'lhu-marble-canvas';
-  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1500;visibility:hidden';
-  document.body.appendChild(canvas);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !matchMedia('(max-width:768px)').matches });
-  const isCompact = matchMedia('(max-width:768px)').matches;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isCompact ? 1 : 2));
-  renderer.setClearColor(0x000000, 0);
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(0, innerWidth, 0, -innerHeight, -1000, 1000);
-  scene.add(new THREE.AmbientLight(0xffffff, 1.55));
-  const key = new THREE.DirectionalLight(0xffffff, 2.1);
-  key.position.set(-3, -4, 6); scene.add(key);
-  const rim = new THREE.DirectionalLight(0x9ec9ff, 0.9);
-  rim.position.set(4, 5, -3); scene.add(rim);
-
-  const bounds = new THREE.Box3().setFromObject(gltf.scene);
-  const dims = bounds.getSize(new THREE.Vector3());
-  const unit = 1 / (Math.max(dims.x, dims.y, dims.z) || 1);
-
-  // One shared glaze material per category colour instead of one per clone —
-  // far fewer materials/shader variants to create on mobile.
-  const glazeMaterials = {};
-  for (const [name, tint] of Object.entries(TINTS)) {
-    glazeMaterials[name] = new THREE.MeshBasicMaterial({
-      color: tint, transparent: true, opacity: 0.4, depthWrite: false
+    var l = (navigator.language || navigator.userLanguage || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+    document.querySelectorAll('[data-lang-' + l + ']').forEach(function (el) {
+      el.innerHTML = el.getAttribute('data-lang-' + l);
     });
+  } catch (e) {}
+})();
+</script>
+<script id="lhu-entry-wiring">
+/* ENTRY WIRING v2 — index.html: leave the intro page. */
+document.addEventListener('click', function (event) {
+  var el = event.target.closest ? event.target : event.target.parentElement;
+  if (!el) return;
+  if (el.closest('#btn-skip-main, #navigate-to-main')) { event.stopPropagation(); event.preventDefault(); window.location.assign('/about.html'); return; }
+  if (el.closest('#btn-skip-heads')) { event.stopPropagation(); event.preventDefault(); window.location.assign('/3dheads.html'); }
+}, true);
+/* The 2D matrix backdrop belongs to the hidden stage; stop its RAF here. */
+window.addEventListener('load', function () { try { window.__lhuPauseMatrixBackground && window.__lhuPauseMatrixBackground(); } catch (e) {} });
+/* Wait for BOTH gates before entering the 3D heads:
+   1) LIGHTNING -> HORN -> UNICORN finished (original removes #lhu-intro)
+   2) the chosen intro sample (lhu-red/yellow/blue.mp3) fired "ended". */
+(function () {
+  var fired = false;
+  var introGone = false;
+  var audioDone = false;
+  var observer = null;
+  var safetyTimer = null;
+  var introAudio = document.getElementById('lhu-intro-audio');
+
+  function continueToHeads() {
+    if (fired || !introGone || !audioDone) return;
+    fired = true;
+    if (observer) observer.disconnect();
+    if (safetyTimer) clearTimeout(safetyTimer);
+    window.location.assign('/3dheads.html');
   }
-
-  let entries = [];
-
-  function rebuild() {
-    entries.forEach(e => scene.remove(e.obj));
-    entries = [];
-    track.querySelectorAll('.marquee-category').forEach(cat => {
-      const planet = cat.querySelector('.marquee-planet');
-      if (!planet) return;
-      const key = cat.dataset.cat || '';
-      const glazeMat = glazeMaterials[key];
-      const obj = gltf.scene.clone(true);
-      // Collect first: adding a glaze while traversing would make traverse()
-      // visit the new mesh too and recurse indefinitely.
-      const meshes = [];
-      obj.traverse(part => { if (part.isMesh) meshes.push(part); });
-      for (const part of meshes) {
-        // Soft 40% colour glaze follows the geometry and rotates with it.
-        const glaze = new THREE.Mesh(part.geometry, glazeMat);
-        glaze.scale.setScalar(1.012);
-        part.add(glaze);
-      }
-      scene.add(obj);
-      entries.push({ planet, obj });
-    });
-  }
-  // Cache each planet's offset inside the moving track once. Per frame we then
-  // read only ONE rect (the track) instead of 24 — no layout thrash while the
-  // WAAPI marquee is animating.
-
-  function cacheOffsets() {
-    const t = track.getBoundingClientRect();
-    for (const e of entries) {
-      const r = e.planet.getBoundingClientRect();
-      e.offsetX = r.left - t.left + r.width / 2;
-      e.offsetY = r.top - t.top + r.height / 2;
-      e.size = Math.max(r.width, r.height);
+  function markIntroGone() {
+    introGone = true;
+    continueToHeads();
+    /* Fallback: autoplay can be blocked by the browser, so "ended" may never
+       fire. Never leave the visitor stuck on a finished intro. */
+    if (!fired && safetyTimer === null) {
+      safetyTimer = setTimeout(function () {
+        if (fired) return;
+        audioDone = true;
+        continueToHeads();
+      }, 15000);
     }
   }
-  rebuild();
-  cacheOffsets();
-  new MutationObserver(() => {
-    const count = track.querySelectorAll('.marquee-category').length;
-    if (count !== entries.length) { rebuild(); cacheOffsets(); }
-  }).observe(track, { childList: true, subtree: true });
-
-  const resize = () => {
-    renderer.setSize(innerWidth, innerHeight, false);
-    camera.right = innerWidth; camera.bottom = -innerHeight;
-    camera.updateProjectionMatrix();
-    cacheOffsets();
-  };
-  addEventListener('resize', resize);
-  resize();
-
-  // Compile shaders before revealing the 3D layer — otherwise the first frame
-  // stalls while WebGL compiles, which is exactly where the marquee "stuck".
-  try { if (renderer.compileAsync) await renderer.compileAsync(scene, camera); } catch (_) {}
-  canvas.style.visibility = 'visible';
-  document.documentElement.classList.add('lhu-marble-3d');
-
-  let last = performance.now();
-
-  function frame(now) {
-    requestAnimationFrame(frame);
-    const dt = Math.min(64, now - last); last = now;
-    const t = track.getBoundingClientRect(); // the only DOM read per frame
-    for (const e of entries) {
-      const x = t.left + e.offsetX;
-      const y = t.top + e.offsetY;
-      if (e.size < 1 || y < 0 || y > innerHeight) { e.obj.visible = false; continue; }
-      e.obj.visible = true;
-      e.obj.position.set(x, -y, 0);
-      e.obj.scale.setScalar(e.size * unit);
-      e.obj.rotation.y += (Math.PI * 2 / 7000) * dt; // full turn ~7s
-    }
-    // Clip to the marquee strip, just like the old CSS overflow:hidden did.
-    const ticker = document.getElementById('duckCrt');
-    if (ticker) {
-      const bounds = ticker.getBoundingClientRect();
-      renderer.setScissorTest(true);
-      renderer.setScissor(bounds.left, innerHeight - bounds.bottom, bounds.width, bounds.height);
-    }
-    renderer.render(scene, camera);
-    renderer.setScissorTest(false);
+  if (introAudio) {
+    introAudio.addEventListener('ended', function () { audioDone = true; continueToHeads(); });
+    introAudio.addEventListener('error', function () { audioDone = true; continueToHeads(); });
+    if (!introAudio.getAttribute('src')) audioDone = true;
+  } else {
+    audioDone = true;
   }
-  requestAnimationFrame(frame);
+  observer = new MutationObserver(function () {
+    if (!document.getElementById('lhu-intro')) markIntroGone();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!document.getElementById('lhu-intro')) markIntroGone();
+  });
 })();
 </script>
 </body>

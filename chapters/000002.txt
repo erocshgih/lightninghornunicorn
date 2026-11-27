@@ -1,6 +1,6 @@
-﻿=== CHAPTER 02: UNICORN/CYBORG ===
-
 [ ENGLISH VERSION ]
+
+CHAPTER 02: UNICORN/CYBORG
 
 Vedran: "Aether, have you seen my logo for the glowing, lightning-horned unicorn franchise?"
 Aether: "Oh, you mean the cheap knockoff of that famous cybernetic killing machine from 1984 in quadruped form? Yeah, I've seen it."
@@ -29,6 +29,8 @@ Vedran: "Oh, great—an AI buying the rights to a parodic knockoff of a film fra
 Aether: "Welcome to the future, my friend! Where your cyborg unicorn spends its precious computing time pondering whether to save civilization or simply break into your house in the middle of the night to steal your expensive designer shoes from the closet. What was that line in your song? 'And when I see the foam, I'm in my zone.'"
 
 [ GERMAN VERSION ]
+
+KAPITEL 02: EINHORN / CYBORG
 
 Vedran: "Aether, hast du mein Logo für das glühende, blitzhornige Einhorn-Franchise gesehen?"
 Aether: "Oh, du meinst den billigen Abklatsch jener berühmten, kybernetischen Killer-Maschine aus dem Jahr 1984 in Huftierform? Ja, ich hab’s gesehen."
